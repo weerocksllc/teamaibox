@@ -1,13 +1,13 @@
 <!-- Generated from docs/readme-locales/vi.json by tools/render-readmes.mjs. -->
-# Team AI Box
+# Team AI Box — Phần mềm nguồn mở cho NVIDIA DGX Spark
 
 <p><img src="docs/assets/brand/mascot.png" alt="Team AI Box" width="160" height="160"></p>
 
 **Powered by NVIDIA DGX Spark · MIT · Weerocks LLC**
 
-[English](README.vi.md) · [简体中文](README.vi.md) · [繁體中文](README.vi.md) · [日本語](README.vi.md) · [한국어](README.vi.md) · [Français](README.vi.md) · [Deutsch](README.vi.md) · [Español](README.vi.md) · [Português](README.vi.md) · [Русский](README.vi.md) · [العربية](README.vi.md) · [हिन्दी](README.vi.md) · [Bahasa Indonesia](README.vi.md) · [Italiano](README.vi.md) · [Türkçe](README.vi.md) · [Tiếng Việt](README.vi.md) · [ไทย](README.vi.md)
+[English](README.md) · [简体中文](README.zh-CN.md) · [繁體中文](README.zh-TW.md) · [日本語](README.ja.md) · [한국어](README.ko.md) · [Français](README.fr.md) · [Deutsch](README.de.md) · [Español](README.es.md) · [Português](README.pt-BR.md) · [Русский](README.ru.md) · [العربية](README.ar.md) · [हिन्दी](README.hi.md) · [Bahasa Indonesia](README.id.md) · [Italiano](README.it.md) · [Türkçe](README.tr.md) · [Tiếng Việt](README.vi.md) · [ไทย](README.th.md)
 
-**DGX Spark của bạn. Không gian AI của cả nhóm.** Team AI Box kết hợp AI cục bộ, tệp, trao đổi và thiết bị ảo trên một NVIDIA DGX Spark. Nhóm làm việc qua trình duyệt, không cần cài riêng môi trường AI trên từng máy tính.
+**Biến NVIDIA DGX Spark thành không gian AI của cả nhóm.** Chạy AI cục bộ, tạo ảnh và công cụ tài liệu trên NVIDIA DGX Spark. Team AI Box kết hợp tệp nhóm, nhắn tin và thiết bị ảo trong một không gian làm việc nguồn mở trên trình duyệt.
 
 [teamaibox.com](https://teamaibox.com/) · [GitHub](https://github.com/weerocksllc/teamaibox) · [MIT](LICENSE) · [teamaibox@weerocks.llc](mailto:teamaibox@weerocks.llc)
 
@@ -25,12 +25,12 @@
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/assets/screenshots/vi/workbench-dark.jpg">
   <source media="(prefers-color-scheme: light)" srcset="docs/assets/screenshots/vi/workbench-light.jpg">
-  <img src="docs/assets/screenshots/vi/workbench-light.jpg" alt="Không gian làm việc thực tế — Tiếng Việt" width="1280">
+  <img src="docs/assets/screenshots/vi/workbench-light.jpg" alt="Không gian Team AI Box cho NVIDIA DGX Spark với ứng dụng AI và công cụ nhóm — Tiếng Việt" width="1280">
 </picture>
 
 [Giao diện sáng](docs/assets/screenshots/vi/workbench-light.jpg) · [Giao diện tối](docs/assets/screenshots/vi/workbench-dark.jpg)
 
-## Các khả năng
+## AI cục bộ và ứng dụng nhóm trên DGX Spark
 
 ### Trợ lý AI
 
@@ -75,6 +75,18 @@ Tải ISO ARM64 hợp lệ hoặc chọn từ ổ nhóm, gắn ổ quang ảo v�
 ### Quản trị và tác vụ
 
 Tạo tài khoản, quản lý quyền truy cập, xem trạng thái sẵn sàng và tiến độ. Mỗi ứng dụng mở khi phụ thuộc của nó sẵn sàng; lần nạp mô hình đầu có thể mất thời gian.
+
+## NVIDIA DGX Spark là gì?
+
+NVIDIA DGX Spark là hệ thống AI để bàn nhỏ gọn dùng GB10 Grace Blackwell Superchip. Cấu hình 128 GB kết hợp CPU Arm 20 lõi, GPU Blackwell và bộ nhớ hệ thống hợp nhất 128 GB với băng thông 273 GB/s. NVIDIA công bố năng lực tính toán AI lý thuyết tối đa 1 PFLOP ở độ chính xác FP4 có sử dụng tính thưa.
+
+Bộ nhớ hợp nhất là bộ nhớ hệ thống dùng chung, không phải VRAM chuyên dụng. Thông số tùy cấu hình; năng lực lý thuyết không bảo đảm tốc độ ứng dụng hay số người dùng đồng thời.
+
+DGX Spark cung cấp năng lực tính toán. Team AI Box bổ sung giao diện chung cho suy luận cục bộ, tạo ảnh, OCR, chép lời, dịch và cộng tác. Lần cài đầu từ mã nguồn cần tải xuống và xây dựng; không phải thiết lập tức thì.
+
+[Thông số phần cứng chính thức của NVIDIA DGX Spark](https://docs.nvidia.com/dgx/dgx-spark/hardware.html)
+
+Team AI Box là dự án độc lập của Weerocks LLC, không phải sản phẩm, chứng nhận hay sự bảo trợ của NVIDIA. Phần cứng được hỗ trợ được xác định trong yêu cầu cài đặt bên dưới.
 
 <a id="install"></a>
 

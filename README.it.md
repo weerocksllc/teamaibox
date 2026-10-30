@@ -1,13 +1,13 @@
 <!-- Generated from docs/readme-locales/it.json by tools/render-readmes.mjs. -->
-# Team AI Box
+# Team AI Box — Software open source per NVIDIA DGX Spark
 
 <p><img src="docs/assets/brand/mascot.png" alt="Team AI Box" width="160" height="160"></p>
 
 **Powered by NVIDIA DGX Spark · MIT · Weerocks LLC**
 
-[English](README.it.md) · [简体中文](README.it.md) · [繁體中文](README.it.md) · [日本語](README.it.md) · [한국어](README.it.md) · [Français](README.it.md) · [Deutsch](README.it.md) · [Español](README.it.md) · [Português](README.it.md) · [Русский](README.it.md) · [العربية](README.it.md) · [हिन्दी](README.it.md) · [Bahasa Indonesia](README.it.md) · [Italiano](README.it.md) · [Türkçe](README.it.md) · [Tiếng Việt](README.it.md) · [ไทย](README.it.md)
+[English](README.md) · [简体中文](README.zh-CN.md) · [繁體中文](README.zh-TW.md) · [日本語](README.ja.md) · [한국어](README.ko.md) · [Français](README.fr.md) · [Deutsch](README.de.md) · [Español](README.es.md) · [Português](README.pt-BR.md) · [Русский](README.ru.md) · [العربية](README.ar.md) · [हिन्दी](README.hi.md) · [Bahasa Indonesia](README.id.md) · [Italiano](README.it.md) · [Türkçe](README.tr.md) · [Tiếng Việt](README.vi.md) · [ไทย](README.th.md)
 
-**Il tuo DGX Spark. Lo spazio IA del tuo team.** Team AI Box riunisce IA locale, file, comunicazione e dispositivi virtuali su un solo NVIDIA DGX Spark. Il team accede dal browser senza installare un ambiente IA su ogni computer.
+**Trasforma NVIDIA DGX Spark nello spazio di lavoro IA del tuo team.** Esegui IA locale, generazione di immagini e strumenti per documenti su NVIDIA DGX Spark. Team AI Box riunisce file, messaggistica e dispositivi virtuali in uno spazio open source nel browser.
 
 [teamaibox.com](https://teamaibox.com/) · [GitHub](https://github.com/weerocksllc/teamaibox) · [MIT](LICENSE) · [teamaibox@weerocks.llc](mailto:teamaibox@weerocks.llc)
 
@@ -25,12 +25,12 @@ Schermata reale in italiano, non un mockup. Segue il tema di GitHub; entrambi gl
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/assets/screenshots/it/workbench-dark.jpg">
   <source media="(prefers-color-scheme: light)" srcset="docs/assets/screenshots/it/workbench-light.jpg">
-  <img src="docs/assets/screenshots/it/workbench-light.jpg" alt="Lo spazio di lavoro reale — Italiano" width="1280">
+  <img src="docs/assets/screenshots/it/workbench-light.jpg" alt="Spazio Team AI Box per NVIDIA DGX Spark con app IA e strumenti per team — Italiano" width="1280">
 </picture>
 
 [Tema chiaro](docs/assets/screenshots/it/workbench-light.jpg) · [Tema scuro](docs/assets/screenshots/it/workbench-dark.jpg)
 
-## Cosa puoi fare
+## IA locale e applicazioni per team su DGX Spark
 
 ### Assistente IA
 
@@ -75,6 +75,18 @@ Carica una ISO ARM64 autorizzata o sceglila dal drive, monta il lettore ottico v
 ### Amministrazione e attività
 
 Crea account, gestisci accessi e osserva disponibilità e avanzamento. Ogni app si abilita quando le sue dipendenze sono pronte; il primo avvio dei modelli può richiedere tempo.
+
+## Che cos’è NVIDIA DGX Spark?
+
+NVIDIA DGX Spark è un sistema IA desktop compatto basato sul superchip GB10 Grace Blackwell. La configurazione da 128 GB combina una CPU Arm a 20 core, una GPU Blackwell e 128 GB di memoria di sistema unificata con banda di 273 GB/s. NVIDIA dichiara fino a 1 PFLOP di calcolo IA teorico con precisione FP4 e sparsità.
+
+La memoria unificata è memoria di sistema condivisa, non VRAM dedicata. Le specifiche variano in base alla configurazione; il calcolo teorico non garantisce velocità delle applicazioni o utenti simultanei.
+
+DGX Spark fornisce il calcolo. Team AI Box aggiunge un’interfaccia comune per inferenza locale, generazione di immagini, OCR, trascrizione, traduzione e collaborazione. La prima installazione dai sorgenti richiede download e compilazioni; non è immediata.
+
+[Specifiche hardware ufficiali di NVIDIA DGX Spark](https://docs.nvidia.com/dgx/dgx-spark/hardware.html)
+
+Team AI Box è un progetto indipendente di Weerocks LLC, non un prodotto, una certificazione o un’approvazione di NVIDIA. L’hardware supportato è definito dai requisiti di installazione seguenti.
 
 <a id="install"></a>
 

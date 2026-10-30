@@ -1,13 +1,13 @@
 <!-- Generated from docs/readme-locales/fr.json by tools/render-readmes.mjs. -->
-# Team AI Box
+# Team AI Box — Logiciel open source pour NVIDIA DGX Spark
 
 <p><img src="docs/assets/brand/mascot.png" alt="Team AI Box" width="160" height="160"></p>
 
 **Powered by NVIDIA DGX Spark · MIT · Weerocks LLC**
 
-[English](README.fr.md) · [简体中文](README.fr.md) · [繁體中文](README.fr.md) · [日本語](README.fr.md) · [한국어](README.fr.md) · [Français](README.fr.md) · [Deutsch](README.fr.md) · [Español](README.fr.md) · [Português](README.fr.md) · [Русский](README.fr.md) · [العربية](README.fr.md) · [हिन्दी](README.fr.md) · [Bahasa Indonesia](README.fr.md) · [Italiano](README.fr.md) · [Türkçe](README.fr.md) · [Tiếng Việt](README.fr.md) · [ไทย](README.fr.md)
+[English](README.md) · [简体中文](README.zh-CN.md) · [繁體中文](README.zh-TW.md) · [日本語](README.ja.md) · [한국어](README.ko.md) · [Français](README.fr.md) · [Deutsch](README.de.md) · [Español](README.es.md) · [Português](README.pt-BR.md) · [Русский](README.ru.md) · [العربية](README.ar.md) · [हिन्दी](README.hi.md) · [Bahasa Indonesia](README.id.md) · [Italiano](README.it.md) · [Türkçe](README.tr.md) · [Tiếng Việt](README.vi.md) · [ไทย](README.th.md)
 
-**Votre DGX Spark. L'espace IA de votre équipe.** Team AI Box réunit IA locale, fichiers, messagerie et appareils virtuels sur un seul NVIDIA DGX Spark. Votre équipe y accède dans son navigateur sans installer une pile IA sur chaque poste.
+**Faites de votre NVIDIA DGX Spark l’espace de travail IA de votre équipe.** Exécutez une IA locale, la génération d’images et des outils documentaires sur NVIDIA DGX Spark. Team AI Box réunit fichiers partagés, messagerie et appareils virtuels dans un espace open source accessible par navigateur.
 
 [teamaibox.com](https://teamaibox.com/) · [GitHub](https://github.com/weerocksllc/teamaibox) · [MIT](LICENSE) · [teamaibox@weerocks.llc](mailto:teamaibox@weerocks.llc)
 
@@ -25,12 +25,12 @@ Capture réelle en français, pas une maquette. L'image suit le thème GitHub ; 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/assets/screenshots/fr/workbench-dark.jpg">
   <source media="(prefers-color-scheme: light)" srcset="docs/assets/screenshots/fr/workbench-light.jpg">
-  <img src="docs/assets/screenshots/fr/workbench-light.jpg" alt="Le véritable espace de travail — Français" width="1280">
+  <img src="docs/assets/screenshots/fr/workbench-light.jpg" alt="Espace Team AI Box pour NVIDIA DGX Spark avec applications IA et outils d’équipe — Français" width="1280">
 </picture>
 
 [Thème clair](docs/assets/screenshots/fr/workbench-light.jpg) · [Thème sombre](docs/assets/screenshots/fr/workbench-dark.jpg)
 
-## Les fonctionnalités
+## IA locale et applications d’équipe sur DGX Spark
 
 ### Assistant IA
 
@@ -75,6 +75,18 @@ Importez une ISO ARM64 autorisée ou choisissez-la dans le disque partagé, mont
 ### Administration et suivi
 
 Créez les comptes, gérez les accès et consultez la disponibilité des applications et la progression des tâches. Chaque application s'ouvre lorsque ses dépendances sont prêtes ; le premier lancement des modèles peut prendre du temps.
+
+## Qu’est-ce que NVIDIA DGX Spark ?
+
+NVIDIA DGX Spark est un système d’IA de bureau compact équipé du superchip GB10 Grace Blackwell. La configuration 128 GB associe un CPU Arm à 20 cœurs, un GPU Blackwell et 128 GB de mémoire système unifiée, avec une bande passante de 273 GB/s. NVIDIA annonce jusqu’à 1 PFLOP de calcul IA théorique en précision FP4 avec parcimonie.
+
+La mémoire unifiée est une mémoire système partagée, pas une VRAM dédiée. Les spécifications varient selon la configuration ; le calcul théorique ne garantit ni la vitesse des applications ni le nombre d’utilisateurs simultanés.
+
+DGX Spark fournit le calcul. Team AI Box ajoute une interface commune pour l’inférence locale, la génération d’images, l’OCR, la transcription, la traduction et la collaboration. La première installation depuis les sources nécessite des téléchargements et des compilations ; elle n’est pas instantanée.
+
+[Spécifications matérielles officielles de NVIDIA DGX Spark](https://docs.nvidia.com/dgx/dgx-spark/hardware.html)
+
+Team AI Box est un projet indépendant de Weerocks LLC, et non un produit, une certification ou une recommandation de NVIDIA. Le matériel pris en charge est défini par les prérequis d’installation ci-dessous.
 
 <a id="install"></a>
 

@@ -1,13 +1,13 @@
 <!-- Generated from docs/readme-locales/zh-CN.json by tools/render-readmes.mjs. -->
-# Team AI Box
+# Team AI Box — 专为 NVIDIA DGX Spark 打造的开源软件
 
 <p><img src="docs/assets/brand/mascot.png" alt="Team AI Box" width="160" height="160"></p>
 
 **Powered by NVIDIA DGX Spark · MIT · Weerocks LLC**
 
-[English](README.zh-CN.md) · [简体中文](README.zh-CN.md) · [繁體中文](README.zh-CN.md) · [日本語](README.zh-CN.md) · [한국어](README.zh-CN.md) · [Français](README.zh-CN.md) · [Deutsch](README.zh-CN.md) · [Español](README.zh-CN.md) · [Português](README.zh-CN.md) · [Русский](README.zh-CN.md) · [العربية](README.zh-CN.md) · [हिन्दी](README.zh-CN.md) · [Bahasa Indonesia](README.zh-CN.md) · [Italiano](README.zh-CN.md) · [Türkçe](README.zh-CN.md) · [Tiếng Việt](README.zh-CN.md) · [ไทย](README.zh-CN.md)
+[English](README.md) · [简体中文](README.zh-CN.md) · [繁體中文](README.zh-TW.md) · [日本語](README.ja.md) · [한국어](README.ko.md) · [Français](README.fr.md) · [Deutsch](README.de.md) · [Español](README.es.md) · [Português](README.pt-BR.md) · [Русский](README.ru.md) · [العربية](README.ar.md) · [हिन्दी](README.hi.md) · [Bahasa Indonesia](README.id.md) · [Italiano](README.it.md) · [Türkçe](README.tr.md) · [Tiếng Việt](README.vi.md) · [ไทย](README.th.md)
 
-**你的 DGX Spark，整个团队的 AI 工作空间。** Team AI Box 将一台 NVIDIA DGX Spark 变成集本地 AI、文件协作、即时通信和虚拟设备于一体的浏览器工作空间。团队可以拥有自己的部署，从不同电脑访问，不必为每位成员重复搭建 AI 环境。
+**让 NVIDIA DGX Spark 成为整个团队的 AI 工作空间。** 在 NVIDIA DGX Spark 上运行本地 AI、图像生成和文档工具。Team AI Box 将团队文件、即时通信与虚拟设备整合到一个开源的浏览器工作空间。
 
 [teamaibox.com](https://teamaibox.com/) · [GitHub](https://github.com/weerocksllc/teamaibox) · [MIT](LICENSE) · [teamaibox@weerocks.llc](mailto:teamaibox@weerocks.llc)
 
@@ -25,12 +25,12 @@
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/assets/screenshots/zh-CN/workbench-dark.jpg">
   <source media="(prefers-color-scheme: light)" srcset="docs/assets/screenshots/zh-CN/workbench-light.jpg">
-  <img src="docs/assets/screenshots/zh-CN/workbench-light.jpg" alt="真实工作空间截图 — 简体中文" width="1280">
+  <img src="docs/assets/screenshots/zh-CN/workbench-light.jpg" alt="面向 NVIDIA DGX Spark 的 Team AI Box 工作台，展示 AI 应用与团队工具 — 简体中文" width="1280">
 </picture>
 
 [浅色截图](docs/assets/screenshots/zh-CN/workbench-light.jpg) · [深色截图](docs/assets/screenshots/zh-CN/workbench-dark.jpg)
 
-## 可以用它完成什么？
+## DGX Spark 上的本地 AI 与团队应用
 
 ### AI 助手
 
@@ -75,6 +75,18 @@
 ### 团队管理与任务状态
 
 创建普通账户、管理访问权限、查看应用就绪状态和任务进度。各应用按自身依赖就绪后开放，首次模型启动可能需要等待。
+
+## 什么是 NVIDIA DGX Spark？
+
+NVIDIA DGX Spark 是采用 GB10 Grace Blackwell 超级芯片的小型桌面 AI 系统。128 GB 配置结合了 20 核 Arm CPU、Blackwell GPU 和 128 GB 统一系统内存，内存带宽为 273 GB/s。NVIDIA 标称的理论 AI 算力最高为 1 PFLOP，采用 FP4 精度与稀疏计算条件。
+
+统一内存是共享系统内存，不是独立显存。参数因配置而异；理论算力不能当作应用实际速度或并发用户容量。
+
+DGX Spark 提供计算能力，Team AI Box 提供团队共同使用本地推理、图像生成、文字识别、转写、翻译与协作工具的统一界面。首次源码安装需要下载和构建，不代表可以瞬间完成部署。
+
+[NVIDIA DGX Spark 官方硬件规格](https://docs.nvidia.com/dgx/dgx-spark/hardware.html)
+
+Team AI Box 是 Weerocks LLC 的独立项目，不是 NVIDIA 官方产品，也不表示获得 NVIDIA 认证或背书。本项目的硬件支持范围以下方安装要求为准。
 
 <a id="install"></a>
 

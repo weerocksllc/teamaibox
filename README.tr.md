@@ -1,13 +1,13 @@
 <!-- Generated from docs/readme-locales/tr.json by tools/render-readmes.mjs. -->
-# Team AI Box
+# Team AI Box — NVIDIA DGX Spark için açık kaynak yazılım
 
 <p><img src="docs/assets/brand/mascot.png" alt="Team AI Box" width="160" height="160"></p>
 
 **Powered by NVIDIA DGX Spark · MIT · Weerocks LLC**
 
-[English](README.tr.md) · [简体中文](README.tr.md) · [繁體中文](README.tr.md) · [日本語](README.tr.md) · [한국어](README.tr.md) · [Français](README.tr.md) · [Deutsch](README.tr.md) · [Español](README.tr.md) · [Português](README.tr.md) · [Русский](README.tr.md) · [العربية](README.tr.md) · [हिन्दी](README.tr.md) · [Bahasa Indonesia](README.tr.md) · [Italiano](README.tr.md) · [Türkçe](README.tr.md) · [Tiếng Việt](README.tr.md) · [ไทย](README.tr.md)
+[English](README.md) · [简体中文](README.zh-CN.md) · [繁體中文](README.zh-TW.md) · [日本語](README.ja.md) · [한국어](README.ko.md) · [Français](README.fr.md) · [Deutsch](README.de.md) · [Español](README.es.md) · [Português](README.pt-BR.md) · [Русский](README.ru.md) · [العربية](README.ar.md) · [हिन्दी](README.hi.md) · [Bahasa Indonesia](README.id.md) · [Italiano](README.it.md) · [Türkçe](README.tr.md) · [Tiếng Việt](README.vi.md) · [ไทย](README.th.md)
 
-**Sizin DGX Spark'ınız, ekibinizin yapay zekâ çalışma alanı.** Team AI Box; yerel yapay zekâ, dosyalar, iletişim ve sanal cihazları tek NVIDIA DGX Spark üzerinde birleştirir. Her bilgisayara ayrı yapay zekâ ortamı kurmadan tarayıcıdan çalışın.
+**NVIDIA DGX Spark’ınızı ekibinizin yapay zekâ çalışma alanına dönüştürün.** NVIDIA DGX Spark üzerinde yerel yapay zekâ, görsel üretimi ve belge araçlarını çalıştırın. Team AI Box, ekip dosyalarını, mesajlaşmayı ve sanal cihazları açık kaynaklı bir tarayıcı çalışma alanında birleştirir.
 
 [teamaibox.com](https://teamaibox.com/) · [GitHub](https://github.com/weerocksllc/teamaibox) · [MIT](LICENSE) · [teamaibox@weerocks.llc](mailto:teamaibox@weerocks.llc)
 
@@ -25,12 +25,12 @@ Türkçe gerçek ürün görüntüsüdür, tasarım maketi değildir. GitHub tem
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/assets/screenshots/tr/workbench-dark.jpg">
   <source media="(prefers-color-scheme: light)" srcset="docs/assets/screenshots/tr/workbench-light.jpg">
-  <img src="docs/assets/screenshots/tr/workbench-light.jpg" alt="Gerçek çalışma alanı — Türkçe" width="1280">
+  <img src="docs/assets/screenshots/tr/workbench-light.jpg" alt="NVIDIA DGX Spark için yapay zekâ uygulamaları ve ekip araçları içeren Team AI Box çalışma alanı — Türkçe" width="1280">
 </picture>
 
 [Açık tema](docs/assets/screenshots/tr/workbench-light.jpg) · [Koyu tema](docs/assets/screenshots/tr/workbench-dark.jpg)
 
-## Yapabilecekleriniz
+## DGX Spark üzerinde yerel yapay zekâ ve ekip uygulamaları
 
 ### Yapay zekâ asistanı
 
@@ -75,6 +75,18 @@ Uygulama yükleyin ve tarayıcıdan her telefonun kalıcı durumuna dönün. Cih
 ### Yönetim ve görevler
 
 Hesap ve erişimleri yönetin, uygulama hazırlığını ve görev ilerlemesini görün. Her uygulama kendi bağımlılıkları hazır olunca açılır; ilk model açılışı zaman alabilir.
+
+## NVIDIA DGX Spark nedir?
+
+NVIDIA DGX Spark, GB10 Grace Blackwell Superchip kullanan kompakt bir masaüstü yapay zekâ sistemidir. 128 GB yapılandırma; 20 çekirdekli Arm CPU, Blackwell GPU ve 273 GB/s bant genişliğine sahip 128 GB birleşik sistem belleğini bir araya getirir. NVIDIA, seyreklik ile FP4 hassasiyetinde 1 PFLOP’a kadar teorik yapay zekâ işlem gücü belirtir.
+
+Birleşik bellek, paylaşılan sistem belleğidir; ayrılmış VRAM değildir. Özellikler yapılandırmaya göre değişir; teorik işlem gücü uygulama hızını veya eşzamanlı kullanıcı sayısını garanti etmez.
+
+DGX Spark işlem gücünü sağlar. Team AI Box; yerel çıkarım, görsel üretimi, OCR, transkripsiyon, çeviri ve iş birliği için ortak bir arayüz ekler. Kaynaktan ilk kurulum indirme ve derleme gerektirir; anında kurulum vaat edilmez.
+
+[NVIDIA DGX Spark resmî donanım özellikleri](https://docs.nvidia.com/dgx/dgx-spark/hardware.html)
+
+Team AI Box, Weerocks LLC’nin bağımsız projesidir; NVIDIA ürünü, sertifikası veya onayı değildir. Desteklenen donanım aşağıdaki kurulum gereksinimleriyle tanımlanır.
 
 <a id="install"></a>
 

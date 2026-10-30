@@ -16,6 +16,9 @@ const fences = text => blocks(text).filter(b => /^\s*```/.test(b.text)).map(b =>
 const links = text => [...text.matchAll(/\]\(([^\s)]+)\)/g)].map(m => m[1]);
 let checkedLinks = 0;
 for (const locale of languages) {
+  const readme=await fs.readFile(path.join(root,readmePath(locale.code)), 'utf8');
+  const expectedSwitches=languages.map(l=>`[${l.name}](${readmePath(l.code)})`).join(' · ');
+  assert.ok(readme.split('\n').includes(expectedSwitches), `${locale.code}: README language destinations are incorrect`);
   const catalog = JSON.parse(await fs.readFile(path.join(root, `docs/document-locales/${locale.code}.json`), 'utf8'));
   assert.equal(catalog.locale, locale.code);
   for (const doc of manifest.documents) {

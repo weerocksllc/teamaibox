@@ -1,13 +1,13 @@
 <!-- Generated from docs/readme-locales/es.json by tools/render-readmes.mjs. -->
-# Team AI Box
+# Team AI Box — Software de código abierto para NVIDIA DGX Spark
 
 <p><img src="docs/assets/brand/mascot.png" alt="Team AI Box" width="160" height="160"></p>
 
 **Powered by NVIDIA DGX Spark · MIT · Weerocks LLC**
 
-[English](README.es.md) · [简体中文](README.es.md) · [繁體中文](README.es.md) · [日本語](README.es.md) · [한국어](README.es.md) · [Français](README.es.md) · [Deutsch](README.es.md) · [Español](README.es.md) · [Português](README.es.md) · [Русский](README.es.md) · [العربية](README.es.md) · [हिन्दी](README.es.md) · [Bahasa Indonesia](README.es.md) · [Italiano](README.es.md) · [Türkçe](README.es.md) · [Tiếng Việt](README.es.md) · [ไทย](README.es.md)
+[English](README.md) · [简体中文](README.zh-CN.md) · [繁體中文](README.zh-TW.md) · [日本語](README.ja.md) · [한국어](README.ko.md) · [Français](README.fr.md) · [Deutsch](README.de.md) · [Español](README.es.md) · [Português](README.pt-BR.md) · [Русский](README.ru.md) · [العربية](README.ar.md) · [हिन्दी](README.hi.md) · [Bahasa Indonesia](README.id.md) · [Italiano](README.it.md) · [Türkçe](README.tr.md) · [Tiếng Việt](README.vi.md) · [ไทย](README.th.md)
 
-**Tu DGX Spark. El espacio de IA de tu equipo.** Team AI Box reúne IA local, archivos, comunicación y dispositivos virtuales en un solo NVIDIA DGX Spark. Accede desde el navegador sin instalar una plataforma de IA en cada ordenador.
+**Convierte tu NVIDIA DGX Spark en el espacio de IA de tu equipo.** Ejecuta IA local, generación de imágenes y herramientas de documentos en NVIDIA DGX Spark. Team AI Box reúne archivos de equipo, mensajería y dispositivos virtuales en un espacio de código abierto desde el navegador.
 
 [teamaibox.com](https://teamaibox.com/) · [GitHub](https://github.com/weerocksllc/teamaibox) · [MIT](LICENSE) · [teamaibox@weerocks.llc](mailto:teamaibox@weerocks.llc)
 
@@ -25,12 +25,12 @@ Captura real en español, no una maqueta. Se adapta al tema de GitHub; abajo est
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/assets/screenshots/es/workbench-dark.jpg">
   <source media="(prefers-color-scheme: light)" srcset="docs/assets/screenshots/es/workbench-light.jpg">
-  <img src="docs/assets/screenshots/es/workbench-light.jpg" alt="El espacio real — Español" width="1280">
+  <img src="docs/assets/screenshots/es/workbench-light.jpg" alt="Espacio Team AI Box para NVIDIA DGX Spark con aplicaciones de IA y herramientas de equipo — Español" width="1280">
 </picture>
 
 [Tema claro](docs/assets/screenshots/es/workbench-light.jpg) · [Tema oscuro](docs/assets/screenshots/es/workbench-dark.jpg)
 
-## Qué puedes hacer
+## IA local y aplicaciones de equipo en DGX Spark
 
 ### Asistente de IA
 
@@ -75,6 +75,18 @@ Sube una ISO ARM64 autorizada o selecciónala en el disco de equipo, monta la un
 ### Administración y tareas
 
 Crea cuentas, gestiona accesos y observa la disponibilidad y el progreso. Cada aplicación se habilita cuando sus dependencias están listas; el primer inicio del modelo puede tardar.
+
+## ¿Qué es NVIDIA DGX Spark?
+
+NVIDIA DGX Spark es un sistema compacto de IA de escritorio con el superchip GB10 Grace Blackwell. La configuración de 128 GB combina una CPU Arm de 20 núcleos, una GPU Blackwell y 128 GB de memoria unificada del sistema con un ancho de banda de 273 GB/s. NVIDIA especifica hasta 1 PFLOP de cálculo de IA teórico en precisión FP4 con dispersión.
+
+La memoria unificada es memoria compartida del sistema, no VRAM dedicada. Las especificaciones dependen de la configuración; el cálculo teórico no garantiza velocidad de las aplicaciones ni capacidad de usuarios simultáneos.
+
+DGX Spark aporta el cálculo. Team AI Box añade una interfaz compartida para inferencia local, generación de imágenes, OCR, transcripción, traducción y colaboración. La primera instalación desde el código requiere descargas y compilaciones; no es instantánea.
+
+[Especificaciones oficiales de NVIDIA DGX Spark](https://docs.nvidia.com/dgx/dgx-spark/hardware.html)
+
+Team AI Box es un proyecto independiente de Weerocks LLC, no un producto, certificación o respaldo de NVIDIA. El hardware compatible se define en los requisitos de instalación que figuran a continuación.
 
 <a id="install"></a>
 

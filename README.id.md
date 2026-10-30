@@ -1,13 +1,13 @@
 <!-- Generated from docs/readme-locales/id.json by tools/render-readmes.mjs. -->
-# Team AI Box
+# Team AI Box — Perangkat lunak sumber terbuka untuk NVIDIA DGX Spark
 
 <p><img src="docs/assets/brand/mascot.png" alt="Team AI Box" width="160" height="160"></p>
 
 **Powered by NVIDIA DGX Spark · MIT · Weerocks LLC**
 
-[English](README.id.md) · [简体中文](README.id.md) · [繁體中文](README.id.md) · [日本語](README.id.md) · [한국어](README.id.md) · [Français](README.id.md) · [Deutsch](README.id.md) · [Español](README.id.md) · [Português](README.id.md) · [Русский](README.id.md) · [العربية](README.id.md) · [हिन्दी](README.id.md) · [Bahasa Indonesia](README.id.md) · [Italiano](README.id.md) · [Türkçe](README.id.md) · [Tiếng Việt](README.id.md) · [ไทย](README.id.md)
+[English](README.md) · [简体中文](README.zh-CN.md) · [繁體中文](README.zh-TW.md) · [日本語](README.ja.md) · [한국어](README.ko.md) · [Français](README.fr.md) · [Deutsch](README.de.md) · [Español](README.es.md) · [Português](README.pt-BR.md) · [Русский](README.ru.md) · [العربية](README.ar.md) · [हिन्दी](README.hi.md) · [Bahasa Indonesia](README.id.md) · [Italiano](README.it.md) · [Türkçe](README.tr.md) · [Tiếng Việt](README.vi.md) · [ไทย](README.th.md)
 
-**DGX Spark Anda. Ruang AI untuk tim Anda.** Team AI Box menyatukan AI lokal, berkas, komunikasi, dan perangkat virtual pada satu NVIDIA DGX Spark. Tim mengaksesnya melalui browser tanpa memasang lingkungan AI di setiap komputer.
+**Jadikan NVIDIA DGX Spark ruang kerja AI tim Anda.** Jalankan AI lokal, pembuatan gambar, dan alat dokumen di NVIDIA DGX Spark. Team AI Box menyatukan file tim, pesan, dan perangkat virtual dalam ruang kerja sumber terbuka melalui browser.
 
 [teamaibox.com](https://teamaibox.com/) · [GitHub](https://github.com/weerocksllc/teamaibox) · [MIT](LICENSE) · [teamaibox@weerocks.llc](mailto:teamaibox@weerocks.llc)
 
@@ -25,12 +25,12 @@ Tangkapan produk dalam Bahasa Indonesia, bukan maket. Gambar mengikuti tema GitH
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/assets/screenshots/id/workbench-dark.jpg">
   <source media="(prefers-color-scheme: light)" srcset="docs/assets/screenshots/id/workbench-light.jpg">
-  <img src="docs/assets/screenshots/id/workbench-light.jpg" alt="Ruang kerja sebenarnya — Bahasa Indonesia" width="1280">
+  <img src="docs/assets/screenshots/id/workbench-light.jpg" alt="Ruang kerja Team AI Box untuk NVIDIA DGX Spark dengan aplikasi AI dan alat tim — Bahasa Indonesia" width="1280">
 </picture>
 
 [Tema terang](docs/assets/screenshots/id/workbench-light.jpg) · [Tema gelap](docs/assets/screenshots/id/workbench-dark.jpg)
 
-## Kemampuan produk
+## AI lokal dan aplikasi tim di DGX Spark
 
 ### Asisten AI
 
@@ -75,6 +75,18 @@ Unggah ISO ARM64 berizin atau pilih dari drive, pasang ke drive optik virtual, l
 ### Administrasi dan tugas
 
 Buat akun, atur akses, dan lihat kesiapan aplikasi serta kemajuan tugas. Tiap aplikasi terbuka ketika dependensinya siap; awal pemuatan model bisa membutuhkan waktu.
+
+## Apa itu NVIDIA DGX Spark?
+
+NVIDIA DGX Spark adalah sistem AI desktop ringkas dengan GB10 Grace Blackwell Superchip. Konfigurasi 128 GB menggabungkan CPU Arm 20 inti, GPU Blackwell, dan memori sistem terpadu 128 GB dengan bandwidth 273 GB/s. NVIDIA menyatakan komputasi AI teoretis hingga 1 PFLOP pada presisi FP4 dengan sparsitas.
+
+Memori terpadu adalah memori sistem bersama, bukan VRAM khusus. Spesifikasi berbeda menurut konfigurasi; komputasi teoretis tidak menjamin kecepatan aplikasi atau jumlah pengguna bersamaan.
+
+DGX Spark menyediakan komputasi. Team AI Box menambahkan antarmuka bersama untuk inferensi lokal, pembuatan gambar, OCR, transkripsi, terjemahan, dan kolaborasi. Instalasi pertama dari sumber membutuhkan unduhan dan build; bukan penyiapan instan.
+
+[Spesifikasi perangkat keras resmi NVIDIA DGX Spark](https://docs.nvidia.com/dgx/dgx-spark/hardware.html)
+
+Team AI Box adalah proyek independen Weerocks LLC, bukan produk, sertifikasi, atau dukungan resmi NVIDIA. Dukungan perangkat keras proyek ini ditentukan oleh persyaratan instalasi di bawah.
 
 <a id="install"></a>
 

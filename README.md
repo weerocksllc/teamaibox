@@ -1,13 +1,13 @@
 <!-- Generated from docs/readme-locales/en.json by tools/render-readmes.mjs. -->
-# Team AI Box
+# Team AI Box — Open-Source Software for NVIDIA DGX Spark
 
 <p><img src="docs/assets/brand/mascot.png" alt="Team AI Box" width="160" height="160"></p>
 
 **Powered by NVIDIA DGX Spark · MIT · Weerocks LLC**
 
-[English](README.md) · [简体中文](README.md) · [繁體中文](README.md) · [日本語](README.md) · [한국어](README.md) · [Français](README.md) · [Deutsch](README.md) · [Español](README.md) · [Português](README.md) · [Русский](README.md) · [العربية](README.md) · [हिन्दी](README.md) · [Bahasa Indonesia](README.md) · [Italiano](README.md) · [Türkçe](README.md) · [Tiếng Việt](README.md) · [ไทย](README.md)
+[English](README.md) · [简体中文](README.zh-CN.md) · [繁體中文](README.zh-TW.md) · [日本語](README.ja.md) · [한국어](README.ko.md) · [Français](README.fr.md) · [Deutsch](README.de.md) · [Español](README.es.md) · [Português](README.pt-BR.md) · [Русский](README.ru.md) · [العربية](README.ar.md) · [हिन्दी](README.hi.md) · [Bahasa Indonesia](README.id.md) · [Italiano](README.it.md) · [Türkçe](README.tr.md) · [Tiếng Việt](README.vi.md) · [ไทย](README.th.md)
 
-**Your DGX Spark. Your team's AI workspace.** Team AI Box turns one NVIDIA DGX Spark into a browser-based workspace for local AI, shared files, communication and virtual devices. It is built for teams that want to own their deployment and use the same tools from multiple computers, without installing a separate AI stack on every desk.
+**Turn your NVIDIA DGX Spark into your team’s AI workspace.** Run local AI, image generation and document tools on NVIDIA DGX Spark. Team AI Box brings team files, messaging and virtual devices into one open-source, browser-based workspace.
 
 [teamaibox.com](https://teamaibox.com/) · [GitHub](https://github.com/weerocksllc/teamaibox) · [MIT](LICENSE) · [teamaibox@weerocks.llc](mailto:teamaibox@weerocks.llc)
 
@@ -25,12 +25,12 @@ Actual product capture in English, not a design mockup. The image follows GitHub
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/assets/screenshots/en/workbench-dark.jpg">
   <source media="(prefers-color-scheme: light)" srcset="docs/assets/screenshots/en/workbench-light.jpg">
-  <img src="docs/assets/screenshots/en/workbench-light.jpg" alt="See the real workspace — English" width="1280">
+  <img src="docs/assets/screenshots/en/workbench-light.jpg" alt="Team AI Box workspace for NVIDIA DGX Spark with AI apps and team tools — English" width="1280">
 </picture>
 
 [Light screenshot](docs/assets/screenshots/en/workbench-light.jpg) · [Dark screenshot](docs/assets/screenshots/en/workbench-dark.jpg)
 
-## What you can do
+## Local AI and team apps on DGX Spark
 
 ### AI assistant
 
@@ -75,6 +75,18 @@ Upload an authorized ARM64 ISO or select one from team drive, mount the virtual 
 ### Team administration and task visibility
 
 Create ordinary accounts, manage access and see application readiness and task progress. An application becomes available when its own dependencies are ready; first model startup can take time.
+
+## What is NVIDIA DGX Spark?
+
+NVIDIA DGX Spark is a compact desktop AI system powered by the GB10 Grace Blackwell Superchip. The 128 GB configuration combines a 20-core Arm CPU, a Blackwell GPU and 128 GB of unified system memory with 273 GB/s memory bandwidth. NVIDIA specifies up to 1 PFLOP of theoretical AI compute at FP4 precision with sparsity.
+
+Unified memory is shared system memory, not dedicated VRAM. Specifications vary by configuration; theoretical compute does not establish application speed or concurrent-user capacity.
+
+DGX Spark supplies the compute. Team AI Box adds a shared interface for local inference, image generation, OCR, transcription, translation and collaboration. Initial source installation requires downloads and builds; this is not a claim of instant setup.
+
+[NVIDIA DGX Spark hardware specifications](https://docs.nvidia.com/dgx/dgx-spark/hardware.html)
+
+Team AI Box is an independent project by Weerocks LLC, not an NVIDIA product, certification or endorsement. Hardware support in this project is defined by the installation requirements below.
 
 <a id="install"></a>
 
