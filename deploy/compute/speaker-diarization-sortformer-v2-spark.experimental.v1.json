@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "profileKey": "speaker-diarization.sortformer-streaming-4spk-q8.spark.experimental.v1",
+  "capability": "speaker-diarization",
+  "certificationState": "experimental",
+  "executionKind": "managed_node",
+  "source": {
+    "repository": "nvidia/diar_streaming_sortformer_4spk-v2",
+    "revision": "5240a64075176943f677d30fa2171c780229f341",
+    "license": "CC-BY-4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/4.0/"
+  },
+  "artifact": {
+    "fileName": "diar_streaming_sortformer_4spk-v2.q8_0.gguf",
+    "sha256": "sha256:0679cfeb1ce356d0dea9470b31274f4bfc7eb927497d82005483770666da998a",
+    "sizeBytes": 147075776
+  },
+  "runtime": {
+    "name": "NeMo-Speech.cpp",
+    "version": "0.1.0",
+    "archiveSha256": "sha256:20ab68b0f8b4ace1e30b6605859935b1a059fc149d7b24f7a4b4d95cbf2f0c2d",
+    "architecture": "linux/arm64/v8",
+    "backend": "cuda"
+  },
+  "api": {
+    "style": "openai",
+    "operation": "POST /v1/audio/diarizations",
+    "health": "GET /ready",
+    "models": "GET /v1/models"
+  },
+  "speakerInformation": {
+    "mode": "global-diarization-prepass",
+    "maximumSpeakerCount": 4,
+    "inputChannels": 1,
+    "inputSampleRateHz": 16000,
+    "output": "timestamped-speaker-segments",
+    "shardedAsrComposition": "Run one global diarization pass, execute ASR shards independently, then assign words and segments by global timestamps."
+  },
+  "resourceEnvelope": {
+    "accelerator": "nvidia-gpu",
+    "exclusiveDuringValidation": true,
+    "maximumConcurrentRequests": 1,
+    "modelArtifactBytes": 147075776
+  },
+  "knownLimitations": [
+    "The model supports at most four speakers.",
+    "Accuracy may degrade for five or more speakers, non-English speech, noisy recordings, or out-of-domain audio.",
+    "This Experimental profile is not eligible for production routing until current quality, failure, coexistence, soak, two-node ASR, and independent acceptance gates pass."
+  ]
+}

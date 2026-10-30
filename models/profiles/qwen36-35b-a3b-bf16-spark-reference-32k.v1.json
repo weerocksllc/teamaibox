@@ -1,0 +1,109 @@
+{
+  "apiContracts": ["openai.chat-completions@v1", "openai.responses@v1"],
+  "artifactDigest": "sha256:0009b85b7069c7f706a1a45a2a7205f750fccbcba7acb9e975c506bdb992b0f2",
+  "artifacts": [{
+    "digest": "sha256:0009b85b7069c7f706a1a45a2a7205f750fccbcba7acb9e975c506bdb992b0f2",
+    "mediaType": "application/vnd.teamaibox.model-snapshot+json",
+    "name": "model-snapshot",
+    "role": "weights",
+    "sizeBytes": 71923435103
+  }],
+  "capabilityId": "855f08c1-e305-5246-a6dd-e50adb29c540",
+  "coldStart": {
+    "artifactReadBytes": 71923435103,
+    "estimatedMilliseconds": 180000,
+    "evidenceRef": "evidence://validation/models/baseline-plan-qwen36-bf16-v1"
+  },
+  "compatibility": {
+    "architectures": ["linux/arm64/v8"],
+    "hardware": {
+      "acceleratorFamilies": ["nvidia-gb10-blackwell"],
+      "codecDirections": {"decode": 0, "encode": 0},
+      "minimumComputeCapability": "12.1",
+      "minimumCpuCores": 16,
+      "minimumUnifiedMemoryBytes": 128000000000
+    },
+    "software": {
+      "containerToolkitRange": ">=1.17 <2.0",
+      "cudaRange": ">=13.0 <14.0",
+      "driverRange": ">=580.0 <590.0",
+      "kernelRange": ">=6.17 <7.0",
+      "os": "linux"
+    }
+  },
+  "dataPolicy": {
+    "allowedDataClasses": ["confidential", "internal", "public", "restricted"],
+    "externalProcessing": "forbidden"
+  },
+  "engine": {
+    "configurationDigest": "sha256:fc5fc1f465a869357757601201719004e8d32475f83a3c1f69f7d2dde8289841",
+    "imageDigest": "sha256:9204569b17ee4c0eff75194b8e6e458479c8aee18953b5ab9cf359fcdac659e2",
+    "name": "ngc-vllm",
+    "runtime": "cuda",
+    "runtimeVersion": "13.2-forward-compatible",
+    "version": "0.21.0+2325b6f0.nvinternal.26.5.post1.53039255"
+  },
+  "exclusive": true,
+  "executionKind": "managed_node",
+  "extensions": {
+    "api_gateway_required": true,
+    "candidate_id": "qwen36-35b-a3b-bf16",
+    "runtime_network": "isolated-internal",
+    "scheduler_requirements": {"fresh_host_memory_evidence": true, "storage_class": "encrypted_nvme"}
+  },
+  "knownLimitations": [
+    "Initial validation uses bounded quality smoke and is not a certification result.",
+    "Linux cgroup memory excludes some accelerator-backed unified-memory allocations; admission also requires fresh host memory evidence.",
+    "Prefix caching for the Qwen3.5/3.6 hybrid Mamba cache is reported experimental by this vLLM build.",
+    "This profile serves the language model only; multimodal encoders are disabled."
+  ],
+  "limits": {
+    "maximumBatchSize": 2,
+    "maximumConcurrentRequests": 2,
+    "maximumContextTokens": 32768,
+    "maximumDurationSeconds": 1800,
+    "maximumInputBytes": 16777216,
+    "maximumOutputBytes": 16777216,
+    "maximumOutputTokens": 8192
+  },
+  "precision": "bf16",
+  "profileKey": "llm.qwen36-35b-a3b.bf16.spark-reference-32k.v1",
+  "quantizationRecipe": null,
+  "resourceEnvelope": {
+    "acceleratorUnits": 1,
+    "accountingMode": "observed",
+    "codecSessions": 0,
+    "cpuMillis": 18000,
+    "evidenceRef": "evidence://validation/models/baseline-plan-qwen36-bf16-v1",
+    "networkBitsPerSecond": 0,
+    "storageBytes": 92716025320,
+    "unifiedMemoryBytes": 111669149696
+  },
+  "source": {
+    "license": {
+      "evidenceRef": "https://huggingface.co/Qwen/Qwen3.6-35B-A3B/blob/995ad96eacd98c81ed38be0c5b274b04031597b0/LICENSE",
+      "name": "Apache License 2.0",
+      "reviewStatus": "approved",
+      "spdxId": "Apache-2.0",
+      "textDigest": "sha256:50cbab8a892c5f2993b8c7351a99182507472def3b1374558308605d99b86b32",
+      "usage": "commercial"
+    },
+    "model": "Qwen/Qwen3.6-35B-A3B",
+    "provenance": {
+      "evidenceRef": "evidence://models/candidate-matrix.v1",
+      "publisher": "Qwen",
+      "retrievedAt": "2026-08-10T19:41:32.000Z",
+      "sourceDigest": "sha256:93a4693fa9d8392fbfccd4b3c9873f4bfdcb14fdede978b123d07d19675efe99",
+      "sourceUri": "https://huggingface.co/Qwen/Qwen3.6-35B-A3B/tree/995ad96eacd98c81ed38be0c5b274b04031597b0"
+    },
+    "revision": "995ad96eacd98c81ed38be0c5b274b04031597b0"
+  },
+  "validationEvidence": [{
+    "environmentDigest": "sha256:a26ee908fdadf7e17338372848ff729332c2d456272c8adfb7b267d9b9b912d5",
+    "evidenceRef": "evidence://models/candidate-matrix.v1",
+    "observedAt": "2026-08-10T19:41:32.000Z",
+    "result": "passed",
+    "runId": "model-discovery-qwen36-bf16-20260810",
+    "stage": "discovery"
+  }]
+}

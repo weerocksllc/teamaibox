@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.teamaibox.local/http/messaging-conversation.v1.schema.json",
+  "title": "Messaging conversation v1",
+  "x-teamaibox-contract": {"family": "http", "role": "response", "major": 1},
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "object", "kind", "title", "team_key", "participants", "last_message_sequence", "revision", "created_at", "updated_at"],
+  "properties": {
+    "id": {"type": "string", "format": "uuid"},
+    "object": {"const": "messaging.conversation"},
+    "kind": {"type": "string", "enum": ["direct", "group"]},
+    "title": {"type": ["string", "null"], "minLength": 1},
+    "team_key": {"type": ["string", "null"], "pattern": "^[a-z][a-z0-9_.-]{2,127}$"},
+    "participants": {
+      "type": "array",
+      "minItems": 2,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["identity_id", "role", "joined_at", "last_read_sequence"],
+        "properties": {
+          "identity_id": {"type": "string", "format": "uuid"},
+          "role": {"type": "string", "enum": ["owner", "admin", "member"]},
+          "joined_at": {"type": "string", "format": "date-time"},
+          "last_read_sequence": {"type": "integer", "minimum": 0}
+        }
+      }
+    },
+    "last_message_sequence": {"type": "integer", "minimum": 0},
+    "revision": {"type": "integer", "minimum": 1},
+    "created_at": {"type": "string", "format": "date-time"},
+    "updated_at": {"type": "string", "format": "date-time"},
+    "extensions": {"type": "object", "additionalProperties": true}
+  }
+}

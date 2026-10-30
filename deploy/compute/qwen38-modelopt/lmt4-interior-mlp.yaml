@@ -1,0 +1,29 @@
+# ModelOpt PTQ for the translation profile: preserve attention and edge MLPs.
+imports:
+  base_disable_all: configs/ptq/units/base_disable_all
+  default_disabled_quantizers: configs/ptq/units/default_disabled_quantizers
+  nvfp4: configs/numerics/nvfp4
+  kv_fp8: configs/ptq/units/kv_fp8
+metadata:
+  recipe_type: ptq
+  description: LMT-60 4B interior MLP NVFP4, attention/edge MLP BF16, KV FP8.
+quantize:
+  algorithm: max
+  quant_cfg:
+    - $import: base_disable_all
+    - quantizer_name: '*mlp*weight_quantizer'
+      cfg:
+        $import: nvfp4
+    - quantizer_name: '*mlp*input_quantizer'
+      cfg:
+        $import: nvfp4
+    - quantizer_name: '*layers.0.mlp*'
+      enable: false
+    - quantizer_name: '*layers.1.mlp*'
+      enable: false
+    - quantizer_name: '*layers.34.mlp*'
+      enable: false
+    - quantizer_name: '*layers.35.mlp*'
+      enable: false
+    - $import: kv_fp8
+    - $import: default_disabled_quantizers

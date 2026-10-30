@@ -1,0 +1,5 @@
+DROP TRIGGER IF EXISTS fleet_operation_orphans_identity_guard
+ON compute.fleet_operation_orphans;
+DROP FUNCTION IF EXISTS compute.guard_fleet_orphan_reconciliation_identity();
+ALTER TABLE compute.fleet_operation_orphans
+DROP CONSTRAINT IF EXISTS fleet_operation_orphans_reconciliation_id_format;

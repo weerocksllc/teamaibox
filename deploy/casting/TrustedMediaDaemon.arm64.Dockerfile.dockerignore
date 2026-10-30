@@ -1,0 +1,7 @@
+**
+!services/
+!services/trusted_media_runtime/
+!services/trusted_media_runtime/**
+**/__pycache__/**
+**/*.pyc
+**/._*

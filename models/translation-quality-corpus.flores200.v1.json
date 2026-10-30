@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 1,
+  "corpusKey": "corpus.translation.multilingual",
+  "version": "1.0.0",
+  "source": {
+    "name": "FLORES-200 devtest",
+    "publisher": "NLLB Team / Meta AI",
+    "license": "CC-BY-SA-4.0",
+    "downloadUrl": "https://dl.fbaipublicfiles.com/nllb/flores200_dataset.tar.gz",
+    "archiveSha256": "sha256:b8b0b76783024b85797e5cc75064eb83fc5288b41e9654dabc7be6ae944011f6",
+    "archiveBytes": 25585843,
+    "releasedAt": "2022-07-14T04:18:34Z",
+    "sourceReadme": "https://github.com/facebookresearch/flores/blob/main/flores200/README.md"
+  },
+  "retention": {
+    "repositoryStoresPlaintextCases": false,
+    "runtimePlaintextLocation": "exact-run-temporary-directory",
+    "evidenceStoresPlaintextCases": false,
+    "reason": "Preserve benchmark integrity and avoid publishing evaluation text in a crawlable repository."
+  },
+  "selection": {
+    "split": "devtest",
+    "indexBase": 0,
+    "seed": 42,
+    "directions": [
+      {"sliceKey": "zh-en", "source": "zho_Hans", "target": "eng_Latn", "bcp47Source": "zh-CN", "bcp47Target": "en", "count": 125},
+      {"sliceKey": "en-zh", "source": "eng_Latn", "target": "zho_Hans", "bcp47Source": "en", "bcp47Target": "zh-CN", "count": 125},
+      {"sliceKey": "long-tail", "source": "jpn_Jpan", "target": "eng_Latn", "bcp47Source": "ja", "bcp47Target": "en", "count": 125},
+      {"sliceKey": "long-tail", "source": "deu_Latn", "target": "eng_Latn", "bcp47Source": "de", "bcp47Target": "en", "count": 125}
+    ],
+    "ordering": "source BCP-47 then target BCP-47 then sha256(seed || direction || source-line || target-line), ascending; directions remain contiguous for bounded aligned batches",
+    "overallCases": 500,
+    "terminologyCases": 75,
+    "subtitleSegmentCases": 75,
+    "numericEntityCases": 100,
+    "terminologyRule": "first 75 selected cases with one or more exact case-folded Latin technical tokens shared by source and reference after stable global ordering",
+    "subtitleRule": "first 75 selected cases after stable global ordering; the input remains one ordered segment and the evaluator requires one ordered output segment",
+    "numericEntityRule": "all selected cases containing a Unicode decimal token; at least 100 cases are required, and each source numeric multiset is compared directly with the candidate output"
+  },
+  "promptContract": "teamaibox.translation.aligned-json.v1",
+  "metrics": {
+    "cometModel": "Unbabel/wmt22-comet-da",
+    "cometModelRevision": "main",
+    "chrf": {"wordOrder": 2, "lowercase": false, "whitespace": false},
+    "numericNormalization": "Unicode NFKC plus decimal-token extraction",
+    "segmentAlignment": "output array length and order exactly match input"
+  }
+}

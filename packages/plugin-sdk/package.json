@@ -1,0 +1,28 @@
+{
+  "name": "@teamaibox/plugin-sdk",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "types": "./src/index.d.ts",
+  "exports": {
+    "./delegated-client": "./src/delegated-client.mjs",
+    "./worker-control-v1": "./src/worker-control-v1.mjs",
+    "./preferences-v1": {
+      "types": "./src/preferences-v1.d.ts",
+      "default": "./src/preferences-v1.mjs"
+    },
+    ".": {
+      "types": "./src/index.d.ts"
+    },
+    "./manifest-v1": {
+      "types": "./src/manifest-v1.d.ts"
+    },
+    "./access-v1": {
+      "types": "./src/access-v1.d.ts"
+    },
+    "./preferences-v1-types": {
+      "types": "./src/preferences-v1.d.ts"
+    }
+  },
+  "license": "MIT"
+}

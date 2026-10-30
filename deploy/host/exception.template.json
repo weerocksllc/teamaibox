@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "id": "host-exception-example",
+  "status": "active",
+  "owner": "named operational owner",
+  "reason": "why the dependency cannot reasonably run in a container",
+  "exactVersion": "package-or-component-version",
+  "driftKeys": ["packageState.digest", "packageState.count"],
+  "securityAndUpdateImpact": "security boundary and upgrade relationship",
+  "uninstallAndRollback": "bounded removal, restoration, and verification steps",
+  "validationEvidence": "versioned evidence reference",
+  "approvedAt": "2026-08-10T00:00:00Z",
+  "expiresAt": "2026-09-10T00:00:00Z"
+}

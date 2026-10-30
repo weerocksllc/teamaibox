@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.teamaibox.local/http/assistant-event.v1.schema.json",
+  "x-teamaibox-contract": { "family": "http", "role": "response", "major": 1 },
+  "title": "Assistant ordered event v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "sequence", "conversationId", "runId", "type", "data", "createdAt"],
+  "properties": {
+    "id": { "type": "string", "format": "uuid" },
+    "sequence": { "type": "integer", "minimum": 1 },
+    "conversationId": { "type": "string", "format": "uuid" },
+    "runId": { "type": "string", "format": "uuid" },
+    "type": {
+      "enum": [
+        "message.created", "message.completed", "run.created", "run.started", "run.completed",
+        "run.failed", "run.cancelled", "routing.selected", "response.delta", "tool.started",
+        "tool.completed", "artifact.created", "source.cited", "usage.updated", "confirmation.requested",
+        "confirmation.resolved"
+      ]
+    },
+    "data": { "type": "object" },
+    "createdAt": { "type": "string", "format": "date-time" }
+  }
+}

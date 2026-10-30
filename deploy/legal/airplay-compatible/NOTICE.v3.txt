@@ -1,0 +1,37 @@
+Team AI Box: AirPlay-compatible wireless casting (not Apple-certified)
+兼容 AirPlay 的无线投屏（非 Apple 认证）。不支持 FairPlay/DRM 保护的内容。
+
+Receiver: UxPlay 1.73.6
+Upstream revision: 21eef8df25d91e12635c36d8176ad192725baca2
+https://github.com/FDH2/UxPlay
+License: GPL-3.0-only. Upstream copyright, contributor credits, PlayFair and
+llhttp notices remain in the corresponding source and /usr/share/doc/uxplay.
+
+This build DOES modify UxPlay. Team AI Box's patches implement ephemeral
+session identity, private PIN input, bounded pairing attempts, paired-peer
+checks, a private Platform pairing acknowledgement and setup-secret handling.
+The patches and their native headers are supplied in /usr/share/teamaibox/source.
+Build instructions: docs/operations/trusted-media-browser-build-20260908.md
+in the Team AI Box source distribution. The upstream archive and all patches
+must accompany any redistribution of the modified receiver's corresponding
+source; the patches do not change the upstream license obligations.
+
+Browser media adapter: gst-plugins-rs (MPL-2.0)
+Revision: 75e46c3a1b868e9a08fd688d091476b76a498df1
+https://github.com/GStreamer/gst-plugins-rs
+The unmodified, locked gst-plugin-webrtc package is built with the livekit
+feature. The MPL-2.0 text is retained in this directory. The supplied Cargo.lock
+describes the upstream workspace dependency superset, not proof that every
+workspace package is linked into the binary.
+
+Room forwarding runs in a separate LiveKit Server 1.13.6 container under
+Apache-2.0, not inside UxPlay. Browser LiveKit client: 2.21.0, Apache-2.0.
+
+Ubuntu 24.04 ARM64 package copyright and license files remain under
+/usr/share/doc. The release SPDX inventory covers detected image packages;
+the source lock additionally exposes Rust workspace dependencies for review.
+Team AI Box's Python service sources are included under /opt/teamaibox/services.
+
+No Apple logo, AirPlay badge, MFi badge or Apple/MFi certification claim is
+included or authorized by this notice. This development build has not completed
+real Apple-sender/browser product acceptance.

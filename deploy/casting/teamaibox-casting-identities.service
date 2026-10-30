@@ -1,0 +1,29 @@
+[Unit]
+Description=Generate boot-local private identities for optional Team AI Box casting
+After=local-fs.target
+Before=docker.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/bin/python3 -B /usr/local/lib/teamaibox/casting-boot-v1/bootstrap_casting_service.py --plan /etc/teamaibox/casting/boot-plan.json --contract /etc/teamaibox/casting/callback-contract.json
+RuntimeDirectory=teamaibox/casting
+RuntimeDirectoryMode=0711
+RuntimeDirectoryPreserve=yes
+UMask=0077
+TimeoutStartSec=60
+NoNewPrivileges=yes
+ProtectSystem=strict
+ProtectHome=yes
+PrivateTmp=yes
+PrivateNetwork=yes
+PrivateDevices=yes
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectControlGroups=yes
+ReadWritePaths=/run/teamaibox/casting
+CapabilityBoundingSet=CAP_CHOWN CAP_DAC_OVERRIDE CAP_FOWNER
+RestrictAddressFamilies=AF_UNIX
+
+[Install]
+WantedBy=multi-user.target

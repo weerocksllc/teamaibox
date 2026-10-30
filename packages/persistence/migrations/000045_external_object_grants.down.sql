@@ -1,0 +1,6 @@
+DROP TRIGGER external_object_grant_update_boundary ON compute.external_object_grants;
+DROP FUNCTION compute.enforce_external_object_grant_update();
+DROP TRIGGER external_object_grant_create_boundary ON compute.external_object_grants;
+DROP FUNCTION compute.enforce_external_object_grant_boundary();
+DROP TABLE compute.external_object_grants;
+DROP FUNCTION compute.valid_external_object_operations(jsonb);

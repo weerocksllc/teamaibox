@@ -1,0 +1,103 @@
+{
+  "schemaVersion": 1,
+  "resourceClasses": {
+    "core-critical": {
+      "description": "Fact stores, trusted API, object protection, messaging, and node control that must survive AI saturation.",
+      "services": [
+        "postgres",
+        "event-bus",
+        "platform-api",
+        "node-agent",
+        "object-service",
+        "messaging"
+      ]
+    },
+    "core-standard": {
+      "description": "Restartable platform services that retain admission priority over AI workers.",
+      "services": [
+        "web",
+        "scheduler",
+        "plugin-runtime",
+        "agent-bridge",
+        "compute-gateway",
+        "source-gateway",
+        "observability"
+      ]
+    }
+  },
+  "serviceSurvivalDomains": {
+    "identity": {
+      "services": [
+        "platform-api",
+        "postgres"
+      ]
+    },
+    "administration": {
+      "services": [
+        "web",
+        "platform-api",
+        "postgres"
+      ]
+    },
+    "files": {
+      "services": [
+        "platform-api",
+        "object-service",
+        "postgres"
+      ]
+    },
+    "messaging": {
+      "services": [
+        "messaging",
+        "event-bus",
+        "postgres"
+      ]
+    },
+    "database": {
+      "services": [
+        "postgres"
+      ]
+    },
+    "object": {
+      "services": [
+        "object-service"
+      ]
+    },
+    "queue": {
+      "services": [
+        "event-bus",
+        "scheduler"
+      ]
+    }
+  },
+  "serviceObjectives": {
+    "identity": {
+      "minimumSuccessRate": 1.0,
+      "maximumLatencyMilliseconds": 1000
+    },
+    "administration": {
+      "minimumSuccessRate": 1.0,
+      "maximumLatencyMilliseconds": 1000
+    },
+    "files": {
+      "minimumSuccessRate": 1.0,
+      "maximumLatencyMilliseconds": 1000
+    },
+    "messaging": {
+      "minimumSuccessRate": 1.0,
+      "maximumLatencyMilliseconds": 1000
+    },
+    "database": {
+      "minimumSuccessRate": 1.0,
+      "maximumLatencyMilliseconds": 1000
+    },
+    "object": {
+      "minimumSuccessRate": 1.0,
+      "maximumLatencyMilliseconds": 1000
+    },
+    "queue": {
+      "minimumSuccessRate": 1.0,
+      "maximumLatencyMilliseconds": 1000
+    }
+  }
+}

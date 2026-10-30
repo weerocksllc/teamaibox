@@ -1,0 +1,18 @@
+{
+  "repository": "https://github.com/google/android-cuttlefish",
+  "commit": "9bb9c72329cedcb436bb75afc05c24d73fbcdf5d",
+  "directory": "base/cvd/cuttlefish/host/commands/vhost_user_media",
+  "files": {
+    "Cargo.toml": "25849d549c9e7131067e7899f04a17bb6981583b0cd47bd4fd70ba293268cb6b",
+    "vhu_media/Cargo.toml": "2f3b8dc0ad6d2a989c863aa2b8f7c41cccf4183423351d233fa422c302579429",
+    "vhu_media/src/lib.rs": "68949d21e2c72b0693706af6a125d13a6706d8974d5cbea033d512c56e157cc4",
+    "v4l2_stream_proxy/Cargo.toml": "e75f168eb5fd68d3f1d9e2b05a41dfea2d94276f9636e7b6a80f1bfbbf61d082",
+    "v4l2_stream_proxy/src/main.rs": "12ad2157bc09db731f5fd420b632af7c68beb1523cb8b9a6fd5caf0979831e06",
+    "v4l2_stream_proxy/src/device.rs": "61fc80a9848455f3bb9b5c0717b2c3d79a2b534da3ffb68fc0492067493e0220",
+    "v4l2_stream_proxy/src/worker.rs": "fdd5ea25d32f7e2612be83ec1b1545d675475feb9652fd4e72ccf9f738d019ec"
+  },
+  "hostPackage": {
+    "url": "https://us-apt.pkg.dev/projects/android-cuttlefish-artifacts/pool/android-cuttlefish/cuttlefish-base_1.57.0_arm64_5a2220d1338b800239467195d0ebd4a6.deb",
+    "sha256": "58387547c155ddcb8769fb9f99fc42ff215cc6870edcbb065b6b91da381fceef"
+  }
+}

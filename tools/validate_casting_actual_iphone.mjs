@@ -1,0 +1,12 @@
+import assert from 'node:assert/strict';
+import {readFile} from 'node:fs/promises';
+import {resolve} from 'node:path';
+import {validateActualIphone} from './casting_actual_iphone_contract.mjs';
+import {digest} from './browser_smoke_common.mjs';
+assert.equal(process.argv[2],'--evidence');
+const file=resolve(process.argv[3]),r=JSON.parse(await readFile(file,'utf8'));
+assert.equal(file,resolve(import.meta.dirname,'../evidence/validation/browser/'+r.runId+'-browser.json'));
+assert.equal(r.sourceSha256,digest(await readFile(new URL('./check_casting_actual_iphone.mjs',import.meta.url))));
+for(const [name,hash] of Object.entries(r.servedSources))assert.equal(hash,digest(await readFile(new URL('../apps/wireless-casting-plugin/src/public/'+name,import.meta.url))));
+assert.deepEqual(Object.keys(r.servedSources).sort(),['app.js','casting-media-client-v1.mjs','casting-viewing-resume-v1.mjs']);
+console.log(JSON.stringify(validateActualIphone(r)));

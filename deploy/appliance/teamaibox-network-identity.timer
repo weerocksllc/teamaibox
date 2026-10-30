@@ -1,0 +1,11 @@
+[Unit]
+Description=Watch appliance network addresses and certificate expiry
+
+[Timer]
+OnBootSec=5s
+OnUnitInactiveSec=15s
+AccuracySec=1s
+Unit=teamaibox-network-identity.service
+
+[Install]
+WantedBy=timers.target

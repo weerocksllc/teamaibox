@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://teamaibox.local/schemas/appliance-runtime-restart-policy.v1.json",
+  "title": "Team AI Box fixed appliance runtime restart policy",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "nodeId",
+    "nodeGeneration",
+    "policyDigest",
+    "platform",
+    "nodeAgent"
+  ],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "nodeId": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+    },
+    "nodeGeneration": { "type": "integer", "minimum": 1 },
+    "policyDigest": { "$ref": "#/$defs/digest" },
+    "platform": { "$ref": "#/$defs/target" },
+    "nodeAgent": { "$ref": "#/$defs/target" }
+  },
+  "$defs": {
+    "digest": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "target": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "containerName",
+        "imageId",
+        "imageReference",
+        "configurationDigest",
+        "requireHealthy"
+      ],
+      "properties": {
+        "containerName": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]{0,127}$"
+        },
+        "imageId": { "$ref": "#/$defs/digest" },
+        "imageReference": {
+          "type": "string",
+          "minLength": 4,
+          "maxLength": 512
+        },
+        "configurationDigest": { "$ref": "#/$defs/digest" },
+        "requireHealthy": { "const": true }
+      }
+    }
+  }
+}

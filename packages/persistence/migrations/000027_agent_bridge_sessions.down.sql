@@ -1,0 +1,10 @@
+DROP INDEX IF EXISTS platform.agent_one_open_reconciliation_idx;
+DROP TABLE IF EXISTS platform.agent_crash_reconciliations;
+DROP INDEX IF EXISTS platform.agent_events_prompt_sequence_idx;
+DROP TABLE IF EXISTS platform.agent_events;
+DROP INDEX IF EXISTS platform.agent_prompts_binding_status_idx;
+DROP TRIGGER IF EXISTS agent_prompts_touch_updated_at ON platform.agent_prompts;
+DROP TABLE IF EXISTS platform.agent_prompts;
+DROP INDEX IF EXISTS platform.agent_session_bindings_sandbox_state_idx;
+DROP TRIGGER IF EXISTS agent_session_bindings_touch_updated_at ON platform.agent_session_bindings;
+DROP TABLE IF EXISTS platform.agent_session_bindings;

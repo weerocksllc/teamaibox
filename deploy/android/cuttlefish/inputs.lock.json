@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "buildId": "16102939",
+  "target": "aosp_cf_arm64_only_phone-userdebug",
+  "androidVersion": "17",
+  "apiLevel": 37,
+  "dependencyDockerfile": "Dependencies.Dockerfile",
+  "artifactBaseUrl": "https://ci.android.com/builds/submitted/16102939/aosp_cf_arm64_only_phone-userdebug/latest/raw/",
+  "inputs": {
+    "cvd-host_package.tar.gz": "8889fc4c3d390e069519f89da937d3b27cfc2c29ee9afb051c72658f9671b1be",
+    "aosp_cf_arm64_only_phone-img-16102939.zip": "4363ec412b7f92a242310b6e4fe75477f8721dca7d48f4f961baf93e89a3dac6",
+    "jquery-3.6.0.min.js": "ff1523fb7389539c84c65aba19260648793bb4f5e29329d2ee8804bc37a3fe6e"
+  },
+  "firstProfile": {
+    "cpuLimitMillicores": 2000,
+    "memoryLimitBytes": 6442450944,
+    "memorySwapLimitBytes": 6442450944,
+    "privateStorageQuotaBytes": 17179869184,
+    "guestMemoryMb": 4096,
+    "guestCpus": 4,
+    "width": 720,
+    "height": 1280,
+    "refreshRateHz": 30,
+    "vmManager": "crosvm",
+    "renderer": "guest_swiftshader",
+    "modemSimulator": true,
+    "googlePlay": "deferred"
+  }
+}

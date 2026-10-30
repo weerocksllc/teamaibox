@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "scenarios": [
+    { "key": "online-proxy", "testFile": "pip-gateway.test.mjs", "testName": "proxy cache verifies upstream checksums before making bytes reusable" },
+    { "key": "cache-hit", "testFile": "pip-gateway.test.mjs", "testName": "proxy cache verifies upstream checksums before making bytes reusable" },
+    { "key": "fully-offline-success", "testFile": "npm-gateway.test.mjs", "testName": "NPM fully offline availability resolves semver ranges and reports a missing transitive package" },
+    { "key": "missing-dependency", "testFile": "apt-repository.test.mjs", "testName": "offline availability traverses required APT packages and reports missing dependencies" },
+    { "key": "pip-source-priority", "testFile": "pip-gateway.test.mjs", "testName": "source priority selects one deterministic artifact when sources publish the same filename" },
+    { "key": "npm-source-priority", "testFile": "npm-gateway.test.mjs", "testName": "NPM source priority prevents a lower-priority source from replacing the same version" },
+    { "key": "apt-source-priority", "testFile": "apt-repository.test.mjs", "testName": "APT snapshot source priority publishes only the preferred duplicate package" },
+    { "key": "pin-deny", "testFile": "pip-gateway.test.mjs", "testName": "package deny, pinned version, and ARM64 compatibility filter the Simple index" },
+    { "key": "credential-redaction", "testFile": "pip-json-upstream-adapter.test.mjs", "testName": "JSON upstream adapter verifies PEP 691 declarations and PEP 658 metadata without exposing credentials" },
+    { "key": "corrupted-artifact", "testFile": "pip-gateway.test.mjs", "testName": "checksum mismatch and a corrupted cache fail closed" },
+    { "key": "x86-only-artifact", "testFile": "offline-media-service.test.mjs", "testName": "approval rejects changed manifests, corrupted artifacts, unsupported architecture, and non-admin mutation" },
+    { "key": "offline-disk-removal", "testFile": "offline-media-service.test.mjs", "testName": "disk removal immediately detaches approved inventory and reattachment requires reapproval" }
+  ]
+}

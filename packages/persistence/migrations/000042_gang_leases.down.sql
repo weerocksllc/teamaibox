@@ -1,0 +1,8 @@
+DROP INDEX compute.gang_lease_members_node_capacity_idx;
+DROP TABLE compute.gang_lease_members;
+DROP INDEX compute.gang_lease_sets_expiry_idx;
+DROP INDEX compute.gang_lease_sets_one_active_job_idx;
+DROP TABLE compute.gang_lease_sets;
+DROP TABLE compute.distributed_profile_certification_members;
+DROP INDEX compute.distributed_profile_certifications_profile_state_idx;
+DROP TABLE compute.distributed_profile_certifications;

@@ -1,0 +1,43 @@
+{
+  "name": "@teamaibox/source-gateway",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./agent-egress-policy": "./src/agent-egress-policy.mjs",
+    "./source-center-service": "./src/source-center-service.mjs",
+    "./source-policy-resolver": "./src/source-policy-resolver.mjs",
+    "./offline-media-service": "./src/offline-media-service.mjs",
+    "./memory-offline-media-repository": "./src/memory-offline-media-repository.mjs",
+    "./postgres-offline-media-repository": "./src/postgres-offline-media-repository.mjs",
+    "./mounted-offline-media-adapter": "./src/mounted-offline-media-adapter.mjs",
+    "./offline-media-openpgp-verifier": "./src/offline-media-openpgp-verifier.mjs",
+    "./memory-source-center-repository": "./src/memory-source-center-repository.mjs",
+    "./postgres-source-center-repository": "./src/postgres-source-center-repository.mjs",
+    "./static-offline-media-inventory": "./src/static-offline-media-inventory.mjs",
+    "./offline-media-ed25519-verifier": "./src/offline-media-ed25519-verifier.mjs",
+    "./pip-gateway-service": "./gateways/pip/src/pip-gateway-service.mjs",
+    "./memory-pip-catalog": "./gateways/pip/src/memory-pip-catalog.mjs",
+    "./postgres-pip-catalog": "./gateways/pip/src/postgres-pip-catalog.mjs",
+    "./pip-simple-http-api": "./gateways/pip/src/pip-simple-http-api.mjs",
+    "./pip-gateway-server": "./gateways/pip/server/pip-gateway-server.mjs",
+    "./pip-json-upstream-adapter": "./gateways/pip/src/pip-json-upstream-adapter.mjs",
+    "./npm-gateway-service": "./gateways/npm/src/npm-gateway-service.mjs",
+    "./memory-npm-catalog": "./gateways/npm/src/memory-npm-catalog.mjs",
+    "./npm-registry-http-api": "./gateways/npm/src/npm-registry-http-api.mjs",
+    "./npm-gateway-server": "./gateways/npm/server/npm-gateway-server.mjs",
+    "./postgres-npm-catalog": "./gateways/npm/src/postgres-npm-catalog.mjs",
+    "./npm-json-upstream-adapter": "./gateways/npm/src/npm-json-upstream-adapter.mjs",
+    "./apt-repository-service": "./gateways/apt/src/apt-repository-service.mjs",
+    "./memory-apt-catalog": "./gateways/apt/src/memory-apt-catalog.mjs",
+    "./apt-repository-http-api": "./gateways/apt/src/apt-repository-http-api.mjs",
+    "./apt-openpgp-command-adapter": "./gateways/apt/src/openpgp-command-adapter.mjs",
+    "./postgres-apt-catalog": "./gateways/apt/src/postgres-apt-catalog.mjs",
+    "./apt-upstream-adapter": "./gateways/apt/src/apt-upstream-adapter.mjs",
+    "./apt-gateway-server": "./gateways/apt/server/apt-gateway-server.mjs"
+  },
+  "scripts": {
+    "test": "node --test test/*.test.mjs"
+  },
+  "license": "MIT"
+}

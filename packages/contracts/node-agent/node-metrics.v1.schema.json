@@ -1,0 +1,62 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://contracts.teamaibox.local/node-agent/node-metrics.v1.schema.json",
+  "title": "Team AI Box managed node metrics v1",
+  "x-teamaibox-contract": { "family": "node-agent", "role": "request", "major": 1 },
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "observedAt", "sequence", "collector", "domains", "processes", "workers", "models", "jobs", "queues", "reservations", "coreServices"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "observedAt": { "type": "string", "format": "date-time" },
+    "sequence": { "type": "integer", "minimum": 1, "maximum": 9007199254740991 },
+    "collector": {
+      "type": "object", "additionalProperties": false, "required": ["agentVersion", "bootId"],
+      "properties": { "agentVersion": { "$ref": "#/$defs/version" }, "bootId": { "$ref": "#/$defs/uuid" } }
+    },
+    "domains": {
+      "type": "object", "additionalProperties": false,
+      "required": ["cpu", "unifiedMemory", "accelerator", "storage", "network", "codecs"],
+      "properties": {
+        "cpu": { "$ref": "#/$defs/cpu" },
+        "unifiedMemory": { "$ref": "#/$defs/unifiedMemory" },
+        "accelerator": { "$ref": "#/$defs/accelerator" },
+        "storage": { "$ref": "#/$defs/storage" },
+        "network": { "$ref": "#/$defs/network" },
+        "codecs": { "$ref": "#/$defs/codecs" }
+      }
+    },
+    "processes": { "type": "array", "maxItems": 512, "items": { "$ref": "#/$defs/process" } },
+    "workers": { "type": "array", "maxItems": 512, "items": { "$ref": "#/$defs/worker" } },
+    "models": { "type": "array", "maxItems": 512, "items": { "$ref": "#/$defs/model" } },
+    "jobs": { "$ref": "#/$defs/jobs" },
+    "queues": { "type": "array", "maxItems": 256, "items": { "$ref": "#/$defs/queue" } },
+    "reservations": { "$ref": "#/$defs/reservations" },
+    "coreServices": { "type": "array", "maxItems": 256, "items": { "$ref": "#/$defs/coreService" } }
+  },
+  "$defs": {
+    "uuid": { "type": "string", "format": "uuid" },
+    "key": { "type": "string", "pattern": "^[a-z][a-z0-9_.-]{2,127}$" },
+    "targetId": { "type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,255}$" },
+    "version": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+(?:[-+][A-Za-z0-9.-]+)?$" },
+    "metric": {
+      "oneOf": [
+        { "type": "object", "additionalProperties": false, "required": ["status", "value", "reasonCode"], "properties": { "status": { "const": "measured" }, "value": { "type": "number", "minimum": 0 }, "reasonCode": { "type": "null" } } },
+        { "type": "object", "additionalProperties": false, "required": ["status", "value", "reasonCode"], "properties": { "status": { "enum": ["unsupported", "unavailable"] }, "value": { "type": "null" }, "reasonCode": { "$ref": "#/$defs/key" } } }
+      ]
+    },
+    "cpu": { "type": "object", "additionalProperties": false, "required": ["logicalCores", "utilizationPercent", "load1"], "properties": { "logicalCores": { "$ref": "#/$defs/metric" }, "utilizationPercent": { "$ref": "#/$defs/metric" }, "load1": { "$ref": "#/$defs/metric" } } },
+    "unifiedMemory": { "type": "object", "additionalProperties": false, "required": ["totalBytes", "usedBytes", "availableBytes", "dedicatedAcceleratorMemoryBytes"], "properties": { "totalBytes": { "$ref": "#/$defs/metric" }, "usedBytes": { "$ref": "#/$defs/metric" }, "availableBytes": { "$ref": "#/$defs/metric" }, "dedicatedAcceleratorMemoryBytes": { "$ref": "#/$defs/metric" } } },
+    "accelerator": { "type": "object", "additionalProperties": false, "required": ["utilizationPercent", "temperatureCelsius", "powerWatts", "powerLimitWatts"], "properties": { "utilizationPercent": { "$ref": "#/$defs/metric" }, "temperatureCelsius": { "$ref": "#/$defs/metric" }, "powerWatts": { "$ref": "#/$defs/metric" }, "powerLimitWatts": { "$ref": "#/$defs/metric" } } },
+    "storage": { "type": "object", "additionalProperties": false, "required": ["totalBytes", "usedBytes", "availableBytes", "readBytesPerSecond", "writeBytesPerSecond"], "properties": { "totalBytes": { "$ref": "#/$defs/metric" }, "usedBytes": { "$ref": "#/$defs/metric" }, "availableBytes": { "$ref": "#/$defs/metric" }, "readBytesPerSecond": { "$ref": "#/$defs/metric" }, "writeBytesPerSecond": { "$ref": "#/$defs/metric" } } },
+    "network": { "type": "object", "additionalProperties": false, "required": ["receiveBytesPerSecond", "transmitBytesPerSecond", "availableBitsPerSecond", "receiveErrors", "transmitErrors"], "properties": { "receiveBytesPerSecond": { "$ref": "#/$defs/metric" }, "transmitBytesPerSecond": { "$ref": "#/$defs/metric" }, "availableBitsPerSecond": { "$ref": "#/$defs/metric" }, "receiveErrors": { "$ref": "#/$defs/metric" }, "transmitErrors": { "$ref": "#/$defs/metric" } } },
+    "codecs": { "type": "object", "additionalProperties": false, "required": ["encodeActive", "encodeCapacity", "decodeActive", "decodeCapacity"], "properties": { "encodeActive": { "$ref": "#/$defs/metric" }, "encodeCapacity": { "$ref": "#/$defs/metric" }, "decodeActive": { "$ref": "#/$defs/metric" }, "decodeCapacity": { "$ref": "#/$defs/metric" } } },
+    "process": { "type": "object", "additionalProperties": false, "required": ["targetKind", "targetId", "cpuPercent", "unifiedMemoryBytes", "cgroupMemoryBytes", "acceleratorMemoryBytes"], "properties": { "targetKind": { "enum": ["worker", "core_service", "plugin", "agent_sandbox"] }, "targetId": { "$ref": "#/$defs/targetId" }, "cpuPercent": { "$ref": "#/$defs/metric" }, "unifiedMemoryBytes": { "$ref": "#/$defs/metric" }, "cgroupMemoryBytes": { "$ref": "#/$defs/metric" }, "acceleratorMemoryBytes": { "$ref": "#/$defs/metric" } } },
+    "worker": { "type": "object", "additionalProperties": false, "required": ["workerId", "state", "profileId", "jobId", "cpuPercent", "unifiedMemoryBytes", "acceleratorUtilizationPercent"], "properties": { "workerId": { "$ref": "#/$defs/uuid" }, "state": { "enum": ["cold", "preparing", "ready", "busy", "draining", "failed", "stopped"] }, "profileId": { "type": ["string", "null"], "format": "uuid" }, "jobId": { "type": ["string", "null"], "format": "uuid" }, "cpuPercent": { "$ref": "#/$defs/metric" }, "unifiedMemoryBytes": { "$ref": "#/$defs/metric" }, "acceleratorUtilizationPercent": { "$ref": "#/$defs/metric" } } },
+    "model": { "type": "object", "additionalProperties": false, "required": ["profileId", "state", "workerId", "unifiedMemoryBytes", "loadMilliseconds"], "properties": { "profileId": { "$ref": "#/$defs/uuid" }, "state": { "enum": ["unloaded", "loading", "loaded", "unloading", "failed"] }, "workerId": { "type": ["string", "null"], "format": "uuid" }, "unifiedMemoryBytes": { "$ref": "#/$defs/metric" }, "loadMilliseconds": { "$ref": "#/$defs/metric" } } },
+    "jobs": { "type": "object", "additionalProperties": false, "required": ["queued", "preparing", "running", "succeeded", "failed", "cancelled"], "properties": { "queued": { "$ref": "#/$defs/metric" }, "preparing": { "$ref": "#/$defs/metric" }, "running": { "$ref": "#/$defs/metric" }, "succeeded": { "$ref": "#/$defs/metric" }, "failed": { "$ref": "#/$defs/metric" }, "cancelled": { "$ref": "#/$defs/metric" } } },
+    "queue": { "type": "object", "additionalProperties": false, "required": ["queueKey", "depth", "oldestWaitMilliseconds", "reasons"], "properties": { "queueKey": { "$ref": "#/$defs/key" }, "depth": { "$ref": "#/$defs/metric" }, "oldestWaitMilliseconds": { "$ref": "#/$defs/metric" }, "reasons": { "type": "array", "maxItems": 64, "items": { "type": "object", "additionalProperties": false, "required": ["reasonCode", "count"], "properties": { "reasonCode": { "$ref": "#/$defs/key" }, "count": { "type": "integer", "minimum": 0, "maximum": 1000000 } } } } } },
+    "reservations": { "type": "object", "additionalProperties": false, "required": ["cpuMillis", "unifiedMemoryBytes", "acceleratorUnits", "codecSessions", "storageBytes", "networkBitsPerSecond"], "properties": { "cpuMillis": { "$ref": "#/$defs/metric" }, "unifiedMemoryBytes": { "$ref": "#/$defs/metric" }, "acceleratorUnits": { "$ref": "#/$defs/metric" }, "codecSessions": { "$ref": "#/$defs/metric" }, "storageBytes": { "$ref": "#/$defs/metric" }, "networkBitsPerSecond": { "$ref": "#/$defs/metric" } } },
+    "coreService": { "type": "object", "additionalProperties": false, "required": ["serviceKey", "state", "availabilityPercent", "latencyMilliseconds", "errorRatePercent"], "properties": { "serviceKey": { "$ref": "#/$defs/key" }, "state": { "enum": ["healthy", "degraded", "unavailable"] }, "availabilityPercent": { "$ref": "#/$defs/metric" }, "latencyMilliseconds": { "$ref": "#/$defs/metric" }, "errorRatePercent": { "$ref": "#/$defs/metric" } } }
+  }
+}

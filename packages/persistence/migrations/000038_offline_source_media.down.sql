@@ -1,0 +1,5 @@
+DROP TRIGGER offline_media_approvals_append_only ON source_center.offline_media_approvals;
+DROP FUNCTION source_center.reject_offline_media_approval_mutation();
+DROP TABLE source_center.offline_media_approvals;
+DROP TABLE source_center.offline_media_artifacts;
+DROP TABLE source_center.offline_media;

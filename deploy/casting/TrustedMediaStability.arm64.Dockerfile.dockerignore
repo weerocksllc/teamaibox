@@ -1,0 +1,8 @@
+**
+!services/
+!services/trusted_media_service/
+!services/trusted_media_service/gdp_media_ingress.py
+!services/trusted_media_service/native_receiver_process.py
+!services/trusted_media_service/discoverable_receiver.py
+!services/trusted_media_service/receiver_supervisor.py
+!services/trusted_media_service/runtime_api.py

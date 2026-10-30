@@ -1,0 +1,4 @@
+Team AI Box ordinary member browser transfer test.
+Run: phone-member-browser-20260912-a3
+Synthetic content only. No personal data.
+中文文件传输验证：只属于第一部测试手机。

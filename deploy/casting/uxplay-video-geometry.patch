@@ -1,0 +1,21 @@
+--- a/renderers/video_renderer.c
++++ b/renderers/video_renderer.c
+@@ -23,1 +23,2 @@
+-#include <gst/gst.h>
++#include <gst/gst.h>
++#include <stdio.h>
+@@ -180,1 +181,13 @@
+-    logger_log(logger, LOGGER_DEBUG, "begin video stream wxh = %dx%d; source %dx%d", width, height, width_source, height_source);
++    logger_log(logger, LOGGER_DEBUG, "begin video stream wxh = %dx%d; source %dx%d", width, height, width_source, height_source);
++#ifdef TEAMAIBOX_PIN_STDIN
++    /* Fixed numeric diagnostics on the existing private stderr pipe only.
++     * No packet, sender name, key, user text or recording. Not a crop hint. */
++    if (*f_width_source >= 16 && *f_width_source <= 8192 &&
++        *f_height_source >= 16 && *f_height_source <= 8192 &&
++        *f_width >= 16 && *f_width <= 8192 &&
++        *f_height >= 16 && *f_height <= 8192) {
++        fprintf(stderr, "TBG1 %u %u %u %u\n", (unsigned)*f_width_source,
++                (unsigned)*f_height_source, (unsigned)*f_width, (unsigned)*f_height);
++        fflush(stderr);
++    }
++#endif

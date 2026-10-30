@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "verifiedAt": "2026-08-10",
+  "architecture": "linux/arm64/v8",
+  "images": {
+    "node-runtime": {
+      "sourceTag": "docker.io/library/node:24.15.0-bookworm-slim",
+      "indexDigest": "sha256:4e6b70dd6cbfc88c8157ba19aa3d9f9cce6ba4703576d55459e45efcbc9c5f5d",
+      "arm64Digest": "sha256:682f301a9e8e5731d4bb1889182a2186fe65a312cc81ae86cea6038ef8b1603f",
+      "reference": "docker.io/library/node@sha256:682f301a9e8e5731d4bb1889182a2186fe65a312cc81ae86cea6038ef8b1603f"
+    },
+    "postgres": {
+      "sourceTag": "docker.io/library/postgres:18.4-bookworm",
+      "indexDigest": "sha256:882236b897e39051d2368c5ccc6cda944904723506b2dfc97f2a8f5bc9afa382",
+      "arm64Digest": "sha256:83b9631dbb4121d9235ef910018272798b7d3041ef5b716aa481122d4c49353f",
+      "reference": "docker.io/library/postgres@sha256:83b9631dbb4121d9235ef910018272798b7d3041ef5b716aa481122d4c49353f"
+    },
+    "nats": {
+      "sourceTag": "docker.io/library/nats:2.14.3-alpine",
+      "indexDigest": "sha256:c11af972c99ae542de8925e6a7d9c533aa1eb039660420d2074beed6089b3bf0",
+      "arm64Digest": "sha256:064222a09af7b194af6760d6089aa9ebd93fe7b8136ec2193ddb72dd78d8bd4c",
+      "reference": "docker.io/library/nats@sha256:064222a09af7b194af6760d6089aa9ebd93fe7b8136ec2193ddb72dd78d8bd4c"
+    }
+  }
+}
+

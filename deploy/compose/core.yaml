@@ -1,0 +1,524 @@
+name: teamaibox-foundation
+
+x-production-environment: &production-environment
+  PLATFORM_DATABASE_HOST: postgres
+  PLATFORM_DATABASE_PORT: "5432"
+  PLATFORM_DATABASE_NAME: teamaibox
+  PLATFORM_DATABASE_USER: teamaibox
+  PLATFORM_DATABASE_PASSWORD_FILE: /run/secrets/postgres_password
+  PLATFORM_DATABASE_TLS_MODE: disable
+  TEAMAIBOX_REQUIRED_SCHEMA_VERSION: "105"
+  TEAMAIBOX_EVENT_BUS_HEALTH_URL: http://event-bus:8222/healthz?js-enabled-only=true
+  TEAMAIBOX_EVENT_BUS_TOKEN_FILE: /run/secrets/nats_token
+
+x-production-service: &production-service
+  platform: linux/arm64/v8
+  init: true
+  read_only: true
+  user: "1000:1000"
+  cap_drop: [ALL]
+  security_opt:
+    - no-new-privileges:true
+  pids_limit: 128
+  tmpfs:
+    - /tmp:rw,noexec,nosuid,nodev,size=32m
+  secrets:
+    - postgres_password
+    - nats_token
+  healthcheck:
+    test: [CMD, node, -e, "fetch('http://127.0.0.1:8080/health/ready').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+    interval: 10s
+    timeout: 3s
+    retries: 6
+    start_period: 10s
+  restart: unless-stopped
+  stop_grace_period: 20s
+
+x-core-critical: &core-critical
+  labels:
+    com.teamaibox.managed: "true"
+    com.teamaibox.resource-class: core-critical
+    com.teamaibox.release-runtime: "true"
+
+x-core-standard: &core-standard
+  labels:
+    com.teamaibox.managed: "true"
+    com.teamaibox.resource-class: core-standard
+    com.teamaibox.release-runtime: "true"
+
+services:
+  postgres:
+    image: ${TEAMAIBOX_POSTGRES_IMAGE:?set the signed PostgreSQL ARM64 registry digest}
+    platform: linux/arm64/v8
+    restart: unless-stopped
+    read_only: true
+    user: "999:999"
+    shm_size: 256m
+    environment:
+      POSTGRES_DB: teamaibox
+      POSTGRES_USER: teamaibox
+      POSTGRES_PASSWORD_FILE: /run/secrets/postgres_password
+      PGDATA: /var/lib/postgresql/18/docker
+    secrets: [postgres_password]
+    volumes:
+      - postgres_data:/var/lib/postgresql
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,nodev,size=64m
+      - /var/run/postgresql:rw,nosuid,nodev,size=16m
+    networks: [data]
+    cap_drop: [ALL]
+    cap_add: [CHOWN, DAC_OVERRIDE, FOWNER, SETGID, SETUID]
+    security_opt:
+      - no-new-privileges:true
+    pids_limit: 256
+    mem_limit: 3g
+    mem_reservation: 1536m
+    cpus: 2.0
+    healthcheck:
+      test: [CMD-SHELL, "pg_isready -U teamaibox -d teamaibox"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+    stop_grace_period: 60s
+    labels:
+      com.teamaibox.managed: "true"
+      com.teamaibox.resource-class: core-critical
+      com.teamaibox.release-runtime: "true"
+
+  database-migrate:
+    image: ${TEAMAIBOX_POSTGRES_IMAGE:?set the signed PostgreSQL ARM64 registry digest}
+    platform: linux/arm64/v8
+    entrypoint: [/usr/local/bin/teamaibox-apply-migrations]
+    restart: "no"
+    read_only: true
+    user: "999:999"
+    environment:
+      PLATFORM_DATABASE_HOST: postgres
+      PLATFORM_DATABASE_PORT: "5432"
+      PLATFORM_DATABASE_NAME: teamaibox
+      PLATFORM_DATABASE_USER: teamaibox
+      PLATFORM_DATABASE_PASSWORD_FILE: /run/secrets/postgres_password
+    secrets: [postgres_password]
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,nodev,size=16m
+    networks: [data]
+    cap_drop: [ALL]
+    security_opt:
+      - no-new-privileges:true
+    pids_limit: 64
+    mem_limit: 512m
+    mem_reservation: 256m
+    cpus: 0.5
+    depends_on:
+      postgres: {condition: service_healthy}
+    labels:
+      com.teamaibox.managed: "true"
+      com.teamaibox.resource-class: core-critical
+      com.teamaibox.lifecycle: one-shot-migration
+
+  event-bus:
+    image: ${TEAMAIBOX_EVENT_BUS_IMAGE:?set the signed event-bus ARM64 registry digest}
+    platform: linux/arm64/v8
+    restart: unless-stopped
+    init: true
+    read_only: true
+    user: "65534:65534"
+    entrypoint: [/bin/sh, -ec]
+    command:
+      - |
+        export NATS_AUTH_TOKEN="$$(cat /run/secrets/nats_token)"
+        exec nats-server --config /etc/nats/nats.conf
+    configs:
+      - source: nats_config
+        target: /etc/nats/nats.conf
+    secrets: [nats_token]
+    volumes:
+      - event_bus_data:/data
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,nodev,size=16m
+    networks: [control, data]
+    cap_drop: [ALL]
+    security_opt:
+      - no-new-privileges:true
+    pids_limit: 128
+    mem_limit: 1g
+    mem_reservation: 512m
+    cpus: 1.0
+    healthcheck:
+      test: [CMD, wget, -q, -O, /dev/null, "http://127.0.0.1:8222/healthz?js-enabled-only=true"]
+      interval: 10s
+      timeout: 3s
+      retries: 10
+      start_period: 10s
+    stop_grace_period: 45s
+    labels:
+      com.teamaibox.managed: "true"
+      com.teamaibox.resource-class: core-critical
+      com.teamaibox.release-runtime: "true"
+
+  platform-api:
+    <<: [*production-service, *core-critical]
+    image: ${TEAMAIBOX_PLATFORM_API_IMAGE:?set the signed platform API ARM64 registry digest}
+    environment:
+      <<: *production-environment
+      PLATFORM_API_PERSISTENCE: postgres
+      PLATFORM_AUDIT_SIGNING_KEY_FILE: /run/secrets/platform_audit_signing_key
+      PLATFORM_PROVIDER_SECRET_MASTER_KEY_FILE: /run/secrets/platform_provider_secret_master_key
+      PLATFORM_PROVIDER_SECRET_CIPHERTEXT_DIR: /var/lib/teamaibox/secrets/providers
+      PLATFORM_AGENT_MODEL_SIGNING_KEY_FILE: /run/secrets/agent_model_signing_key
+      PLATFORM_AGENT_MODEL_ALIAS_MAP_FILE: /run/config/agent-model-aliases.json
+      PLATFORM_APPLICATION_ROUTES_FILE: /run/config/plugin-routes.json
+      PLATFORM_BUILT_IN_APPLICATIONS_FILE: /run/config/built-in-applications.json
+    configs:
+      - source: empty_plugin_routes
+        target: /run/config/plugin-routes.json
+      - source: built_in_applications
+        target: /run/config/built-in-applications.json
+    secrets:
+      - postgres_password
+      - nats_token
+      - platform_audit_signing_key
+      - platform_provider_secret_master_key
+      - agent_model_signing_key
+    mem_limit: 2g
+    mem_reservation: 1g
+    cpus: 1.0
+    networks:
+      edge: {}
+      control: {}
+      data: {}
+    volumes:
+      - audit_data:/var/lib/teamaibox/audit
+      - secrets_data:/var/lib/teamaibox/secrets
+    depends_on:
+      database-migrate: {condition: service_completed_successfully}
+      event-bus: {condition: service_healthy}
+
+  compute-gateway:
+    image: ${TEAMAIBOX_COMPUTE_GATEWAY_IMAGE:?set the signed Agent Compute Gateway ARM64 registry digest}
+    platform: linux/arm64/v8
+    init: true
+    restart: unless-stopped
+    read_only: true
+    user: "1000:1000"
+    cap_drop: [ALL]
+    security_opt:
+      - no-new-privileges:true
+    pids_limit: 128
+    environment:
+      AGENT_COMPUTE_GATEWAY_HOST: 0.0.0.0
+      AGENT_COMPUTE_GATEWAY_PORT: "8080"
+      AGENT_MODEL_SIGNING_KEY_FILE: /run/secrets/agent_model_signing_key
+      AGENT_MODEL_ALIAS_MAP_FILE: /run/config/agent-model-aliases.json
+      PLATFORM_COMPUTE_ORIGIN: http://platform-api:8080
+    secrets: [agent_model_signing_key]
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,nodev,size=16m
+    mem_limit: 512m
+    mem_reservation: 256m
+    cpus: 0.5
+    networks:
+      control: {}
+      agent-egress-proxy:
+        aliases: [compute-gateway]
+    healthcheck:
+      test: [CMD, node, -e, "fetch('http://127.0.0.1:8080/health/live').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 10s
+      timeout: 3s
+      retries: 6
+      start_period: 5s
+    stop_grace_period: 20s
+    labels:
+      com.teamaibox.managed: "true"
+      com.teamaibox.resource-class: core-standard
+      com.teamaibox.release-runtime: "true"
+    depends_on:
+      platform-api: {condition: service_healthy}
+
+  node-agent:
+    image: ${TEAMAIBOX_NODE_AGENT_IMAGE:?set the signed Node Agent ARM64 registry digest}
+    platform: linux/arm64/v8
+    restart: unless-stopped
+    read_only: true
+    user: "10001:10001"
+    group_add:
+      - ${TEAMAIBOX_DOCKER_SOCKET_GID:?set the observed Docker socket group ID}
+    cap_drop: [ALL]
+    security_opt:
+      - no-new-privileges:true
+    pids_limit: 128
+    mem_limit: 512m
+    mem_reservation: 256m
+    cpus: 0.5
+    network_mode: service:platform-api
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,nodev,size=16m
+    volumes:
+      - type: bind
+        source: /var/run/docker.sock
+        target: /var/run/docker.sock
+        read_only: true
+      - node_agent_state:/var/lib/teamaibox/node-agent
+      - node_agent_identity:/var/lib/teamaibox/node-identity:ro
+      - model_artifacts:/var/lib/teamaibox/models:ro
+      - model_cache:/var/cache/teamaibox/models
+      - agent_workspace_data:/var/lib/teamaibox/agent-workspaces
+      - agent_cache:/var/cache/teamaibox/agent
+      - compute_worker_data:/var/lib/teamaibox/worker-roots
+    secrets: [node_agent_command_key]
+    environment:
+      TEAMAIBOX_NODE_IDENTITY_FILE: /var/lib/teamaibox/node-identity/node.json
+      TEAMAIBOX_COMMAND_KEY_ID: ${TEAMAIBOX_COMMAND_KEY_ID:?set the active scheduler key ID}
+      TEAMAIBOX_COMMAND_KEY_FILE: /run/secrets/node_agent_command_key
+      TEAMAIBOX_TLS_CERT_FILE: /var/lib/teamaibox/node-identity/node.crt
+      TEAMAIBOX_TLS_KEY_FILE: /var/lib/teamaibox/node-identity/node.key
+      TEAMAIBOX_CLIENT_CA_FILE: /var/lib/teamaibox/node-identity/ca.crt
+      TEAMAIBOX_TLS_SERVER_NAME: ${PLATFORM_APPLIANCE_NODE_KEY:-localhost}
+      TEAMAIBOX_HEALTH_CLIENT_CERT_FILE: /var/lib/teamaibox/node-identity/node.crt
+      TEAMAIBOX_HEALTH_CLIENT_KEY_FILE: /var/lib/teamaibox/node-identity/node.key
+      TEAMAIBOX_NODE_INVENTORY_FILE: /var/lib/teamaibox/node-identity/inventory.json
+      TEAMAIBOX_LISTEN_ADDRESS: 127.0.0.1:9443
+      TEAMAIBOX_APPLIANCE_ORIGIN: https://127.0.0.1:9444
+      TEAMAIBOX_APPLIANCE_CA_FILE: /var/lib/teamaibox/node-identity/ca.crt
+      TEAMAIBOX_APPLIANCE_SERVER_NAME: ${PLATFORM_APPLIANCE_NODE_KEY:-localhost}
+      TEAMAIBOX_APPLIANCE_IMAGE_DIGEST: ${TEAMAIBOX_APPLIANCE_IMAGE_DIGEST:?set the local Agent image digest}
+      TEAMAIBOX_APPLIANCE_CONFIGURATION_DIGEST: ${TEAMAIBOX_APPLIANCE_CONFIGURATION_DIGEST:?set the local installation configuration digest}
+    healthcheck:
+      test: [CMD, /usr/local/bin/teamaibox-node-agent, healthcheck]
+      interval: 10s
+      timeout: 4s
+      retries: 6
+      start_period: 5s
+    stop_grace_period: 20s
+    labels:
+      com.teamaibox.managed: "true"
+      com.teamaibox.resource-class: core-critical
+      com.teamaibox.release-runtime: "true"
+      com.teamaibox.privileged-boundary: node-agent-only
+    depends_on:
+      event-bus: {condition: service_healthy}
+
+  object-service:
+    <<: [*production-service, *core-critical]
+    image: ${TEAMAIBOX_OBJECT_SERVICE_IMAGE:?set the signed object service ARM64 registry digest}
+    environment:
+      <<: *production-environment
+      TEAMAIBOX_SERVICE_NAME: object-service
+    mem_limit: 1g
+    mem_reservation: 512m
+    # Large encrypted ISO transfers may use idle CPU; retain relative fairness
+    # under contention instead of a fixed sub-core throughput ceiling.
+    cpu_shares: 512
+    networks: [control, data]
+    volumes:
+      - object_data:/var/lib/teamaibox/objects
+      - object_staging:/var/lib/teamaibox/object-staging
+    depends_on:
+      database-migrate: {condition: service_completed_successfully}
+      event-bus: {condition: service_healthy}
+
+  messaging:
+    <<: [*production-service, *core-critical]
+    image: ${TEAMAIBOX_MESSAGING_IMAGE:?set the signed messaging ARM64 registry digest}
+    environment:
+      <<: *production-environment
+      TEAMAIBOX_SERVICE_NAME: messaging
+    mem_limit: 1g
+    mem_reservation: 512m
+    cpus: 1.0
+    networks: [control, data]
+    depends_on:
+      database-migrate: {condition: service_completed_successfully}
+      event-bus: {condition: service_healthy}
+
+  web:
+    image: ${TEAMAIBOX_WEB_IMAGE:?set the signed Web ARM64 registry digest}
+    platform: linux/arm64/v8
+    init: true
+    read_only: true
+    user: "1000:1000"
+    cap_drop: [ALL]
+    security_opt:
+      - no-new-privileges:true
+    pids_limit: 128
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,nodev,size=32m
+    environment:
+      WEB_HOST: 0.0.0.0
+      WEB_MODE: internal
+      WEB_PORT: "8080"
+      WEB_DEPLOYMENT_SLOT: foundation
+      WEB_RELEASE_ID: ${TEAMAIBOX_RELEASE_ID:?set the immutable release identifier}
+      WEB_PLUGIN_ROUTES_FILE: /run/config/plugin-routes.json
+      PLATFORM_API_ORIGIN: http://platform-api:8080
+    configs:
+      - source: empty_plugin_routes
+        target: /run/config/plugin-routes.json
+    mem_limit: 512m
+    mem_reservation: 256m
+    cpus: 0.5
+    networks: [edge]
+    restart: unless-stopped
+    healthcheck:
+      test: [CMD, node, -e, "const p=process.env.WEB_PORT||8080;const tls=Boolean(process.env.WEB_TLS_CERT_FILE);const m=tls?require('node:https'):require('node:http');const r=m.get({host:'127.0.0.1',port:p,path:'/health/ready',rejectUnauthorized:false},x=>process.exit(x.statusCode===200?0:1));r.on('error',()=>process.exit(1))"]
+      interval: 10s
+      timeout: 3s
+      retries: 6
+      start_period: 5s
+    stop_grace_period: 15s
+    labels:
+      com.teamaibox.managed: "true"
+      com.teamaibox.resource-class: core-standard
+      com.teamaibox.release-runtime: "true"
+    depends_on:
+      platform-api: {condition: service_healthy}
+
+  scheduler:
+    <<: [*production-service, *core-standard]
+    image: ${TEAMAIBOX_SCHEDULER_IMAGE:?set the signed scheduler ARM64 registry digest}
+    environment:
+      <<: *production-environment
+      TEAMAIBOX_SERVICE_NAME: scheduler
+    mem_limit: 1g
+    mem_reservation: 512m
+    cpus: 1.0
+    networks: [control, data]
+    volumes:
+      - model_evidence:/var/lib/teamaibox/model-evidence
+    depends_on:
+      database-migrate: {condition: service_completed_successfully}
+      event-bus: {condition: service_healthy}
+
+  plugin-runtime:
+    <<: [*production-service, *core-standard]
+    image: ${TEAMAIBOX_PLUGIN_RUNTIME_IMAGE:?set the signed plugin runtime ARM64 registry digest}
+    environment:
+      <<: *production-environment
+      TEAMAIBOX_SERVICE_NAME: plugin-runtime
+    mem_limit: 768m
+    mem_reservation: 256m
+    cpus: 0.5
+    networks: [control, data]
+    volumes:
+      - plugin_data:/var/lib/teamaibox/plugins
+      - plugin_cache:/var/cache/teamaibox/plugins
+    depends_on:
+      database-migrate: {condition: service_completed_successfully}
+      event-bus: {condition: service_healthy}
+
+  agent-bridge:
+    <<: [*production-service, *core-standard]
+    image: ${TEAMAIBOX_AGENT_BRIDGE_IMAGE:?set the signed Agent Bridge ARM64 registry digest}
+    environment:
+      <<: *production-environment
+      TEAMAIBOX_SERVICE_NAME: agent-bridge
+    mem_limit: 1g
+    mem_reservation: 512m
+    cpus: 1.0
+    networks: [control, data]
+    volumes:
+      - agent_bridge_data:/var/lib/teamaibox/agent-bridge
+      - agent_workspace_data:/var/lib/teamaibox/agent-workspaces
+    depends_on:
+      database-migrate: {condition: service_completed_successfully}
+      event-bus: {condition: service_healthy}
+
+  source-gateway:
+    <<: [*production-service, *core-standard]
+    image: ${TEAMAIBOX_SOURCE_GATEWAY_IMAGE:?set the signed source gateway ARM64 registry digest}
+    environment:
+      <<: *production-environment
+      TEAMAIBOX_SERVICE_NAME: source-gateway
+    mem_limit: 1g
+    mem_reservation: 256m
+    cpus: 0.5
+    networks:
+      control: {}
+      data: {}
+      edge: {}
+      agent-egress-proxy:
+        aliases: [source-gateway, agent-egress-gateway]
+    volumes:
+      - source_cache:/var/cache/teamaibox/sources
+    depends_on:
+      database-migrate: {condition: service_completed_successfully}
+      event-bus: {condition: service_healthy}
+
+  observability:
+    <<: [*production-service, *core-standard]
+    image: ${TEAMAIBOX_OBSERVABILITY_IMAGE:?set the signed observability ARM64 registry digest}
+    environment:
+      <<: *production-environment
+      TEAMAIBOX_SERVICE_NAME: observability
+    mem_limit: 512m
+    mem_reservation: 256m
+    cpus: 0.5
+    networks: [control, data]
+    volumes:
+      - observability_data:/var/lib/teamaibox/observability
+      - diagnostics_data:/var/lib/teamaibox/diagnostics
+    depends_on:
+      database-migrate: {condition: service_completed_successfully}
+      event-bus: {condition: service_healthy}
+
+networks:
+  edge:
+    driver: bridge
+  control:
+    driver: bridge
+    internal: true
+  data:
+    driver: bridge
+    internal: true
+  agent-egress-proxy:
+    name: agent-egress-proxy
+    driver: bridge
+    internal: true
+
+volumes:
+  postgres_data:
+  event_bus_data:
+  node_agent_state:
+  node_agent_identity:
+  object_data:
+  object_staging:
+  plugin_data:
+  plugin_cache:
+  agent_bridge_data:
+  agent_workspace_data:
+  agent_cache:
+  source_cache:
+  model_artifacts:
+  model_cache:
+  model_evidence:
+  audit_data:
+  secrets_data:
+  compute_worker_data:
+  diagnostics_data:
+  observability_data:
+
+configs:
+  nats_config:
+    file: ./nats.conf
+  empty_plugin_routes:
+    file: ./plugin-routes.empty.v1.json
+  built_in_applications:
+    file: ../applications/built-in-applications.v1.json
+secrets:
+  postgres_password:
+    file: ${TEAMAIBOX_POSTGRES_PASSWORD_FILE:?set an absolute PostgreSQL password-file path}
+  nats_token:
+    file: ${TEAMAIBOX_NATS_TOKEN_FILE:?set an absolute NATS token-file path}
+  platform_audit_signing_key:
+    file: ${TEAMAIBOX_PLATFORM_AUDIT_SIGNING_KEY_FILE:?set the platform audit signing-key path}
+  platform_provider_secret_master_key:
+    file: ${TEAMAIBOX_PLATFORM_PROVIDER_SECRET_MASTER_KEY_FILE:?set the provider secret master-key path}
+  agent_model_signing_key:
+    file: ${TEAMAIBOX_AGENT_MODEL_SIGNING_KEY_FILE:?set the Agent model signing-key path}
+  node_agent_command_key:
+    file: ${TEAMAIBOX_NODE_AGENT_COMMAND_KEY_FILE:?set the scheduler HMAC key path}
+  web_tls_certificate:
+    file: ${TEAMAIBOX_WEB_TLS_CERTIFICATE_FILE:?set the Web TLS certificate path}
+  web_tls_private_key:
+    file: ${TEAMAIBOX_WEB_TLS_PRIVATE_KEY_FILE:?set the Web TLS private-key path}

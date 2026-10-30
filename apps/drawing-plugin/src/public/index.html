@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>AI Drawing</title>
+  <link rel="stylesheet" href="/plugins/official.drawing/app.css"><link rel="stylesheet" href="/plugins/official.drawing/platform-preferences.css">
+<link rel="stylesheet" href="/plugins/official.drawing/ui-system.css"></head>
+<body data-ui-app="drawing">
+  <main class="drawing-shell">
+    <header class="drawing-header">
+      <div><p class="eyebrow" data-i18n="eyebrow">AI 创作空间</p><h1 data-i18n="title">AI 绘图</h1><p class="subtitle" data-i18n="subtitle">描述想要的画面，选择创作方式，生成属于你的图片。</p></div>
+      <div class="header-chips"><div id="model-tier" class="security-chip tier-chip" hidden><span aria-hidden="true">⚗</span><span data-i18n="validating">验证中模型</span></div><div class="security-chip"><span aria-hidden="true">◆</span><span data-i18n="encrypted">加密存储</span></div></div>
+    </header>
+
+    <section class="studio-grid">
+      <form id="drawing-form" class="control-panel">
+        <section class="intent-section" aria-labelledby="intent-title">
+          <div class="section-heading"><div><p class="step-label">01</p><h2 id="intent-title" data-i18n="chooseIntent">选择创作意图</h2></div><span id="router-version">v2</span></div>
+          <div id="intent-grid" class="intent-grid" role="radiogroup" data-i18n-aria="intentGroup" aria-label="绘图意图">
+            <button type="button" class="intent-card" data-intent="automatic" role="radio" aria-checked="false"><span class="intent-icon" aria-hidden="true">✦</span><strong data-i18n="intentAutomatic">自动</strong><small data-i18n="intentAutomaticHint">自动选择当前可用模型</small><em></em></button>
+            <button type="button" class="intent-card" data-intent="fast" role="radio" aria-checked="false"><span class="intent-icon" aria-hidden="true">↯</span><strong data-i18n="intentFast">快速</strong><small data-i18n="intentFastHint">优先低延迟预览</small><em></em></button>
+          </div>
+        </section>
+
+        <section id="route-disclosure" class="route-disclosure" aria-live="polite" hidden>
+          <div class="route-symbol" aria-hidden="true">N</div>
+          <div class="route-main"><span data-i18n="activeProfile">当前模型</span><strong id="profile-name"></strong><code id="profile-key"></code></div>
+          <div class="route-facts"><span id="profile-precision"></span><span id="profile-certification"></span><span id="profile-route"></span></div>
+        </section>
+
+        <label class="field field--wide prompt-field"><span><b>02</b><span data-i18n="prompt">画面描述</span></span><textarea id="prompt" maxlength="32000" required data-i18n-placeholder="promptPlaceholder" placeholder="描述主体、场景、光线、材质与风格…"></textarea></label>
+
+
+        <section class="output-settings">
+          <div class="section-heading compact"><div><p class="step-label">03</p><h2 data-i18n="outputSettings">输出设置</h2></div></div>
+          <div class="preset-grid" role="group" data-i18n-aria="aspectGroup" aria-label="画面比例">
+            <button type="button" class="preset is-active" aria-pressed="true" data-size="1024x1024"><strong data-i18n="square">方形</strong><small>1:1</small></button>
+            <button type="button" class="preset" aria-pressed="false" data-size="1024x768"><strong data-i18n="landscape">横版</strong><small>4:3</small></button>
+            <button type="button" class="preset" aria-pressed="false" data-size="768x1024"><strong data-i18n="portrait">竖版</strong><small>3:4</small></button>
+          </div>
+          <div class="settings-grid">
+            <label class="field"><span data-i18n="size">尺寸</span><select id="size"><option>1024x1024</option><option>1024x768</option><option>768x1024</option><option>768x768</option><option>512x512</option></select></label>
+            <label class="field"><span data-i18n="seed">随机种子</span><input id="seed" type="number" min="0" max="4294967295" data-i18n-placeholder="random" placeholder="Random"></label>
+            <label class="field"><span data-i18n="format">格式</span><select id="format"><option value="png">PNG</option><option value="webp">WebP</option><option value="jpeg">JPEG</option></select></label>
+            <label class="field"><span data-i18n="count">数量</span><select id="count" disabled><option value="1">1</option></select></label>
+          </div>
+        </section>
+
+        <details class="advanced"><summary data-i18n="executionFacts">参数与支持范围</summary><div class="settings-grid"><label class="field"><span data-i18n="steps">采样步数</span><input id="steps" type="number" value="4" readonly></label><label class="field"><span data-i18n="guidance">提示词引导</span><input id="guidance" type="number" value="1" readonly></label></div><p id="capability-boundary" class="boundary-note" data-i18n="fluxBoundary">当前模型固定使用 4 步、引导值 1，暂不支持负面提示词和局部重绘。</p></details>
+
+        <div id="form-error" class="notice notice--error" role="alert" hidden></div>
+        <button id="submit" class="submit-button" type="submit" disabled><span aria-hidden="true">✦</span><span data-i18n="submit">开始生成</span></button>
+        <p class="submit-hint" data-i18n="queueHint">提交后可查看生成进度。服务正在恢复时，任务会排队等待。</p>
+      </form>
+
+      <section class="result-panel" aria-live="polite">
+        <div id="empty-state" class="empty-state"><div class="empty-orb" aria-hidden="true">✦</div><h2 data-i18n="emptyTitle">在这里预览创作结果</h2><p data-i18n="emptyBody">描述想要的图片并开始生成，完成后可查看、下载或继续编辑。</p></div>
+        <div id="job-view" role="status" aria-live="polite" aria-busy="true" hidden><div class="job-heading"><div><p class="eyebrow" data-i18n="currentJob">当前任务</p><h2 id="job-status">等待处理</h2></div><button id="cancel-job" type="button" class="ghost-button" data-i18n="cancel">取消</button></div><div class="progress-track"><span id="progress-bar"></span></div><p id="job-detail" class="job-detail"></p><div id="result-error" class="notice notice--error" role="alert" hidden></div><div id="gallery" class="gallery"></div><details id="metadata" class="metadata-card ui-result-details" hidden></details></div>
+      </section>
+    </section>
+  </main>
+  <script type="module" src="/plugins/official.drawing/app.js"></script>
+</body>
+</html>

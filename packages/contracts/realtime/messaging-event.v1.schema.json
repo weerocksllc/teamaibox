@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.teamaibox.local/realtime/messaging-event.v1.schema.json",
+  "title": "Messaging realtime event v1",
+  "x-teamaibox-contract": {"family": "realtime", "role": "response", "major": 1},
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["protocol_version", "id", "sequence", "type", "conversation_id", "message_id", "data", "created_at"],
+  "properties": {
+    "protocol_version": {"const": 1},
+    "id": {"type": "string", "format": "uuid"},
+    "sequence": {"type": "integer", "minimum": 1},
+    "type": {"type": "string", "enum": ["conversation.created", "conversation.participant_added", "conversation.participant_removed", "message.created", "message.edited", "message.deleted", "message.delivered", "message.read"]},
+    "conversation_id": {"type": ["string", "null"], "format": "uuid"},
+    "message_id": {"type": ["string", "null"], "format": "uuid"},
+    "data": {"type": "object", "additionalProperties": true},
+    "created_at": {"type": "string", "format": "date-time"},
+    "extensions": {"type": "object", "additionalProperties": true}
+  }
+}

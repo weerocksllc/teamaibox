@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "purpose": "Independent Google Play compatibility experiment; not the default phone image",
+  "baseRecipe": "install/build_public_phone_rom.py",
+  "buildId": "16102939",
+  "androidVersion": "17",
+  "abi": "arm64-v8a",
+  "vendorCommit": "ce96d815698119bf8b85589b13a1dd8acab3212d",
+  "release": "MindTheGapps-17.0.0-arm64-20260828_065753",
+  "asset": "MindTheGapps-17.0.0-arm64-20260828_065753.zip",
+  "url": "https://github.com/MindTheGapps/17.0.0-arm64/releases/download/MindTheGapps-17.0.0-arm64-20260828_065753/MindTheGapps-17.0.0-arm64-20260828_065753.zip",
+  "size": 547409889,
+  "sha256": "82aa202a0675a0c641b2adef02c67e2769e73734f68a3ac4d773893d8f627be9",
+  "googleLoginTested": false,
+  "redistributionApproved": false
+}

@@ -1,0 +1,17 @@
+[Unit]
+Description=Restore current Team AI Box web and control services in dependency order
+Requires=docker.service
+After=docker.service
+Before=teamaibox-existing-office-workers.service
+StartLimitIntervalSec=0
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/python3 /usr/local/lib/teamaibox/frontdoor/restore_appliance_frontdoor.py --configuration /etc/teamaibox/frontdoor.json
+RemainAfterExit=yes
+Restart=on-failure
+RestartSec=10
+TimeoutStartSec=600
+
+[Install]
+WantedBy=multi-user.target

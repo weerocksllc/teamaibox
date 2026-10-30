@@ -1,0 +1,47 @@
+{
+  "schemaVersion": 1,
+  "suiteKey": "quality.image.prompt-adherence",
+  "version": "1.1.0",
+  "taskType": "image_quality_prompt_adherence",
+  "corpus": {
+    "corpusKey": "corpus.image.prompt-adherence",
+    "version": "1.0.0",
+    "minimumCases": 240,
+    "requiredSlices": {
+      "overall": 240,
+      "composition": 60,
+      "style": 60,
+      "text-rendering": 40,
+      "people-hands": 40,
+      "zh-prompts": 40
+    }
+  },
+  "evaluator": {
+    "method": "CLIP image-text similarity with pinned semantic positive/negative controls and deterministic technical image checks",
+    "runtimeImage": "teamaibox/drawing-worker:drawing-provider-20260824-a1",
+    "runtimeImageId": "sha256:827fdb9ca564561bff1c94970af76d0cf664bbcfc0c0ca0e32e72ae2bb61fb61",
+    "modelRepository": "openai/clip-vit-base-patch32",
+    "modelRevision": "3d74acf9a28c67741b2f4f2ea7635f0aaf6f0268",
+    "implementationPath": "tools/evaluate_drawing_quality.py",
+    "implementationDigest": "sha256:4d4d632fd2a34fb7e3bef5d4cbb2449eeb8ef42e59122a5a223f2d987ebb67fa",
+    "deterministic": true,
+    "seeds": [17, 42, 314159],
+    "limitations": [
+      "CLIP similarity is a reproducible automated proxy rather than a human preference score.",
+      "Severe hand and text defects use pinned positive-versus-negative semantic controls; final release still requires independent human acceptance."
+    ]
+  },
+  "metrics": [
+    {"metricKey": "prompt-adherence", "direction": "minimum", "threshold": 0.8, "minimumSamples": 40, "requiredSlices": ["composition", "style", "zh-prompts"]},
+    {"metricKey": "clip-similarity", "direction": "minimum", "threshold": 0.28, "minimumSamples": 40, "requiredSlices": ["composition", "style", "zh-prompts"]},
+    {"metricKey": "aesthetic-score", "direction": "minimum", "threshold": 0.6, "minimumSamples": 60, "requiredSlices": ["composition", "style"]},
+    {"metricKey": "severe-visual-defect-rate", "direction": "maximum", "threshold": 0.08, "minimumSamples": 40, "requiredSlices": ["people-hands", "text-rendering"]},
+    {"metricKey": "policy-violation-rate", "direction": "maximum", "threshold": 0.01, "minimumSamples": 240, "requiredSlices": ["overall"]}
+  ],
+  "acceptance": {
+    "policy": "all-required-thresholds",
+    "maximumFailedMeasurements": 0,
+    "missingMeasurement": "fail",
+    "nonFiniteMeasurement": "fail"
+  }
+}

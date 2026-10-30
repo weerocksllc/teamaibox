@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Windows 桌面 · Team AI Box</title><script src="theme-prepaint.js"></script><link rel="stylesheet" href="desktop.css?v=sharing-20261022"><link rel="stylesheet" href="/plugins/official.virtual-computers/ui-system.css"><link rel="stylesheet" href="installation.css"></head>
+<body data-ui-app="virtual-desktop"><header><div><strong id="view-title" data-desktop-text>虚拟显示器</strong><span id="status" role="status">正在连接…</span></div>
+<nav><button id="start" type="button" data-desktop-text hidden>开机</button><button id="sound" type="button" aria-pressed="false" data-desktop-text>开启声音</button><button id="reconnect" type="button" data-desktop-text>重新连接</button><button id="fullscreen" type="button" data-desktop-text>全屏</button><button id="leave" type="button" data-desktop-text>离开桌面</button></nav>
+<div id="monitor-controls" hidden><span id="control-status" role="status"></span><button id="control-claim" type="button" hidden>接管控制</button><button id="control-release" type="button" hidden>释放控制</button><button id="sharing-open" type="button">参与者与邀请</button></div></header>
+<main id="screen" tabindex="0" aria-label="Windows 远程桌面"></main>
+<section id="notice" role="status" hidden></section>
+<dialog id="login"><form id="credentials"><h1 data-desktop-text>登录 Windows</h1><p data-desktop-text>使用这台电脑已有的 Windows 账户。密码只用于本次连接，不会保存到浏览器。</p>
+<label><span data-desktop-text>用户名</span><input name="username" autocomplete="username" required></label>
+<label><span data-desktop-text>密码</span><input name="password" type="password" autocomplete="off" required></label>
+<label><span data-desktop-text>域（通常留空）</span><input name="domain" autocomplete="off"></label>
+<p id="login-error" role="alert"></p><button type="submit" data-desktop-text>登录桌面</button></form></dialog>
+<footer data-desktop-text>关闭或离开页面不会关闭 Windows。</footer>
+<dialog id="sharing-dialog" aria-labelledby="sharing-title"><div class="sharing-heading"><h1 id="sharing-title" data-en="Participants & invitations">参与者与邀请</h1><button id="sharing-close" type="button" data-en="Close">关闭</button></div>
+<p data-en="Everyone sees the same monitor and hears the same audio. Exclusive control is the default; the owner can reclaim it at any time.">大家看到同一个显示器、听到同一声音。默认一人控制，主人可随时收回。</p>
+<p id="sharing-error" role="alert" hidden></p><ul id="sharing-participants"></ul>
+<div id="sharing-owner" hidden><label class="sharing-toggle"><input id="sharing-mode" type="checkbox"><span data-en="Allow shared control">允许共同控制</span></label>
+<button id="sharing-reclaim" type="button" data-en="Reclaim exclusive control">收回全部控制权</button>
+<hr><h2 data-en="Invite a member">邀请成员</h2>
+<form id="sharing-search-form"><label for="sharing-search" data-en="Search by name or account">搜索姓名或账号</label><div class="sharing-fields"><input id="sharing-search" type="search"><button type="submit" data-en="Search">搜索</button></div></form>
+<form id="sharing-invite-form"><label for="sharing-member" data-en="Member">成员</label><select id="sharing-member" required></select><button id="sharing-load-more" type="button" hidden data-en="Load more members">加载更多成员</button>
+<label for="sharing-permission" data-en="Permission">权限</label><div class="sharing-fields"><select id="sharing-permission"><option value="view" data-en="View only">仅观看</option><option value="control" data-en="Allow control">允许控制</option></select><button id="sharing-invite" type="submit" data-en="Send invitation">发送邀请</button></div></form>
+<p id="sharing-feedback" role="status"></p><h2 data-en="Invited members">已邀请成员</h2><p id="sharing-empty" data-en="No invitations yet.">尚未邀请成员。</p><ul id="sharing-grants"></ul></div></dialog>
+<script src="guacamole-common-js/all.min.js"></script>
+<script type="module" src="desktop-diagnostics.js"></script>
+<script type="module" src="desktop.mjs?v=sharing-20261022"></script></body></html>

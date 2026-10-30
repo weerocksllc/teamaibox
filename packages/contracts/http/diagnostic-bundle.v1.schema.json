@@ -1,0 +1,87 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.teamaibox.local/http/diagnostic-bundle.v1.schema.json",
+  "title": "Administrator diagnostic export bundle v1",
+  "x-teamaibox-contract": { "family": "http", "role": "response", "major": 1 },
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "exportId", "generatedAt", "filters", "sensitiveContentIncluded", "signals", "health", "alerts", "sensitiveContent", "bundleDigest", "expiresAt"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "exportId": { "type": "string", "format": "uuid" },
+    "generatedAt": { "$ref": "#/$defs/timestamp" },
+    "filters": { "$ref": "#/$defs/filters" },
+    "sensitiveContentIncluded": { "type": "boolean" },
+    "signals": { "type": "array", "maxItems": 5000, "items": { "$ref": "#/$defs/signal" } },
+    "health": { "type": "array", "maxItems": 5000, "items": { "$ref": "#/$defs/health" } },
+    "alerts": { "type": "array", "maxItems": 5000, "items": { "$ref": "#/$defs/alert" } },
+    "sensitiveContent": { "type": "array", "maxItems": 100, "items": { "$ref": "#/$defs/sensitiveItem" } },
+    "bundleDigest": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+    "expiresAt": { "$ref": "#/$defs/timestamp" }
+  },
+  "$defs": {
+    "timestamp": { "type": "string", "format": "date-time" },
+    "uuid": { "type": "string", "format": "uuid" },
+    "key": { "type": "string", "pattern": "^[a-z][a-z0-9_.-]{1,127}$" },
+    "correlation": { "type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{7,127}$" },
+    "targetKind": { "enum": ["core_service", "plugin", "node", "worker", "provider", "software_source", "storage_pool", "network_link"] },
+    "target": {
+      "type": "object", "additionalProperties": false, "required": ["kind", "key"],
+      "properties": { "kind": { "$ref": "#/$defs/targetKind" }, "key": { "type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]{0,255}$" } }
+    },
+    "facts": {
+      "type": "object", "maxProperties": 48,
+      "propertyNames": { "enum": ["applicationKey", "architecture", "attemptNumber", "bytes", "cacheState", "coldStartMilliseconds", "concurrency", "crashCount", "dataClass", "direction", "durationMilliseconds", "errorCode", "generation", "healthState", "httpStatus", "identityId", "jobId", "latencyMilliseconds", "lifecycleState", "metricStatus", "modelProfileId", "networkLinkId", "nodeId", "operation", "outcome", "pluginId", "providerId", "queueDelayMilliseconds", "queueDepth", "reasonCode", "requestCount", "retryable", "revision", "sequence", "sourceId", "state", "storagePoolId", "targetKind", "targetKey", "teamId", "temperatureCelsius", "unifiedMemoryBytes", "unit", "value", "workerId", "nextRetryAt"] },
+      "additionalProperties": { "type": ["string", "number", "boolean", "null"] }
+    },
+    "filters": {
+      "type": "object", "additionalProperties": false, "required": ["since", "until", "correlationId", "targetKinds"],
+      "properties": {
+        "since": { "$ref": "#/$defs/timestamp" }, "until": { "$ref": "#/$defs/timestamp" },
+        "correlationId": { "oneOf": [{ "$ref": "#/$defs/correlation" }, { "type": "null" }] },
+        "targetKinds": { "oneOf": [{ "type": "array", "minItems": 1, "maxItems": 8, "uniqueItems": true, "items": { "$ref": "#/$defs/targetKind" } }, { "type": "null" }] }
+      }
+    },
+    "signalData": {
+      "oneOf": [
+        { "type": "object", "additionalProperties": false, "required": ["level"], "properties": { "level": { "enum": ["debug", "info", "warning", "error", "critical"] } } },
+        { "type": "object", "additionalProperties": false, "required": ["metricKey", "value", "unit", "aggregation"], "properties": { "metricKey": { "$ref": "#/$defs/key" }, "value": { "type": "number" }, "unit": { "$ref": "#/$defs/key" }, "aggregation": { "enum": ["gauge", "counter", "histogram_sample"] } } },
+        { "type": "object", "additionalProperties": false, "required": ["spanKey", "status", "durationMilliseconds"], "properties": { "spanKey": { "$ref": "#/$defs/key" }, "status": { "enum": ["ok", "error", "cancelled"] }, "durationMilliseconds": { "type": "number", "minimum": 0, "maximum": 604800000 } } }
+      ]
+    },
+    "signal": {
+      "type": "object", "additionalProperties": false,
+      "required": ["signalId", "kind", "correlationId", "producer", "eventKey", "severity", "observedAt", "data", "facts", "jobIds", "attemptIds"],
+      "properties": {
+        "signalId": { "$ref": "#/$defs/uuid" }, "kind": { "enum": ["log", "metric", "trace"] }, "correlationId": { "$ref": "#/$defs/correlation" },
+        "producer": { "$ref": "#/$defs/target" }, "eventKey": { "$ref": "#/$defs/key" }, "severity": { "enum": ["debug", "info", "warning", "error", "critical"] },
+        "observedAt": { "$ref": "#/$defs/timestamp" }, "data": { "$ref": "#/$defs/signalData" }, "facts": { "$ref": "#/$defs/facts" },
+        "jobIds": { "type": "array", "maxItems": 256, "uniqueItems": true, "items": { "$ref": "#/$defs/uuid" } },
+        "attemptIds": { "type": "array", "maxItems": 256, "uniqueItems": true, "items": { "$ref": "#/$defs/uuid" } }
+      }
+    },
+    "health": {
+      "type": "object", "additionalProperties": false,
+      "required": ["healthId", "correlationId", "target", "state", "reasonCode", "observedAt", "facts", "signalId"],
+      "properties": {
+        "healthId": { "$ref": "#/$defs/uuid" }, "correlationId": { "$ref": "#/$defs/correlation" }, "target": { "$ref": "#/$defs/target" },
+        "state": { "enum": ["unknown", "healthy", "degraded", "unavailable"] }, "reasonCode": { "oneOf": [{ "$ref": "#/$defs/key" }, { "type": "null" }] },
+        "observedAt": { "$ref": "#/$defs/timestamp" }, "facts": { "$ref": "#/$defs/facts" }, "signalId": { "oneOf": [{ "$ref": "#/$defs/uuid" }, { "type": "null" }] }
+      }
+    },
+    "alert": {
+      "type": "object", "additionalProperties": false,
+      "required": ["alertId", "alertKey", "severity", "status", "target", "correlationId", "titleKey", "detailKey", "facts", "signalIds", "jobIds", "occurrenceCount", "openedAt", "lastSeenAt", "resolvedAt"],
+      "properties": {
+        "alertId": { "$ref": "#/$defs/uuid" }, "alertKey": { "type": "string", "minLength": 3, "maxLength": 512 }, "severity": { "enum": ["info", "warning", "critical"] }, "status": { "enum": ["open", "resolved"] },
+        "target": { "$ref": "#/$defs/target" }, "correlationId": { "$ref": "#/$defs/correlation" }, "titleKey": { "$ref": "#/$defs/key" }, "detailKey": { "$ref": "#/$defs/key" }, "facts": { "$ref": "#/$defs/facts" },
+        "signalIds": { "type": "array", "maxItems": 256, "uniqueItems": true, "items": { "$ref": "#/$defs/uuid" } }, "jobIds": { "type": "array", "maxItems": 256, "uniqueItems": true, "items": { "$ref": "#/$defs/uuid" } },
+        "occurrenceCount": { "type": "integer", "minimum": 1 }, "openedAt": { "$ref": "#/$defs/timestamp" }, "lastSeenAt": { "$ref": "#/$defs/timestamp" }, "resolvedAt": { "oneOf": [{ "$ref": "#/$defs/timestamp" }, { "type": "null" }] }
+      }
+    },
+    "sensitiveItem": {
+      "type": "object", "additionalProperties": false, "required": ["referenceId", "contentType", "content"],
+      "properties": { "referenceId": { "type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]{0,255}$" }, "contentType": { "$ref": "#/$defs/key" }, "content": {} }
+    }
+  }
+}

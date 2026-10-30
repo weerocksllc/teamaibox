@@ -1,0 +1,28 @@
+.header-badges {
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.experimental {
+  padding: 9px 13px;
+  border: 1px solid color-mix(in srgb, var(--accent) 42%, var(--line));
+  border-radius: 99px;
+  background: var(--soft);
+  color: var(--accent);
+  font-size: 12px;
+  font-weight: 760;
+}
+
+@media (max-width: 540px) {
+  .header-badges {
+    justify-content: flex-start;
+    margin-top: 13px;
+  }
+
+  .header-badges .secure {
+    margin-top: 0;
+  }
+}

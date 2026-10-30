@@ -1,0 +1,15 @@
+#!/bin/sh
+set -eu
+
+if [ -n "${UXPLAYRC:-}" ]; then
+  echo "UXPLAYRC is forbidden; the platform supplies the complete option set" >&2
+  exit 64
+fi
+
+runtime_dir=/run/teamaibox
+mkdir -p "$runtime_dir"
+umask 077
+echo "$$" > "$runtime_dir/uxplay.pid"
+trap 'rm -f "$runtime_dir/uxplay.pid"' EXIT HUP INT TERM
+
+exec /usr/bin/uxplay "$@"

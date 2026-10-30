@@ -1,0 +1,5 @@
+#!/usr/bin/env sh
+set -eu
+
+TOOL_DIR=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
+exec python3 "$TOOL_DIR/spark_inventory.py" "$@"

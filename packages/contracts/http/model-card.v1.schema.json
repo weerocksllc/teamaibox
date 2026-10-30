@@ -1,0 +1,75 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.teamaibox.local/http/model-card.v1.schema.json",
+  "x-teamaibox-contract": { "family": "http", "role": "response", "major": 1 },
+  "title": "Administrator model card v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "generatedAt", "profile", "lifecycle", "compatibilityMatrix", "validationRuns", "comparisons", "knownLimitations", "routingRecommendation", "rawRunLinks"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "generatedAt": { "type": "string", "format": "date-time" },
+    "profile": {
+      "type": "object",
+      "required": ["profileId", "profileKey", "fingerprint", "precision", "artifactDigest", "apiContracts", "limits", "resourceEnvelope", "exclusive"],
+      "properties": {
+        "profileId": { "type": "string", "format": "uuid" },
+        "profileKey": { "type": "string", "pattern": "^[a-z][a-z0-9_.-]{2,191}$" },
+        "fingerprint": { "$ref": "#/$defs/digest" },
+        "sourceModel": { "type": "string" },
+        "sourceRevision": { "type": "string" },
+        "engine": { "type": "string" },
+        "engineVersion": { "type": "string" },
+        "engineImageDigest": { "$ref": "#/$defs/digest" },
+        "precision": { "type": "string" },
+        "artifactDigest": { "$ref": "#/$defs/digest" },
+        "apiContracts": { "type": "array", "items": { "type": "string" } },
+        "limits": { "type": "object" },
+        "resourceEnvelope": { "type": "object" },
+        "exclusive": { "type": "boolean" }
+      }
+    },
+    "lifecycle": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["state", "revision", "reasonKey", "validationRunId", "updatedAt"],
+      "properties": {
+        "state": { "enum": ["experimental", "validating", "certified", "deprecated", "failed", "revalidation_required"] },
+        "revision": { "type": "integer", "minimum": 1 },
+        "reasonKey": { "type": "string" },
+        "validationRunId": { "type": ["string", "null"], "format": "uuid" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      }
+    },
+    "compatibilityMatrix": { "type": "array", "items": { "$ref": "#/$defs/compatibilityRow" } },
+    "validationRuns": { "type": "array", "items": { "type": "object" } },
+    "comparisons": { "type": "array", "items": { "type": "object" } },
+    "knownLimitations": { "type": "array", "items": { "type": "string" } },
+    "routingRecommendation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["recommendationKey", "productionEligible", "allowedEnvironments", "reasonKeys"],
+      "properties": {
+        "recommendationKey": { "type": "string" },
+        "productionEligible": { "type": "boolean" },
+        "allowedEnvironments": { "type": "array", "items": { "enum": ["production", "validation", "development"] }, "uniqueItems": true },
+        "reasonKeys": { "type": "array", "items": { "type": "string" }, "uniqueItems": true }
+      }
+    },
+    "rawRunLinks": { "type": "array", "items": { "$ref": "#/$defs/evidenceRef" }, "uniqueItems": true }
+  },
+  "$defs": {
+    "digest": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+    "evidenceRef": { "type": "string", "pattern": "^(object|evidence)://[A-Za-z0-9/._:-]{1,2000}$" },
+    "compatibilityRow": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["section", "requirement", "value"],
+      "properties": {
+        "section": { "enum": ["platform", "hardware", "software"] },
+        "requirement": { "type": "string" },
+        "value": { "type": "string" }
+      }
+    }
+  }
+}

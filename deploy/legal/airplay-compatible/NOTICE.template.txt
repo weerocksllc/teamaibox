@@ -1,0 +1,74 @@
+DRAFT — NOT FOR RELEASE OR DISTRIBUTION
+
+Team AI Box — AirPlay-compatible wireless casting (not Apple-certified)
+兼容 AirPlay 的无线投屏（非 Apple 认证）
+
+Team AI Box is an independent product and is not authorized, sponsored,
+endorsed, or approved by Apple Inc.
+Team AI Box 是独立产品，未经 Apple Inc. 授权、赞助、认可或批准。
+
+FairPlay/DRM-protected content is unsupported.
+不支持受 FairPlay/DRM 保护的内容。
+
+AirPlay is a trademark of Apple Inc., registered in the U.S. and other
+countries and regions. [COUNSEL MUST CONFIRM THE FINAL TERRITORIAL ATTRIBUTION.]
+No Apple logo, AirPlay badge, MFi badge, or Apple-owned artwork is licensed by
+this notice.
+
+Exact release subject
+---------------------
+Receiver image: [REQUIRED OCI ARM64 DIGEST]
+SFU image: [REQUIRED OCI ARM64 DIGEST]
+Source bundle: [REQUIRED URL OR PHYSICAL-MEDIUM METHOD]
+Source bundle SHA-256: [REQUIRED]
+SPDX SBOM SHA-256: [REQUIRED]
+CycloneDX SBOM SHA-256: [REQUIRED]
+Vulnerability report and database digests: [REQUIRED]
+Cosign identity/issuer verification: [REQUIRED]
+SLSA provenance digest: [REQUIRED]
+
+UxPlay 1.73.6
+---------------
+Candidate source commit: 21eef8df25d91e12635c36d8176ad192725baca2
+Candidate source tree: ece31de373433cf042ecb3ab801abb6ceb23fba3
+Project: https://github.com/FDH2/UxPlay
+License: GNU General Public License version 3 only (GPL-3.0-only)
+
+This distribution must include the complete GPLv3 license and
+Complete Corresponding Source for the exact receiver binary, including Team AI Box
+patches, build/container recipes, generated source and Installation Information
+when required for a User Product. The final release must state the exact GPLv3
+section 6 source-delivery method and retention period approved by counsel.
+
+UxPlay bundles or inherits code from PlayFair, RPiPlay, ShairPlay,
+AirplayServer and llhttp. Preserve the upstream copyright, GPL/LGPL/MIT license
+texts and modification notices. UxPlay upstream states that the legal status of
+the bundled PlayFair library is unclear; this draft is not an approval of that
+code.
+
+Selected candidate components
+-----------------------------
+GStreamer 1.28.6 — LGPL-2.1-or-later
+gst-plugin-webrtc 0.15.3 (only the livekit feature) — MPL-2.0
+LiveKit Server 1.13.6 — Apache-2.0
+GLib 2.88.3 — LGPL-2.1-or-later
+libplist 2.7.0 library — LGPL-2.1-or-later
+OpenSSL 3.5.8 — Apache-2.0
+Avahi 0.8 selected components — LGPL-2.1-or-later
+FFmpeg 8.1.2 selected LGPL configuration — LGPL-2.1-or-later
+libnice 0.1.24 (LGPL option selected) — LGPL-2.1-or-later
+libsrtp 2.8.0 — BSD-3-Clause
+usrsctp 0.9.5.0 — BSD-3-Clause
+libvpx 1.17.0 — BSD-3-Clause; preserve its PATENTS grant
+Opus 1.6.1 — BSD-3-Clause; preserve its patent-license references
+nv-codec-headers 13.0.19.1 — per-header MIT notices
+llhttp as bundled in the exact UxPlay tree — MIT
+
+The release bundle must include every applicable complete license, copyright,
+NOTICE and patent file, a file-level license map, and source/relink materials
+required by GPL, LGPL and MPL. This short notice never replaces those texts.
+Static LGPL linking, FFmpeg GPL/nonfree mode, gst-plugins-ugly, x264/x265,
+OpenH264 and FDK AAC are not approved by this candidate review.
+
+This template remains invalid for release while any [REQUIRED] or [COUNSEL]
+field is present or while the review packet reports releaseEligible=false.

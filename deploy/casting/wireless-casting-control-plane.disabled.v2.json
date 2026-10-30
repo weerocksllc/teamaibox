@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 2,
+  "configurationId": "teamaibox.wireless-casting-control-plane.disabled.v2",
+  "mode": "disabled",
+  "state": "unsupported",
+  "claims": {"receiverReady": false, "sessionStartAllowed": false, "receiverAdvertisementAllowed": false, "productAccepted": false, "releaseEligible": false},
+  "outputs": {
+    "hdmi": {"state": "unavailable", "reasonCode": "casting_product_service_not_deployed"},
+    "browser": {"state": "unavailable", "reasonCode": "casting_product_service_not_deployed"}
+  },
+  "gates": [
+    {"code": "casting_product_service_not_deployed", "category": "runtime"},
+    {"code": "casting_office_reservation_not_integrated", "category": "runtime"},
+    {"code": "physical_apple_sender_not_exercised", "category": "hardware"}
+  ],
+  "limitations": {"appleCertified": false, "fairPlayDrmSupported": false, "syntheticAcceptanceAllowed": false},
+  "sourceBindings": {
+    "trustedMediaPackage": {"path": "deploy/casting/trusted-media-service.package.v2.json", "sha256": "sha256:2b5005be73e6173245f681620e300a0c1e037886a0cb2f9a210a28593842c305"},
+    "supplyChainReview": {"path": "architecture/validation/airplay-compatible-supply-chain-review.v3.json", "sha256": "sha256:2c357df62076e3a2dede0d02e60cbe48c74f7794827d120f9727b238222a7116"},
+    "hardwareInventory": {"path": "evidence/validation/acceptance/hdmi-physical-observation-20260907-a2.json", "sha256": "sha256:e0362dee308713f550004f20d6cfea40133f1c39f0a547954c7be184ce6a6197"},
+    "hdmiComponent": {"path": "evidence/validation/components/casting-hdmi-component-20260907-a14.json", "sha256": "sha256:da52536dc6a8fbb33734c2711d60034ecd8ca6d6b19b47c9741f716bc1842b69"},
+    "daemonComponent": {"path": "evidence/validation/components/casting-daemon-component-20260907-a2.json", "sha256": "sha256:509339b65e42e5a495506acd301bc3571c50f04c2ae08957bed7eabca5189588"}
+  },
+  "successorPolicy": {
+    "activation": "atomic-platform-and-trusted-media-cutover",
+    "requiresReadyTrustedMediaRelease": true,
+    "requiresSupportedHardwareEvidence": true,
+    "requiresApprovedSupplyChainReview": true,
+    "configurationAloneMayEnableReceiver": false
+  }
+}

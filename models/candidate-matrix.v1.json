@@ -1,0 +1,664 @@
+{
+  "schemaVersion": 1,
+  "researchSnapshotAt": "2026-08-10T19:41:32.000Z",
+  "target": {
+    "nodeKey": "dgx-spark-dev-01",
+    "architecture": "linux/arm64/v8",
+    "accelerator": "nvidia-gb10-blackwell",
+    "unifiedMemoryBytes": 137438953472,
+    "containerFirst": true
+  },
+  "downloadGate": {
+    "metadataOnlyDuringDiscovery": true,
+    "requireExactRevision": true,
+    "requireReviewedLicense": true,
+    "requireChecksumBeforeCommit": true,
+    "allowedLicenseReviewStates": [
+      "approved"
+    ]
+  },
+  "coverage": [
+    "llm_agent",
+    "large_nvfp4_llm",
+    "image_drawing",
+    "ocr",
+    "asr",
+    "translation"
+  ],
+  "researchSources": [
+    {
+      "sourceId": "nvidia.spark.hardware",
+      "publisher": "NVIDIA",
+      "uri": "https://docs.nvidia.com/dgx/dgx-spark/hardware.html",
+      "retrievedAt": "2026-08-10T19:41:32.000Z"
+    },
+    {
+      "sourceId": "nvidia.spark.trtllm",
+      "publisher": "NVIDIA",
+      "uri": "https://build.nvidia.com/spark/trt-llm/overview",
+      "retrievedAt": "2026-08-10T19:41:32.000Z"
+    },
+    {
+      "sourceId": "nvidia.spark.nvfp4",
+      "publisher": "NVIDIA",
+      "uri": "https://build.nvidia.com/spark/nvfp4-quantization/overview",
+      "retrievedAt": "2026-08-10T19:41:32.000Z"
+    },
+    {
+      "sourceId": "nvidia.spark.comfyui",
+      "publisher": "NVIDIA",
+      "uri": "https://build.nvidia.com/spark/comfy-ui/overview",
+      "retrievedAt": "2026-08-10T19:41:32.000Z"
+    },
+    {
+      "sourceId": "nvidia.nemotron.quantization",
+      "publisher": "NVIDIA",
+      "uri": "https://docs.nvidia.com/nemotron/latest/nemotron/super3/quantization.html",
+      "retrievedAt": "2026-08-10T19:41:32.000Z"
+    },
+    {
+      "sourceId": "openai.whisper",
+      "publisher": "OpenAI",
+      "uri": "https://github.com/openai/whisper/tree/v20250625",
+      "retrievedAt": "2026-08-10T19:41:32.000Z"
+    },
+    {
+      "sourceId": "paddle.ocr",
+      "publisher": "PaddlePaddle",
+      "uri": "https://huggingface.co/PaddlePaddle/PaddleOCR-VL-1.5",
+      "retrievedAt": "2026-08-10T19:41:32.000Z"
+    },
+    {
+      "sourceId": "google.madlad",
+      "publisher": "Google",
+      "uri": "https://huggingface.co/google/madlad400-3b-mt",
+      "retrievedAt": "2026-08-10T19:41:32.000Z"
+    }
+  ],
+  "candidates": [
+    {
+      "candidateId": "qwen36-35b-a3b-bf16",
+      "role": "baseline",
+      "useCases": [
+        "llm_agent"
+      ],
+      "source": {
+        "publisher": "Qwen",
+        "repository": "Qwen/Qwen3.6-35B-A3B",
+        "revision": "995ad96eacd98c81ed38be0c5b274b04031597b0",
+        "provenanceUri": "https://huggingface.co/Qwen/Qwen3.6-35B-A3B/tree/995ad96eacd98c81ed38be0c5b274b04031597b0",
+        "artifactSourceUri": "https://huggingface.co/Qwen/Qwen3.6-35B-A3B/resolve/995ad96eacd98c81ed38be0c5b274b04031597b0/",
+        "gated": false,
+        "reportedRepositoryBytes": 71921347477
+      },
+      "license": {
+        "identifier": "Apache-2.0",
+        "usage": "commercial",
+        "reviewStatus": "approved",
+        "reviewedAt": "2026-08-10T19:41:32.000Z",
+        "reviewedBy": "model-discovery-policy-v1",
+        "evidenceUri": "https://huggingface.co/Qwen/Qwen3.6-35B-A3B/blob/995ad96eacd98c81ed38be0c5b274b04031597b0/LICENSE",
+        "evidenceDigest": "sha256:50cbab8a892c5f2993b8c7351a99182507472def3b1374558308605d99b86b32",
+        "conditions": [
+          "Retain Apache-2.0 notices when distributing model materials."
+        ]
+      },
+      "artifactDecision": {
+        "status": "allowed",
+        "reason": "Ungated publisher revision and permissive license; import still requires file checksums and quota reservation.",
+        "maximumDownloadBytes": 75000000000,
+        "downloadState": "not_downloaded",
+        "allowPatterns": [
+          "*.json",
+          "*.jinja",
+          "*.safetensors",
+          "*.model",
+          "tokenizer*"
+        ]
+      },
+      "precision": {
+        "kind": "bf16",
+        "nvfp4Applicability": "baseline-for-nvfp4",
+        "evidenceUri": "https://build.nvidia.com/spark/nvfp4-quantization/overview",
+        "baselineCandidateId": null,
+        "comparisonReferences": []
+      },
+      "engine": {
+        "name": "ngc-vllm",
+        "compatibilityStatus": "documented-on-spark",
+        "targetArchitecture": "linux/arm64/v8",
+        "resourceMode": "node-exclusive",
+        "notes": "High-precision quality reference. Weight size is not a deployability claim; load/KV/workspace must be measured with the core-service reserve intact."
+      },
+      "selection": {
+        "status": "planned",
+        "rationale": "Exact high-precision reference for the primary Qwen3.6 NVFP4 profile."
+      }
+    },
+    {
+      "candidateId": "qwen36-35b-a3b-nvfp4",
+      "role": "primary",
+      "useCases": [
+        "llm_agent",
+        "large_nvfp4_llm"
+      ],
+      "source": {
+        "publisher": "NVIDIA/Qwen",
+        "repository": "nvidia/Qwen3.6-35B-A3B-NVFP4",
+        "revision": "491c2f1ea524c639598bf8fa787a93fed5a6fbce",
+        "provenanceUri": "https://huggingface.co/nvidia/Qwen3.6-35B-A3B-NVFP4/tree/491c2f1ea524c639598bf8fa787a93fed5a6fbce",
+        "artifactSourceUri": "https://huggingface.co/nvidia/Qwen3.6-35B-A3B-NVFP4/resolve/491c2f1ea524c639598bf8fa787a93fed5a6fbce/",
+        "gated": false,
+        "reportedRepositoryBytes": 23462477790
+      },
+      "license": {
+        "identifier": "Apache-2.0",
+        "usage": "commercial",
+        "reviewStatus": "approved",
+        "reviewedAt": "2026-08-10T19:41:32.000Z",
+        "reviewedBy": "model-discovery-policy-v1",
+        "evidenceUri": "https://huggingface.co/nvidia/Qwen3.6-35B-A3B-NVFP4/blob/491c2f1ea524c639598bf8fa787a93fed5a6fbce/README.md",
+        "evidenceDigest": "sha256:bb3a29ef8870dd68be8a0e0d508880dd49a4db5aafb034bb9b3f475ca5740481",
+        "conditions": [
+          "Retain Apache-2.0 notices and preserve NVIDIA/Qwen provenance."
+        ]
+      },
+      "artifactDecision": {
+        "status": "allowed",
+        "reason": "NVIDIA publishes the exact NVFP4 revision and a current Spark quantization/serving playbook.",
+        "maximumDownloadBytes": 26000000000,
+        "downloadState": "not_downloaded",
+        "allowPatterns": [
+          "*.json",
+          "*.jinja",
+          "*.safetensors",
+          "*.model",
+          "tokenizer*"
+        ]
+      },
+      "precision": {
+        "kind": "nvfp4",
+        "nvfp4Applicability": "official-prequantized",
+        "evidenceUri": "https://build.nvidia.com/spark/nvfp4-quantization/overview",
+        "baselineCandidateId": "qwen36-35b-a3b-bf16",
+        "comparisonReferences": []
+      },
+      "engine": {
+        "name": "ngc-vllm",
+        "compatibilityStatus": "documented-on-spark",
+        "targetArchitecture": "linux/arm64/v8",
+        "resourceMode": "node-exclusive",
+        "notes": "Primary interactive Agent/LLM candidate; certification must compare the exact W4A16/FP8-attention recipe to the BF16 source under identical requests."
+      },
+      "selection": {
+        "status": "planned",
+        "rationale": "Current NVIDIA Spark-specific NVFP4 workflow, Apache license, ungated source, and approximately 23.5 GB repository snapshot."
+      }
+    },
+    {
+      "candidateId": "nemotron3-super-120b-a12b-nvfp4",
+      "role": "stretch",
+      "useCases": [
+        "large_nvfp4_llm",
+        "llm_agent"
+      ],
+      "source": {
+        "publisher": "NVIDIA",
+        "repository": "nvidia/NVIDIA-Nemotron-3-Super-120B-A12B-NVFP4",
+        "revision": "4f0cf9daaeb7a4d5e23f80a00e7ed15f0e03caf6",
+        "provenanceUri": "https://huggingface.co/nvidia/NVIDIA-Nemotron-3-Super-120B-A12B-NVFP4/tree/4f0cf9daaeb7a4d5e23f80a00e7ed15f0e03caf6",
+        "artifactSourceUri": "https://huggingface.co/nvidia/NVIDIA-Nemotron-3-Super-120B-A12B-NVFP4/resolve/4f0cf9daaeb7a4d5e23f80a00e7ed15f0e03caf6/",
+        "gated": false,
+        "reportedRepositoryBytes": 80365683780
+      },
+      "license": {
+        "identifier": "NVIDIA-Nemotron-Open-Model-License",
+        "usage": "conditional-commercial",
+        "reviewStatus": "conditional",
+        "reviewedAt": "2026-08-10T19:41:32.000Z",
+        "reviewedBy": "model-discovery-policy-v1",
+        "evidenceUri": "https://huggingface.co/nvidia/NVIDIA-Nemotron-3-Super-120B-A12B-NVFP4/blob/4f0cf9daaeb7a4d5e23f80a00e7ed15f0e03caf6/README.md",
+        "evidenceDigest": "sha256:4ea83df2c6f00a9238cb08bab7267bbf187d9442d4f8b2fe1463b9a63f4a8283",
+        "conditions": [
+          "Administrator must accept and retain the non-SPDX NVIDIA model terms before artifact import."
+        ]
+      },
+      "artifactDecision": {
+        "status": "blocked",
+        "reason": "Commercial use is stated by the publisher, but the non-SPDX license still requires explicit administrator review.",
+        "maximumDownloadBytes": null,
+        "downloadState": "not_downloaded",
+        "allowPatterns": []
+      },
+      "precision": {
+        "kind": "nvfp4",
+        "nvfp4Applicability": "official-prequantized",
+        "evidenceUri": "https://build.nvidia.com/spark/trt-llm/overview",
+        "baselineCandidateId": null,
+        "comparisonReferences": [
+          {
+            "repository": "nvidia/NVIDIA-Nemotron-3-Super-120B-A12B-Base-BF16",
+            "revision": "46cc6113d364942e7742b0b2afd35b5db5058b29",
+            "precision": "bf16",
+            "executionRequirement": "two-spark-or-external",
+            "downloadStatus": "blocked-until-benchmark-plan"
+          },
+          {
+            "repository": "nvidia/NVIDIA-Nemotron-3-Super-120B-A12B-FP8",
+            "revision": "7d7e5797b8a3c7abbab54033b6004e93e8b6bc91",
+            "precision": "fp8",
+            "executionRequirement": "two-spark-or-external",
+            "downloadStatus": "blocked-until-benchmark-plan"
+          }
+        ]
+      },
+      "engine": {
+        "name": "tensorrt-llm",
+        "compatibilityStatus": "documented-on-spark",
+        "targetArchitecture": "linux/arm64/v8",
+        "resourceMode": "node-exclusive",
+        "notes": "Publisher states one-Spark minimum for the NVFP4 profile, but local concurrency/context and core-reserve feasibility remain unverified."
+      },
+      "selection": {
+        "status": "hold",
+        "rationale": "Best 120B Spark showcase candidate, held until license acceptance and lower-precision baseline execution is planned."
+      }
+    },
+    {
+      "candidateId": "gpt-oss-120b-mxfp4",
+      "role": "alternate",
+      "useCases": [
+        "llm_agent",
+        "large_nvfp4_llm"
+      ],
+      "source": {
+        "publisher": "OpenAI",
+        "repository": "openai/gpt-oss-120b",
+        "revision": "b5c939de8f754692c1647ca79fbf85e8c1e70f8a",
+        "provenanceUri": "https://huggingface.co/openai/gpt-oss-120b/tree/b5c939de8f754692c1647ca79fbf85e8c1e70f8a",
+        "artifactSourceUri": "https://huggingface.co/openai/gpt-oss-120b/resolve/b5c939de8f754692c1647ca79fbf85e8c1e70f8a/original/",
+        "gated": false,
+        "reportedRepositoryBytes": 195764040609
+      },
+      "license": {
+        "identifier": "Apache-2.0",
+        "usage": "commercial",
+        "reviewStatus": "approved",
+        "reviewedAt": "2026-08-10T19:41:32.000Z",
+        "reviewedBy": "model-discovery-policy-v1",
+        "evidenceUri": "https://huggingface.co/openai/gpt-oss-120b/blob/b5c939de8f754692c1647ca79fbf85e8c1e70f8a/LICENSE",
+        "evidenceDigest": "sha256:58d1e17ffe5109a7ae296caafcadfdbe6a7d176f0bc4ab01e12a689b0499d8bd",
+        "conditions": [
+          "Retain Apache-2.0 notices and apply the publisher usage policy."
+        ]
+      },
+      "artifactDecision": {
+        "status": "allowed",
+        "reason": "Ungated Apache-2.0 alternate; only the original MXFP4 artifact set may be imported, not the entire multi-format repository.",
+        "maximumDownloadBytes": 70000000000,
+        "downloadState": "not_downloaded",
+        "allowPatterns": [
+          "original/**",
+          "LICENSE",
+          "README.md"
+        ]
+      },
+      "precision": {
+        "kind": "mxfp4",
+        "nvfp4Applicability": "different-fp4-format",
+        "evidenceUri": "https://huggingface.co/openai/gpt-oss-120b/blob/b5c939de8f754692c1647ca79fbf85e8c1e70f8a/README.md",
+        "baselineCandidateId": null,
+        "comparisonReferences": []
+      },
+      "engine": {
+        "name": "tensorrt-llm",
+        "compatibilityStatus": "documented-on-spark",
+        "targetArchitecture": "linux/arm64/v8",
+        "resourceMode": "node-exclusive",
+        "notes": "MXFP4 is not NVFP4 and must never be reported as an NVFP4 result; useful as a large-model functional and memory comparator."
+      },
+      "selection": {
+        "status": "planned",
+        "rationale": "Permissive large Agent model and NVIDIA-documented Spark support, retained as a distinct FP4 format."
+      }
+    },
+    {
+      "candidateId": "flux1-schnell-bf16",
+      "role": "primary",
+      "useCases": [
+        "image_drawing"
+      ],
+      "source": {
+        "publisher": "Black Forest Labs",
+        "repository": "black-forest-labs/FLUX.1-schnell",
+        "revision": "741f7c3ce8b383c54771c7003378a50191e9efe9",
+        "provenanceUri": "https://huggingface.co/black-forest-labs/FLUX.1-schnell/tree/741f7c3ce8b383c54771c7003378a50191e9efe9",
+        "artifactSourceUri": "https://huggingface.co/black-forest-labs/FLUX.1-schnell/resolve/741f7c3ce8b383c54771c7003378a50191e9efe9/",
+        "gated": true,
+        "reportedRepositoryBytes": 57845410538
+      },
+      "license": {
+        "identifier": "Apache-2.0",
+        "usage": "commercial",
+        "reviewStatus": "approved",
+        "reviewedAt": "2026-08-10T19:41:32.000Z",
+        "reviewedBy": "model-discovery-policy-v1",
+        "evidenceUri": "https://huggingface.co/api/models/black-forest-labs/FLUX.1-schnell/revision/741f7c3ce8b383c54771c7003378a50191e9efe9",
+        "evidenceDigest": "sha256:82c9540963fdf0fee54b2f4e732b3ef0a56e7b945044328d77e4264990e48611",
+        "conditions": [
+          "Retain Apache-2.0 notices."
+        ]
+      },
+      "artifactDecision": {
+        "status": "blocked",
+        "reason": "The exact model revision is gated; no user token or acceptance is collected during autonomous discovery.",
+        "maximumDownloadBytes": null,
+        "downloadState": "not_downloaded",
+        "allowPatterns": []
+      },
+      "precision": {
+        "kind": "bf16",
+        "nvfp4Applicability": "not-applicable-no-documented-path",
+        "evidenceUri": "https://build.nvidia.com/spark/comfy-ui/overview",
+        "baselineCandidateId": null,
+        "comparisonReferences": []
+      },
+      "engine": {
+        "name": "comfyui-pytorch",
+        "compatibilityStatus": "documented-on-spark",
+        "targetArchitecture": "linux/arm64/v8",
+        "resourceMode": "node-exclusive",
+        "notes": "Spark supports ComfyUI-class diffusion workloads, but this exact revision and workflow still require containerized probing."
+      },
+      "selection": {
+        "status": "hold",
+        "rationale": "Preferred modern drawing candidate, held because gated repository acceptance is a human action."
+      }
+    },
+    {
+      "candidateId": "sdxl-base-1.0-fp16",
+      "role": "fallback",
+      "useCases": [
+        "image_drawing"
+      ],
+      "source": {
+        "publisher": "Stability AI",
+        "repository": "stabilityai/stable-diffusion-xl-base-1.0",
+        "revision": "462165984030d82259a11f4367a4eed129e94a7b",
+        "provenanceUri": "https://huggingface.co/stabilityai/stable-diffusion-xl-base-1.0/tree/462165984030d82259a11f4367a4eed129e94a7b",
+        "artifactSourceUri": "https://huggingface.co/stabilityai/stable-diffusion-xl-base-1.0/resolve/462165984030d82259a11f4367a4eed129e94a7b/",
+        "gated": false,
+        "reportedRepositoryBytes": 76912765291
+      },
+      "license": {
+        "identifier": "CreativeML-OpenRAIL++-M",
+        "usage": "conditional-commercial",
+        "reviewStatus": "approved",
+        "reviewedAt": "2026-08-10T19:41:32.000Z",
+        "reviewedBy": "model-discovery-policy-v1",
+        "evidenceUri": "https://huggingface.co/stabilityai/stable-diffusion-xl-base-1.0/blob/462165984030d82259a11f4367a4eed129e94a7b/LICENSE.md",
+        "evidenceDigest": "sha256:19b6998b569b53ac1fc2158a8a3202c8699a9a4605b47075715d9c96be7fb6d0",
+        "conditions": [
+          "Product use policy must enforce the OpenRAIL use restrictions.",
+          "Redistribution or hosted access must carry required notices and terms."
+        ]
+      },
+      "artifactDecision": {
+        "status": "allowed",
+        "reason": "Ungated fallback with reviewed use-based restrictions; only the FP16 Diffusers variant is eligible.",
+        "maximumDownloadBytes": 16000000000,
+        "downloadState": "not_downloaded",
+        "allowPatterns": [
+          "*.json",
+          "*.txt",
+          "*.model",
+          "*fp16*.safetensors",
+          "scheduler/**",
+          "tokenizer*/**"
+        ]
+      },
+      "precision": {
+        "kind": "fp16",
+        "nvfp4Applicability": "not-applicable-no-documented-path",
+        "evidenceUri": "https://build.nvidia.com/spark/comfy-ui/overview",
+        "baselineCandidateId": null,
+        "comparisonReferences": []
+      },
+      "engine": {
+        "name": "comfyui-pytorch",
+        "compatibilityStatus": "documented-on-spark",
+        "targetArchitecture": "linux/arm64/v8",
+        "resourceMode": "node-exclusive",
+        "notes": "Fallback avoids gated artifact access. Exact quality, memory and cancellation behavior remain certification work."
+      },
+      "selection": {
+        "status": "planned",
+        "rationale": "Immediately importable fallback while FLUX gated access remains unresolved."
+      }
+    },
+    {
+      "candidateId": "paddleocr-vl-1.5-bf16",
+      "role": "primary",
+      "useCases": [
+        "ocr"
+      ],
+      "source": {
+        "publisher": "PaddlePaddle",
+        "repository": "PaddlePaddle/PaddleOCR-VL-1.5",
+        "revision": "df2b114327c857f4db801d3d5b6741ad9a24fcd1",
+        "provenanceUri": "https://huggingface.co/PaddlePaddle/PaddleOCR-VL-1.5/tree/df2b114327c857f4db801d3d5b6741ad9a24fcd1",
+        "artifactSourceUri": "https://huggingface.co/PaddlePaddle/PaddleOCR-VL-1.5/resolve/df2b114327c857f4db801d3d5b6741ad9a24fcd1/",
+        "gated": false,
+        "reportedRepositoryBytes": 1930468999
+      },
+      "license": {
+        "identifier": "Apache-2.0",
+        "usage": "commercial",
+        "reviewStatus": "approved",
+        "reviewedAt": "2026-08-10T19:41:32.000Z",
+        "reviewedBy": "model-discovery-policy-v1",
+        "evidenceUri": "https://huggingface.co/PaddlePaddle/PaddleOCR-VL-1.5/blob/df2b114327c857f4db801d3d5b6741ad9a24fcd1/LICENSE",
+        "evidenceDigest": "sha256:b8c4d7deccd236af023af1c88c4d4e8f0fc2f41914e0fb23a3ec9678fb5a8456",
+        "conditions": [
+          "Retain Apache-2.0 notices."
+        ]
+      },
+      "artifactDecision": {
+        "status": "allowed",
+        "reason": "Ungated official OCR revision with permissive terms; exact ARM64 CUDA backend must pass a container probe.",
+        "maximumDownloadBytes": 3000000000,
+        "downloadState": "not_downloaded",
+        "allowPatterns": [
+          "*.json",
+          "*.py",
+          "*.safetensors",
+          "tokenizer*"
+        ]
+      },
+      "precision": {
+        "kind": "bf16",
+        "nvfp4Applicability": "not-applicable-no-documented-path",
+        "evidenceUri": null,
+        "baselineCandidateId": null,
+        "comparisonReferences": []
+      },
+      "engine": {
+        "name": "paddleocr-transformers",
+        "compatibilityStatus": "probe-required",
+        "targetArchitecture": "linux/arm64/v8",
+        "resourceMode": "shared",
+        "notes": "No exact publisher NVFP4 deployment path was found; do not force conversion. Test layout, tables, formulas and 109-language behavior."
+      },
+      "selection": {
+        "status": "planned",
+        "rationale": "Compact official multilingual document OCR candidate with a permissive license."
+      }
+    },
+    {
+      "candidateId": "whisper-large-v3-fp16",
+      "role": "primary",
+      "useCases": [
+        "asr"
+      ],
+      "source": {
+        "publisher": "OpenAI",
+        "repository": "openai/whisper",
+        "revision": "v20250625",
+        "provenanceUri": "https://github.com/openai/whisper/tree/v20250625",
+        "artifactSourceUri": "https://openaipublic.azureedge.net/main/whisper/models/e5b1a55b89c1367dacf97e3e19bfd829a01529dbfdeefa8caeb59b3f1b81dadb/large-v3.pt",
+        "gated": false,
+        "reportedRepositoryBytes": null
+      },
+      "license": {
+        "identifier": "MIT",
+        "usage": "commercial",
+        "reviewStatus": "approved",
+        "reviewedAt": "2026-08-10T19:41:32.000Z",
+        "reviewedBy": "model-discovery-policy-v1",
+        "evidenceUri": "https://github.com/openai/whisper/blob/v20250625/LICENSE",
+        "evidenceDigest": "sha256:b5d65a59060e68c4ff940e1eddfa6f94b2d68fdf58ed7f4dd57721c997e35e9d",
+        "conditions": [
+          "Retain the MIT copyright and permission notice."
+        ]
+      },
+      "artifactDecision": {
+        "status": "allowed",
+        "reason": "Official release pins the checkpoint SHA-256 in its artifact URL; importer must verify it again.",
+        "maximumDownloadBytes": 4000000000,
+        "downloadState": "not_downloaded",
+        "allowPatterns": [
+          "large-v3.pt"
+        ]
+      },
+      "precision": {
+        "kind": "fp16",
+        "nvfp4Applicability": "not-applicable-no-documented-path",
+        "evidenceUri": null,
+        "baselineCandidateId": null,
+        "comparisonReferences": []
+      },
+      "engine": {
+        "name": "openai-whisper-pytorch",
+        "compatibilityStatus": "probe-required",
+        "targetArchitecture": "linux/arm64/v8",
+        "resourceMode": "shared",
+        "notes": "Use the publisher checkpoint first. Faster engines are separate immutable profiles and require ARM64/CUDA conformance and timestamp quality tests."
+      },
+      "selection": {
+        "status": "planned",
+        "rationale": "Mature multilingual ASR reference with an official checksum and permissive upstream license."
+      }
+    },
+    {
+      "candidateId": "madlad400-3b-mt-bf16",
+      "role": "primary",
+      "useCases": [
+        "translation"
+      ],
+      "source": {
+        "publisher": "Google",
+        "repository": "google/madlad400-3b-mt",
+        "revision": "fa184c675da0b5c9e1c8694fccd4e12e2d422094",
+        "provenanceUri": "https://huggingface.co/google/madlad400-3b-mt/tree/fa184c675da0b5c9e1c8694fccd4e12e2d422094",
+        "artifactSourceUri": "https://huggingface.co/google/madlad400-3b-mt/resolve/fa184c675da0b5c9e1c8694fccd4e12e2d422094/",
+        "gated": false,
+        "reportedRepositoryBytes": 15666842819
+      },
+      "license": {
+        "identifier": "Apache-2.0",
+        "usage": "commercial",
+        "reviewStatus": "approved",
+        "reviewedAt": "2026-08-10T19:41:32.000Z",
+        "reviewedBy": "model-discovery-policy-v1",
+        "evidenceUri": "https://huggingface.co/google/madlad400-3b-mt/blob/fa184c675da0b5c9e1c8694fccd4e12e2d422094/README.md",
+        "evidenceDigest": "sha256:7579fd7a40ebb96bc9098b1c817825c572a20763aa8fc80c5261a0517e224979",
+        "conditions": [
+          "Retain Apache-2.0 notices and publisher/model-card attribution."
+        ]
+      },
+      "artifactDecision": {
+        "status": "allowed",
+        "reason": "Ungated dedicated translation model with permissive terms; pin only the selected Transformers weights.",
+        "maximumDownloadBytes": 17000000000,
+        "downloadState": "not_downloaded",
+        "allowPatterns": [
+          "*.json",
+          "*.model",
+          "*.safetensors",
+          "tokenizer*"
+        ]
+      },
+      "precision": {
+        "kind": "bf16",
+        "nvfp4Applicability": "not-applicable-no-documented-path",
+        "evidenceUri": null,
+        "baselineCandidateId": null,
+        "comparisonReferences": []
+      },
+      "engine": {
+        "name": "transformers-t5",
+        "compatibilityStatus": "probe-required",
+        "targetArchitecture": "linux/arm64/v8",
+        "resourceMode": "shared",
+        "notes": "Dedicated translation reference; test Chinese/English and selected long-tail language pairs. No exact NVFP4 path is claimed."
+      },
+      "selection": {
+        "status": "planned",
+        "rationale": "Commercially usable dedicated translation baseline with broad multilingual coverage."
+      }
+    },
+    {
+      "candidateId": "nllb-200-1.3b-noncommercial",
+      "role": "rejected",
+      "useCases": [
+        "translation"
+      ],
+      "source": {
+        "publisher": "Meta",
+        "repository": "facebook/nllb-200-distilled-1.3B",
+        "revision": "7be3e24664b38ce1cac29b8aeed6911aa0cf0576",
+        "provenanceUri": "https://huggingface.co/facebook/nllb-200-distilled-1.3B/tree/7be3e24664b38ce1cac29b8aeed6911aa0cf0576",
+        "artifactSourceUri": "https://huggingface.co/facebook/nllb-200-distilled-1.3B/resolve/7be3e24664b38ce1cac29b8aeed6911aa0cf0576/",
+        "gated": false,
+        "reportedRepositoryBytes": 5505079452
+      },
+      "license": {
+        "identifier": "CC-BY-NC-4.0",
+        "usage": "non-commercial",
+        "reviewStatus": "rejected",
+        "reviewedAt": "2026-08-10T19:41:32.000Z",
+        "reviewedBy": "model-discovery-policy-v1",
+        "evidenceUri": "https://huggingface.co/facebook/nllb-200-distilled-1.3B/blob/7be3e24664b38ce1cac29b8aeed6911aa0cf0576/README.md",
+        "evidenceDigest": "sha256:fd1dc9f45b7a6709662a7c972f6ab82bdbc1bc0d742257c08ad80b497ba620cc",
+        "conditions": [
+          "Publisher limits the model to research/non-commercial use and says it is not released for production deployment."
+        ]
+      },
+      "artifactDecision": {
+        "status": "blocked",
+        "reason": "Non-commercial, research-oriented license is incompatible with the product's default distribution and team-service goals.",
+        "maximumDownloadBytes": null,
+        "downloadState": "not_downloaded",
+        "allowPatterns": []
+      },
+      "precision": {
+        "kind": "fp16",
+        "nvfp4Applicability": "not-applicable-no-documented-path",
+        "evidenceUri": null,
+        "baselineCandidateId": null,
+        "comparisonReferences": []
+      },
+      "engine": {
+        "name": "transformers-nllb",
+        "compatibilityStatus": "probe-required",
+        "targetArchitecture": "linux/arm64/v8",
+        "resourceMode": "shared",
+        "notes": "Retained only as negative license evidence; no artifact or runtime work is authorized."
+      },
+      "selection": {
+        "status": "rejected",
+        "rationale": "License and model card explicitly conflict with production use."
+      }
+    }
+  ]
+}

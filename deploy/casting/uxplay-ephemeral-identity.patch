@@ -1,0 +1,32 @@
+--- a/lib/crypto.c
++++ b/lib/crypto.c
+@@ -354,6 +354,11 @@
+     FILE *file = NULL;
+     bool new_pk = false;
+     bool use_keyfile = strlen(keyfile);
++#ifdef TEAMAIBOX_PIN_STDIN
++    /* Each authorized Web session owns one receiver process. Never derive
++     * its identity key from a public device ID or read/write a key file. */
++    use_keyfile = false;
++#endif
+ 
+     *result = 0;
+ 
+@@ -374,6 +379,9 @@
+             new_pk = true;
+         }
+     } else {
++#ifdef TEAMAIBOX_PIN_STDIN
++        new_pk = true;
++#else
+         /* generate (insecure) persistent keypair using device_id */
+         unsigned char hash[SHA512_DIGEST_LENGTH] = {0};
+         char salt[] = SALT_PK;
+@@ -383,6 +391,7 @@
+         sha_final(ctx, hash, NULL);
+         sha_destroy(ctx);
+         key->pkey = EVP_PKEY_new_raw_private_key(EVP_PKEY_ED25519, NULL, (const unsigned char *) hash, ED25519_KEY_SIZE);
++#endif
+     }
+ 
+     if (new_pk) {

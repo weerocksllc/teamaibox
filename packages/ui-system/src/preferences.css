@@ -1,0 +1,41 @@
+/* Apply only snapshots accepted by the existing preferences-v1 client. */
+:root[data-plugin-preference-revision] {
+  --canvas: var(--teamaibox-canvas);
+  --surface: var(--teamaibox-surface);
+  --surface-raised: var(--teamaibox-surface-raised);
+  --surface-subtle: var(--teamaibox-surface-subtle);
+  --text: var(--teamaibox-text);
+  --text-muted: var(--teamaibox-text-muted);
+  --border: var(--teamaibox-border);
+  --border-strong: var(--teamaibox-border-strong);
+  --interactive: var(--teamaibox-interactive);
+  --interactive-hover: var(--teamaibox-interactive-hover);
+  --on-interactive: var(--teamaibox-on-interactive);
+  --selected-surface: var(--teamaibox-selected-surface);
+  --selected-text: var(--teamaibox-selected-text);
+  --focus: var(--teamaibox-focus);
+  --disabled-surface: var(--teamaibox-disabled-surface);
+  --disabled-text: var(--teamaibox-disabled-text);
+  --disabled-border: var(--teamaibox-disabled-border);
+  --success: var(--teamaibox-success);
+  --success-soft: var(--teamaibox-success-soft);
+  --warning: var(--teamaibox-warning);
+  --warning-soft: var(--teamaibox-warning-soft);
+  --error: var(--teamaibox-error);
+  --error-soft: var(--teamaibox-error-soft);
+  --info: var(--teamaibox-info);
+  --info-soft: var(--teamaibox-info-soft);
+  --chart-1: var(--teamaibox-chart-1);
+  --chart-2: var(--teamaibox-chart-2);
+  --chart-3: var(--teamaibox-chart-3);
+  --chart-4: var(--teamaibox-chart-4);
+  --chart-5: var(--teamaibox-chart-5);
+  --chart-6: var(--teamaibox-chart-6);
+  --code-surface: var(--teamaibox-code-surface);
+  --code-text: var(--teamaibox-code-text);
+  --log-info: var(--teamaibox-log-info);
+  --log-warning: var(--teamaibox-log-warning);
+  --log-error: var(--teamaibox-log-error);
+  --shadow-sm: var(--teamaibox-shadow-sm);
+  --shadow-lg: var(--teamaibox-shadow-lg);
+}

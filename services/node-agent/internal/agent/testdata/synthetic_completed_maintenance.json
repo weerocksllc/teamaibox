@@ -1,0 +1,169 @@
+{
+  "schemaVersion": 1,
+  "nodeId": "10000000-0000-4000-8000-000000000001",
+  "nodeGeneration": 1,
+  "commandDigest": "0000000000000000000000000000000000000000000000000000000000000001",
+  "planDigest": "sha256:cebb3d0dac5927aa5f6054e6dd8eee6e99cd6b31a7f4a0d637bd0c8b770ddf5a",
+  "payload": {
+    "transactionId": "20000000-0000-4000-8000-000000000001",
+    "workerIds": [
+      "30000000-0000-4000-8000-000000000001",
+      "30000000-0000-4000-8000-000000000002",
+      "30000000-0000-4000-8000-000000000003",
+      "30000000-0000-4000-8000-000000000004",
+      "30000000-0000-4000-8000-000000000005",
+      "30000000-0000-4000-8000-000000000006"
+    ],
+    "allowedOperations": [
+      "protected-set.maintenance"
+    ],
+    "operationOrder": [
+      "protected.stop",
+      "protected.restore",
+      "protected.verify"
+    ],
+    "maintenanceGeneration": 1,
+    "issuedAt": "2000-01-01T00:00:00Z",
+    "expiresAt": "2000-01-01T00:15:00Z",
+    "journalRevision": 17,
+    "targets": [
+      {
+        "targetKey": "office.drawing-flux2",
+        "workerId": "30000000-0000-4000-8000-000000000001",
+        "modelProfileId": "40000000-0000-4000-8000-000000000001",
+        "containerName": "synthetic-worker-30000000-0000-4000-8000-000000000001",
+        "placementClass": "protected-resident",
+        "maintenanceGeneration": 1,
+        "stageOrder": 6,
+        "dependsOnWorkerIds": [
+          "30000000-0000-4000-8000-000000000006"
+        ],
+        "requiredImageId": "sha256:0000000000000000000000000000000000000000000000000000000000000003",
+        "requiredImageDigest": "registry.example.invalid/teamaibox/synthetic/drawing-flux2@sha256:0000000000000000000000000000000000000000000000000000000000000004",
+        "requiredConfigDigest": "sha256:0000000000000000000000000000000000000000000000000000000000000005",
+        "requiredStartSpecDigest": "sha256:0000000000000000000000000000000000000000000000000000000000000006",
+        "requiredLabels": {
+          "com.teamaibox.model-profile-id": "40000000-0000-4000-8000-000000000001",
+          "com.teamaibox.placement-class": "protected-resident",
+          "com.teamaibox.worker-id": "30000000-0000-4000-8000-000000000001"
+        }
+      },
+      {
+        "targetKey": "office.assistant-qwen38",
+        "workerId": "30000000-0000-4000-8000-000000000002",
+        "modelProfileId": "40000000-0000-4000-8000-000000000002",
+        "containerName": "synthetic-worker-30000000-0000-4000-8000-000000000002",
+        "placementClass": "protected-resident",
+        "maintenanceGeneration": 1,
+        "stageOrder": 5,
+        "dependsOnWorkerIds": [
+          "30000000-0000-4000-8000-000000000006"
+        ],
+        "requiredImageId": "sha256:0000000000000000000000000000000000000000000000000000000000000007",
+        "requiredImageDigest": "registry.example.invalid/teamaibox/synthetic/assistant-qwen38@sha256:0000000000000000000000000000000000000000000000000000000000000008",
+        "requiredConfigDigest": "sha256:0000000000000000000000000000000000000000000000000000000000000009",
+        "requiredStartSpecDigest": "sha256:000000000000000000000000000000000000000000000000000000000000000a",
+        "requiredLabels": {
+          "com.teamaibox.model-profile-id": "40000000-0000-4000-8000-000000000002",
+          "com.teamaibox.placement-class": "protected-resident",
+          "com.teamaibox.worker-id": "30000000-0000-4000-8000-000000000002"
+        }
+      },
+      {
+        "targetKey": "office.translation-lmt4",
+        "workerId": "30000000-0000-4000-8000-000000000003",
+        "modelProfileId": "40000000-0000-4000-8000-000000000003",
+        "containerName": "synthetic-worker-30000000-0000-4000-8000-000000000003",
+        "placementClass": "protected-resident",
+        "maintenanceGeneration": 1,
+        "stageOrder": 4,
+        "dependsOnWorkerIds": [
+          "30000000-0000-4000-8000-000000000006"
+        ],
+        "requiredImageId": "sha256:000000000000000000000000000000000000000000000000000000000000000b",
+        "requiredImageDigest": "registry.example.invalid/teamaibox/synthetic/translation-lmt4@sha256:000000000000000000000000000000000000000000000000000000000000000c",
+        "requiredConfigDigest": "sha256:000000000000000000000000000000000000000000000000000000000000000d",
+        "requiredStartSpecDigest": "sha256:000000000000000000000000000000000000000000000000000000000000000e",
+        "requiredLabels": {
+          "com.teamaibox.model-profile-id": "40000000-0000-4000-8000-000000000003",
+          "com.teamaibox.placement-class": "protected-resident",
+          "com.teamaibox.worker-id": "30000000-0000-4000-8000-000000000003"
+        }
+      },
+      {
+        "targetKey": "office.ocr-hunyuan",
+        "workerId": "30000000-0000-4000-8000-000000000004",
+        "modelProfileId": "40000000-0000-4000-8000-000000000004",
+        "containerName": "synthetic-worker-30000000-0000-4000-8000-000000000004",
+        "placementClass": "protected-resident",
+        "maintenanceGeneration": 1,
+        "stageOrder": 3,
+        "dependsOnWorkerIds": [
+          "30000000-0000-4000-8000-000000000006"
+        ],
+        "requiredImageId": "sha256:000000000000000000000000000000000000000000000000000000000000000f",
+        "requiredImageDigest": "registry.example.invalid/teamaibox/synthetic/ocr-hunyuan@sha256:0000000000000000000000000000000000000000000000000000000000000010",
+        "requiredConfigDigest": "sha256:0000000000000000000000000000000000000000000000000000000000000011",
+        "requiredStartSpecDigest": "sha256:0000000000000000000000000000000000000000000000000000000000000012",
+        "requiredLabels": {
+          "com.teamaibox.model-profile-id": "40000000-0000-4000-8000-000000000004",
+          "com.teamaibox.placement-class": "protected-resident",
+          "com.teamaibox.worker-id": "30000000-0000-4000-8000-000000000004"
+        },
+        "dependentContainers": [
+          {
+            "containerName": "synthetic-ocr-provider",
+            "requiredImageId": "sha256:0000000000000000000000000000000000000000000000000000000000000013",
+            "requiredImageDigest": "registry.example.invalid/teamaibox/synthetic/ocr-hunyuan-provider@sha256:0000000000000000000000000000000000000000000000000000000000000014",
+            "requiredConfigDigest": "sha256:0000000000000000000000000000000000000000000000000000000000000011",
+            "requiredLabels": {
+              "com.teamaibox.office-companion": "ocr-hunyuan"
+            }
+          }
+        ]
+      },
+      {
+        "targetKey": "office.asr-whisper",
+        "workerId": "30000000-0000-4000-8000-000000000005",
+        "modelProfileId": "40000000-0000-4000-8000-000000000005",
+        "containerName": "synthetic-worker-30000000-0000-4000-8000-000000000005",
+        "placementClass": "protected-resident",
+        "maintenanceGeneration": 1,
+        "stageOrder": 2,
+        "dependsOnWorkerIds": [
+          "30000000-0000-4000-8000-000000000006"
+        ],
+        "requiredImageId": "sha256:0000000000000000000000000000000000000000000000000000000000000015",
+        "requiredImageDigest": "registry.example.invalid/teamaibox/synthetic/asr-whisper@sha256:0000000000000000000000000000000000000000000000000000000000000016",
+        "requiredConfigDigest": "sha256:0000000000000000000000000000000000000000000000000000000000000017",
+        "requiredStartSpecDigest": "sha256:0000000000000000000000000000000000000000000000000000000000000018",
+        "requiredLabels": {
+          "com.teamaibox.model-profile-id": "40000000-0000-4000-8000-000000000005",
+          "com.teamaibox.placement-class": "protected-resident",
+          "com.teamaibox.worker-id": "30000000-0000-4000-8000-000000000005"
+        }
+      },
+      {
+        "targetKey": "office.embedding-qwen3",
+        "workerId": "30000000-0000-4000-8000-000000000006",
+        "modelProfileId": "40000000-0000-4000-8000-000000000006",
+        "containerName": "synthetic-worker-30000000-0000-4000-8000-000000000006",
+        "placementClass": "protected-resident",
+        "maintenanceGeneration": 1,
+        "stageOrder": 1,
+        "requiredImageId": "sha256:0000000000000000000000000000000000000000000000000000000000000019",
+        "requiredImageDigest": "registry.example.invalid/teamaibox/synthetic/embedding-qwen3@sha256:000000000000000000000000000000000000000000000000000000000000001a",
+        "requiredConfigDigest": "sha256:000000000000000000000000000000000000000000000000000000000000001b",
+        "requiredStartSpecDigest": "sha256:000000000000000000000000000000000000000000000000000000000000001c",
+        "requiredLabels": {
+          "com.teamaibox.model-profile-id": "40000000-0000-4000-8000-000000000006",
+          "com.teamaibox.placement-class": "protected-resident",
+          "com.teamaibox.worker-id": "30000000-0000-4000-8000-000000000006"
+        }
+      }
+    ]
+  },
+  "phase": "complete",
+  "nextOperation": 0,
+  "updatedAt": "2000-01-01T00:00:01Z"
+}

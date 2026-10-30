@@ -1,0 +1,6 @@
+DROP TRIGGER IF EXISTS model_capability_binding_opt_ins_touch_updated_at ON compute.model_capability_binding_opt_ins;
+DROP TABLE IF EXISTS compute.model_capability_binding_opt_ins;
+DROP TRIGGER IF EXISTS model_capability_bindings_identity_immutable ON compute.model_capability_bindings;
+DROP TRIGGER IF EXISTS model_capability_bindings_touch_updated_at ON compute.model_capability_bindings;
+DROP TABLE IF EXISTS compute.model_capability_bindings;
+DROP FUNCTION IF EXISTS compute.reject_model_capability_binding_identity_mutation();

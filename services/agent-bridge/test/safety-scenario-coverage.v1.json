@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "scenarios": [
+    {"key": "user_isolation", "file": "agent-sandbox.test.mjs", "test": "two users receive disjoint sandbox and workspace identities"},
+    {"key": "host_escape_attempts", "file": "agent-sandbox.test.mjs", "test": "host escape controls and direct devices are denied before runtime start"},
+    {"key": "quota_pressure", "file": "agent-sandbox.test.mjs", "test": "quota pressure is bounded without weakening sandbox security"},
+    {"key": "offline_package_install", "file": "agent-sandbox.test.mjs", "test": "offline package install requests remain routed to internal Pip NPM and APT gateways"},
+    {"key": "network_denial", "file": "agent-sandbox.test.mjs", "test": "network denial blocks unapproved Internet while preserving internal gateways"},
+    {"key": "reconnect_replay", "file": "agent-session-service.test.mjs", "test": "replays gap-free deduplicated events from an authenticated conversation cursor"},
+    {"key": "bridge_restart", "file": "agent-session-service.test.mjs", "test": "bridge restart preserves bindings prompts and replay cursors in durable repository state"},
+    {"key": "opencode_crash", "file": "agent-session-service.test.mjs", "test": "crash reconciliation never blindly replays an acceptance-uncertain prompt"},
+    {"key": "confirmation_races", "file": "agent-operation-confirmation.test.mjs", "test": "approval and interruption race has one fenced winner and one upstream reply"},
+    {"key": "interruption", "file": "agent-operation-confirmation.test.mjs", "test": "authenticated interruption rejects a pending action and aborts the OpenCode session"},
+    {"key": "uncertain_side_effects", "file": "agent-operation-confirmation.test.mjs", "test": "unknown approval outcome and crash require manual reconciliation without blind replay"}
+  ]
+}

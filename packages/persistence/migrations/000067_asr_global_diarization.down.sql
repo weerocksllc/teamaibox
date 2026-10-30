@@ -1,0 +1,8 @@
+DROP INDEX compute.asr_shard_plans_diarization_artifact_idx;
+ALTER TABLE compute.asr_shard_plans
+DROP CONSTRAINT asr_shard_plans_diarization_complete,
+DROP CONSTRAINT asr_shard_plans_profile_options_shape,
+DROP COLUMN diarization_completed_at,
+DROP COLUMN diarization_sha256,
+DROP COLUMN diarization_artifact_id,
+DROP COLUMN profile_options;

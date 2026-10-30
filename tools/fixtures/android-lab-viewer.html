@@ -1,0 +1,65 @@
+<!doctype html><meta charset="utf-8"><title>Android lab browser viewer</title>
+<style>body{background:#18212a;color:white;font:16px sans-serif}canvas{display:block;max-height:85vh;max-width:90vw;touch-action:none}button,input{padding:10px}</style>
+<button id="connect">Connect lab phone</button><button id="disconnect">Disconnect</button>
+<input id="text" placeholder="Text to phone"><button id="send">Send text</button><button id="back">Back</button>
+<output id="state">Disconnected</output><canvas width="720" height="1280"></canvas>
+<script>
+const canvas=document.querySelector('canvas'),ctx=canvas.getContext('2d');
+let ws,decoder,audio,audioNext=0,config=null;
+window.lab={frames:0,videoPackets:0,audioPackets:0,audioNonzeroPackets:0,audioPeak:0,audioSamples:0,
+  audioRebases:0,controls:0,errors:[],sessions:0,frameTimes:[],width:720,height:1280};
+function fail(e){lab.errors.push(String(e));document.querySelector('#state').textContent=String(e);}
+function control(m){if(ws?.readyState===1){ws.send(JSON.stringify(m));lab.controls++;}}
+document.querySelector('#connect').onclick=async()=>{
+  if(ws&&ws.readyState<2)return;
+  config=null;audioNext=0;lab.sessions++;
+  audio=new AudioContext({sampleRate:48000});await audio.resume();lab.audioState=audio.state;
+  decoder=new VideoDecoder({output:frame=>{
+    canvas.width=frame.displayWidth;canvas.height=frame.displayHeight;
+    lab.width=canvas.width;lab.height=canvas.height;ctx.drawImage(frame,0,0);frame.close();
+    lab.frames++;lab.frameTimes.push(performance.now());if(lab.frameTimes.length>20000)lab.frameTimes.shift();
+  },error:fail});
+  ws=new WebSocket('ws://'+location.host+'/ws');ws.binaryType='arraybuffer';
+  ws.onopen=()=>document.querySelector('#state').textContent='Connected';
+  ws.onclose=()=>{document.querySelector('#state').textContent='Disconnected';if(decoder.state!=='closed')decoder.close();audio.close();};
+  ws.onerror=()=>fail('WebSocket error');
+  ws.onmessage=e=>{
+    try{
+      if(typeof e.data==='string'){const m=JSON.parse(e.data);if(m.error)fail(m.error);if(m.codecHex)lab[m.channel===0?'videoCodec':'audioCodec']=m.codecHex;return;}
+      const raw=new Uint8Array(e.data),view=new DataView(e.data),channel=raw[0],flags=raw[1];
+      const pts=Number(view.getBigUint64(1)&((1n<<61n)-1n)),data=raw.subarray(13);
+      if(channel===0){
+        lab.videoPackets++;
+        if(flags&64){
+          config=data.slice();let sps=-1;
+          for(let i=0;i<data.length-7;i++)if(data[i]===0&&data[i+1]===0&&data[i+2]===0&&data[i+3]===1&&(data[i+4]&31)===7){sps=i+5;break;}
+          if(sps<0)throw Error('No H264 SPS');
+          const codec='avc1.'+Array.from(data.subarray(sps,sps+3),x=>x.toString(16).padStart(2,'0')).join('');
+          decoder.configure({codec,optimizeForLatency:true});lab.decoderCodec=codec;return;
+        }
+        if(!config)return;
+        const key=!!(flags&32);let bytes=data;
+        if(key){bytes=new Uint8Array(config.length+data.length);bytes.set(config);bytes.set(data,config.length);}
+        decoder.decode(new EncodedVideoChunk({type:key?'key':'delta',timestamp:pts,data:bytes}));
+      }else{
+        lab.audioPackets++;
+        if(flags&64)return;
+        if(lab.audioCodec!=='00726177')throw Error('Expected raw PCM');
+        if(data.byteLength%4)throw Error('PCM stereo alignment');
+        const count=data.byteLength/4,pcm=new DataView(data.buffer,data.byteOffset,data.byteLength),buffer=audio.createBuffer(2,count,48000);
+        let peak=0;
+        for(let channel=0;channel<2;channel++){const out=buffer.getChannelData(channel);for(let i=0;i<count;i++){out[i]=pcm.getInt16(i*4+channel*2,true)/32768;peak=Math.max(peak,Math.abs(out[i]));}}
+        lab.audioSamples+=count;lab.audioPeak=Math.max(lab.audioPeak,peak);if(peak>0.005)lab.audioNonzeroPackets++;
+        if(audioNext<audio.currentTime||audioNext>audio.currentTime+0.3){audioNext=audio.currentTime+0.07;lab.audioRebases++;}
+        const src=audio.createBufferSource();src.buffer=buffer;src.connect(audio.destination);src.start(audioNext);audioNext+=count/48000;
+      }
+    }catch(e){fail(e);ws.close();}
+  };
+};
+document.querySelector('#disconnect').onclick=()=>ws?.close();
+document.querySelector('#send').onclick=()=>control({type:'text',text:document.querySelector('#text').value});
+document.querySelector('#back').onclick=()=>{control({type:'key',keycode:4,action:0});control({type:'key',keycode:4,action:1});};
+canvas.onpointerdown=e=>{canvas.setPointerCapture(e.pointerId);touch(e,0);};canvas.onpointerup=e=>touch(e,1);
+canvas.onpointermove=e=>{if(e.buttons)touch(e,2);};
+function touch(e,action){const r=canvas.getBoundingClientRect();control({type:'touch',action,x:Math.min(canvas.width-1,Math.max(0,Math.round((e.clientX-r.left)/r.width*canvas.width))),y:Math.min(canvas.height-1,Math.max(0,Math.round((e.clientY-r.top)/r.height*canvas.height))),width:canvas.width,height:canvas.height});}
+</script>

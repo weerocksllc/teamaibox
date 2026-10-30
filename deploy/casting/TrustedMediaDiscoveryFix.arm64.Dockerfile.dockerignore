@@ -1,0 +1,5 @@
+**
+!services/
+!services/trusted_media_service/
+!services/trusted_media_service/private_discovery.py
+!services/trusted_media_service/private_discovery_address.py

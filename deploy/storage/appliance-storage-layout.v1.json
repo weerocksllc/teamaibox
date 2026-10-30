@@ -1,0 +1,394 @@
+{
+  "schemaVersion": 1,
+  "layoutId": "teamaibox.production-storage.v1",
+  "claimBoundary": "all durable team and platform data is below one already-mounted LUKS2 data root; only an allowlisted unlock/recovery runtime remains available while locked",
+  "bootRecovery": {
+    "root": "/var/lib/teamaibox-unlock",
+    "services": [
+      "unlock-service"
+    ],
+    "artifacts": [
+      {
+        "path": "runtime/unlock-service.oci",
+        "purpose": "digest-pinned minimal unlock service image",
+        "mode": "0444"
+      },
+      {
+        "path": "config/storage.json",
+        "purpose": "volume UUID mapper name and non-secret unlock policy",
+        "mode": "0444"
+      },
+      {
+        "path": "tls/server.crt",
+        "purpose": "unlock HTTPS certificate",
+        "mode": "0444"
+      },
+      {
+        "path": "tls/server.key",
+        "purpose": "unlock HTTPS private key",
+        "mode": "0400"
+      },
+      {
+        "path": "automatic/key.bin",
+        "purpose": "default automatic LUKS slot factor; absent when startup unlock protection is enabled",
+        "mode": "0400",
+        "allowedOnlyWhen": "startup_unlock_protection_disabled"
+      },
+      {
+        "path": "audit/pending.jsonl",
+        "purpose": "bounded redacted pre-unlock audit buffer",
+        "mode": "0600",
+        "maximumBytes": 1048576
+      },
+      {
+        "path": "usb/adapter.json",
+        "purpose": "non-secret USB adapter identity and version",
+        "mode": "0444"
+      }
+    ],
+    "forbiddenClasses": [
+      "team_database",
+      "object_blob",
+      "model_artifact",
+      "model_cache",
+      "agent_workspace",
+      "plugin_data",
+      "plugin_cache",
+      "audit_history",
+      "platform_secret_ciphertext",
+      "source_cache",
+      "backup_payload",
+      "recovery_key",
+      "web_passphrase",
+      "usb_private_material"
+    ]
+  },
+  "protectedVolume": {
+    "environmentVariable": "TEAMAIBOX_DATA_ROOT",
+    "productionMountPoint": "/srv/teamaibox/data",
+    "mapperName": "teamaibox-data",
+    "blockEncryption": "luks2",
+    "encryptionRequired": true,
+    "filesystem": "ext4",
+    "mountOptions": [
+      "nodev",
+      "nosuid"
+    ],
+    "rootMode": "0710",
+    "requiredBeforeProtectedServices": true,
+    "automaticUnlockDefault": true
+  },
+  "staticMappings": [
+    {
+      "key": "postgres",
+      "classes": [
+        "database"
+      ],
+      "relativePath": "database/postgres",
+      "mode": "0700",
+      "owner": "postgres",
+      "composeVolume": "postgres_data",
+      "containerTargets": [
+        "postgres:/var/lib/postgresql"
+      ]
+    },
+    {
+      "key": "event-bus",
+      "classes": [
+        "database",
+        "queue"
+      ],
+      "relativePath": "database/event-bus",
+      "mode": "0700",
+      "owner": "event-bus",
+      "composeVolume": "event_bus_data",
+      "containerTargets": [
+        "event-bus:/data"
+      ]
+    },
+    {
+      "key": "objects",
+      "classes": [
+        "object"
+      ],
+      "relativePath": "objects/blobs",
+      "mode": "0700",
+      "owner": "object-service",
+      "composeVolume": "object_data",
+      "containerTargets": [
+        "object-service:/var/lib/teamaibox/objects"
+      ]
+    },
+    {
+      "key": "object-staging",
+      "classes": [
+        "object",
+        "cache"
+      ],
+      "relativePath": "objects/staging",
+      "mode": "0700",
+      "owner": "object-service",
+      "composeVolume": "object_staging",
+      "containerTargets": [
+        "object-service:/var/lib/teamaibox/object-staging"
+      ]
+    },
+    {
+      "key": "model-artifacts",
+      "classes": [
+        "model"
+      ],
+      "relativePath": "models/artifacts",
+      "mode": "0710",
+      "owner": "node-agent",
+      "composeVolume": "model_artifacts",
+      "containerTargets": [
+        "node-agent:/var/lib/teamaibox/models:ro"
+      ]
+    },
+    {
+      "key": "model-cache",
+      "classes": [
+        "model",
+        "cache"
+      ],
+      "relativePath": "models/runtime-cache",
+      "mode": "0700",
+      "owner": "node-agent",
+      "composeVolume": "model_cache",
+      "containerTargets": [
+        "node-agent:/var/cache/teamaibox/models"
+      ]
+    },
+    {
+      "key": "model-evidence",
+      "classes": [
+        "model",
+        "audit"
+      ],
+      "relativePath": "models/evidence",
+      "mode": "0700",
+      "owner": "scheduler",
+      "composeVolume": "model_evidence",
+      "containerTargets": [
+        "scheduler:/var/lib/teamaibox/model-evidence"
+      ]
+    },
+    {
+      "key": "agent-state",
+      "classes": [
+        "workspace"
+      ],
+      "relativePath": "agent/state",
+      "mode": "0700",
+      "owner": "agent-bridge",
+      "composeVolume": "agent_bridge_data",
+      "containerTargets": [
+        "agent-bridge:/var/lib/teamaibox/agent-bridge"
+      ]
+    },
+    {
+      "key": "agent-workspaces",
+      "classes": [
+        "workspace"
+      ],
+      "relativePath": "agent/workspaces",
+      "mode": "0710",
+      "owner": "node-agent",
+      "composeVolume": "agent_workspace_data",
+      "containerTargets": [
+        "node-agent:/var/lib/teamaibox/agent-workspaces"
+      ]
+    },
+    {
+      "key": "agent-cache",
+      "classes": [
+        "workspace",
+        "cache"
+      ],
+      "relativePath": "agent/cache",
+      "mode": "0700",
+      "owner": "node-agent",
+      "composeVolume": "agent_cache",
+      "containerTargets": [
+        "node-agent:/var/cache/teamaibox/agent"
+      ]
+    },
+    {
+      "key": "plugin-data",
+      "classes": [
+        "plugin"
+      ],
+      "relativePath": "plugins/data",
+      "mode": "0710",
+      "owner": "plugin-runtime",
+      "composeVolume": "plugin_data",
+      "containerTargets": [
+        "plugin-runtime:/var/lib/teamaibox/plugins"
+      ]
+    },
+    {
+      "key": "plugin-cache",
+      "classes": [
+        "plugin",
+        "cache"
+      ],
+      "relativePath": "plugins/cache",
+      "mode": "0710",
+      "owner": "plugin-runtime",
+      "composeVolume": "plugin_cache",
+      "containerTargets": [
+        "plugin-runtime:/var/cache/teamaibox/plugins"
+      ]
+    },
+    {
+      "key": "audit",
+      "classes": [
+        "audit"
+      ],
+      "relativePath": "audit/events",
+      "mode": "0700",
+      "owner": "platform-api",
+      "composeVolume": "audit_data",
+      "containerTargets": [
+        "platform-api:/var/lib/teamaibox/audit"
+      ]
+    },
+    {
+      "key": "secrets",
+      "classes": [
+        "secrets"
+      ],
+      "relativePath": "secrets/ciphertext",
+      "mode": "0700",
+      "owner": "platform-api",
+      "composeVolume": "secrets_data",
+      "containerTargets": [
+        "platform-api:/var/lib/teamaibox/secrets"
+      ]
+    },
+    {
+      "key": "source-cache",
+      "classes": [
+        "cache"
+      ],
+      "relativePath": "caches/software-sources",
+      "mode": "0710",
+      "owner": "source-gateway",
+      "composeVolume": "source_cache",
+      "containerTargets": [
+        "source-gateway:/var/cache/teamaibox/sources"
+      ]
+    },
+    {
+      "key": "node-state",
+      "classes": [
+        "node"
+      ],
+      "relativePath": "node/state",
+      "mode": "0700",
+      "owner": "node-agent",
+      "composeVolume": "node_agent_state",
+      "containerTargets": [
+        "node-agent:/var/lib/teamaibox/node-agent"
+      ]
+    },
+    {
+      "key": "node-identity",
+      "classes": [
+        "secrets",
+        "node"
+      ],
+      "relativePath": "node/identity",
+      "mode": "0700",
+      "owner": "node-agent",
+      "composeVolume": "node_agent_identity",
+      "containerTargets": [
+        "node-agent:/var/lib/teamaibox/node-identity:ro"
+      ]
+    },
+    {
+      "key": "worker-data",
+      "classes": [
+        "workspace",
+        "object"
+      ],
+      "relativePath": "workers/data",
+      "mode": "0710",
+      "owner": "node-agent",
+      "composeVolume": "compute_worker_data",
+      "containerTargets": [
+        "node-agent:/var/lib/teamaibox/worker-roots"
+      ]
+    },
+    {
+      "key": "diagnostics",
+      "classes": [
+        "audit",
+        "cache"
+      ],
+      "relativePath": "diagnostics",
+      "mode": "0700",
+      "owner": "observability",
+      "composeVolume": "diagnostics_data",
+      "containerTargets": []
+    },
+    {
+      "key": "observability",
+      "classes": [
+        "audit"
+      ],
+      "relativePath": "observability",
+      "mode": "0700",
+      "owner": "observability",
+      "composeVolume": "observability_data",
+      "containerTargets": [
+        "observability:/var/lib/teamaibox/observability"
+      ]
+    }
+  ],
+  "dynamicMappings": [
+    {
+      "key": "plugin-instance-data",
+      "parentKey": "plugin-data",
+      "template": "{pluginId}/data",
+      "allocator": "node-agent",
+      "dockerStorage": "protected-bind"
+    },
+    {
+      "key": "plugin-instance-cache",
+      "parentKey": "plugin-cache",
+      "template": "{pluginId}/cache",
+      "allocator": "node-agent",
+      "dockerStorage": "protected-bind"
+    },
+    {
+      "key": "agent-user-workspace",
+      "parentKey": "agent-workspaces",
+      "template": "{userId}/{sandboxId}/workspace",
+      "allocator": "node-agent",
+      "dockerStorage": "protected-bind"
+    },
+    {
+      "key": "agent-user-cache",
+      "parentKey": "agent-cache",
+      "template": "{userId}/{sandboxId}/cache",
+      "allocator": "node-agent",
+      "dockerStorage": "protected-bind"
+    },
+    {
+      "key": "worker-attempt",
+      "parentKey": "worker-data",
+      "template": "{jobId}/{attemptId}",
+      "allocator": "node-agent",
+      "dockerStorage": "protected-bind"
+    }
+  ],
+  "dockerStoragePolicy": {
+    "preUnlockImageLayerStoreMayRemainOutsideProtectedVolume": true,
+    "reason": "the minimal unlock container must start before the LUKS2 volume is open",
+    "teamDataInImageLayerOrContainerWritableLayer": false,
+    "persistentNamedVolumesOutsideProtectedRoot": false,
+    "dynamicPluginAgentAndWorkerStorage": "protected-bind-only"
+  }
+}

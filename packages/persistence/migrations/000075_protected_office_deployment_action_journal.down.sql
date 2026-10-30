@@ -1,0 +1,5 @@
+DROP TRIGGER protected_office_deployment_action_guard
+ON compute.protected_office_deployment_actions;
+DROP FUNCTION compute.guard_protected_office_deployment_action();
+DROP TABLE compute.protected_office_deployment_actions;
+

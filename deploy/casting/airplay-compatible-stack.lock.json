@@ -1,0 +1,456 @@
+{
+  "schemaVersion": 1,
+  "lockId": "teamaibox.airplay-compatible-stack.candidate.v1",
+  "asOf": "2026-09-04",
+  "target": {
+    "platform": "linux/arm64/v8",
+    "phase": "source-candidate-only",
+    "remoteDeploymentPerformed": false,
+    "releaseEligible": false,
+    "task22_1Complete": false
+  },
+  "receiver": {
+    "name": "UxPlay",
+    "version": "1.73.6",
+    "tag": "v1.73.6",
+    "repository": "https://github.com/FDH2/UxPlay",
+    "sourceUrl": "https://github.com/FDH2/UxPlay/tree/21eef8df25d91e12635c36d8176ad192725baca2",
+    "commitSha1": "21eef8df25d91e12635c36d8176ad192725baca2",
+    "treeSha1": "ece31de373433cf042ecb3ab801abb6ceb23fba3",
+    "tagSignatureState": "unsigned-lightweight",
+    "sourceArchiveSha256": null,
+    "sourceMirrorVerified": false,
+    "license": {
+      "expression": "GPL-3.0-only",
+      "sourceUrl": "https://github.com/FDH2/UxPlay/blob/21eef8df25d91e12635c36d8176ad192725baca2/LICENSE",
+      "fileSha256": "sha256:3972dc9744f6499f0f9b2dbf76696f2ae7ad8af9b23dde66d6af86c9dfb36986"
+    },
+    "bundledCode": [
+      {
+        "name": "PlayFair",
+        "path": "lib/playfair",
+        "licenseExpression": "GPL-3.0-or-later",
+        "licenseUrl": "https://github.com/FDH2/UxPlay/blob/21eef8df25d91e12635c36d8176ad192725baca2/lib/playfair/LICENSE.md",
+        "licenseFileSha256": "sha256:0b7cf235e6136b426f00870c3200bac308950973d062a733bdc3fc1eca36fa06",
+        "provenanceStatus": "upstream-declares-legal-status-unclear",
+        "humanLegalReviewRequired": true
+      },
+      {
+        "name": "llhttp",
+        "path": "lib/llhttp",
+        "licenseExpression": "MIT",
+        "licenseUrl": "https://github.com/FDH2/UxPlay/blob/21eef8df25d91e12635c36d8176ad192725baca2/lib/llhttp/LICENSE-MIT",
+        "licenseFileSha256": "sha256:ebca854e0134cd256d673627c20499f42577eb74bacf08b9f25b626a73c91277"
+      },
+      {
+        "name": "inherited RPiPlay, ShairPlay and AirplayServer code",
+        "path": "lib and renderers",
+        "licenseExpression": "GPL-3.0-only AND LGPL-2.1-or-later",
+        "provenanceSourceUrl": "https://github.com/FDH2/UxPlay/blob/21eef8df25d91e12635c36d8176ad192725baca2/README.md#uxplay-authors",
+        "fileLevelMappingComplete": false,
+        "humanLegalReviewRequired": true
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "GStreamer monorepo",
+      "version": "1.28.6",
+      "tag": "1.28.6",
+      "repository": "https://gitlab.freedesktop.org/gstreamer/gstreamer",
+      "tagObjectSha1": "e9b6350ac26189fc02e5362feaee521d808378ee",
+      "commitSha1": "2d3e05cbdad68e47d645f548899b432dc9fb4473",
+      "tagSignatureState": "embedded-pgp-unverified",
+      "licenseExpression": "LGPL-2.1-or-later",
+      "licenseUrl": "https://gitlab.freedesktop.org/gstreamer/gstreamer/-/blob/2d3e05cbdad68e47d645f548899b432dc9fb4473/LICENSE",
+      "licenseFileSha256": "sha256:ad2eec519ebd4b5df86ea84dff24ae3bfa2edea846a703b58902dd221ae375db",
+      "selectedSubprojects": [
+        "gstreamer",
+        "gst-plugins-base",
+        "gst-plugins-good",
+        "gst-plugins-bad",
+        "gst-libav"
+      ],
+      "selectedRuntimeElements": [
+        "appsrc",
+        "audioconvert",
+        "audioresample",
+        "decodebin",
+        "h264parse",
+        "nvh264dec",
+        "videoconvert",
+        "videoscale",
+        "webrtcbin",
+        "vp8enc",
+        "rtpvp8pay",
+        "opusenc",
+        "rtpopuspay",
+        "avdec_aac",
+        "avdec_alac",
+        "avdec_h264"
+      ]
+    },
+    {
+      "name": "gst-plugins-rs gst-plugin-webrtc",
+      "version": "0.15.3",
+      "tag": "gstreamer-1.28.6",
+      "repository": "https://gitlab.freedesktop.org/gstreamer/gst-plugins-rs",
+      "tagObjectSha1": "839233ec35dc53738edd0cfea19f872edf5694f1",
+      "commitSha1": "75e46c3a1b868e9a08fd688d091476b76a498df1",
+      "tagSignatureState": "embedded-pgp-unverified",
+      "licenseExpression": "MPL-2.0",
+      "licenseUrl": "https://gitlab.freedesktop.org/gstreamer/gst-plugins-rs/-/blob/75e46c3a1b868e9a08fd688d091476b76a498df1/LICENSE-MPL-2.0",
+      "licenseFileSha256": "sha256:fab3dd6bdab226f1c08630b1dd917e11fcb4ec5e1e020e2c16f83a0a13863e85",
+      "cargoLocked": true,
+      "defaultFeatures": false,
+      "enabledFeatures": [
+        "livekit"
+      ],
+      "selectedElements": [
+        "livekitwebrtcsink"
+      ]
+    },
+    {
+      "name": "LiveKit server",
+      "version": "1.13.6",
+      "tag": "v1.13.6",
+      "repository": "https://github.com/livekit/livekit",
+      "commitSha1": "3cfbd1242618a61178f7a05b126d6c0c4cac3731",
+      "licenseExpression": "Apache-2.0",
+      "licenseUrl": "https://github.com/livekit/livekit/blob/3cfbd1242618a61178f7a05b126d6c0c4cac3731/LICENSE",
+      "licenseFileSha256": "sha256:cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+      "imageIndex": "docker.io/livekit/livekit-server:v1.13.6@sha256:e37d68f172556d02aa77968b9fc55ef481468c0315fa38e4fa6c56ce72e3a815",
+      "arm64Image": "docker.io/livekit/livekit-server@sha256:4eeb7a7af9e133afee7d07fc48623373852a34ad709094345d1761c9b283dc1a",
+      "arm64AttestationManifest": "sha256:56255e3a7d749beb9a94d9b5f2e634242330def7f044d6613fabb312600fee04",
+      "observedOciRevisionMatchesCommit": true,
+      "provenanceAttestationObserved": true,
+      "sbomAttestationObserved": false,
+      "signatureVerified": false,
+      "deploymentBoundary": "separate-internal-sfu-process"
+    },
+    {
+      "name": "LiveKit browser client",
+      "version": "2.21.0",
+      "tag": "v2.21.0",
+      "repository": "https://github.com/livekit/client-sdk-js",
+      "tagObjectSha1": "b91e3bb64365a822b0200c4bb38535a314628479",
+      "commitSha1": "15ca5f8180ab8939c3a5a4dfee1d5e44f62f71cf",
+      "tagSignatureState": "unsigned-annotated",
+      "commitSignatureState": "github-pgp-verified",
+      "licenseExpression": "Apache-2.0",
+      "licenseUrl": "https://github.com/livekit/client-sdk-js/blob/15ca5f8180ab8939c3a5a4dfee1d5e44f62f71cf/LICENSE",
+      "licenseFileSha256": "sha256:09e8a9bcec8067104652c168685ab0931e7868f9c8284b66f5ae6edae5f1130b",
+      "npmPackage": "livekit-client",
+      "npmRegistryUrl": "https://registry.npmjs.org/livekit-client/2.21.0",
+      "npmTarballSha1": "694bee97e7e37594a7fabbb1c69e84699d6cc0ce",
+      "npmIntegrity": "sha512-RBUhPkV/sl1nzl8lokVlK5uATPwn0AlsudCBZXissw/kDl9yz8ac4pNJ43iPpMVoHOeBYH/BZ3vUC1adqa/zFQ==",
+      "npmSignatureObserved": true,
+      "npmProvenanceAttestationObserved": true,
+      "controlledTarballSha256": null,
+      "controlledTarballVerified": false,
+      "transitiveBrowserBundleReviewed": false,
+      "deploymentBoundary": "official-plugin-build-time-browser-client-only"
+    },
+    {
+      "name": "GLib",
+      "version": "2.88.3",
+      "tag": "2.88.3",
+      "repository": "https://gitlab.gnome.org/GNOME/glib",
+      "tagObjectSha1": "8861fc77046a6b2218f49fe10c0a12d9f70de52e",
+      "commitSha1": "43bc79ea8803e33c5eb368085e2d5906f9f98079",
+      "tagSignatureState": "embedded-pgp-unverified",
+      "licenseExpression": "LGPL-2.1-or-later",
+      "licenseUrl": "https://gitlab.gnome.org/GNOME/glib/-/blob/43bc79ea8803e33c5eb368085e2d5906f9f98079/LICENSES/LGPL-2.1-or-later.txt",
+      "licenseFileSha256": "sha256:fa6f36630bb1e0c571d34b2bbdf188d08495c9dbf58f28cac112f303fc1f58fb"
+    },
+    {
+      "name": "libplist",
+      "version": "2.7.0",
+      "tag": "2.7.0",
+      "repository": "https://github.com/libimobiledevice/libplist",
+      "tagObjectSha1": "e1531342fe084781124d2243ccad8d8eca5c9db5",
+      "commitSha1": "cf5897a71ea412ea2aeb1e2f6b5ea74d4fabfd8c",
+      "licenseExpression": "LGPL-2.1-or-later",
+      "licenseScope": "libplist library only; GPL command-line tools excluded",
+      "licenseUrl": "https://github.com/libimobiledevice/libplist/blob/cf5897a71ea412ea2aeb1e2f6b5ea74d4fabfd8c/COPYING.LESSER",
+      "licenseFileSha256": "sha256:e237fa56668030e928551ddd60f05df5fe957f75eab874bbd017e085ed722e7c"
+    },
+    {
+      "name": "OpenSSL",
+      "version": "3.5.8",
+      "tag": "openssl-3.5.8",
+      "repository": "https://github.com/openssl/openssl",
+      "tagObjectSha1": "090eec6d3628aa0520bdf2cf97b063fafc34e7be",
+      "commitSha1": "f4dc4d58b48d346a8270183f89acf826d459b0ca",
+      "licenseExpression": "Apache-2.0",
+      "licenseUrl": "https://github.com/openssl/openssl/blob/f4dc4d58b48d346a8270183f89acf826d459b0ca/LICENSE.txt",
+      "licenseFileSha256": "sha256:7d5450cb2d142651b8afa315b5f238efc805dad827d91ba367d8516bc9d49e7a"
+    },
+    {
+      "name": "Avahi",
+      "version": "0.8",
+      "tag": "v0.8",
+      "repository": "https://github.com/avahi/avahi",
+      "commitSha1": "f060abee2807c943821d88839c013ce15db17b58",
+      "licenseExpression": "LGPL-2.1-or-later",
+      "licenseScope": "avahi-client, avahi-common, avahi-daemon and avahi-compat-libdns_sd only",
+      "licenseUrl": "https://github.com/avahi/avahi/blob/f060abee2807c943821d88839c013ce15db17b58/LICENSE",
+      "licenseFileSha256": "sha256:a9bdde5616ecdd1e980b44f360600ee8783b1f99b8cc83a2beb163a0a390e861"
+    },
+    {
+      "name": "FFmpeg",
+      "version": "8.1.2",
+      "tag": "n8.1.2",
+      "repository": "https://github.com/FFmpeg/FFmpeg",
+      "tagObjectSha1": "1c2c67c0b9f7f66ab32c19dcf7f227bcd290aa4c",
+      "commitSha1": "38b88335f99e76ed89ff3c93f877fdefce736c13",
+      "licenseExpression": "LGPL-2.1-or-later",
+      "licenseUrl": "https://github.com/FFmpeg/FFmpeg/blob/38b88335f99e76ed89ff3c93f877fdefce736c13/LICENSE.md",
+      "licenseFileSha256": "sha256:2e1d16c72fd74e12063776371da757322f8b77589386532f4fd8634bde7de1af",
+      "configurePolicy": [
+        "--disable-gpl",
+        "--disable-nonfree",
+        "--disable-programs",
+        "--disable-doc",
+        "--disable-everything",
+        "--enable-avcodec",
+        "--enable-avutil",
+        "--enable-decoder=h264,aac,alac",
+        "--enable-parser=h264,aac"
+      ]
+    },
+    {
+      "name": "libnice",
+      "version": "0.1.24",
+      "tag": "0.1.24",
+      "repository": "https://gitlab.freedesktop.org/libnice/libnice",
+      "tagObjectSha1": "399a0ec7500786c7bc1723927c2887498a713794",
+      "commitSha1": "af62014d520ac09c8fe1974bda1b253114c68843",
+      "tagSignatureState": "embedded-pgp-unverified",
+      "licenseExpression": "LGPL-2.1-or-later OR MPL-1.1",
+      "selectedLicense": "LGPL-2.1-or-later",
+      "licenseUrl": "https://gitlab.freedesktop.org/libnice/libnice/-/blob/af62014d520ac09c8fe1974bda1b253114c68843/COPYING",
+      "licenseFileSha256": "sha256:e5504e5ffe894870ea1a652df957a120ead9c3f9a5e9d314ca41ba06f2d72024"
+    },
+    {
+      "name": "libsrtp",
+      "version": "2.8.0",
+      "tag": "v2.8.0",
+      "repository": "https://github.com/cisco/libsrtp",
+      "commitSha1": "24b3bf8f19b6f5ab4cd2bcceb4f4064efca86fd5",
+      "licenseExpression": "BSD-3-Clause",
+      "licenseUrl": "https://github.com/cisco/libsrtp/blob/24b3bf8f19b6f5ab4cd2bcceb4f4064efca86fd5/LICENSE",
+      "licenseFileSha256": "sha256:8e19d42a1eec9561f3f347253ddf2e385c55f392f025bb0fd41b88dbf38db5ae"
+    },
+    {
+      "name": "usrsctp",
+      "version": "0.9.5.0",
+      "tag": "0.9.5.0",
+      "repository": "https://github.com/sctplab/usrsctp",
+      "commitSha1": "07f871bda23943c43c9e74cc54f25130459de830",
+      "licenseExpression": "BSD-3-Clause",
+      "licenseUrl": "https://github.com/sctplab/usrsctp/blob/07f871bda23943c43c9e74cc54f25130459de830/LICENSE.md",
+      "licenseFileSha256": "sha256:fa53711b25af4b9a9b8dadfea3cb38166ec4b96760c8d62b284055554537d9ef"
+    },
+    {
+      "name": "libvpx",
+      "version": "1.17.0",
+      "tag": "v1.17.0",
+      "repository": "https://github.com/webmproject/libvpx",
+      "tagObjectSha1": "82615ff0733cd4063838c352bc2e2ab225f37ade",
+      "commitSha1": "6df3ec34557879fff673706f4a1d9fbd0f3a6f0e",
+      "licenseExpression": "BSD-3-Clause",
+      "licenseUrl": "https://github.com/webmproject/libvpx/blob/6df3ec34557879fff673706f4a1d9fbd0f3a6f0e/LICENSE",
+      "licenseFileSha256": "sha256:8267348d5af1262c11d1a08de2f5afc77457755f1ac658627dd9acf71011d615",
+      "patentGrantUrl": "https://github.com/webmproject/libvpx/blob/6df3ec34557879fff673706f4a1d9fbd0f3a6f0e/PATENTS",
+      "patentGrantFileSha256": "sha256:cc3273e0694ea5896145e0677699b53471b03ea43021ddc50e7923fbb9f5023c"
+    },
+    {
+      "name": "Opus",
+      "version": "1.6.1",
+      "tag": "v1.6.1",
+      "repository": "https://gitlab.xiph.org/xiph/opus",
+      "tagObjectSha1": "a5d6c1b6f4e582df97390f9ac5c6e7c51cbffffe",
+      "commitSha1": "22244de5a79bd1d6d623c32e72bf1954b56235be",
+      "tagSignatureState": "embedded-pgp-unverified",
+      "licenseExpression": "BSD-3-Clause",
+      "licenseUrl": "https://gitlab.xiph.org/xiph/opus/-/blob/22244de5a79bd1d6d623c32e72bf1954b56235be/COPYING",
+      "licenseFileSha256": "sha256:01e1167d54a096d123cf6dfbbeb19587278845c6481d2d66d545669846079551"
+    },
+    {
+      "name": "nv-codec-headers",
+      "version": "13.0.19.1",
+      "tag": "n13.0.19.1",
+      "repository": "https://github.com/FFmpeg/nv-codec-headers",
+      "tagObjectSha1": "ee1c8a8cdb05f733ca661c30fd50c74f94ad6937",
+      "commitSha1": "88fee5c37318c991a8762d423530f91681e32e3a",
+      "licenseExpression": "MIT",
+      "licenseScope": "per-header notices; repository has no top-level license file",
+      "licenseUrl": "https://github.com/FFmpeg/nv-codec-headers/blob/88fee5c37318c991a8762d423530f91681e32e3a/include/ffnvcodec/nvEncodeAPI.h",
+      "licenseBearingHeaderSha256": "sha256:8776fddcb8febc6aec4d73989b1f21831eb30306bc583da55b4bf0c14a1dc228",
+      "minimumLinuxDriver": "570.0",
+      "driverBundled": false,
+      "hardwareCompatibilityVerified": false
+    }
+  ],
+  "pipelinePolicy": {
+    "airPlayIngress": {
+      "video": [
+        "H.264 decode only"
+      ],
+      "audio": [
+        "AAC decode",
+        "ALAC decode"
+      ],
+      "hevcEnabled": false,
+      "hlsEnabled": false,
+      "recordingEnabled": false
+    },
+    "browserEgress": {
+      "video": "VP8",
+      "audio": "Opus",
+      "onePublisherEncode": true,
+      "sfuFanout": "LiveKit",
+      "browserClient": "LiveKit browser client 2.21.0",
+      "maximumViewers": 8,
+      "h264EncodeEnabled": false
+    },
+    "uxplayBuild": {
+      "cmakeOptions": [
+        "-DNO_MARCH_NATIVE=ON",
+        "-DNO_X11_DEPS=ON"
+      ],
+      "dbusDevelopmentFilesPresent": false,
+      "bluetoothBeaconPackaged": false
+    },
+    "sessionAuthentication": {
+      "requiredOptions": [
+        "-rc /dev/null",
+        "-nh",
+        "-m",
+        "-s 1920x1080",
+        "-fps 30",
+        "-pin",
+        "-reg /run/teamaibox/uxplay.register",
+        "-key /run/teamaibox/uxplay.pem"
+      ],
+      "allowedDynamicOptions": [
+        {
+          "option": "-n",
+          "valuePolicy": "session-random-ascii-name-without-user-team-host-or-device-identity"
+        },
+        {
+          "option": "-vs",
+          "valuePolicy": "supervisor-owned-fixed-gstreamer-video-pipeline"
+        },
+        {
+          "option": "-as",
+          "valuePolicy": "supervisor-owned-fixed-gstreamer-audio-pipeline"
+        }
+      ],
+      "forbiddenOptions": [
+        "-pw",
+        "-nohold",
+        "-hls",
+        "-mp4",
+        "-h265",
+        "-vdmp",
+        "-admp",
+        "-dacp",
+        "-ca",
+        "-md",
+        "-ble",
+        "-scrsv"
+      ],
+      "exactOptionAllowlistRequired": true,
+      "inheritedConfigurationFilesAllowed": false,
+      "uxplayrcEnvironmentAllowed": false,
+      "receiverIdentityPerSession": true,
+      "registerAndKeyOnTmpfs": true,
+      "stateDestroyedAtSessionEnd": true,
+      "authenticatedEncryptedProtocolStillRequiresRealDeviceProof": true
+    },
+    "forbiddenBuildFeatures": [
+      "gst-plugins-ugly",
+      "x264",
+      "x265",
+      "OpenH264",
+      "fdk-aac",
+      "FFmpeg --enable-gpl",
+      "FFmpeg --enable-nonfree",
+      "gst-plugin-webrtc default features",
+      "gst-plugin-webrtc aws",
+      "gst-plugin-webrtc janus",
+      "gst-plugin-webrtc whip",
+      "gst-plugin-webrtc whep",
+      "gst-plugin-webrtc web_server"
+    ]
+  },
+  "legalBoundary": {
+    "productCopyEnglish": "AirPlay-compatible wireless casting (not Apple-certified)",
+    "productCopyChinese": "兼容 AirPlay 的无线投屏（非 Apple 认证）",
+    "nonAffiliationEnglish": "Team AI Box is an independent product and is not authorized, sponsored, endorsed, or approved by Apple Inc.",
+    "nonAffiliationChinese": "Team AI Box 是独立产品，未经 Apple Inc. 授权、赞助、认可或批准。",
+    "fairPlayBoundaryEnglish": "FairPlay/DRM-protected content is unsupported.",
+    "fairPlayBoundaryChinese": "不支持受 FairPlay/DRM 保护的内容。",
+    "appleAuthorizationPresent": false,
+    "mfiMembershipOrCertificationPresent": false,
+    "appleLogoOrBadgeAllowed": false,
+    "appleTrademarkAttributionRequired": true,
+    "playFairLegalityApproved": false,
+    "codecPatentClearanceApproved": false
+  },
+  "verificationPolicy": {
+    "tools": {
+      "syft": {
+        "version": "1.50.0",
+        "arm64Image": "docker.io/anchore/syft@sha256:142a0f42f34a4bef64c15e1720c504ff3f2840ae6ce4d5bfd2b26948cbfac82a"
+      },
+      "cosign": {
+        "version": "3.0.6",
+        "arm64Image": "ghcr.io/sigstore/cosign/cosign@sha256:fbc7abb42803effc0467e06d612f4e5fa37f68b54c4733c312b021a150519b43"
+      },
+      "grype": {
+        "version": "0.118.0",
+        "arm64Image": "docker.io/anchore/grype@sha256:84a1e5435228172a0e56e8bfda49fa7ca62159f5eefcf7ae4b7851952e72315f"
+      }
+    },
+    "requiredSbomFormat": "spdx-json",
+    "cycloneDxAlsoProduced": true,
+    "sourceArchiveSha256Required": true,
+    "completeTransitiveClosureRequired": true,
+    "exactArm64ImageDigestRequired": true,
+    "exactSignatureIdentityRequired": true,
+    "slsaProvenanceRequired": true,
+    "twoIndependentBuildsRequired": true,
+    "vulnerabilityDatabaseDigestRequired": true,
+    "maximumVulnerabilityEvidenceAgeHours": 24,
+    "criticalFindingsAllowed": 0,
+    "highFindingsRequireReviewedException": true,
+    "sourceSignaturesVerified": false,
+    "builtImageSbomVerified": false,
+    "builtImageSignatureVerified": false,
+    "builtImageProvenanceVerified": false,
+    "builtImageVulnerabilitiesAccepted": false,
+    "reproducibleArm64DigestVerified": false
+  },
+  "closure": {
+    "topLevelCandidatePinsComplete": true,
+    "transitiveBuildClosureComplete": false,
+    "missingBeforeRelease": [
+      "digest-pinned receiver and SFU base images",
+      "controlled SHA-256 source archives for every source component",
+      "file-level license map for every installed file",
+      "selected Cargo.lock feature closure for gst-plugin-webrtc",
+      "LiveKit Go module and image package closure",
+      "controlled LiveKit browser-client tarball and transitive browser bundle closure",
+      "NVIDIA runtime and host-driver compatibility/license evidence",
+      "HDMI sink choice after hardware inventory",
+      "complete SPDX and CycloneDX SBOMs for final ARM64 images",
+      "verified source and image signatures with exact trusted identities",
+      "fresh vulnerability reports bound to image and database digests"
+    ],
+    "releaseBlocked": true,
+    "task22_1Complete": false
+  }
+}

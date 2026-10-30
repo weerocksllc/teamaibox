@@ -1,0 +1,38 @@
+services:
+  ocr-provider:
+    image: ${OCR_PROVIDER_IMAGE:?OCR Provider image is required}
+    container_name: ${OCR_PROVIDER_CONTAINER_NAME:?OCR Provider container name is required}
+    network_mode: host
+    restart: unless-stopped
+    user: "65532:65532"
+    read_only: true
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    pids_limit: 128
+    mem_limit: 512m
+    cpus: 1.0
+    tmpfs:
+      - /tmp:rw,nosuid,nodev,noexec,size=16m,mode=1700,uid=65532,gid=65532
+    environment:
+      OCR_PROVIDER_BIND_HOST: 0.0.0.0
+      OCR_PROVIDER_PORT: ${OCR_PROVIDER_PORT:-19094}
+      OCR_PROVIDER_TLS_CERT_FILE: /run/secrets/tls/server.crt
+      OCR_PROVIDER_TLS_KEY_FILE: /run/secrets/tls/server.key
+      OCR_PROVIDER_CA_FILE: /run/secrets/tls/ca.crt
+      OCR_PROVIDER_TOKEN_FILE: /run/secrets/auth/provider.token
+      OCR_PROVIDER_DOCFARM_BASE_URL: http://127.0.0.1:9200/docfarm/api/v1
+      OCR_PROVIDER_REQUEST_TIMEOUT_SECONDS: ${OCR_PROVIDER_REQUEST_TIMEOUT_SECONDS:-900}
+      OCR_PROVIDER_POLL_INTERVAL_SECONDS: ${OCR_PROVIDER_POLL_INTERVAL_SECONDS:-0.5}
+      OCR_PROVIDER_MODEL_REVISION: ${OCR_PROVIDER_MODEL_REVISION:?OCR model revision is required}
+      OCR_PROVIDER_WORKER_IMAGE_DIGEST: ${OCR_PROVIDER_WORKER_IMAGE_DIGEST:?OCR worker image digest is required}
+    volumes:
+      - ${OCR_PROVIDER_RUNTIME_ROOT:?OCR Provider runtime root is required}/tls:/run/secrets/tls:ro
+      - ${OCR_PROVIDER_RUNTIME_ROOT:?OCR Provider runtime root is required}/auth:/run/secrets/auth:ro
+    healthcheck:
+      test: ["CMD", "python3", "/opt/teamaibox/ocr-provider/server.py", "--healthcheck"]
+      interval: 15s
+      timeout: 8s
+      retries: 4
+      start_period: 10s

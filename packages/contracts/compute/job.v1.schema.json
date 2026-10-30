@@ -1,0 +1,66 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.teamaibox.local/compute/job.v1.schema.json",
+  "title": "Team AI Box durable compute job v1",
+  "x-teamaibox-contract": {"family": "compute", "role": "response", "major": 1},
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion", "jobId", "ownerIdentityId", "capabilityId", "operation",
+    "status", "priority", "route", "requestDigest", "dataClass", "progress",
+    "inputArtifacts", "resultArtifacts", "correlationId", "submittedAt", "updatedAt"
+  ],
+  "properties": {
+    "schemaVersion": {"const": 1},
+    "jobId": {"type": "string", "format": "uuid"},
+    "ownerIdentityId": {"type": "string", "format": "uuid"},
+    "submittedByPluginId": {"type": ["string", "null"], "format": "uuid"},
+    "capabilityId": {"type": "string", "format": "uuid"},
+    "operation": {"type": "string", "pattern": "^[a-z][a-z0-9_.-]{2,127}$"},
+    "requestedModel": {"type": ["string", "null"], "maxLength": 512},
+    "requestedProfileId": {"type": ["string", "null"], "format": "uuid"},
+    "status": {"type": "string", "enum": ["queued", "admitted", "preparing", "running", "succeeded", "failed", "cancelled", "expired", "incomplete"]},
+    "priority": {"type": "integer", "minimum": 0, "maximum": 100},
+    "route": {"type": "string", "enum": ["unassigned", "local", "managed_node", "external_provider"]},
+    "idempotency": {
+      "type": ["object", "null"],
+      "additionalProperties": false,
+      "required": ["scope", "key"],
+      "properties": {
+        "scope": {"type": "string", "pattern": "^[a-z][a-z0-9:._-]{2,190}$"},
+        "key": {"type": "string", "minLength": 1, "maxLength": 512}
+      }
+    },
+    "requestDigest": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+    "dataClass": {"type": "string", "enum": ["public", "internal", "confidential", "restricted"]},
+    "progress": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["revision", "sequence", "value"],
+      "properties": {
+        "revision": {"type": "integer", "minimum": 1},
+        "sequence": {"type": "integer", "minimum": 0},
+        "value": {"type": "number", "minimum": 0, "maximum": 1},
+        "messageKey": {"type": ["string", "null"], "pattern": "^[a-z][a-z0-9_.-]{2,127}$"}
+      }
+    },
+    "waitingReason": {"type": ["string", "null"], "pattern": "^[a-z][a-z0-9_]{2,63}$"},
+    "currentAttemptId": {"type": ["string", "null"], "format": "uuid"},
+    "inputArtifacts": {
+      "type": "array", "uniqueItems": true,
+      "items": {"type": "string", "format": "uuid"}
+    },
+    "resultArtifacts": {
+      "type": "array", "uniqueItems": true,
+      "items": {"type": "string", "format": "uuid"}
+    },
+    "errorCode": {"type": ["string", "null"], "pattern": "^[a-z][a-z0-9_]{2,63}$"},
+    "deadlineAt": {"type": ["string", "null"], "format": "date-time"},
+    "cancelRequestedAt": {"type": ["string", "null"], "format": "date-time"},
+    "terminalAt": {"type": ["string", "null"], "format": "date-time"},
+    "correlationId": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{7,127}$"},
+    "submittedAt": {"type": "string", "format": "date-time"},
+    "updatedAt": {"type": "string", "format": "date-time"},
+    "extensions": {"type": "object", "additionalProperties": true}
+  }
+}

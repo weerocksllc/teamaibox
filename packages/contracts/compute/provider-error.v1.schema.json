@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.teamaibox.local/compute/provider-error.v1.schema.json",
+  "title": "Team AI Box normalized provider error v1",
+  "x-teamaibox-contract": {"family": "compute", "role": "response", "major": 1},
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion", "providerId", "providerKind", "phase", "code", "category",
+    "message", "retryable", "replaySafety", "acceptanceState", "observedAt",
+    "correlationId"
+  ],
+  "properties": {
+    "schemaVersion": {"const": 1},
+    "providerId": {"type": "string", "format": "uuid"},
+    "providerKind": {"type": "string", "enum": ["managed_node", "external_openai"]},
+    "phase": {"type": "string", "enum": ["discovery", "admission", "dispatch", "acceptance", "stream", "execution", "cancel", "reconcile"]},
+    "code": {"type": "string", "pattern": "^[a-z][a-z0-9_]{2,63}$"},
+    "category": {
+      "type": "string",
+      "enum": ["authentication", "rate_limit", "capacity", "timeout", "unavailable", "invalid_request", "policy", "content_filter", "integrity", "protocol", "unknown"]
+    },
+    "message": {"type": "string", "minLength": 1, "maxLength": 1024},
+    "upstreamStatus": {"type": ["integer", "null"], "minimum": 100, "maximum": 599},
+    "retryable": {"type": "boolean"},
+    "replaySafety": {"type": "string", "enum": ["safe_before_acceptance", "requires_idempotency", "unsafe_after_output", "non_replayable"]},
+    "acceptanceState": {"type": "string", "enum": ["not_accepted", "accepted_no_output", "output_observed", "side_effect_uncertain"]},
+    "detailArtifactId": {"type": ["string", "null"], "format": "uuid"},
+    "observedAt": {"type": "string", "format": "date-time"},
+    "correlationId": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{7,127}$"},
+    "extensions": {"type": "object", "additionalProperties": true}
+  }
+}

@@ -1,0 +1,708 @@
+{
+  "schemaVersion": 1,
+  "inputSha256": {
+    "pnpm-lock.yaml": "3fe7996c44b60851573c96f0b0d9f1652ad4dad1e802c2e8dabbb95a880bd7f4",
+    "services/drawing-worker/requirements.txt": "8a2b630a57beb83bc271c38650b3093f4508958aa5acc2ca0d73b26f2565643e",
+    "services/node-agent/go.mod": "3432ef80a6e695c0d3693b70f592b02ae3664f95563cd302953d8580694f31fc",
+    "services/ocr-worker/requirements.txt": "3937656bcfd92c79a05c60a60205d6010091e5fb1e7c6dd588a1dd5390632cfc",
+    "services/speaker-diarization-worker/supervisor/go.mod": "348c0c81e9a6ff47566a0e41ef5919bc7b02baa3a2373532bfb3185ad0f0fdde",
+    "services/translation-provider-adapter/go.mod": "de1a93b7d8a9d0c87406311d26f815235800fc5014ac1fe74ae631007d881453"
+  },
+  "dependencies": [
+    {
+      "ecosystem": "npm",
+      "name": "@oxc-project/types",
+      "version": "0.143.0",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "@rolldown/binding-android-arm64",
+      "version": "1.2.3",
+      "license": "MIT",
+      "evidence": "https://registry.npmjs.org/@rolldown/binding-android-arm64/1.2.3"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "@rolldown/binding-darwin-arm64",
+      "version": "1.2.3",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "@rolldown/binding-darwin-x64",
+      "version": "1.2.3",
+      "license": "MIT",
+      "evidence": "https://registry.npmjs.org/@rolldown/binding-darwin-x64/1.2.3"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "@rolldown/binding-freebsd-x64",
+      "version": "1.2.3",
+      "license": "MIT",
+      "evidence": "https://registry.npmjs.org/@rolldown/binding-freebsd-x64/1.2.3"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "@rolldown/binding-linux-arm-gnueabihf",
+      "version": "1.2.3",
+      "license": "MIT",
+      "evidence": "https://registry.npmjs.org/@rolldown/binding-linux-arm-gnueabihf/1.2.3"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "@rolldown/binding-linux-arm64-gnu",
+      "version": "1.2.3",
+      "license": "MIT",
+      "evidence": "https://registry.npmjs.org/@rolldown/binding-linux-arm64-gnu/1.2.3"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "@rolldown/binding-linux-arm64-musl",
+      "version": "1.2.3",
+      "license": "MIT",
+      "evidence": "https://registry.npmjs.org/@rolldown/binding-linux-arm64-musl/1.2.3"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "@rolldown/binding-linux-ppc64-gnu",
+      "version": "1.2.3",
+      "license": "MIT",
+      "evidence": "https://registry.npmjs.org/@rolldown/binding-linux-ppc64-gnu/1.2.3"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "@rolldown/binding-linux-s390x-gnu",
+      "version": "1.2.3",
+      "license": "MIT",
+      "evidence": "https://registry.npmjs.org/@rolldown/binding-linux-s390x-gnu/1.2.3"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "@rolldown/binding-linux-x64-gnu",
+      "version": "1.2.3",
+      "license": "MIT",
+      "evidence": "https://registry.npmjs.org/@rolldown/binding-linux-x64-gnu/1.2.3"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "@rolldown/binding-linux-x64-musl",
+      "version": "1.2.3",
+      "license": "MIT",
+      "evidence": "https://registry.npmjs.org/@rolldown/binding-linux-x64-musl/1.2.3"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "@rolldown/binding-openharmony-arm64",
+      "version": "1.2.3",
+      "license": "MIT",
+      "evidence": "https://registry.npmjs.org/@rolldown/binding-openharmony-arm64/1.2.3"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "@rolldown/binding-win32-arm64-msvc",
+      "version": "1.2.3",
+      "license": "MIT",
+      "evidence": "https://registry.npmjs.org/@rolldown/binding-win32-arm64-msvc/1.2.3"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "@rolldown/binding-win32-x64-msvc",
+      "version": "1.2.3",
+      "license": "MIT",
+      "evidence": "https://registry.npmjs.org/@rolldown/binding-win32-x64-msvc/1.2.3"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "@rolldown/pluginutils",
+      "version": "1.0.1",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "@types/react",
+      "version": "19.2.18",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "@types/react-dom",
+      "version": "19.2.4",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "@typescript/typescript-aix-ppc64",
+      "version": "7.0.2",
+      "license": "Apache-2.0",
+      "evidence": "https://registry.npmjs.org/@typescript/typescript-aix-ppc64/7.0.2"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "@typescript/typescript-darwin-arm64",
+      "version": "7.0.2",
+      "license": "Apache-2.0",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "@typescript/typescript-darwin-x64",
+      "version": "7.0.2",
+      "license": "Apache-2.0",
+      "evidence": "https://registry.npmjs.org/@typescript/typescript-darwin-x64/7.0.2"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "@typescript/typescript-freebsd-arm64",
+      "version": "7.0.2",
+      "license": "Apache-2.0",
+      "evidence": "https://registry.npmjs.org/@typescript/typescript-freebsd-arm64/7.0.2"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "@typescript/typescript-freebsd-x64",
+      "version": "7.0.2",
+      "license": "Apache-2.0",
+      "evidence": "https://registry.npmjs.org/@typescript/typescript-freebsd-x64/7.0.2"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "@typescript/typescript-linux-arm",
+      "version": "7.0.2",
+      "license": "Apache-2.0",
+      "evidence": "https://registry.npmjs.org/@typescript/typescript-linux-arm/7.0.2"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "@typescript/typescript-linux-arm64",
+      "version": "7.0.2",
+      "license": "Apache-2.0",
+      "evidence": "https://registry.npmjs.org/@typescript/typescript-linux-arm64/7.0.2"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "@typescript/typescript-linux-loong64",
+      "version": "7.0.2",
+      "license": "Apache-2.0",
+      "evidence": "https://registry.npmjs.org/@typescript/typescript-linux-loong64/7.0.2"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "@typescript/typescript-linux-mips64el",
+      "version": "7.0.2",
+      "license": "Apache-2.0",
+      "evidence": "https://registry.npmjs.org/@typescript/typescript-linux-mips64el/7.0.2"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "@typescript/typescript-linux-ppc64",
+      "version": "7.0.2",
+      "license": "Apache-2.0",
+      "evidence": "https://registry.npmjs.org/@typescript/typescript-linux-ppc64/7.0.2"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "@typescript/typescript-linux-riscv64",
+      "version": "7.0.2",
+      "license": "Apache-2.0",
+      "evidence": "https://registry.npmjs.org/@typescript/typescript-linux-riscv64/7.0.2"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "@typescript/typescript-linux-s390x",
+      "version": "7.0.2",
+      "license": "Apache-2.0",
+      "evidence": "https://registry.npmjs.org/@typescript/typescript-linux-s390x/7.0.2"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "@typescript/typescript-linux-x64",
+      "version": "7.0.2",
+      "license": "Apache-2.0",
+      "evidence": "https://registry.npmjs.org/@typescript/typescript-linux-x64/7.0.2"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "@typescript/typescript-netbsd-arm64",
+      "version": "7.0.2",
+      "license": "Apache-2.0",
+      "evidence": "https://registry.npmjs.org/@typescript/typescript-netbsd-arm64/7.0.2"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "@typescript/typescript-netbsd-x64",
+      "version": "7.0.2",
+      "license": "Apache-2.0",
+      "evidence": "https://registry.npmjs.org/@typescript/typescript-netbsd-x64/7.0.2"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "@typescript/typescript-openbsd-arm64",
+      "version": "7.0.2",
+      "license": "Apache-2.0",
+      "evidence": "https://registry.npmjs.org/@typescript/typescript-openbsd-arm64/7.0.2"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "@typescript/typescript-openbsd-x64",
+      "version": "7.0.2",
+      "license": "Apache-2.0",
+      "evidence": "https://registry.npmjs.org/@typescript/typescript-openbsd-x64/7.0.2"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "@typescript/typescript-sunos-x64",
+      "version": "7.0.2",
+      "license": "Apache-2.0",
+      "evidence": "https://registry.npmjs.org/@typescript/typescript-sunos-x64/7.0.2"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "@typescript/typescript-win32-arm64",
+      "version": "7.0.2",
+      "license": "Apache-2.0",
+      "evidence": "https://registry.npmjs.org/@typescript/typescript-win32-arm64/7.0.2"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "@typescript/typescript-win32-x64",
+      "version": "7.0.2",
+      "license": "Apache-2.0",
+      "evidence": "https://registry.npmjs.org/@typescript/typescript-win32-x64/7.0.2"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "@vitejs/plugin-react",
+      "version": "6.0.5",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "csstype",
+      "version": "3.2.3",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "detect-libc",
+      "version": "2.1.2",
+      "license": "Apache-2.0",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "fdir",
+      "version": "6.5.0",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "fsevents",
+      "version": "2.3.3",
+      "license": "MIT",
+      "evidence": "https://registry.npmjs.org/fsevents/2.3.3"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "lightningcss",
+      "version": "1.33.0",
+      "license": "MPL-2.0",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "lightningcss-android-arm64",
+      "version": "1.33.0",
+      "license": "MPL-2.0",
+      "evidence": "https://registry.npmjs.org/lightningcss-android-arm64/1.33.0"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "lightningcss-darwin-arm64",
+      "version": "1.33.0",
+      "license": "MPL-2.0",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "lightningcss-darwin-x64",
+      "version": "1.33.0",
+      "license": "MPL-2.0",
+      "evidence": "https://registry.npmjs.org/lightningcss-darwin-x64/1.33.0"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "lightningcss-freebsd-x64",
+      "version": "1.33.0",
+      "license": "MPL-2.0",
+      "evidence": "https://registry.npmjs.org/lightningcss-freebsd-x64/1.33.0"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "lightningcss-linux-arm-gnueabihf",
+      "version": "1.33.0",
+      "license": "MPL-2.0",
+      "evidence": "https://registry.npmjs.org/lightningcss-linux-arm-gnueabihf/1.33.0"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "lightningcss-linux-arm64-gnu",
+      "version": "1.33.0",
+      "license": "MPL-2.0",
+      "evidence": "https://registry.npmjs.org/lightningcss-linux-arm64-gnu/1.33.0"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "lightningcss-linux-arm64-musl",
+      "version": "1.33.0",
+      "license": "MPL-2.0",
+      "evidence": "https://registry.npmjs.org/lightningcss-linux-arm64-musl/1.33.0"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "lightningcss-linux-x64-gnu",
+      "version": "1.33.0",
+      "license": "MPL-2.0",
+      "evidence": "https://registry.npmjs.org/lightningcss-linux-x64-gnu/1.33.0"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "lightningcss-linux-x64-musl",
+      "version": "1.33.0",
+      "license": "MPL-2.0",
+      "evidence": "https://registry.npmjs.org/lightningcss-linux-x64-musl/1.33.0"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "lightningcss-win32-arm64-msvc",
+      "version": "1.33.0",
+      "license": "MPL-2.0",
+      "evidence": "https://registry.npmjs.org/lightningcss-win32-arm64-msvc/1.33.0"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "lightningcss-win32-x64-msvc",
+      "version": "1.33.0",
+      "license": "MPL-2.0",
+      "evidence": "https://registry.npmjs.org/lightningcss-win32-x64-msvc/1.33.0"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "lucide-react",
+      "version": "1.30.0",
+      "license": "ISC",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "nanoid",
+      "version": "3.3.18",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "pg",
+      "version": "8.22.0",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "pg-cloudflare",
+      "version": "1.4.0",
+      "license": "MIT",
+      "evidence": "https://registry.npmjs.org/pg-cloudflare/1.4.0"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "pg-connection-string",
+      "version": "2.14.0",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "pg-int8",
+      "version": "1.0.1",
+      "license": "ISC",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "pg-pool",
+      "version": "3.14.0",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "pg-protocol",
+      "version": "1.16.0",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "pg-types",
+      "version": "2.2.0",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "pgpass",
+      "version": "1.0.5",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "picocolors",
+      "version": "1.1.1",
+      "license": "ISC",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "picomatch",
+      "version": "4.0.5",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "postcss",
+      "version": "8.5.26",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "postgres-array",
+      "version": "2.0.0",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "postgres-bytea",
+      "version": "1.0.1",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "postgres-date",
+      "version": "1.0.7",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "postgres-interval",
+      "version": "1.2.0",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "react",
+      "version": "19.2.8",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "react-dom",
+      "version": "19.2.8",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "rolldown",
+      "version": "1.2.3",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "scheduler",
+      "version": "0.27.0",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "source-map-js",
+      "version": "1.2.1",
+      "license": "BSD-3-Clause",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "split2",
+      "version": "4.2.0",
+      "license": "ISC",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "tinyglobby",
+      "version": "0.2.17",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "typescript",
+      "version": "7.0.2",
+      "license": "Apache-2.0",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "vite",
+      "version": "8.2.1",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "ws",
+      "version": "8.21.3",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "xtend",
+      "version": "4.0.2",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "python",
+      "name": "Pillow",
+      "version": "11.3.0",
+      "license": "MIT-CMU",
+      "evidence": "https://pypi.org/pypi/Pillow/11.3.0/json"
+    },
+    {
+      "ecosystem": "python",
+      "name": "PyMuPDF",
+      "version": "1.26.4",
+      "license": "AGPL-3.0-or-later OR commercial",
+      "evidence": "services/ocr-worker/requirements.txt"
+    },
+    {
+      "ecosystem": "python",
+      "name": "accelerate",
+      "version": "1.10.1",
+      "license": "Apache",
+      "evidence": "https://pypi.org/pypi/accelerate/1.10.1/json"
+    },
+    {
+      "ecosystem": "python",
+      "name": "diffusers",
+      "version": "0.39.0",
+      "license": "Apache 2.0 License",
+      "evidence": "https://pypi.org/pypi/diffusers/0.39.0/json"
+    },
+    {
+      "ecosystem": "python",
+      "name": "fastapi",
+      "version": "0.116.1",
+      "license": "License :: OSI Approved :: MIT License",
+      "evidence": "https://pypi.org/pypi/fastapi/0.116.1/json"
+    },
+    {
+      "ecosystem": "python",
+      "name": "httpx",
+      "version": "0.28.1",
+      "license": "BSD-3-Clause",
+      "evidence": "https://pypi.org/pypi/httpx/0.28.1/json"
+    },
+    {
+      "ecosystem": "python",
+      "name": "huggingface-hub",
+      "version": "0.34.4",
+      "license": "Apache",
+      "evidence": "https://pypi.org/pypi/huggingface-hub/0.34.4/json"
+    },
+    {
+      "ecosystem": "python",
+      "name": "invisible-watermark",
+      "version": "0.2.0",
+      "license": "License :: OSI Approved :: MIT License",
+      "evidence": "https://pypi.org/pypi/invisible-watermark/0.2.0/json"
+    },
+    {
+      "ecosystem": "python",
+      "name": "numpy",
+      "version": "2.3.5",
+      "license": "SEE UPSTREAM LICENSE TEXT",
+      "evidence": "https://pypi.org/pypi/numpy/2.3.5/json"
+    },
+    {
+      "ecosystem": "python",
+      "name": "onnxruntime",
+      "version": "1.28.0",
+      "license": "MIT License",
+      "evidence": "https://pypi.org/pypi/onnxruntime/1.28.0/json"
+    },
+    {
+      "ecosystem": "python",
+      "name": "opencv-python-headless",
+      "version": "4.12.0.88",
+      "license": "Apache 2.0",
+      "evidence": "https://pypi.org/pypi/opencv-python-headless/4.12.0.88/json"
+    },
+    {
+      "ecosystem": "python",
+      "name": "safetensors",
+      "version": "0.8.0",
+      "license": "License :: OSI Approved :: Apache Software License",
+      "evidence": "https://pypi.org/pypi/safetensors/0.8.0/json"
+    },
+    {
+      "ecosystem": "python",
+      "name": "sentencepiece",
+      "version": "0.2.1",
+      "license": "Apache-2.0",
+      "evidence": "https://github.com/google/sentencepiece/blob/v0.2.1/LICENSE"
+    },
+    {
+      "ecosystem": "python",
+      "name": "transformers",
+      "version": "4.56.2",
+      "license": "Apache 2.0 License",
+      "evidence": "https://pypi.org/pypi/transformers/4.56.2/json"
+    },
+    {
+      "ecosystem": "python",
+      "name": "uvicorn",
+      "version": "0.35.0",
+      "license": "BSD-3-Clause",
+      "evidence": "https://pypi.org/pypi/uvicorn/0.35.0/json"
+    }
+  ],
+  "coverage": {
+    "npmLocked": 83,
+    "unknownLicenseMetadata": 0,
+    "notCovered": [
+      "transitive Python/OS packages inside externally supplied images",
+      "firmware or model binaries not in this source checkout"
+    ]
+  },
+  "warning": "Metadata inventory, not legal clearance or a complete binary SBOM. Original licenses govern. UNKNOWN is never MIT."
+}

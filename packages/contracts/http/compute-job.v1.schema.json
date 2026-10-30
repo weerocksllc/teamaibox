@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.teamaibox.local/http/compute-job.v1.schema.json",
+  "title": "Team AI Box compute job resource v1",
+  "x-teamaibox-contract": {"family": "http", "role": "response", "major": 1},
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["job_id", "object", "operation", "result_schema", "status", "progress", "waiting_reason", "created_at", "result", "x_teamaibox", "links"],
+  "properties": {
+    "job_id": {"type": "string", "format": "uuid"},
+    "object": {"const": "teamaibox.job"},
+    "operation": {"type": "string", "pattern": "^[a-z][a-z0-9._-]{1,127}$"},
+    "result_schema": {"type": ["string", "null"], "pattern": "^teamaibox\\.ai\\.[a-z0-9._-]+\\.v1$"},
+    "status": {"type": "string", "enum": ["queued", "admitted", "preparing", "running", "succeeded", "failed", "cancelled", "expired", "incomplete"]},
+    "progress": {
+      "type": "object", "additionalProperties": false,
+      "required": ["value", "revision", "sequence", "message_key"],
+      "properties": {
+        "value": {"type": "number", "minimum": 0, "maximum": 1},
+        "revision": {"type": "integer", "minimum": 1},
+        "sequence": {"type": "integer", "minimum": 0},
+        "message_key": {"type": "string", "pattern": "^[a-z][a-z0-9._-]{2,190}$"}
+      }
+    },
+    "waiting_reason": {"type": ["string", "null"], "maxLength": 512},
+    "created_at": {"type": "integer", "minimum": 0},
+    "result": {
+      "description": "Terminal typed result. Artifact values are scoped ArtifactRef objects, never storage credentials or signed URLs.",
+      "type": ["object", "null"]
+    },
+    "x_teamaibox": {"$ref": "../openai/job-extension.v1.schema.json"},
+    "links": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["self", "cancel"],
+      "properties": {
+        "self": {"type": "string", "pattern": "^/api/v1/jobs/[0-9a-f-]{36}$"},
+        "cancel": {"type": "string", "pattern": "^/api/v1/jobs/[0-9a-f-]{36}/cancel$"}
+      }
+    }
+  }
+}

@@ -1,0 +1,26 @@
+--- a/net/webrtc/src/webrtcsink/imp.rs
++++ b/net/webrtc/src/webrtcsink/imp.rs
+@@ -4815,6 +4815,7 @@
+             gst::info!(CAT, obj = pad, "Received caps event {:?}", e);
+ 
++            let enabled_mitigation_modes = self.settings.lock().unwrap().enabled_mitigation_modes;
+             let mut state = self.state.lock().unwrap();
+ 
+             state.streams.iter_mut().for_each(|(_, stream)| {
+                 if stream.sink_pad.upcast_ref::<gst::Pad>() == pad {
+@@ -4851,2 +4851,15 @@
+                             encoder.video_info = video_info.clone();
++                            // Source geometry is independent of rate-control ticks.
++                            // Recompute the raw scaling caps even at a stable bitrate,
++                            // otherwise a landscape frame can be squeezed into the
++                            // dimensions of the previous portrait frame.
++                            let Ok(bitrate) = encoder.bitrate() else {
++                                return false;
++                            };
++                            if encoder
++                                .set_bitrate(element, bitrate, enabled_mitigation_modes)
++                                .is_err()
++                            {
++                                return false;
++                            }
+                         }

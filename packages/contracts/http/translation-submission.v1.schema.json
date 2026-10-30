@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.teamaibox.local/http/translation-submission.v1.schema.json",
+  "title": "Team AI Box translation submission v1",
+  "x-teamaibox-contract": {"family": "http", "role": "request", "major": 1},
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["target_language"],
+  "oneOf": [
+    {"required": ["input_text"], "not": {"required": ["input_reference"]}, "properties": {"input_kind": {"const": "text"}}},
+    {"required": ["input_reference", "input_kind"], "not": {"required": ["input_text"]}, "properties": {"input_kind": {"enum": ["image", "document", "audio", "video"]}}}
+  ],
+  "properties": {
+    "model": {"type": ["string", "null"], "minLength": 1, "maxLength": 512},
+    "input_text": {"type": "string", "minLength": 1, "maxLength": 200000},
+    "input_reference": {"type": "object", "additionalProperties": false, "required": ["reference_id"], "properties": {"reference_id": {"type": "string", "format": "uuid"}}},
+    "input_kind": {"type": "string", "enum": ["text", "image", "document", "audio", "video"], "default": "text"},
+    "input_representation": {"type": "string", "enum": ["source", "ocr-result", "asr-result"], "default": "source"},
+    "source_language": {"type": ["string", "null"], "pattern": "^[A-Za-z]{2,8}(?:-[A-Za-z0-9]{1,8})*$"},
+    "target_language": {"type": "string", "pattern": "^[A-Za-z]{2,8}(?:-[A-Za-z0-9]{1,8})*$"},
+    "output_format": {"type": "string", "enum": ["text", "json", "markdown", "srt", "vtt"], "default": "text"},
+    "preserve_layout": {"type": "boolean", "default": true},
+    "include_intermediates": {"type": "boolean", "default": true},
+    "x_teamaibox": {"$ref": "../openai/request-extension.v1.schema.json"}
+  }
+}

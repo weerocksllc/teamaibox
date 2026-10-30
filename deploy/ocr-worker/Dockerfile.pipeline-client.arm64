@@ -1,0 +1,22 @@
+FROM python@sha256:229a2c5bfa27522db7815ea81f9bed70af17ccb9de9fc7ad142b1877b5830d36
+
+ARG PADDLE_VERSION=3.3.1
+ARG PADDLEOCR_VERSION=3.7.0
+
+RUN apt-get update \
+    && apt-get install --yes --no-install-recommends \
+      libgl1=1.7.0-1+b2 \
+      libglib2.0-0t64=2.84.4-3~deb13u3 \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN python -m pip install --no-cache-dir \
+      --extra-index-url https://www.paddlepaddle.org.cn/packages/stable/cpu/ \
+      "paddlepaddle==${PADDLE_VERSION}"
+
+RUN python -m pip install --no-cache-dir \
+      "paddleocr[doc-parser]==${PADDLEOCR_VERSION}"
+
+RUN python -m pip check
+
+USER 10001:10001
+ENTRYPOINT ["python"]

@@ -1,0 +1,12 @@
+/* Use the same semantic colors as the surrounding workbench. The fallbacks
+   cover first paint before the host preference message arrives. */
+
+
+body { background: var(--bg); color: var(--text); }
+.card, dialog { background: var(--card); }
+button.primary { color: var(--on-accent); }
+button.primary:hover:not(:disabled) { background: var(--accent); filter: brightness(.94); }
+button:focus-visible, input:focus-visible, select:focus-visible, summary:focus-visible { outline-color: var(--focus); }
+input, select { color: var(--text); accent-color: var(--accent); }
+input::placeholder { color: var(--muted); }
+#phone-camera-usb-device, .phone-file-row { border-color: var(--line); }

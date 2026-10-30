@@ -1,0 +1,64 @@
+{
+  "schemaVersion": 1,
+  "corpusKey": "corpus.ocr.text-layout",
+  "version": "1.1.0",
+  "license": "CC0-1.0",
+  "distribution": "generated-fixtures-only",
+  "purpose": "Reproducible commercial-safe OCR qualification without user or third-party document content.",
+  "limitations": [
+    "synthetic-pages-do-not-replace-independent-real-document-acceptance",
+    "multilingual-slice-is-limited-to-simplified-chinese-and-english",
+    "scan-photo-slice-uses-deterministic-optical-degradation"
+  ],
+  "caseCount": 400,
+  "slices": {
+    "clean-print": 80,
+    "scan-photo": 80,
+    "complex-layout": 80,
+    "tables-formulas": 80,
+    "multilingual": 80
+  },
+  "generationSeed": 20260829,
+  "page": {
+    "cleanWidth": 1024,
+    "cleanHeight": 768,
+    "complexWidth": 1280,
+    "complexHeight": 960
+  },
+  "renderer": {
+    "name": "ImageMagick",
+    "requiredVersionPrefix": "7.1.2-26 Q16-HDRI aarch64",
+    "binary": "/opt/homebrew/bin/magick",
+    "binarySha256": "sha256:4849678b618c869feaf69c5bdb4a6ab40df4e9eee9f6f7b729ce42cd5c13c69e"
+  },
+  "fonts": [
+    {
+      "family": "Helvetica Neue",
+      "path": "/System/Library/Fonts/HelveticaNeue.ttc",
+      "sha256": "sha256:a43317500f5c8086ebbe479b32e86f53ce7c075c14283aa9894cc23be5bfd8e2"
+    },
+    {
+      "family": "Hiragino Sans GB",
+      "path": "/System/Library/Fonts/Hiragino Sans GB.ttc",
+      "sha256": "sha256:f887295caf2881cab9554b14c5ab4c9ee624c3895599da152ec37416b5aefae0"
+    },
+    {
+      "family": "Times New Roman",
+      "path": "/System/Library/Fonts/Supplemental/Times New Roman.ttf",
+      "sha256": "sha256:f3b4ffff71c2a0c7227d37497683b2498fb2d0a4e8beae26f022e3ccfcaabfa3"
+    }
+  ],
+  "metrics": {
+    "character-error-rate": ["clean-print", "scan-photo", "multilingual"],
+    "word-error-rate": ["clean-print", "scan-photo", "multilingual"],
+    "layout-block-f1": ["complex-layout"],
+    "reading-order-accuracy": ["complex-layout"],
+    "table-structure-teds": ["tables-formulas"]
+  },
+  "contentPolicy": {
+    "userContent": false,
+    "thirdPartyDocumentImages": false,
+    "personalData": false,
+    "secrets": false
+  }
+}

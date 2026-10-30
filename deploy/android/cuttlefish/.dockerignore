@@ -1,0 +1,9 @@
+*
+!Dockerfile
+!inputs.lock.json
+!prepare_bundle.py
+!bundle_info.py
+!inputs/
+!inputs/cvd-host_package.tar.gz
+!inputs/aosp_cf_arm64_only_phone-img-16102939.zip
+!inputs/jquery-3.6.0.min.js

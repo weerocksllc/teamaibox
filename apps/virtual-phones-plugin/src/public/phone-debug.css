@@ -1,0 +1,6 @@
+#phone-workspace-more{position:relative;margin-inline-start:auto;flex-shrink:0}#phone-workspace-more summary{cursor:pointer;padding:10px;border:1px solid var(--line);border-radius:10px}#phone-adb-dialog{width:min(620px,calc(100vw - 32px));max-height:calc(100dvh - 32px);overflow:auto}#phone-adb-dialog a{display:inline-block;color:var(--accent);margin:8px 12px 0 0}#phone-adb-dialog pre{white-space:pre-wrap;overflow-wrap:anywhere;padding:12px;background:var(--panel2);border-radius:8px;font-size:12px;user-select:all}.debug-steps{padding-inline-start:24px;line-height:1.6}.debug-steps li{margin:16px 0}.debug-steps label{margin-top:8px}#phone-adb-copy{margin-top:8px}
+#phone-files-dialog{width:min(42rem,calc(100vw - 2rem));max-height:85dvh;overflow:auto}
+#phone-file-input{max-width:100%}
+.phone-file-row{display:flex;align-items:center;gap:.75rem;padding:.6rem 0;border-bottom:1px solid var(--border,#ddd)}
+.phone-file-row span{flex:1;min-width:0;overflow-wrap:anywhere}
+.phone-file-row small{white-space:nowrap}

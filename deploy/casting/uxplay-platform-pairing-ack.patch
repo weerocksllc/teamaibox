@@ -1,0 +1,27 @@
+--- a/lib/pairing.c
++++ b/lib/pairing.c
+@@ -29,6 +29,16 @@
+ #include "teamaibox_pairing_budget.h"
+ #include "teamaibox_paired_peer.h"
++#include "teamaibox_platform_pairing_ack.h"
+ static teamaibox_pairing_budget_t teamaibox_pairing_budget =
+     TEAMAIBOX_PAIRING_BUDGET_INITIALIZER;
++static pthread_mutex_t teamaibox_platform_pair_mutex = PTHREAD_MUTEX_INITIALIZER;
++static bool teamaibox_confirm_platform_pairing(const unsigned char key[32]) {
++    if (pthread_mutex_lock(&teamaibox_platform_pair_mutex) != 0) return false;
++    /* Descriptor 3 is an anonymous, dedicated supervisor socketpair. A
++     * missing supervisor or rejected/expired Platform session fails closed. */
++    bool accepted = teamaibox_platform_pairing_ack(3, key);
++    pthread_mutex_unlock(&teamaibox_platform_pair_mutex);
++    return accepted;
++}
+ #endif
+ 
+@@ -704,6 +714,7 @@
+     int epk_len = gcm_encrypt(pk, ED25519_KEY_SIZE, epk, aesKey, aesIV, auth_tag);
+ #ifdef TEAMAIBOX_PIN_STDIN
+     if (epk_len != ED25519_KEY_SIZE
++        || !teamaibox_confirm_platform_pairing(session->client_pk)
+         || !teamaibox_paired_peer_approve(&pairing->approved_peer, session->client_pk)) return -1;
+     session->pair_setup = true;
+ #endif

@@ -1,0 +1,7 @@
+DROP TRIGGER artifact_handoffs_append_only ON objects.artifact_handoffs;
+DROP TRIGGER artifact_provenance_sources_append_only ON objects.artifact_provenance_sources;
+DROP TRIGGER artifact_provenance_append_only ON objects.artifact_provenance;
+DROP FUNCTION objects.reject_artifact_provenance_mutation();
+DROP TABLE objects.artifact_handoffs;
+DROP TABLE objects.artifact_provenance_sources;
+DROP TABLE objects.artifact_provenance;

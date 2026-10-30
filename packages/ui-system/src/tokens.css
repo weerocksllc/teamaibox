@@ -1,0 +1,76 @@
+/* Precision Workspace — Figma 15:7071 / 15:7131. Local, offline-safe defaults. */
+:root {
+  color-scheme: light;
+  font-family: Inter, "Noto Sans SC", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  --font-ui: Inter, "Noto Sans SC", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+  --font-code: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  --space-1: 4px; --space-2: 8px; --space-3: 12px; --space-4: 16px;
+  --space-6: 24px; --space-8: 32px; --space-12: 48px;
+  --radius-control: 8px; --radius-panel: 12px; --radius-workspace: 16px;
+  --control-height: 44px; --sidebar-width: 208px; --header-height: 64px;
+  --canvas: #f6f8f8;
+  --surface: #ffffff; --surface-raised: #ffffff; --surface-subtle: #edf2f2;
+  --surface-strong: #17292b;
+  --text: #17292b; --text-muted: #5b6e70;
+  --border: #dce5e4; --border-strong: #b7c8c7;
+  --interactive: #087f78; --interactive-hover: #066a65; --on-interactive: #ffffff;
+  --selected-surface: #e0f4ef; --selected-text: #087f78; --focus: #326b9b;
+  --disabled-surface: #edf2f2; --disabled-text: #657879; --disabled-border: #dce5e4;
+  --success: #087f78; --success-soft: #e0f4ef;
+  --warning: #936316; --warning-soft: #fbf0d7;
+  --error: #ba3d49; --error-soft: #fbe9ec;
+  --info: #326b9b; --info-soft: #e6f0fb;
+  --chart-1: #087f78; --chart-2: #326b9b; --chart-3: #936316;
+  --chart-4: #7757a2; --chart-5: #ab4e77; --chart-6: #537e38;
+  --code-surface: #edf2f2; --code-text: #17292b;
+  --log-info: #326b9b; --log-warning: #936316; --log-error: #ba3d49;
+  --shadow-sm: 0 2px 8px rgba(23, 41, 43, .04);
+  --shadow-lg: 0 16px 48px rgba(23, 41, 43, .14);
+  --overlay: rgba(16, 25, 30, .48); --overlay-soft: rgba(16, 25, 30, .32);
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --canvas: #10191e;
+  --surface: #18252b; --surface-raised: #1c2c33; --surface-subtle: #22333a;
+  --surface-strong: #edf4f3;
+  --text: #edf4f3; --text-muted: #a9bdbf;
+  --border: #32454c; --border-strong: #536b73;
+  --interactive: #6ae0c5; --interactive-hover: #8aecd6; --on-interactive: #10191e;
+  --selected-surface: #1e413e; --selected-text: #6ae0c5; --focus: #9ac8f0;
+  --disabled-surface: #22333a; --disabled-text: #96a9ad; --disabled-border: #32454c;
+  --success: #6ae0c5; --success-soft: #1e413e;
+  --warning: #f2cd83; --warning-soft: #40351f;
+  --error: #ffabb4; --error-soft: #402a32;
+  --info: #9ac8f0; --info-soft: #233c51;
+  --chart-1: #6ae0c5; --chart-2: #9ac8f0; --chart-3: #f2cd83;
+  --chart-4: #c9b2e7; --chart-5: #f2a8c7; --chart-6: #b0d68e;
+  --code-surface: #10191e; --code-text: #edf4f3;
+  --log-info: #9ac8f0; --log-warning: #f2cd83; --log-error: #ffabb4;
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, .12);
+  --shadow-lg: 0 16px 48px rgba(0, 0, 0, .32);
+  --overlay: rgba(5, 12, 16, .68); --overlay-soft: rgba(5, 12, 16, .48);
+}
+/* Existing consumers keep their names; only the visual source changes. */
+:root {
+  --bg: var(--canvas); --panel: var(--surface); --panel2: var(--surface-subtle);
+  --panel3: var(--surface-raised); --card: var(--surface-raised);
+  --muted: var(--text-muted); --text-soft: var(--text-muted); --line: var(--border);
+  --line-strong: var(--border-strong); --panel-strong: var(--surface-raised);
+  --surface-muted: var(--surface-subtle); --accent-border: var(--border-strong);
+  --accent: var(--interactive); --accent2: var(--interactive-hover); --accent-hover: var(--interactive-hover);
+  --accent-soft: var(--selected-surface); --accent-wash: var(--selected-surface); --soft: var(--selected-surface);
+  --on-accent: var(--on-interactive); --danger: var(--error); --warn: var(--warning);
+  --accent-2: var(--interactive-hover); --danger-soft: var(--error-soft); --shadow-soft: var(--shadow-sm);
+  --good: var(--success); --blue: var(--info); --own: var(--interactive); --own-text: var(--on-interactive);
+  --notification: var(--error); --shadow: var(--shadow-sm);
+  --shadow-card: var(--shadow-sm); --shadow-dialog: var(--shadow-lg); --shadow-hover: var(--shadow-sm);
+  --hero-surface: var(--surface); --hero-text: var(--text); --hero-muted: var(--text-muted);
+  --hero-subtle: var(--border); --hero-accent: var(--interactive);
+  --hero-interactive: var(--interactive); --hero-interactive-hover: var(--interactive-hover);
+  --hero-on-interactive: var(--on-interactive);
+  --collaboration-surface: var(--info-soft); --collaboration-text: var(--info);
+  --professional-surface: var(--selected-surface); --professional-text: var(--interactive);
+  --avatar-start: var(--selected-surface); --avatar-end: var(--selected-surface); --avatar-text: var(--interactive);
+}

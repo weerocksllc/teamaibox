@@ -1,0 +1,16 @@
+#phone-camera-dialog{width:min(34rem,calc(100vw - 2rem));max-height:calc(100dvh - 2rem);overflow:auto}
+#phone-camera-dialog h2{margin:0}#phone-camera-dialog .camera-heading{display:flex;gap:1rem;align-items:center;justify-content:space-between}
+#phone-camera-state{font-size:.8rem;color:var(--accent)}#phone-camera-input{font-size:.875rem}#phone-camera-dialog small{color:var(--muted);display:block;line-height:1.5;margin-top:.5rem}
+#phone-camera-dialog .confirmation{padding:1rem;border-radius:.75rem;background:var(--panel2)}#phone-camera-consent{flex-shrink:0;margin:.3rem 0 0;accent-color:var(--accent)}
+#phone-camera-status:empty{display:none}#phone-camera-status{font-size:.875rem}#phone-camera-dialog .dialog-actions{flex-wrap:wrap;margin-top:1.25rem}
+#phone-camera-indicator{font-size:.8rem;color:var(--accent);background:var(--accent-soft)}
+.camera-source-tabs{display:flex;gap:.4rem;padding:.3rem;background:var(--panel2);border-radius:.8rem;margin-bottom:1rem}.camera-source-tabs button{flex:1;font-size:.9rem}.camera-source-tabs button[aria-pressed="true"]{background:var(--accent-soft);color:var(--accent)}
+#phone-camera-local-preview{display:block;width:100%;max-height:16rem;object-fit:contain;aspect-ratio:4/3;background:#111;border-radius:.75rem}
+#phone-camera-dialog [hidden]{display:none!important}
+.camera-list-state{display:flex;align-items:center;justify-content:space-between;gap:.75rem;margin:.8rem 0;padding:.6rem .75rem;border-radius:.75rem;background:var(--accent-soft);color:var(--accent);font-size:.85rem}
+.camera-list-state button{padding:.4rem .6rem;flex-shrink:0;font-size:.8rem}.camera-list-state[data-state="stopping"]{background:var(--panel2);color:var(--muted)}
+#phone-camera-usb-device{width:100%;margin:.5rem 0;font:inherit;padding:.65rem;border:1px solid var(--border);border-radius:.6rem;background:var(--panel)}
+#phone-camera-udp-source{width:100%;margin:.5rem 0;font:inherit;padding:.65rem;border:1px solid var(--border);border-radius:.6rem;background:var(--panel);color:var(--text)}
+#phone-camera-udp-address{font-variant-numeric:tabular-nums;overflow-wrap:anywhere;color:var(--accent)}
+.camera-consent{display:flex;gap:.55rem;align-items:flex-start;font-size:.875rem;line-height:1.6;margin:1rem 0}.camera-consent input{flex-shrink:0;margin-top:.3rem;accent-color:var(--accent)}
+@media(max-width:540px){.camera-source-tabs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}.camera-source-tabs button{padding:.65rem .4rem}}

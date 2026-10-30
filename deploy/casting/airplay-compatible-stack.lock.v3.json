@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 3,
+  "lockId": "teamaibox.airplay-compatible-stack.open-source.v3",
+  "asOf": "2026-10-16",
+  "target": "linux/arm64/v8",
+  "predecessor": {
+    "path": "deploy/casting/airplay-compatible-stack.lock.v2.json"
+  },
+  "receiver": {
+    "name": "UxPlay",
+    "version": "1.73.6",
+    "commitSha1": "21eef8df25d91e12635c36d8176ad192725baca2",
+    "archiveUrl": "https://github.com/FDH2/UxPlay/archive/21eef8df25d91e12635c36d8176ad192725baca2.tar.gz",
+    "archiveSha256": "sha256:03a92523cf750af87be594974819cd6709c5e7a6f8863f109b418b246acf9c5c",
+    "licenseExpression": "GPL-3.0-only"
+  },
+  "separateBrowserDelivery": {
+    "sfuSource": {
+      "repository": "https://github.com/livekit/livekit",
+      "version": "1.13.10",
+      "commitSha1": "e5655ac20267fa5005dccaf3f0e3bfc3ea688c07",
+      "archiveUrl": "https://github.com/livekit/livekit/archive/refs/tags/v1.13.10.tar.gz",
+      "archiveSha256": "sha256:d1b93ced314b14654faceeb99627a79114b8ebe002bb5d620be4a185db83a4b2",
+      "licenseExpression": "Apache-2.0"
+    },
+    "upstreamSfuImage": "docker.io/livekit/livekit-server@sha256:89ca9ce0791e18d6e03bf6e2c49ceb27e1c754eae8bd50c989386c1a5963791a",
+    "sfuImage": "teamaibox/livekit-server:1.13.10-security-20261016-a1",
+    "sfuArm64ImageId": "sha256:6cbdcd247703af258240e0f948bb319999b26273dc0b78e6216721d0cb7194af",
+    "securityRebuild": {
+      "dockerfile": "deploy/casting/LiveKitServerSecurityFix.arm64.Dockerfile",
+      "goVersion": "1.27.2",
+      "golangXNetVersion": "0.60.0",
+      "functionalSourceModified": false
+    },
+    "browserPackage": "livekit-client@2.21.0",
+    "browserPackageIntegrity": "sha512-RBUhPkV/sl1nzl8lokVlK5uATPwn0AlsudCBZXissw/kDl9yz8ac4pNJ43iPpMVoHOeBYH/BZ3vUC1adqa/zFQ==",
+    "browserPackageTarball": "https://registry.npmjs.org/livekit-client/-/livekit-client-2.21.0.tgz",
+    "browserPackageTarballSha256": "sha256:205a3d49070d350702dc44b6c20045c0cc2aae22f19117efa8ebea7375caf097"
+  },
+  "verificationTools": {
+    "syft": "docker.io/anchore/syft@sha256:142a0f42f34a4bef64c15e1720c504ff3f2840ae6ce4d5bfd2b26948cbfac82a",
+    "grype": "docker.io/anchore/grype@sha256:84a1e5435228172a0e56e8bfda49fa7ca62159f5eefcf7ae4b7851952e72315f",
+    "cosign": "ghcr.io/sigstore/cosign/cosign@sha256:de9c65609e6bde17e6b48de485ee788407c9502fa08b8f4459f595b21f56cd00"
+  },
+  "releaseMinimum": {
+    "review": "architecture/validation/airplay-compatible-supply-chain-review.v4.json",
+    "notice": "deploy/legal/airplay-compatible/NOTICE.v4.txt",
+    "correspondingSourceAndBuild": "docs/operations/trusted-media-browser-build-20260908.md",
+    "sbomFormat": "spdx-json",
+    "maximumUnacceptedCriticalVulnerabilities": 0,
+    "platformSignatureRequired": true
+  }
+}

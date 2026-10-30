@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.teamaibox.local/http/ocr-submission.v1.schema.json",
+  "title": "Team AI Box OCR submission v1",
+  "x-teamaibox-contract": {"family": "http", "role": "request", "major": 1},
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["input"],
+  "properties": {
+    "model": {"type": ["string", "null"], "minLength": 1, "maxLength": 512},
+    "input": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["reference_id"],
+      "properties": {"reference_id": {"type": "string", "format": "uuid"}}
+    },
+    "output_format": {"type": "string", "enum": ["text", "json", "markdown", "hocr"], "default": "json"},
+    "language_hints": {"type": "array", "maxItems": 32, "items": {"type": "string", "pattern": "^[A-Za-z]{2,8}(?:-[A-Za-z0-9]{1,8})*$"}},
+    "x_teamaibox": {"$ref": "../openai/request-extension.v1.schema.json"}
+  }
+}

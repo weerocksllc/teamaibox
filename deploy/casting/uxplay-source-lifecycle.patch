@@ -1,0 +1,64 @@
+--- a/lib/raop.c
++++ b/lib/raop.c
+@@ -121,2 +121,5 @@
+-    bool have_active_remote;
+-};
++    bool have_active_remote;
++#ifdef TEAMAIBOX_PIN_STDIN
++    bool teamaibox_mirroring;
++#endif
++};
+@@ -123,3 +126,22 @@
+-typedef struct raop_conn_s raop_conn_t;
+-
+-#include "raop_handlers.h"
++typedef struct raop_conn_s raop_conn_t;
++
++#ifdef TEAMAIBOX_PIN_STDIN
++#include <pthread.h>
++static pthread_mutex_t teamaibox_source_mutex = PTHREAD_MUTEX_INITIALIZER;
++static unsigned teamaibox_source_count = 0;
++/* Fixed lifecycle telemetry only: no peer identifiers or user content. A
++ * metadata/auth-only connection closing must not stop a different stream. */
++static void teamaibox_source_state(raop_conn_t *conn, bool active) {
++    pthread_mutex_lock(&teamaibox_source_mutex);
++    if (conn->teamaibox_mirroring != active) {
++        conn->teamaibox_mirroring = active;
++        if (active) ++teamaibox_source_count;
++        else if (teamaibox_source_count) --teamaibox_source_count;
++        fputs(teamaibox_source_count ? "TBS1 1\n" : "TBS1 0\n", stderr);
++        fflush(stderr);
++    }
++    pthread_mutex_unlock(&teamaibox_source_mutex);
++}
++#endif
++
++#include "raop_handlers.h"
+@@ -550,1 +572,4 @@
+-    logger_log(raop->logger, LOGGER_DEBUG, "Destroying connection");
++    logger_log(raop->logger, LOGGER_DEBUG, "Destroying connection");
++#ifdef TEAMAIBOX_PIN_STDIN
++    teamaibox_source_state(conn, false);
++#endif
+--- a/lib/raop_handlers.h
++++ b/lib/raop_handlers.h
+@@ -959,1 +959,4 @@
+-                    raop_rtp_mirror_start(conn->raop_rtp_mirror, &dport, raop->clientFPSdata);
++                    raop_rtp_mirror_start(conn->raop_rtp_mirror, &dport, raop->clientFPSdata);
++#ifdef TEAMAIBOX_PIN_STDIN
++                    teamaibox_source_state(conn, true);
++#endif
+@@ -1288,1 +1291,4 @@
+-            raop_rtp_mirror_stop(conn->raop_rtp_mirror);
++            raop_rtp_mirror_stop(conn->raop_rtp_mirror);
++#ifdef TEAMAIBOX_PIN_STDIN
++            teamaibox_source_state(conn, false);
++#endif
+@@ -1297,2 +1303,5 @@
+-            raop_rtp_mirror_destroy(conn->raop_rtp_mirror);
+-            conn->raop_rtp_mirror = NULL;
++#ifdef TEAMAIBOX_PIN_STDIN
++            teamaibox_source_state(conn, false);
++#endif
++            raop_rtp_mirror_destroy(conn->raop_rtp_mirror);
++            conn->raop_rtp_mirror = NULL;

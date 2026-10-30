@@ -1,0 +1,55 @@
+{
+  "schemaVersion": 1,
+  "scenarios": [
+    {
+      "key": "cold_model_loading",
+      "file": "worker-lifecycle-manager.test.mjs",
+      "test": "cold start prepares once and a subsequent request reuses the warm worker"
+    },
+    {
+      "key": "insufficient_memory",
+      "file": "unified-memory-guard.test.mjs",
+      "test": "unrealized reservations and the core floor reject a load before host OOM"
+    },
+    {
+      "key": "fair_share_limits",
+      "file": "routing-engine.test.mjs",
+      "test": "fair-share concurrency and quota limits block admission with scope details"
+    },
+    {
+      "key": "priority_inversion",
+      "file": "routing-engine.test.mjs",
+      "test": "bounded aging and fair share cannot invert an administrator priority gap"
+    },
+    {
+      "key": "cancellation_races",
+      "file": "worker-lifecycle-manager.test.mjs",
+      "test": "cooperative cancellation keeps ownership until the worker confirms cancellation"
+    },
+    {
+      "key": "expired_leases",
+      "file": "lease-manager.test.mjs",
+      "test": "expired leases cannot heartbeat or dispatch and a retry receives a newer fence"
+    },
+    {
+      "key": "worker_crashes",
+      "file": "worker-lifecycle-manager.test.mjs",
+      "test": "repeated crashes back off, open the circuit, expose affected attempts, and half-open after expiry"
+    },
+    {
+      "key": "exclusive_jobs",
+      "file": "exclusive-job-coordinator.test.mjs",
+      "test": "exclusive preparation gates admissions, drains workers, verifies seven domains, then acquires"
+    },
+    {
+      "key": "realtime_batch_coexistence",
+      "file": "realtime-reservation-manager.test.mjs",
+      "test": "realtime reservations block lower-priority batch admission on shared capacity"
+    },
+    {
+      "key": "core_service_reserve",
+      "file": "no-resource-booking.test.mjs",
+      "test": "AI admission preserves CPU, unified memory, disk IO, and network together"
+    }
+  ]
+}

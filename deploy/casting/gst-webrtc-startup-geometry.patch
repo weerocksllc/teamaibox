@@ -1,0 +1,37 @@
+--- a/net/webrtc/src/webrtcsink/imp.rs
++++ b/net/webrtc/src/webrtcsink/imp.rs
+@@ -1470,6 +1470,7 @@
+         producer: &StreamProducer,
+         webrtc_pad: &WebRTCPad,
+         session_setup_result: SessionSetupResult,
++        current_in_caps: &gst::Caps,
+     ) -> Result<(), Error> {
+         let (appsrc, encoding_chain, caps, codec, stream_name) = session_setup_result;
+ 
+@@ -1502,7 +1503,7 @@
+         encoding_chain.pay_filter.set_property("caps", pay_caps);
+ 
+         if codec.is_video() {
+-            let video_info = gst_video::VideoInfo::from_caps(&webrtc_pad.in_caps)?;
++            let video_info = gst_video::VideoInfo::from_caps(current_in_caps)?;
+             if let Some(mut enc) = VideoEncoder::new(
+                 &encoding_chain,
+                 video_info,
+@@ -4093,8 +4094,16 @@
+                     session = session_clone.lock().unwrap();
+                     state = state_guard.deref_mut();
+ 
++                    // Input may rotate while the asynchronous encoding chain
++                    // is being constructed. Read current geometry under the
++                    // same state lock that protects encoder registration.
++                    let current_in_caps = state
++                        .streams
++                        .get(stream_name)
++                        .and_then(|stream| stream.in_caps.as_ref())
++                        .unwrap_or(&webrtc_pad.in_caps);
+                     if let Err(err) =
+-                        session.connect_input_stream(&self.obj(), &producer, webrtc_pad, res)
++                        session.connect_input_stream(&self.obj(), &producer, webrtc_pad, res, current_in_caps)
+                     {
+                         gst::error!(
+                             CAT,

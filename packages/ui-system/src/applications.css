@@ -1,0 +1,208 @@
+/* Precision Workspace application patterns. No data, lifecycle or network behavior. */
+body[data-ui-app] { font-family: var(--font-ui); font-size: 14px; line-height: 1.5; }
+body[data-ui-app] :is(.shell, .ocr-shell, .drawing-shell, .cast-shell) { padding: 24px 36px 32px; background: var(--canvas); max-width: 1440px; margin-inline: auto; }
+body[data-ui-app] :is(.app-header, .drawing-header) { margin-bottom: 28px; align-items: flex-start; }
+body[data-ui-app] :is(.app-header, .drawing-header, main > header) h1 { font-size: 28px; line-height: 1.5; letter-spacing: -.03em; margin: 0; }
+body[data-ui-app] :is(.app-header, .drawing-header) .eyebrow { display: none; }
+body[data-ui-app] :is(.app-header, .drawing-header) :is(.subtitle, p:last-child) { font-size: 13px; line-height: 1.6; margin-top: 6px; }
+body[data-ui-app] :is(.header-chips, .chips) { gap: 8px; }
+body[data-ui-app] :is(.secure-chip, .security-chip) { background: var(--surface); box-shadow: none; border-color: var(--border); font-size: 12px; padding: 6px 10px; }
+body[data-ui-app] :is(.workspace, .studio-grid) { gap: 24px; align-items: start; }
+body[data-ui-app] :is(.source, .source-panel, .control-panel, .result, .result-panel, .preview-panel) { min-width: 0; padding: 24px; border: 1px solid var(--border); border-radius: var(--radius-workspace); background: var(--surface); box-shadow: none; }
+body[data-ui-app] :is(.result, .result-panel, .preview-panel) { min-height: 550px; }
+body[data-ui-app] :is(.empty-result, .preview-empty) { min-height: 420px; padding: 24px; }
+body[data-ui-app] :is(.empty-result, .preview-empty) h2 { font-size: 20px; }
+body[data-ui-app] :is(.empty-result, .preview-empty) p { font-size: 14px; line-height: 1.7; max-width: 42ch; }
+body[data-ui-app] :is(.primary, .primary-button, .primary-icon, .send-button) { min-height: 44px; padding: 10px 16px; border-radius: 8px; border: 1px solid var(--interactive); color: var(--on-interactive); background: var(--interactive); box-shadow: none; font-size: 14px; font-weight: 500; }
+body[data-ui-app] :is(.primary, .primary-button, .primary-icon, .send-button):hover:not(:disabled) { background: var(--interactive-hover); border-color: var(--interactive-hover); }
+body[data-ui-app] :is(.secondary, .secondary-button) { min-height: 44px; padding: 10px 16px; border-radius: 8px; border: 1px solid var(--border); color: var(--text); background: var(--surface); font-size: 14px; font-weight: 500; box-shadow: none; }
+body[data-ui-app] :is(.icon-button, .attach-button, .send-button) { width: 40px; height: 40px; min-height: 40px; padding: 8px; border-radius: 8px; }
+body[data-ui-app] :is(.primary, .primary-button, .primary-icon, .send-button):disabled { opacity: 1; background: var(--disabled-surface); color: var(--disabled-text); border-color: var(--disabled-border); }
+body[data-ui-app] :is(.options, .language-row) { gap: 12px; }
+body[data-ui-app] :is(input:not([type=checkbox]):not([type=radio]):not([type=file]):not([type=range]), select, textarea) { border-radius: 8px; color: var(--text); font-size: 14px; }
+body[data-ui-app] :is(.options, .language-row, .form-grid, dialog) :is(input:not([type=checkbox]):not([type=radio]):not([type=file]), select) { min-height: 44px; }
+body[data-ui-app] :is(.source-tabs, .tabs, .view-tabs) { gap: 4px; border-radius: 8px; background: var(--surface-subtle); }
+body[data-ui-app] :is(.source-tabs, .tabs, .view-tabs) button { min-height: 40px; padding: 8px 12px; font-size: 13px; font-weight: 500; border-radius: 6px; }
+body[data-ui-app] :is(.check, .queue-note) { margin-top: 12px; }
+body[data-ui-app] .queue-note { font-size: 12px; line-height: 1.6; }
+body[data-ui-app] .dropzone { min-height: 184px; border-radius: 12px; background: var(--canvas); border-color: var(--border-strong); }
+body[data-ui-app] .dropzone > span { background: var(--selected-surface); color: var(--interactive); box-shadow: none; border-radius: 12px; }
+body[data-ui-app] :is(.provenance, .footnote, .preview-caption) { color: var(--text-muted); font-size: 12px; line-height: 1.6; }
+body[data-ui-app] dialog { border: 1px solid var(--border); border-radius: 16px; background: var(--surface); color: var(--text); box-shadow: var(--shadow-lg); max-height: calc(100dvh - 32px); }
+body[data-ui-app] dialog::backdrop { background: var(--overlay); backdrop-filter: none; }
+body[data-ui-app] dialog form { padding: 24px; gap: 16px; }
+body[data-ui-app] dialog h2 { font-size: 24px; line-height: 1.4; }
+body[data-ui-app] :is(.error, .inline-error, .composer-error) { color: var(--error); background: var(--error-soft); border-color: color-mix(in srgb, var(--error) 30%, var(--border)); font-size: 13px; }
+body[data-ui-app] :is(button, a, input, select, textarea, summary, [tabindex]):focus-visible { outline: 2px solid var(--focus); outline-offset: 3px; }
+/* AI workspaces: source controls stay separate from the readable result. */
+body[data-ui-app=ocr] .workspace { grid-template-columns: minmax(310px, .82fr) minmax(0, 1fr); }
+body[data-ui-app=ocr] #corrected-text { min-height: 340px; font-size: 16px; line-height: 1.8; }
+body[data-ui-app=asr] .workspace { grid-template-columns: minmax(290px, 310px) minmax(0, 1fr); }
+body[data-ui-app=asr] .tabs button { padding-inline: 6px; font-size: 12px; white-space: nowrap; }
+body[data-ui-app=asr] :is(.segment, .live-segment) { padding-block: 18px; border-bottom: 1px solid var(--border); background: transparent; }
+body[data-ui-app=asr] :is(.segment p, .live-segment p, .segment-text) { font-size: 16px; line-height: 1.7; }
+body[data-ui-app=asr] .live-orb { width: 64px; height: 64px; margin: 16px auto; background: var(--selected-surface); color: var(--interactive); box-shadow: none; }
+body[data-ui-app=translation] .workspace { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+body[data-ui-app=translation] :is(#source-text, #translated-text) { min-height: 260px; font-size: 18px; line-height: 1.8; padding: 16px; background: var(--surface); }
+body[data-ui-app=drawing] .studio-grid { grid-template-columns: minmax(290px, 326px) minmax(0, 1fr); }
+body[data-ui-app=drawing] :is(.step-label, #router-version) { display: none; }
+body[data-ui-app=drawing] .section-heading h2 { font-size: 16px; }
+body[data-ui-app=drawing] .intent-grid { gap: 8px; grid-template-columns: minmax(0, 1fr); }
+body[data-ui-app=drawing] .intent-card { min-height: 64px; padding: 10px; border-radius: 8px; background: var(--surface); box-shadow: none; }
+body[data-ui-app=drawing] .intent-card strong { font-size: 14px; }
+body[data-ui-app=drawing] .intent-card small { line-height: 1.5; }
+body[data-ui-app=drawing] .intent-card em { color: var(--success); background: var(--success-soft); }
+body[data-ui-app=drawing] .intent-card[aria-checked=true] { border-color: var(--interactive); background: var(--selected-surface); }
+body[data-ui-app=drawing] .intent-icon { background: transparent; color: var(--interactive); }
+body[data-ui-app=drawing] .prompt-field > span > b { display: none; }
+body[data-ui-app=drawing] .empty-state { min-height: 420px; padding: 24px; }
+body[data-ui-app=drawing] .empty-orb { width: 56px; height: 56px; background: var(--selected-surface); color: var(--interactive); box-shadow: none; transform: none; border-radius: 12px; }
+body[data-ui-app=drawing] .empty-state h2 { font-size: 20px; }
+body[data-ui-app=drawing] .empty-state p { font-size: 14px; line-height: 1.7; max-width: 42ch; }
+body[data-ui-app=drawing] .submit-button { min-height: 44px; border-radius: 8px; background: var(--interactive); color: var(--on-interactive); box-shadow: none; }
+body[data-ui-app=drawing] .submit-button:disabled { opacity: 1; background: var(--disabled-surface); color: var(--disabled-text); }
+body[data-ui-app=drawing] :is(.result-stage, .preview-stage) { background: var(--canvas); border-radius: 12px; }
+/* Conversation/file layouts retain their existing narrow-screen navigation. */
+body[data-ui-app=messaging] .messaging-shell { height: 100dvh; min-height: 0; grid-template-columns: 280px minmax(0, 1fr) 240px; box-shadow: none; }
+body[data-ui-app=messaging] :is(.conversation-pane, .chat-pane, .details-pane, .pane-header) { background: var(--surface); }
+body[data-ui-app=messaging] .pane-header { height: 64px; padding-inline: 20px; }
+body[data-ui-app=messaging] .conversation-header .eyebrow { display: none; }
+body[data-ui-app=messaging] .conversation-header h1 { font-size: 20px; }
+body[data-ui-app=messaging] .conversation-item { min-height: 76px; border-radius: 8px; }
+body[data-ui-app=messaging] .conversation-copy strong { font-size: 14px; }
+body[data-ui-app=messaging] :is(.avatar, .details-avatar) { background: var(--selected-surface); border-radius: 10px; }
+body[data-ui-app=messaging] .message-bubble { padding: 12px 16px; border-radius: 12px; box-shadow: none; background: var(--surface-subtle); border-color: transparent; }
+body[data-ui-app=messaging] .message-row.is-own .message-bubble { background: var(--selected-surface); color: var(--text); border-radius: 12px; }
+body[data-ui-app=messaging] .message-text { font-size: 15px; line-height: 1.75; }
+body[data-ui-app=messaging] .composer { padding: 16px 24px; gap: 12px; }
+body[data-ui-app=messaging] .composer textarea { min-height: 44px; font-size: 14px; background: var(--canvas); }
+body[data-ui-app=team-drive] .drive-shell { grid-template-columns: 200px minmax(0, 1fr); height: 100dvh; min-height: 0; box-shadow: none; }
+body[data-ui-app=team-drive] .drive-nav { background: var(--surface); }
+body[data-ui-app=team-drive] .brand { padding-inline: 16px; }
+body[data-ui-app=team-drive] .brand h1 { font-size: 20px; }
+body[data-ui-app=team-drive] :is(.brand-mark, .security-note) { display: none; }
+body[data-ui-app=team-drive] .topbar { min-height: 64px; height: auto; padding-block: 10px; }
+body[data-ui-app=team-drive] .file-table-header { min-height: 38px; }
+body[data-ui-app=team-drive] .file-row { min-height: 64px; }
+body[data-ui-app=team-drive] .details-pane { box-shadow: var(--shadow-lg); }
+/* Device lists and players: never theme, crop or stretch guest pixels. */
+body[data-ui-app=virtual-phones] main, body[data-ui-app=virtual-computers] main { max-width: 1440px; padding: 24px 36px 32px; }
+body[data-ui-app=virtual-phones] .card, body[data-ui-app=virtual-computers] .card { padding: 24px; border: 1px solid var(--border); border-radius: 16px; box-shadow: none; background: var(--surface); }
+body[data-ui-app=virtual-phones] main > header, body[data-ui-app=virtual-computers] main > header { margin-bottom: 28px; }
+body[data-ui-app=virtual-phones] .workspace-bar { flex-wrap: wrap; gap: 12px; }
+body[data-ui-app=virtual-phones] .workspace-body { padding: 20px; background: var(--surface); border: 1px solid var(--border); border-radius: 16px; align-items: center; flex-wrap: wrap; }
+body[data-ui-app=virtual-phones] .phone-tool-panel { width: 248px; align-self: stretch; margin-inline-start: auto; padding: 20px; border-inline-start: 1px solid var(--border); }
+body[data-ui-app=virtual-phones] .phone-tool-panel h3 { margin: 0 0 20px; font-size: 16px; }
+body[data-ui-app=virtual-phones] .phone-tool-panel > button { display: block; width: 100%; margin-bottom: 12px; text-align: start; }
+body[data-ui-app=virtual-phones] .phone-tool-panel summary { min-height: 44px; padding-block: 12px; color: var(--text-muted); cursor: pointer; }
+body[data-ui-app=virtual-phones] .phone-advanced-tools { display: grid; gap: 16px; }
+body[data-ui-app=virtual-phones] #phone-diagnostics { flex-basis: 100%; width: 100%; max-height: 240px; }
+/* Keep visual and keyboard reading order aligned: screen, controls, tools. */
+body[data-ui-app=virtual-phones] .phone-controls { order: 0; }
+body[data-ui-app=virtual-phones] .phone-controls button { min-width: 52px; min-height: 44px; padding: 8px; font-size: 12px; border-radius: 8px; }
+body[data-ui-app=virtual-phones] .phone-stage { height: calc(100dvh - 210px); background: #10191e; border-radius: 12px; }
+body[data-ui-app=virtual-phones].workspace-open main { padding-top: 20px; }
+body[data-ui-app=wireless-casting] .cast-shell { max-width: 1440px; }
+body[data-ui-app=wireless-casting] .workspace { align-items: stretch; }
+body[data-ui-app=wireless-casting] :is(.panel, .card) { border-radius: 16px; box-shadow: none; }
+body[data-ui-app=wireless-casting] .hero h1 { font-size: 28px; line-height: 1.5; }
+body[data-ui-app=wireless-casting] .button { min-height: 44px; padding: 10px 16px; border-radius: 8px; font-size: 14px; font-weight: 500; box-shadow: none; }
+body[data-ui-app=wireless-casting] .button--primary { background: var(--interactive); color: var(--on-interactive); border-color: var(--interactive); }
+body[data-ui-app=wireless-casting] .button--primary:hover:not(:disabled) { background: var(--interactive-hover); }
+body[data-ui-app=wireless-casting] .button:disabled { background: var(--disabled-surface); color: var(--disabled-text); border-color: var(--disabled-border); }
+body[data-ui-app=wireless-casting] .video-frame { border-radius: 12px; }
+body[data-ui-app] .ui-icon { width: 20px; height: 20px; flex: 0 0 auto; vertical-align: middle; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+body[data-ui-app=virtual-desktop] header, body[data-ui-app=virtual-desktop] footer { background: var(--surface); border-color: var(--border); }
+body[data-ui-app=virtual-desktop] button { border-radius: 8px; min-height: 40px; font-size: 14px; }
+/* Result, recovery and editing states: Figma 10:7618, 13:7572, 22:7453. */
+body[data-ui-app] :is(.job-header, .job-head, .job-heading) { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin: 0 0 20px; }
+body[data-ui-app] :is(.job-header, .job-head, .job-heading) h2 { margin: 0; font-size: 20px; line-height: 1.5; }
+body[data-ui-app] :is(.job-header, .job-head, .job-heading) .eyebrow { margin: 0 0 4px; font-size: 12px; color: var(--text-muted); letter-spacing: 0; }
+body[data-ui-app] :is(.progress, .progress-track) { height: 4px; border-radius: 4px; margin-block: 16px; background: var(--surface-subtle); overflow: hidden; }
+body[data-ui-app] :is(.progress i, .progress-track span) { background: var(--interactive); box-shadow: none; }
+body[data-ui-app] :is(.job-detail, #job-detail, .progress-copy) { font-size: 12px; line-height: 1.7; color: var(--text-muted); overflow-wrap: anywhere; }
+body[data-ui-app] :is(.error, .inline-error, .composer-error, .notice--error, .field-error) { padding: 14px 16px; border: 1px solid color-mix(in srgb, var(--error) 25%, var(--border)); border-radius: 8px; color: var(--error); background: var(--error-soft); font-size: 14px; line-height: 1.6; overflow-wrap: anywhere; }
+body[data-ui-app] :is(.notice--success, .capability-note, .source-feedback) { padding: 14px 16px; border-radius: 8px; line-height: 1.6; font-size: 13px; }
+body[data-ui-app] :is(.result-toolbar, .summary, .result-actions) { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; padding-block: 16px; border-bottom: 1px solid var(--border); margin-bottom: 16px; }
+body[data-ui-app] :is(.result-toolbar > div, .summary-actions) { display: flex; flex-wrap: wrap; gap: 8px; }
+body[data-ui-app] :is(.summary-actions, .result-toolbar > div:last-child) { margin-inline-start: auto; }
+body[data-ui-app] .ui-result-details { margin-top: 24px; border-top: 1px solid var(--border); padding-top: 8px; color: var(--text-muted); font-size: 13px; }
+body[data-ui-app] .ui-result-details > summary { padding: 12px 0; min-height: 44px; cursor: pointer; font-weight: 500; }
+body[data-ui-app] .ui-result-details :is(.provenance, .metadata-grid) { display: grid; gap: 12px; padding: 16px; background: var(--canvas); border: 1px solid var(--border); border-radius: 8px; overflow-wrap: anywhere; }
+body[data-ui-app] .ui-result-details:has(.provenance:empty) { display: none; }
+body[data-ui-app] .provenance span { max-width: 100%; white-space: normal; overflow-wrap: anywhere; }
+body[data-ui-app=ocr] .page-card { padding: 20px; border-radius: 12px; background: var(--canvas); border: 1px solid var(--border); margin-top: 16px; }
+body[data-ui-app=ocr] .page-card h3 { font-size: 16px; margin: 0 0 16px; }
+body[data-ui-app=ocr] .block { display: grid; grid-template-columns: minmax(0, 1fr); gap: 8px; padding: 16px 0; border-top: 1px solid var(--border); line-height: 1.8; }
+body[data-ui-app=ocr] .block > span:not(.confidence) { font-size: 16px; white-space: pre-wrap; overflow-wrap: anywhere; }
+body[data-ui-app=ocr] :is(.block code, .confidence) { font-size: 12px; color: var(--text-muted); }
+body[data-ui-app=asr] .segment { display: grid; grid-template-columns: 76px 68px minmax(0, 1fr); gap: 12px; align-items: start; }
+body[data-ui-app=asr] .segment textarea { width: 100%; resize: vertical; min-height: 78px; padding: 12px; line-height: 1.8; font-size: 16px; border: 1px solid transparent; background: transparent; }
+body[data-ui-app=asr] .segment textarea:focus { background: var(--canvas); border-color: var(--border-strong); }
+body[data-ui-app=asr] .segment :is(time, .speaker) { padding-top: 14px; font-size: 12px; font-variant-numeric: tabular-nums; color: var(--text-muted); }
+body[data-ui-app=translation] .segment { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 20px; padding: 20px 0; border-bottom: 1px solid var(--border); }
+body[data-ui-app=translation] .segment time { grid-column: 1 / -1; font-size: 12px; color: var(--text-muted); }
+body[data-ui-app=translation] .segment p { margin: 0; font-size: 15px; line-height: 1.8; overflow-wrap: anywhere; }
+body[data-ui-app=translation] .segment p:first-of-type { color: var(--text-muted); }
+body[data-ui-app=translation] .workflow-card { padding: 16px; background: var(--canvas); border: 1px solid var(--border); border-radius: 8px; }
+body[data-ui-app=drawing] .gallery { gap: 20px; }
+body[data-ui-app=drawing] .gallery > :only-child { grid-column: 1 / -1; }
+body[data-ui-app=drawing] .gallery > :only-child img { aspect-ratio: auto; }
+body[data-ui-app=drawing] .result-card { margin: 0; border: 1px solid var(--border); border-radius: 12px; overflow: hidden; background: var(--canvas); box-shadow: none; }
+body[data-ui-app=drawing] .result-card img { display: block; width: 100%; max-height: 560px; object-fit: contain; background: var(--canvas); }
+body[data-ui-app=drawing] .result-actions { justify-content: space-between; margin: 0; padding: 16px; border: 0; background: var(--surface); }
+body[data-ui-app=drawing] .result-actions a { min-height: 44px; padding: 10px 16px; border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-size: 14px; }
+body[data-ui-app=drawing] .metadata-card { background: transparent; border: 0; border-top: 1px solid var(--border); border-radius: 0; padding: 8px 0 0; }
+body[data-ui-app] dialog { width: min(600px, calc(100% - 32px)); padding: 24px; overflow-y: auto; overscroll-behavior: contain; }
+body[data-ui-app] dialog form { padding: 0; }
+body[data-ui-app] dialog :is(h2, h3) { margin-top: 0; }
+body[data-ui-app] dialog :is(footer, .actions, .dialog-actions) { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 12px; padding-top: 24px; }
+body[data-ui-app] dialog > form > .dialog-actions,
+body[data-ui-app] dialog > .dialog-actions:last-child { position: sticky; bottom: -24px; z-index: 1; background: var(--surface); padding: 16px 0; border-top: 1px solid var(--border); margin-top: 20px; }
+body[data-ui-app] dialog :is(label, .field) { display: grid; gap: 8px; margin-block: 16px; min-width: 0; }
+body[data-ui-app] dialog :is(input, select, textarea) { max-width: 100%; }
+body[data-ui-app] dialog :is(input[type=checkbox], input[type=radio]) { min-height: auto; }
+body[data-ui-app] dialog .check { display: flex; align-items: start; }
+body[data-ui-app] dialog :is(.confirmation, .confirm, .camera-consent, .rom-choice) { display: flex; align-items: flex-start; gap: 12px; }
+body[data-ui-app] .summary-actions { display: flex; flex-direction: row; flex-wrap: wrap; align-items: center; gap: 8px; }
+body[data-ui-app] .summary-actions > button { width: auto; margin: 0; }
+body[data-ui-app] dialog :is(.icon-button, [data-dialog-close], [data-share-close], [data-trash-close]) { flex-shrink: 0; }
+body[data-ui-app=team-drive] .preview-dialog { width: min(1000px, calc(100% - 32px)); }
+body[data-ui-app=team-drive] :is(.details-section, .details-actions) { padding-block: 20px; }
+body[data-ui-app=messaging] .attachment-card { border: 1px solid var(--border); border-radius: 8px; background: var(--surface); }
+body[data-ui-app=virtual-phones] #phone-camera-dialog { width: min(900px, calc(100% - 32px)); }
+body[data-ui-app=virtual-phones] :is(.camera-source-options, .rom-options) { gap: 12px; }
+body[data-ui-app=virtual-phones] :is(.camera-source-option, .rom-option) { border-radius: 8px; padding: 16px; }
+body[data-ui-app=virtual-desktop] #connection-status { font-size: 13px; line-height: 1.6; }
+@media (max-width: 700px) {
+  body[data-ui-app] dialog { padding: 20px; }
+  body[data-ui-app] :is(.result-toolbar, .summary) { align-items: flex-start; }
+  body[data-ui-app] :is(.summary-actions, .result-toolbar > div:last-child) { margin-inline-start: 0; }
+  body[data-ui-app=asr] .segment { grid-template-columns: 72px minmax(0, 1fr); }
+  body[data-ui-app=asr] .segment textarea { grid-column: 1 / -1; }
+  body[data-ui-app=translation] .segment { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 1120px) {
+  body[data-ui-app=messaging] .messaging-shell { grid-template-columns: 280px minmax(0, 1fr); }
+}
+@media (max-width: 850px) {
+  body[data-ui-app] :is(.shell, .ocr-shell, .drawing-shell, .cast-shell) { padding: 20px; }
+  body[data-ui-app=virtual-phones] main, body[data-ui-app=virtual-computers] main { padding: 20px; }
+  body[data-ui-app] :is(.workspace, .studio-grid) { grid-template-columns: minmax(0, 1fr); }
+  body[data-ui-app] :is(.result, .result-panel, .preview-panel) { min-height: 360px; }
+  body[data-ui-app] :is(.empty-result, .preview-empty) { min-height: 280px; }
+}
+@media (max-width: 700px) {
+  body[data-ui-app] :is(.app-header, .drawing-header) { flex-wrap: wrap; gap: 12px; margin-bottom: 20px; }
+  body[data-ui-app] :is(.source, .source-panel, .control-panel, .result, .result-panel, .preview-panel) { padding: 20px; }
+  body[data-ui-app] :is(.shell, .ocr-shell, .drawing-shell, .cast-shell) { padding: 16px; }
+  body[data-ui-app=team-drive] .drive-shell { display: block; }
+  body[data-ui-app=messaging] .messaging-shell { display: block; }
+  body[data-ui-app=messaging] .composer { padding: 12px; gap: 8px; }
+  body[data-ui-app=virtual-phones] .workspace-body { display: flex; flex-wrap: wrap; padding: 12px; }
+  body[data-ui-app=virtual-phones] .phone-tool-panel { order: 2; width: 100%; padding: 16px 0 0; border: 0; border-top: 1px solid var(--border); }
+  body[data-ui-app=virtual-phones] .phone-tool-panel > button { width: auto; display: inline-block; margin-inline-end: 8px; }
+  body[data-ui-app=virtual-phones] .phone-controls { order: 1; width: 100%; flex-direction: row; flex-wrap: wrap; }
+  body[data-ui-app=virtual-phones] .phone-stage { height: calc(100dvh - 270px); max-width: 100%; min-height: 220px; }
+  body[data-ui-app=virtual-phones] #phone-diagnostics { order: 2; width: 100%; }
+}

@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "candidateKey": "drawing.flux2-klein-4b.bf16.spark23.v1",
+  "certificationState": "candidate",
+  "license": "Apache-2.0",
+  "source": {
+    "repository": "black-forest-labs/FLUX.2-klein-4B",
+    "revision": "e7b7dc27f91deacad38e78976d1f2b499d76a294",
+    "artifactManifestDigest": "sha256:17a487c25d814cce591c03ab1ad832c210de65d26513fd9adb73893ee09b18ca",
+    "selectedFileCount": 20,
+    "selectedTotalBytes": 15980151320,
+    "transformer": {
+      "filename": "transformer/diffusion_pytorch_model.safetensors",
+      "bytes": 7751109744,
+      "sha256": "sha256:9f29f9edcfdae452a653ffb51a534ca4decd389952c225724ff3b94042612a6e"
+    }
+  },
+  "runtime": {
+    "pipelineClass": "Flux2KleinPipeline",
+    "dtype": "bfloat16",
+    "inferenceSteps": 4,
+    "guidanceScale": 1.0,
+    "exclusive": true,
+    "targetNode": "dgx-spark-worker-02"
+  },
+  "claimBoundary": {
+    "downloaded": false,
+    "smokeQualified": false,
+    "qualityQualified": false,
+    "certified": false,
+    "productRouted": false
+  }
+}

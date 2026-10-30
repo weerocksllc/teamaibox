@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "profileKey": "asr.whisper-large-v3.fp16.spark-worker02.audio.runtime.v2",
+  "imageDigest": "sha256:cf44da03c1ea916da7f5b28dc196f61dfb8a68bdbad96b9f23427683e32e1591",
+  "modelDigest": "sha256:e5b1a55b89c1367dacf97e3e19bfd829a01529dbfdeefa8caeb59b3f1b81dadb",
+  "runAs": "1000:1000",
+  "readOnlyRootFilesystem": true,
+  "capabilitiesDropped": ["ALL"],
+  "noNewPrivileges": true,
+  "internetAtRuntime": false,
+  "memoryLimitBytes": 12884901888,
+  "cpuCores": 4,
+  "pidsLimit": 1024,
+  "temporaryFilesystems": [
+    {"path": "/tmp", "options": ["rw", "noexec", "nosuid", "nodev"], "sizeBytes": 1073741824},
+    {"path": "/var/cache/triton", "options": ["rw", "exec", "nosuid", "nodev", "uid=1000", "gid=1000", "mode=0700"], "sizeBytes": 268435456, "purpose": "ephemeral CUDA word-timestamp kernel cache; readiness compiles and executes both Whisper timestamp kernels"}
+  ],
+  "environment": {"TRITON_CACHE_DIR": "/var/cache/triton"},
+  "modelMount": {"volume": "teamaibox-model-whisper-large-v3-e5b1a55b", "path": "/models", "readOnly": true},
+  "publishedEndpoint": {"hostFromEnvironment": "TEAMAIBOX_ASR_PUBLISH_HOST", "port": 18083, "containerPort": 8080},
+  "restartPolicy": "unless-stopped",
+  "knownBoundary": "The dedicated executable tmpfs is owned only by the non-root worker and is destroyed with the container. Readiness compiles and executes both Whisper CUDA timestamp kernels. The root filesystem, model volume, and general temporary directory remain read-only or noexec."
+}

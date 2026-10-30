@@ -1,0 +1,135 @@
+{
+  "schemaVersion": 1,
+  "packageId": "teamaibox.trusted-media-service.candidate.v1",
+  "architecture": "linux/arm64/v8",
+  "status": "source-scaffold-blocked",
+  "sourceLock": {
+    "path": "deploy/casting/airplay-compatible-stack.lock.json",
+    "sha256": "sha256:dcc2818da3cb8e53b189091d23d31391f86f77de4e34f06458c60e9de18f1756",
+    "lockId": "teamaibox.airplay-compatible-stack.candidate.v1"
+  },
+  "supplyChainReview": {
+    "path": "architecture/validation/airplay-compatible-supply-chain-review.v1.json",
+    "sha256": "sha256:ee020b9cca741311980cc06abdeca624eae844ed7e162ae7b7035ce9b06d7730",
+    "reviewId": "teamaibox.airplay-compatible-supply-chain-review.v1",
+    "releaseEligible": false,
+    "requiredHumanDecisionCount": 5
+  },
+  "hardwareInventory": {
+    "path": "evidence/validation/hardware/airplay-main-hardware-inventory-20260904-a1.json",
+    "fileSha256": "sha256:2fd33d2e887e11c49d5df2f2557793b3f68ee82099fcf7450bdb99432ad971d3",
+    "evidenceDigest": "sha256:5713c7f85dad7711d3e5177fab891b9e58b9d3d917d27d1d254b28d941f0d49a",
+    "supportedEnvironment": false
+  },
+  "build": {
+    "dockerfile": {
+      "path": "deploy/casting/TrustedMediaService.arm64.Dockerfile",
+      "sha256": "sha256:695d8ce7c3bb88e7788d0bd2a7333842ef182cfc1e387ee3bc0c3c8a7849890f"
+    },
+    "context": "deploy/casting/trusted-media-service-rootfs",
+    "network": "none",
+    "baseImage": "scratch",
+    "rootfsManifest": null,
+    "rootfsManifestSha256": null,
+    "twoIndependentBuildDigests": [],
+    "reproducible": false,
+    "buildPerformed": false
+  },
+  "images": {
+    "trustedMediaService": {
+      "repository": "registry.teamaibox.invalid/first-party/trusted-media-service",
+      "arm64Digest": null,
+      "signatureVerified": false,
+      "provenanceVerified": false,
+      "spdxSbomVerified": false,
+      "cycloneDxSbomVerified": false,
+      "vulnerabilitiesAccepted": false
+    },
+    "internalSfu": {
+      "repository": "docker.io/livekit/livekit-server",
+      "arm64Digest": "sha256:4eeb7a7af9e133afee7d07fc48623373852a34ad709094345d1761c9b283dc1a",
+      "reference": "docker.io/livekit/livekit-server@sha256:4eeb7a7af9e133afee7d07fc48623373852a34ad709094345d1761c9b283dc1a",
+      "signatureVerified": false,
+      "upstreamSbomVerified": false
+    }
+  },
+  "policies": {
+    "runtime": {
+      "path": "deploy/casting/trusted-media-runtime-policy.v1.json",
+      "sha256": "sha256:30ece7eaaba68c1e3320a20dcc282617fb8000b575a31235b15e86084f207d08"
+    },
+    "seccomp": {
+      "path": "deploy/casting/trusted-media-seccomp.v1.json",
+      "sha256": "sha256:06e0d54fff2b427b6445f33c982759adeab01ded17fba18b42429765783cd374"
+    },
+    "hostExceptions": {
+      "path": "deploy/casting/trusted-media-host-exceptions.v1.json",
+      "sha256": "sha256:18b4081cc6bf08c1bcadd8f5f2ebbb896385f05eb38080dd4d286e329ed4bfb5"
+    }
+  },
+  "lifecycle": {
+    "controller": "services/trusted_media_service/release_controller.py",
+    "hostDriftGuard": "services/trusted_media_service/host_exception_guard.py",
+    "viewerTokenIssuer": "services/trusted_media_service/viewer_token_issuer.py",
+    "internalControlApi": "services/trusted_media_service/runtime_api.py",
+    "operations": [
+      "stage",
+      "start",
+      "upgrade",
+      "rollback",
+      "stop",
+      "uninstall",
+      "recover"
+    ],
+    "stateWrite": "fsync-temporary-plus-atomic-rename-plus-directory-fsync",
+    "serialized": true,
+    "previousHealthyIdentityRetained": true,
+    "failedHealthRestoresPrevious": true,
+    "discoveryWithdrawnBeforeStop": true,
+    "ephemeralSessionStateDestroyedAtEveryStop": true,
+    "dockerControlBoundary": "signed-mtls-node-agent-adapter-only",
+    "dockerSocketMounted": false
+  },
+  "admission": {
+    "failClosed": true,
+    "requiredTrue": [
+      "supplyChainReview.releaseEligible",
+      "hardwareInventory.supportedEnvironment",
+      "build.reproducible",
+      "build.buildPerformed",
+      "images.trustedMediaService.signatureVerified",
+      "images.trustedMediaService.provenanceVerified",
+      "images.trustedMediaService.spdxSbomVerified",
+      "images.trustedMediaService.cycloneDxSbomVerified",
+      "images.trustedMediaService.vulnerabilitiesAccepted"
+    ],
+    "requiredPinned": [
+      "build.rootfsManifestSha256",
+      "images.trustedMediaService.arm64Digest",
+      "images.internalSfu.arm64Digest"
+    ],
+    "currentBlockers": [
+      "airplay_supply_chain_human_decisions_pending",
+      "trusted_media_arm64_image_unbuilt",
+      "final_sbom_signature_provenance_and_vulnerability_evidence_missing",
+      "hdmi_sink_disconnected",
+      "hdmi_1080p30_not_proven",
+      "hdmi_audio_sink_not_proven",
+      "h264_encoder_plugin_missing",
+      "webrtc_plugin_missing",
+      "physical_apple_sender_not_exercised",
+      "seccomp_and_apparmor_real_runtime_not_exercised"
+    ]
+  },
+  "claimBoundary": {
+    "sourceScaffoldReady": true,
+    "containerBuilt": false,
+    "deploymentPerformed": false,
+    "componentReady": false,
+    "productAccepted": false,
+    "releaseEligible": false,
+    "task22_1Complete": false,
+    "task22_3Complete": false,
+    "task22_10Complete": false
+  }
+}

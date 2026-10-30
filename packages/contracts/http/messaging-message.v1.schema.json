@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.teamaibox.local/http/messaging-message.v1.schema.json",
+  "title": "Messaging message v1",
+  "x-teamaibox-contract": {"family": "http", "role": "response", "major": 1},
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "object", "conversation_id", "sequence", "author_identity_id", "author_kind", "application_key", "content", "attachments", "reply_to_message_id", "delivery", "created_at", "edited_at", "deleted_at"],
+  "properties": {
+    "id": {"type": "string", "format": "uuid"},
+    "object": {"const": "messaging.message"},
+    "conversation_id": {"type": "string", "format": "uuid"},
+    "sequence": {"type": "integer", "minimum": 1},
+    "author_identity_id": {"type": "string", "format": "uuid"},
+    "author_kind": {"type": "string", "enum": ["user", "application"]},
+    "application_key": {"type": ["string", "null"], "pattern": "^[a-z][a-z0-9_.-]{2,127}$"},
+    "content": {"type": "string"},
+    "attachments": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["object_id", "object_version", "filename", "media_type", "byte_size", "sha256"],
+        "properties": {
+          "object_id": {"type": "string", "format": "uuid"},
+          "object_version": {"type": "integer", "minimum": 1},
+          "filename": {"type": "string", "minLength": 1, "maxLength": 1024},
+          "media_type": {"type": "string", "minLength": 1, "maxLength": 256},
+          "byte_size": {"type": "integer", "minimum": 0},
+          "sha256": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"}
+        }
+      }
+    },
+    "reply_to_message_id": {"type": ["string", "null"], "format": "uuid"},
+    "delivery": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["identity_id", "state", "delivered_at", "read_at"],
+        "properties": {
+          "identity_id": {"type": "string", "format": "uuid"},
+          "state": {"type": "string", "enum": ["queued", "delivered", "read"]},
+          "delivered_at": {"type": ["string", "null"], "format": "date-time"},
+          "read_at": {"type": ["string", "null"], "format": "date-time"}
+        }
+      }
+    },
+    "created_at": {"type": "string", "format": "date-time"},
+    "edited_at": {"type": ["string", "null"], "format": "date-time"},
+    "deleted_at": {"type": ["string", "null"], "format": "date-time"},
+    "extensions": {"type": "object", "additionalProperties": true}
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.teamaibox.local/realtime/session-envelope.v1.schema.json",
+  "title": "Team AI Box realtime session envelope v1",
+  "x-teamaibox-contract": {"family": "realtime", "role": "bidirectional", "major": 1},
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["protocolVersion", "sessionId", "eventId", "sequence", "type", "occurredAt", "payload"],
+  "properties": {
+    "protocolVersion": {"const": 1},
+    "sessionId": {"type": "string", "format": "uuid"},
+    "eventId": {"type": "string", "format": "uuid"},
+    "sequence": {"type": "integer", "minimum": 0},
+    "type": {"type": "string", "pattern": "^[a-z][a-z0-9._-]{2,127}$"},
+    "occurredAt": {"type": "string", "format": "date-time"},
+    "correlationId": {"type": ["string", "null"], "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{7,127}$"},
+    "resumeFrom": {"type": ["integer", "null"], "minimum": 0},
+    "required": {"type": "boolean", "default": true},
+    "payload": {"type": "object"},
+    "extensions": {"type": "object", "additionalProperties": true}
+  }
+}

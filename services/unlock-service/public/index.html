@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Team AI Box · Unlock</title>
+  <link rel="stylesheet" href="/app.css">
+</head>
+<body>
+  <main class="shell">
+    <header class="toolbar"><strong>TEAM AI BOX</strong><div><button id="locale" type="button">EN</button><button id="theme" type="button" aria-label="切换主题">◐</button></div></header>
+    <section class="card" aria-labelledby="title">
+      <div class="mark" aria-hidden="true">◆</div>
+      <p class="eyebrow" data-i18n="eyebrow">受保护启动</p>
+      <h1 id="title" data-i18n="title">解锁团队数据</h1>
+      <p class="intro" data-i18n="intro">LUKS2 数据卷仍处于锁定状态。此页面只运行最小解锁服务，无法访问团队文件、消息或 AI 工作负载。</p>
+      <dl class="status"><div><dt data-i18n="volume">数据卷</dt><dd id="state">—</dd></div><div><dt data-i18n="network">网络</dt><dd id="network">—</dd></div></dl>
+      <form id="form">
+        <label for="passphrase" data-i18n="passphrase">管理员解锁口令</label>
+        <div class="field"><input id="passphrase" name="passphrase" type="password" required maxlength="4096" autocomplete="current-password" spellcheck="false"><button id="reveal" type="button" data-i18n="show">显示</button></div>
+        <p class="hint" data-i18n="hint">口令只通过当前 HTTPS 连接送入 LUKS2 解锁边界，不会写入日志。</p>
+        <div id="message" class="message" role="status" aria-live="polite" hidden></div>
+        <button id="submit" class="primary" type="submit" data-i18n="submit">解锁并启动服务</button>
+      </form>
+      <footer data-i18n="footer">离线恢复密钥不在此页面使用，请按恢复手册操作。</footer>
+    </section>
+  </main>
+  <script type="module" src="/app.js"></script>
+</body>
+</html>

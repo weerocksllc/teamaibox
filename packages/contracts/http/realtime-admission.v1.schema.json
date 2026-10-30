@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.teamaibox.local/http/realtime-admission.v1.schema.json",
+  "title": "Team AI Box realtime admission request v1",
+  "x-teamaibox-contract": {"family": "http", "role": "request", "major": 1},
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["capability"],
+  "properties": {
+    "capability": {"type": "string", "enum": ["asr", "translation", "codec", "webrtc-gateway"]},
+    "model": {"type": ["string", "null"], "minLength": 1, "maxLength": 512},
+    "expires_in_seconds": {"type": "integer", "minimum": 30, "maximum": 3600, "default": 300},
+    "input": {"type": "object", "additionalProperties": true},
+    "output": {"type": "object", "additionalProperties": true}
+  }
+}

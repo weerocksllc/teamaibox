@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "profileKey": "llm.qwen38-27b.modelopt-nvfp4-fp8.main-protected.v1",
+  "source": {
+    "model": "Qwen/Qwen3.8-27B",
+    "revision": "1d4bf0f2ff6012fd82039f2fa52739d0dd7c60c0",
+    "license": {
+      "name": "Apache License 2.0",
+      "spdxId": "Apache-2.0",
+      "reviewStatus": "approved"
+    }
+  },
+  "engine": {
+    "name": "vLLM",
+    "version": "0.22.1+7b9cb5b7.dev"
+  },
+  "precision": {
+    "databaseValue": "nvfp4",
+    "weights": "MLP/lm_head NVFP4 W4A16; attention/linear-attention FP8",
+    "kvCache": "FP8 cast",
+    "recipe": "huggingface/qwen3_5/ptq/w4a16_nvfp4-fp8_attn-kv_fp8_cast",
+    "recipeDigest": "sha256:8b3ca7d06c3c6645f2ce5641e26c73b1c0913604da4af3fb9b616489f63489d4",
+    "modelOptRevision": "51cc5dbadeedd93cba5cc37eec637f26efd3f8ab"
+  },
+  "runtime": {
+    "servedModel": "qwen3.8-27b-nvfp4",
+    "hardMemoryBytes": 51539607552,
+    "runtimeEnvironment": {
+      "HF_HUB_OFFLINE": "1",
+      "HOME": "/tmp",
+      "LOGNAME": "teamaibox",
+      "TORCHINDUCTOR_CACHE_DIR": "/tmp/torchinductor",
+      "TRANSFORMERS_OFFLINE": "1",
+      "USER": "teamaibox",
+      "VLLM_USAGE_SOURCE": "production"
+    }
+  }
+}

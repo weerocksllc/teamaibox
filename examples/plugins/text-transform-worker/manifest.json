@@ -1,0 +1,75 @@
+{
+  "apiVersion": "teamaibox.io/plugin/v1",
+  "id": "example.text-transform",
+  "type": "ComputePlugin",
+  "version": "1.0.0",
+  "official": false,
+  "publisher": {
+    "id": "example.community",
+    "displayName": "Example Community",
+    "website": "https://plugins.example.test"
+  },
+  "architectures": ["linux/arm64/v8"],
+  "images": [{
+    "name": "text-transform-worker",
+    "role": "worker",
+    "variants": [{
+      "architecture": "linux/arm64/v8",
+      "reference": "registry.example.test/community/text-transform-worker",
+      "digest": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+      "mediaType": "application/vnd.oci.image.manifest.v1+json"
+    }]
+  }],
+  "entryPoints": {
+    "worker": {"protocol": "teamaibox.worker-control/v1", "capabilityRegistration": "scheduler-only"}
+  },
+  "apis": [{"name": "worker-control", "versionRange": ">=1.0.0 <2.0.0", "access": "scheduler"}],
+  "ui": {
+    "displayNameKey": "text-transform.catalog.name",
+    "summaryKey": "text-transform.catalog.summary",
+    "icon": "case-upper",
+    "category": "infrastructure",
+    "order": 900
+  },
+  "localization": {
+    "supportedLocales": ["en"],
+    "fallbackLocale": "en",
+    "supportedDirections": ["ltr"],
+    "rtlReady": false
+  },
+  "themes": {"supported": ["dark"], "usesSemanticTokens": true, "livePreferenceEvents": false},
+  "permissions": {
+    "platformApiScopes": ["compute:report"],
+    "delegatedUserToken": false,
+    "network": {"mode": "none", "egressHosts": []},
+    "objectNamespaces": ["sample.transforms"],
+    "devices": []
+  },
+  "resources": {
+    "cpu": {"requestMillicores": 100, "limitMillicores": 500},
+    "unifiedMemoryBytes": 134217728,
+    "ephemeralStorageBytes": 67108864,
+    "persistentStorageBytes": 0,
+    "network": {"ingressBitsPerSecond": 100000000, "egressBitsPerSecond": 100000000}
+  },
+  "health": {
+    "startup": {"path": "/health/startup", "intervalSeconds": 5, "timeoutSeconds": 2, "failureThreshold": 12},
+    "readiness": {"path": "/health/ready", "intervalSeconds": 10, "timeoutSeconds": 2, "failureThreshold": 3},
+    "liveness": {"path": "/health/live", "intervalSeconds": 30, "timeoutSeconds": 3, "failureThreshold": 3}
+  },
+  "migrations": [],
+  "compatibility": {
+    "platform": ">=0.1.0 <1.0.0",
+    "pluginApi": ">=1.0.0 <2.0.0",
+    "runtime": "oci-linux-arm64-v1",
+    "requiredCapabilities": [],
+    "dependencies": []
+  },
+  "signature": {
+    "format": "teamaibox.canonical-json/v1",
+    "algorithm": "Ed25519",
+    "keyId": "example.community/sample-release-2026",
+    "payloadDigest": "sha256:807f9b3437e5f638be8b44a1c9545840f0257288e787ec041969fb3fe01b3259",
+    "value": "lGET8LW6WEaUajPAd+CqUfMKGsPSdihgJVf84rIgdxX58PK8N5QJzAPcHqPa93ETJKieBbDgBpI73SQ2jvFIDg=="
+  }
+}

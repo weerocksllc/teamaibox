@@ -1,0 +1,175 @@
+{
+  "schemaVersion": 1,
+  "runtimeImage": {
+    "sourceTag": "nvcr.io/nvidia/vllm:26.05.post1-py3",
+    "platform": "linux/arm64/v8",
+    "platformDigest": "sha256:9204569b17ee4c0eff75194b8e6e458479c8aee18953b5ab9cf359fcdac659e2",
+    "imageIdObservedOnSpark": "sha256:46591c6e4a018d8d197fa246b1e3d682c907654aab4e9402302abb3e6a7dd916",
+    "vllmVersion": "0.21.0+2325b6f0.nvinternal.26.5.post1.53039255"
+  },
+  "artifactValidation": [
+    {
+      "candidateId": "qwen36-35b-a3b-bf16",
+      "dockerVolume": "teamaibox-model-lab-qwen36-bf16-995ad96e",
+      "maximumBytes": 75000000000,
+      "minimumPreflightMemoryBytes": 107374182400,
+      "minimumPreflightDiskBytes": 96636764160,
+      "storageReservationBytes": 92716025320,
+      "coldStartEstimatedMilliseconds": 180000,
+      "evidenceRef": "evidence://validation/models/baseline-plan-qwen36-bf16-v1",
+      "discoveryRunId": "model-discovery-qwen36-bf16-20260810"
+    },
+    {
+      "candidateId": "qwen36-35b-a3b-nvfp4",
+      "dockerVolume": "teamaibox-model-lab-qwen36-nvfp4-491c2f1e",
+      "maximumBytes": 26000000000,
+      "minimumPreflightMemoryBytes": 68719476736,
+      "minimumPreflightDiskBytes": 53687091200,
+      "storageReservationBytes": 53687091200,
+      "coldStartEstimatedMilliseconds": 180000,
+      "evidenceRef": "evidence://validation/models/baseline-plan-qwen36-nvfp4-v1",
+      "discoveryRunId": "model-discovery-qwen36-nvfp4-20260810",
+      "quantizationRecipe": {
+        "scheme": "nvfp4",
+        "tool": "nvidia-modelopt-publisher-prequantized",
+        "toolVersion": "revision-491c2f1ea524",
+        "recipeDigest": "sha256:c20fe6eb55909d8be667bf5cfd5e4918525a3b36ae507c3bc848142f32368356",
+        "parametersDigest": "sha256:926868e31a724313268c7b69f4bdd050713633f2cb9000a95c52a2be1d2e3276",
+        "calibrationDatasetDigest": null
+      }
+    }
+  ],
+  "profiles": [
+    {
+      "profileKey": "llm.qwen36-35b-a3b.bf16.spark-reference-32k.v1",
+      "candidateId": "qwen36-35b-a3b-bf16",
+      "source": {
+        "model": "Qwen/Qwen3.6-35B-A3B",
+        "revision": "995ad96eacd98c81ed38be0c5b274b04031597b0",
+        "precision": "bf16"
+      },
+      "servedModelName": "qwen3.6-35b-a3b-bf16",
+      "scheduling": {
+        "nodeExclusive": true,
+        "minimumHostAvailableMemoryBytes": 107374182400,
+        "coreServiceReserveBytes": 12884901888,
+        "maximumWorkerMemoryBytes": 111669149696,
+        "maximumConcurrentRequests": 2
+      },
+      "network": {
+        "runtimeMode": "isolated-internal",
+        "dockerNetwork": "teamaibox-model-validation-internal",
+        "publishedPorts": [],
+        "listenHost": "0.0.0.0",
+        "listenPort": 8000
+      },
+      "security": {
+        "runAsUid": 1000,
+        "runAsGid": 1000,
+        "readOnlyRootFilesystem": true,
+        "capabilitiesDropped": ["ALL"],
+        "noNewPrivileges": true,
+        "dockerSocketMounted": false,
+        "modelArtifactMountReadOnly": true,
+        "internetAtRuntime": false
+      },
+      "engineArguments": [
+        "serve", "/models/model",
+        "--served-model-name", "qwen3.6-35b-a3b-bf16",
+        "--host", "0.0.0.0",
+        "--port", "8000",
+        "--dtype", "bfloat16",
+        "--language-model-only",
+        "--mm-processor-cache-gb", "0",
+        "--tensor-parallel-size", "1",
+        "--gpu-memory-utilization", "0.75",
+        "--max-model-len", "32768",
+        "--max-num-seqs", "2",
+        "--max-num-batched-tokens", "8192",
+        "--enable-chunked-prefill",
+        "--enable-prefix-caching",
+        "--async-scheduling",
+        "--load-format", "fastsafetensors",
+        "--reasoning-parser", "qwen3",
+        "--tool-call-parser", "qwen3_xml",
+        "--enable-auto-tool-choice",
+        "--seed", "1337"
+      ],
+      "validationPlan": {
+        "coldStartRuns": 3,
+        "warmupExcluded": true,
+        "qualitySuite": "llm.baseline-smoke.v1",
+        "benchmarkScenarios": ["warm_single", "dynamic_batch_four", "concurrency_two", "long_context"],
+        "stabilityRequests": 20,
+        "certificationEligible": false
+      }
+    },
+    {
+      "profileKey": "llm.qwen36-35b-a3b.nvfp4.spark-32k.v1",
+      "candidateId": "qwen36-35b-a3b-nvfp4",
+      "source": {
+        "model": "nvidia/Qwen3.6-35B-A3B-NVFP4",
+        "revision": "491c2f1ea524c639598bf8fa787a93fed5a6fbce",
+        "precision": "nvfp4"
+      },
+      "servedModelName": "qwen3.6-35b-a3b-nvfp4",
+      "scheduling": {
+        "nodeExclusive": true,
+        "minimumHostAvailableMemoryBytes": 68719476736,
+        "coreServiceReserveBytes": 12884901888,
+        "maximumWorkerMemoryBytes": 68719476736,
+        "maximumConcurrentRequests": 2
+      },
+      "network": {
+        "runtimeMode": "isolated-internal",
+        "dockerNetwork": "teamaibox-model-validation-internal",
+        "publishedPorts": [],
+        "listenHost": "0.0.0.0",
+        "listenPort": 8000
+      },
+      "security": {
+        "runAsUid": 1000,
+        "runAsGid": 1000,
+        "readOnlyRootFilesystem": true,
+        "capabilitiesDropped": ["ALL"],
+        "noNewPrivileges": true,
+        "dockerSocketMounted": false,
+        "modelArtifactMountReadOnly": true,
+        "internetAtRuntime": false
+      },
+      "engineArguments": [
+        "serve", "/models/model",
+        "--served-model-name", "qwen3.6-35b-a3b-nvfp4",
+        "--host", "0.0.0.0",
+        "--port", "8000",
+        "--dtype", "auto",
+        "--language-model-only",
+        "--mm-processor-cache-gb", "0",
+        "--tensor-parallel-size", "1",
+        "--gpu-memory-utilization", "0.40",
+        "--kv-cache-dtype", "fp8",
+        "--attention-backend", "flashinfer",
+        "--moe-backend", "marlin",
+        "--max-model-len", "32768",
+        "--max-num-seqs", "2",
+        "--max-num-batched-tokens", "8192",
+        "--enable-chunked-prefill",
+        "--enable-prefix-caching",
+        "--async-scheduling",
+        "--load-format", "fastsafetensors",
+        "--reasoning-parser", "qwen3",
+        "--tool-call-parser", "qwen3_xml",
+        "--enable-auto-tool-choice",
+        "--seed", "1337"
+      ],
+      "validationPlan": {
+        "coldStartRuns": 3,
+        "warmupExcluded": true,
+        "qualitySuite": "llm.baseline-smoke.v1",
+        "benchmarkScenarios": ["warm_single", "dynamic_batch_four", "concurrency_two", "long_context"],
+        "stabilityRequests": 20,
+        "certificationEligible": false
+      }
+    }
+  ]
+}

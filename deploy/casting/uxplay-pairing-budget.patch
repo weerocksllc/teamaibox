@@ -1,0 +1,22 @@
+--- a/lib/pairing.c
++++ b/lib/pairing.c
+@@ -25,6 +25,11 @@
+ #include "pairing.h"
+ #include "crypto.h"
+ #include "srp.h"
++#ifdef TEAMAIBOX_PIN_STDIN
++#include "teamaibox_pairing_budget.h"
++static teamaibox_pairing_budget_t teamaibox_pairing_budget =
++    TEAMAIBOX_PAIRING_BUDGET_INITIALIZER;
++#endif
+ 
+ #define SALT_KEY "Pair-Verify-AES-Key"
+ #define SALT_IV "Pair-Verify-AES-IV"
+@@ -565,6 +570,7 @@
+ #ifdef TEAMAIBOX_PIN_STDIN
+     if (!session || !session->srp || !pairing || !A || !proof || len_A < 1 || len_A > SRP_PK_SIZE
+         || client_proof_len != 20 || proof_len < 20 || session->teamaibox_srp_proof_verified) return -1;
++    if (!teamaibox_pairing_budget_claim(&teamaibox_pairing_budget)) return -3;
+ #endif
+     int authenticated  = 0;
+     const unsigned char *B =  NULL;

@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.teamaibox.local/http/file-root.v1.schema.json",
+  "title": "Team Drive root v1",
+  "x-teamaibox-contract": {"family": "http", "role": "response", "major": 1},
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "object", "scope_kind", "scope_key", "quota_bytes", "used_bytes", "available_bytes", "revision", "created_at", "updated_at"],
+  "properties": {
+    "id": {"type": "string", "format": "uuid"},
+    "object": {"const": "files.root"},
+    "scope_kind": {"type": "string", "enum": ["user", "team"]},
+    "scope_key": {"type": "string", "minLength": 3, "maxLength": 128},
+    "quota_bytes": {"type": "integer", "minimum": 1},
+    "used_bytes": {"type": "integer", "minimum": 0},
+    "available_bytes": {"type": "integer", "minimum": 0},
+    "revision": {"type": "integer", "minimum": 1},
+    "created_at": {"type": "string", "format": "date-time"},
+    "updated_at": {"type": "string", "format": "date-time"},
+    "extensions": {"type": "object", "additionalProperties": true}
+  }
+}

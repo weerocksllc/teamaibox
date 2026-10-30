@@ -1,0 +1,78 @@
+{
+  "schemaVersion": 1,
+  "contractId": "teamaibox.trusted-media-callback.v1",
+  "status": "contract-ready-activation-blocked",
+  "exposure": {
+    "listener": "dedicated-private-mtls",
+    "minimumTlsVersion": "TLSv1.3",
+    "maximumRequestBytes": 16384,
+    "sharedBrowserListenerAllowed": false,
+    "publicRouteAllowed": false
+  },
+  "serviceIdentity": {
+    "serviceIdentityId": "60000000-0000-4000-8000-000000000001",
+    "spiffeUri": "spiffe://teamaibox.local/service/trusted-media/60000000-0000-4000-8000-000000000001",
+    "certificateFingerprint": null,
+    "forwardedIdentityHeadersAccepted": false
+  },
+  "replay": {
+    "callbackIdHeader": "x-teamaibox-callback-id",
+    "issuedAtHeader": "x-teamaibox-callback-issued-at",
+    "maximumClockSkewSeconds": 30,
+    "retentionSeconds": 120,
+    "maximumEntries": 4096,
+    "reusedCallbackIdPolicy": "reject"
+  },
+  "endpoints": {
+    "pairSource": {
+      "method": "POST",
+      "pathTemplate": "/internal/v1/casting/sessions/{sessionId}/source/pair"
+    },
+    "markStreaming": {
+      "method": "POST",
+      "pathTemplate": "/internal/v1/casting/sessions/{sessionId}/source/streaming"
+    },
+    "authorizeViewer": {
+      "method": "POST",
+      "pathTemplate": "/internal/v1/casting/sessions/{sessionId}/viewers/authorize"
+    }
+  },
+  "viewerAuthorization": {
+    "maximumCredentialTtlSeconds": 300,
+    "permission": "cast:view",
+    "currentAudienceRequired": true,
+    "joinedCurrentGrantRequired": true,
+    "browserInstanceBindingRequired": true,
+    "recheckOnEveryConnection": true,
+    "maximumViewers": null,
+    "publisherEncodeRenditions": 1
+  },
+  "secretBoundary": {
+    "pairingPinPersisted": false,
+    "mediaCredentialPersisted": false,
+    "requestBodiesLogged": false,
+    "callbackBodiesInAudit": false,
+    "replayStateFields": [
+      "callbackId",
+      "expiresAt"
+    ]
+  },
+  "activationGate": {
+    "bound": false,
+    "blockers": [
+      "dedicated_mtls_listener_not_deployed",
+      "trusted_media_service_certificate_not_issued",
+      "trusted_media_release_digest_not_materialized"
+    ]
+  },
+  "claimBoundary": {
+    "sourceContractReady": true,
+    "runtimeBound": false,
+    "deploymentPerformed": false,
+    "receiverOrMediaStarted": false,
+    "realAppleSenderAccepted": false,
+    "realBrowserWebrtcAccepted": false,
+    "task22_6Complete": false,
+    "task22_7Complete": false
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "name": "@teamaibox/contracts",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "python3 ../../tools/validate_interface_contracts.py && PYTHONPATH=../.. python3 -m unittest tests.test_interface_contracts -v"
+  },
+  "license": "MIT"
+}

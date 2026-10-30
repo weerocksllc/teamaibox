@@ -1,0 +1,7 @@
+DROP TRIGGER IF EXISTS model_profile_revalidation_checks_immutable
+ON compute.model_profile_revalidation_checks;
+DROP TRIGGER IF EXISTS model_profile_certification_baselines_immutable
+ON compute.model_profile_certification_baselines;
+DROP FUNCTION IF EXISTS compute.reject_model_certification_baseline_mutation();
+DROP TABLE IF EXISTS compute.model_profile_revalidation_checks;
+DROP TABLE IF EXISTS compute.model_profile_certification_baselines;

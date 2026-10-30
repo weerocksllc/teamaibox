@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.teamaibox.local/http/realtime-session.v1.schema.json",
+  "title": "Team AI Box admitted realtime session v1",
+  "x-teamaibox-contract": {"family": "http", "role": "response", "major": 1},
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["session_id", "object", "protocol_version", "capability", "model", "status", "expires_at", "websocket_url", "reservation"],
+  "properties": {
+    "session_id": {"type": "string", "format": "uuid"},
+    "object": {"const": "teamaibox.realtime.session"},
+    "protocol_version": {"const": 1},
+    "capability": {"type": "string", "enum": ["asr", "translation", "codec", "webrtc-gateway"]},
+    "model": {"type": ["string", "null"]},
+    "status": {"const": "admitted"},
+    "expires_at": {"type": "string", "format": "date-time"},
+    "websocket_url": {"type": "string", "pattern": "^/api/v1/realtime/sessions/[0-9a-f-]{36}/stream$"},
+    "reservation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "reservation_id", "reservation_kind", "priority_class",
+        "latency_budget_milliseconds", "protected_from_batch", "resources"
+      ],
+      "properties": {
+        "reservation_id": {"type": "string", "format": "uuid"},
+        "reservation_kind": {"const": "realtime"},
+        "priority_class": {"const": "latency"},
+        "latency_budget_milliseconds": {"type": "integer", "minimum": 10, "maximum": 10000},
+        "protected_from_batch": {"const": true},
+        "resources": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "cpu_millis", "unified_memory_bytes", "accelerator_units",
+            "codec_sessions", "storage_bytes", "network_bits_per_second",
+            "codec_encode_sessions", "codec_decode_sessions"
+          ],
+          "properties": {
+            "cpu_millis": {"type": "integer", "minimum": 0},
+            "unified_memory_bytes": {"type": "integer", "minimum": 0},
+            "accelerator_units": {"type": "integer", "minimum": 0},
+            "codec_sessions": {"type": "integer", "minimum": 0},
+            "storage_bytes": {"type": "integer", "minimum": 0},
+            "network_bits_per_second": {"type": "integer", "minimum": 0},
+            "codec_encode_sessions": {"type": "integer", "minimum": 0},
+            "codec_decode_sessions": {"type": "integer", "minimum": 0}
+          }
+        }
+      }
+    }
+  }
+}

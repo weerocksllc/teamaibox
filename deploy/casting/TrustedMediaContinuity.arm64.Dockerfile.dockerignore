@@ -1,0 +1,9 @@
+**
+!services/
+!services/trusted_media_service/
+!services/trusted_media_service/receiver_supervisor.py
+!services/trusted_media_service/runtime_api.py
+!services/trusted_media_service/media_progress.py
+!services/trusted_media_service/tls_runtime_server.py
+!services/trusted_media_runtime/
+!services/trusted_media_runtime/sfu_gateway.py

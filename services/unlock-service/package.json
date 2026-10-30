@@ -1,0 +1,19 @@
+{
+  "name": "@teamaibox/unlock-service",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.mjs",
+    "./http-api": "./src/unlock-http-api.mjs",
+    "./https-server": "./server/https-server.mjs",
+    "./transition-service": "./src/unlock-protection-transition-service.mjs",
+    "./memory-transition-repository": "./src/memory-unlock-transition-repository.mjs",
+    "./postgres-transition-repository": "./src/postgres-unlock-transition-repository.mjs",
+    "./recovery-lifecycle-service": "./src/recovery-lifecycle-service.mjs"
+  },
+  "scripts": {
+    "test": "node --test test/*.test.mjs"
+  },
+  "license": "MIT"
+}

@@ -1,0 +1,7 @@
+*
+!services/ocr-worker/worker_hunyuanocr/**
+!services/ocr-worker/managed_dflash_server.py
+!services/ocr-worker/managed_dflash_office_engine.py
+!services/media_io/resources.py
+**/__pycache__
+**/*.pyc

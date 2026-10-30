@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "profileKey": "ocr.hunyuanocr-1.5.bf16-dflash.main-protected.v1",
+  "source": {
+    "model": "tencent/HunyuanOCR",
+    "revision": "01b3ec869d704307645d2d8667f01c5bec6fef6d",
+    "license": {
+      "name": "Tencent Hunyuan Community License Agreement",
+      "textDigest": "sha256:745adaa59575d2a98b64fd6d3452537b477a6b6edc126f742fc055313cc3d3e0",
+      "reviewId": "teamaibox.hunyuanocr-1.5-license-review.v2",
+      "reviewStatus": "approved-with-conditions"
+    }
+  },
+  "engine": {
+    "name": "vllm-dflash",
+    "version": "0.25.1",
+    "precision": "bf16"
+  },
+  "runtime": {
+    "servedModel": "hunyuanocr-1.5-bf16-dflash",
+    "hardMemoryBytes": 12884901888
+  }
+}

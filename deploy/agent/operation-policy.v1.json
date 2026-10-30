@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "policyId": "official-agent-operations.v1",
+  "revision": 1,
+  "confirmationTimeoutSeconds": 120,
+  "alwaysReplyAllowed": false,
+  "defaultDisposition": "confirm",
+  "defaultSideEffectClass": "non_idempotent",
+  "rules": [
+    {"actionKind": "code.inspect", "disposition": "allow", "sideEffectClass": "none"},
+    {"actionKind": "docker.control", "disposition": "deny", "sideEffectClass": "non_idempotent"},
+    {"actionKind": "filesystem.delete", "disposition": "confirm", "sideEffectClass": "non_idempotent"},
+    {"actionKind": "filesystem.read", "disposition": "allow", "sideEffectClass": "none"},
+    {"actionKind": "filesystem.write", "disposition": "confirm", "sideEffectClass": "idempotent"},
+    {"actionKind": "git.commit", "disposition": "confirm", "sideEffectClass": "non_idempotent"},
+    {"actionKind": "git.push", "disposition": "confirm", "sideEffectClass": "non_idempotent"},
+    {"actionKind": "gpu.direct", "disposition": "deny", "sideEffectClass": "non_idempotent"},
+    {"actionKind": "host.access", "disposition": "deny", "sideEffectClass": "non_idempotent"},
+    {"actionKind": "network.request", "disposition": "confirm", "sideEffectClass": "idempotent"},
+    {"actionKind": "package.install", "disposition": "confirm", "sideEffectClass": "non_idempotent"},
+    {"actionKind": "privilege.escalate", "disposition": "deny", "sideEffectClass": "non_idempotent"},
+    {"actionKind": "process.start", "disposition": "confirm", "sideEffectClass": "non_idempotent"},
+    {"actionKind": "search.query", "disposition": "allow", "sideEffectClass": "none"},
+    {"actionKind": "shell.execute", "disposition": "confirm", "sideEffectClass": "non_idempotent"}
+  ]
+}

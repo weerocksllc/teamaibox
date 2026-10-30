@@ -1,0 +1,77 @@
+{
+  "schemaVersion": 1,
+  "suiteId": "model.release-candidate-faults.v1",
+  "deploymentCatalogDigest": "sha256:c2884f7f690182488755b576f58fd4acafa5f738229ca6b1e9a3d4078a0aa3fe",
+  "releaseCandidates": [
+    "llm.qwen36-35b-a3b.bf16.spark-reference-32k.v1",
+    "llm.qwen36-35b-a3b.nvfp4.spark-32k.v1"
+  ],
+  "cases": [
+    {
+      "case": "cancellation",
+      "executor": "live_openai_stream",
+      "acceptance": "client_disconnect_drains_worker_and_health_survives"
+    },
+    {
+      "case": "timeout",
+      "executor": "live_openai_request",
+      "acceptance": "client_deadline_drains_worker_and_health_survives"
+    },
+    {
+      "case": "malformed_input",
+      "executor": "live_openai_request",
+      "acceptance": "bounded_4xx_openai_error_and_health_survives"
+    },
+    {
+      "case": "oom",
+      "executor": "exact_profile_undersized_cgroup",
+      "acceptance": "oom_is_classified_core_services_survive_and_profile_recovers"
+    },
+    {
+      "case": "worker_restart",
+      "executor": "live_profile_sigkill_restart",
+      "acceptance": "non_oom_exit_same_container_and_integrity_recovers"
+    },
+    {
+      "case": "node_agent_restart",
+      "executor": "real_mtls_node_agent_boundary",
+      "acceptance": "exact_start_replay_returns_same_worker"
+    },
+    {
+      "case": "queue_replay",
+      "executor": "durable_job_and_scheduler_contracts",
+      "acceptance": "one_durable_job_and_no_duplicate_dispatch"
+    },
+    {
+      "case": "cold_unload_reload",
+      "executor": "exact_profile_new_container",
+      "acceptance": "new_container_ready_and_integrity_matches"
+    },
+    {
+      "case": "cache_pressure",
+      "executor": "two_concurrent_long_context_requests",
+      "acceptance": "both_complete_above_16000_prompt_tokens_and_worker_drains"
+    },
+    {
+      "case": "result_integrity",
+      "executor": "deterministic_content_digest",
+      "acceptance": "digest_matches_before_after_request_restart_reload_and_oom"
+    }
+  ],
+  "limits": {
+    "clientTimeoutMilliseconds": 10,
+    "drainTimeoutSeconds": 180,
+    "cachePressureConcurrency": 2,
+    "minimumCachePressurePromptTokens": 16000,
+    "maximumContextTokens": 32768,
+    "oomWorkerMemoryBytes": 8589934592,
+    "oomTerminalTimeoutSeconds": 600,
+    "probeMemoryBytes": 2147483648,
+    "probeCpuCores": 2
+  },
+  "dataHandling": {
+    "retainPromptOrOutputText": false,
+    "retainResponseDigests": true,
+    "externalNetwork": false
+  }
+}

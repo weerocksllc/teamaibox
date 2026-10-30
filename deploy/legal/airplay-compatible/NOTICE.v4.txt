@@ -1,0 +1,19 @@
+Team AI Box: AirPlay-compatible wireless casting (not Apple-certified)
+兼容 AirPlay 的无线投屏（非 Apple 认证）。不支持 FairPlay/DRM 保护的内容。
+
+Receiver: UxPlay 1.73.6, revision 21eef8df25d91e12635c36d8176ad192725baca2.
+License: GPL-3.0-only. Team AI Box patches and corresponding source remain
+available under /usr/share/teamaibox/source and in the source distribution.
+
+Browser media adapter: gst-plugins-rs gst-plugin-webrtc 0.15.3 (MPL-2.0).
+Room forwarding: LiveKit Server 1.13.10, revision
+e5655ac20267fa5005dccaf3f0e3bfc3ea688c07 (Apache-2.0).
+Team AI Box rebuilds that exact source with Go 1.27.2 and golang.org/x/net
+0.60.0 to include published security fixes; LiveKit functional source is not
+modified. The reproducible Dockerfile is included in the source distribution.
+Browser LiveKit client: 2.21.0 (Apache-2.0).
+
+Exact source archives, image identities, SBOMs, vulnerability results and the
+Team AI Box release signature are bound by the v3 stack lock and its release
+evidence. No Apple logo, AirPlay badge, MFi badge or Apple/MFi certification
+claim is included or authorized.

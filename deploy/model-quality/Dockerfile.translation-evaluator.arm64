@@ -1,0 +1,18 @@
+FROM docker.io/library/python@sha256:519591d6871b7bc437060736b9f7456b8731f1499a57e22e6c285135ae657bf7
+
+ARG UNBABEL_COMET_VERSION=2.2.7
+ARG SACREBLEU_VERSION=2.6.0
+ARG TORCH_VERSION=2.5.1
+
+RUN python -m pip install --no-cache-dir \
+      --index-url https://download.pytorch.org/whl/cpu \
+      "torch==${TORCH_VERSION}" \
+    && python -m pip install --no-cache-dir \
+      "unbabel-comet==${UNBABEL_COMET_VERSION}" \
+      "sacrebleu==${SACREBLEU_VERSION}" \
+    && python -m pip check
+
+COPY tools/translation_quality_evaluator.py /opt/teamaibox/translation_quality_evaluator.py
+
+USER 1000:1000
+ENTRYPOINT ["python", "/opt/teamaibox/translation_quality_evaluator.py"]

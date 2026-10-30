@@ -1,0 +1,29 @@
+DROP TRIGGER IF EXISTS agent_operation_confirmations_touch_updated_at ON platform.agent_operation_confirmations;
+DROP INDEX IF EXISTS platform.agent_confirmation_lifecycle_deadline_idx;
+DROP INDEX IF EXISTS platform.agent_confirmation_upstream_request_idx;
+ALTER TABLE platform.agent_operation_confirmations
+    DROP CONSTRAINT IF EXISTS agent_operation_confirmations_reconciliation_check,
+    DROP CONSTRAINT IF EXISTS agent_operation_confirmations_decision_evidence_check,
+    DROP CONSTRAINT IF EXISTS agent_operation_confirmations_bridge_fields_check,
+    DROP COLUMN IF EXISTS updated_at,
+    DROP COLUMN IF EXISTS revision,
+    DROP COLUMN IF EXISTS result_digest,
+    DROP COLUMN IF EXISTS reconciliation_reason_code,
+    DROP COLUMN IF EXISTS reconciliation_outcome,
+    DROP COLUMN IF EXISTS authenticated_at,
+    DROP COLUMN IF EXISTS authentication_proof_digest,
+    DROP COLUMN IF EXISTS authentication_event_id,
+    DROP COLUMN IF EXISTS decision_kind,
+    DROP COLUMN IF EXISTS execution_boundary,
+    DROP COLUMN IF EXISTS upstream_reply_state,
+    DROP COLUMN IF EXISTS lifecycle_state,
+    DROP COLUMN IF EXISTS policy_disposition,
+    DROP COLUMN IF EXISTS policy_revision,
+    DROP COLUMN IF EXISTS policy_id,
+    DROP COLUMN IF EXISTS side_effect_class,
+    DROP COLUMN IF EXISTS action_digest,
+    DROP COLUMN IF EXISTS tool_name,
+    DROP COLUMN IF EXISTS upstream_request_id,
+    DROP COLUMN IF EXISTS prompt_id,
+    DROP COLUMN IF EXISTS binding_id,
+    DROP COLUMN IF EXISTS bridge_schema_version;

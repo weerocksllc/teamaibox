@@ -1,0 +1,76 @@
+{
+  "apiVersion": "teamaibox.io/plugin/v1",
+  "id": "example.team-notes",
+  "type": "ApplicationPlugin",
+  "version": "1.0.0",
+  "official": false,
+  "publisher": {
+    "id": "example.community",
+    "displayName": "Example Community",
+    "website": "https://plugins.example.test"
+  },
+  "architectures": ["linux/arm64/v8"],
+  "images": [{
+    "name": "team-notes-app",
+    "role": "application",
+    "variants": [{
+      "architecture": "linux/arm64/v8",
+      "reference": "registry.example.test/community/team-notes",
+      "digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "mediaType": "application/vnd.oci.image.manifest.v1+json"
+    }]
+  }],
+  "entryPoints": {
+    "web": {"path": "/plugins/example.team-notes", "integration": "iframe"}
+  },
+  "apis": [{"name": "platform.files", "versionRange": ">=1.0.0 <2.0.0", "access": "delegated-user"}],
+  "ui": {
+    "displayNameKey": "team-notes.catalog.name",
+    "summaryKey": "team-notes.catalog.summary",
+    "icon": "notebook-tabs",
+    "category": "collaboration",
+    "launchPath": "/apps/example.team-notes",
+    "order": 500
+  },
+  "localization": {
+    "supportedLocales": ["en"],
+    "fallbackLocale": "en",
+    "supportedDirections": ["ltr"],
+    "rtlReady": false
+  },
+  "themes": {"supported": ["light", "dark"], "usesSemanticTokens": true, "livePreferenceEvents": true},
+  "permissions": {
+    "platformApiScopes": ["files:read"],
+    "delegatedUserToken": true,
+    "network": {"mode": "none", "egressHosts": []},
+    "objectNamespaces": ["sample.notes"],
+    "devices": []
+  },
+  "resources": {
+    "cpu": {"requestMillicores": 100, "limitMillicores": 500},
+    "unifiedMemoryBytes": 134217728,
+    "ephemeralStorageBytes": 67108864,
+    "persistentStorageBytes": 536870912,
+    "network": {"ingressBitsPerSecond": 100000000, "egressBitsPerSecond": 100000000}
+  },
+  "health": {
+    "startup": {"path": "/health/startup", "intervalSeconds": 5, "timeoutSeconds": 2, "failureThreshold": 12},
+    "readiness": {"path": "/health/ready", "intervalSeconds": 10, "timeoutSeconds": 2, "failureThreshold": 3},
+    "liveness": {"path": "/health/live", "intervalSeconds": 30, "timeoutSeconds": 3, "failureThreshold": 3}
+  },
+  "migrations": [],
+  "compatibility": {
+    "platform": ">=0.1.0 <1.0.0",
+    "pluginApi": ">=1.0.0 <2.0.0",
+    "runtime": "oci-linux-arm64-v1",
+    "requiredCapabilities": ["object-references"],
+    "dependencies": []
+  },
+  "signature": {
+    "format": "teamaibox.canonical-json/v1",
+    "algorithm": "Ed25519",
+    "keyId": "example.community/sample-release-2026",
+    "payloadDigest": "sha256:8f241781c982b6f94f850dec2dc7d874d17fee673931079293688981d982cafe",
+    "value": "RxR9lHkActiMaG9JFB1oJaoCJa9cgwa3dJ73a5yuFx5TjWaWeXc9ExxDTwmGUw9vGxDa3/89vwDlibbuIGYfCw=="
+  }
+}

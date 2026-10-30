@@ -1,0 +1,86 @@
+# Normal single-appliance office routes and installed protection policies.
+# Historical v5 acceptance bundles are not an installation or boot dependency.
+services:
+  platform-api:
+    labels:
+      com.teamaibox.config-digest: ${TEAMAIBOX_PLATFORM_CONFIGURATION_DIGEST:?}
+    environment:
+      PLATFORM_PROTECTED_OFFICE_SET_ID: office.baseline
+      PLATFORM_PROTECTED_OFFICE_SET_NODE_ID: ${PLATFORM_APPLIANCE_NODE_ID:?}
+      PLATFORM_PROTECTED_OFFICE_SET_RESTART_POLICY_DIGEST: ${TEAMAIBOX_APPLIANCE_RESTART_POLICY_SEMANTIC_DIGEST:?}
+      PLATFORM_APPLIANCE_PROTECTED_TARGET_POLICY_DIGEST: ${TEAMAIBOX_EXCLUSIVE_DRAIN_TARGETS_DIGEST:?}
+      LOCAL_OPENAI_WORKER_ID: ${LOCAL_OPENAI_WORKER_ID:?preserve the installed local Worker identity}
+      LOCAL_OPENAI_WORKER_ORIGIN: http://teamaibox-worker-${LOCAL_OPENAI_WORKER_ID:?preserve the installed local Worker identity}:8000
+      LOCAL_OPENAI_MODEL_ALIAS: local/qwen3.8-27b-nvfp4
+      LOCAL_OPENAI_SERVED_MODEL: qwen3.8-27b-nvfp4
+      DRAWING_WORKER_ID: ${DRAWING_WORKER_ID:?preserve the installed local Worker identity}
+      DRAWING_WORKER_ORIGIN: http://teamaibox-worker-${DRAWING_WORKER_ID:?preserve the installed local Worker identity}:8000
+      DRAWING_MODEL_ALIAS: local/drawing-default
+      DRAWING_SERVED_MODEL: flux2-klein-4b-bf16
+      DRAWING_PROFILE_ID: 06c9542e-4bf3-5f4f-a41e-c7768398e2ea
+      DRAWING_PROFILE_KEY: drawing.flux2-klein-4b.bf16.main-protected.v2
+      DRAWING_PROFILE_FINGERPRINT: sha256:209bf2d3cc1ec774cd5d2bd1d15896f2963b0d811b5e1799cc55b303812a18e5
+      DRAWING_ENGINE_IMAGE_DIGEST: sha256:827fdb9ca564561bff1c94970af76d0cf664bbcfc0c0ca0e32e72ae2bb61fb61
+      OCR_WORKER_ID: ${OCR_WORKER_ID:?preserve the installed local Worker identity}
+      OCR_WORKER_ORIGIN: http://teamaibox-worker-${OCR_WORKER_ID:?preserve the installed local Worker identity}:8000
+      OCR_MODEL_ALIAS: local/ocr-default
+      OCR_SERVED_MODEL: hunyuanocr-1.5-bf16-dflash
+      OCR_WORKER_PROTOCOL: hunyuan-managed-v1
+      OCR_PROFILE_ID: a0a1906f-8d34-5d30-91f8-990ca2ec3853
+      OCR_PROFILE_KEY: ocr.hunyuanocr-1.5.bf16-dflash.main-protected.v1
+      OCR_PROFILE_FINGERPRINT: sha256:39d99c02fc3428fb1937932e55d904f2a12afb550fdaed2b28dda5079cd5bf45
+      OCR_ENGINE_IMAGE_DIGEST: sha256:07685bbb77a6718c56f4a4195baf6e1047c3d0247f39980e05668bc54a33c21b
+      ASR_WORKER_ID: ${ASR_WORKER_ID:?preserve the installed local Worker identity}
+      ASR_WORKER_ORIGIN: http://teamaibox-worker-${ASR_WORKER_ID:?preserve the installed local Worker identity}:8080
+      ASR_MODEL_ALIAS: local/asr-default
+      ASR_SERVED_MODEL: whisper-small-ct2-int8
+      ASR_PROFILE_ID: b7cf5644-5558-5c62-bbf9-f1da597caae9
+      ASR_PROFILE_KEY: asr.whisper-small.ct2-int8.spark-local.realtime.v1
+      ASR_PROFILE_FINGERPRINT: sha256:77335e615abbdfbe02038cfaef475cd6129d269ca71a9b26ed635229a1cfffae
+      ASR_ENGINE_IMAGE_DIGEST: sha256:372e3155874907186872b641ff8cf4552d6a7d34dc54322806dfdef7357b3b5a
+      TRANSLATION_WORKER_ID: ${TRANSLATION_WORKER_ID:?preserve the installed local Worker identity}
+      TRANSLATION_WORKER_ORIGIN: http://teamaibox-worker-${TRANSLATION_WORKER_ID:?preserve the installed local Worker identity}:8008
+      TRANSLATION_MODEL_ALIAS: local/translation-default
+      TRANSLATION_SERVED_MODEL: lmt-60-4b-nvfp4-mlp-edge
+      TRANSLATION_PROFILE_ID: 6090e4f5-502a-5038-8dac-88e29620301f
+      TRANSLATION_PROFILE_KEY: translation.lmt4-4b.modelopt-nvfp4-fp8.main-protected.v1
+      TRANSLATION_PROFILE_FINGERPRINT: sha256:419e38f3950c9a916aad3d7ab5ed060456bd71da1c692bc9dc2c542009712f28
+      TRANSLATION_ENGINE_IMAGE_DIGEST: sha256:c5c116c732f24a640650e1e6e399112ef7c2b1e80c5fd7c13808b10a579646e6
+      EMBEDDING_WORKER_ID: ${EMBEDDING_WORKER_ID:?preserve the installed local Worker identity}
+      EMBEDDING_WORKER_ORIGIN: http://teamaibox-worker-${EMBEDDING_WORKER_ID:?preserve the installed local Worker identity}:8010
+      EMBEDDING_MODEL_ALIAS: local/qwen3-embedding-0.6b
+      EMBEDDING_SERVED_MODEL: qwen3-embedding-0.6b
+      EMBEDDING_PROFILE_ID: 01faa703-64ee-5926-878d-31e52e67fdd3
+      EMBEDDING_PROFILE_KEY: embedding.qwen3-0.6b.bf16.main-protected.v1
+      EMBEDDING_PROFILE_FINGERPRINT: sha256:97f283c983e10590c7b60d36e28d4db298128c5181b07a76f6969134faa790e1
+      EMBEDDING_ENGINE_IMAGE_DIGEST: sha256:9223af7363fb1cc92b53b40ccf825b5f6ee2b3bf5595b082da857537724b6606
+      EMBEDDING_WORKER_CA_FILE: ""
+      EMBEDDING_WORKER_TOKEN_FILE: ""
+      EMBEDDING_WORKER_SERVER_NAME: ""
+    # The local Agent shares this namespace and serves retained application
+    # plugins and Android browser sessions over these internal networks.
+    networks: [edge, control, data, compute-internal, plugin-ingress, phone-control]
+
+  node-agent:
+    environment:
+      TEAMAIBOX_EXCLUSIVE_DRAIN_TARGETS_FILE: /run/teamaibox/protected-targets.v1.json
+      TEAMAIBOX_EXCLUSIVE_DRAIN_TARGETS_DIGEST: ${TEAMAIBOX_EXCLUSIVE_DRAIN_TARGETS_DIGEST:?}
+      TEAMAIBOX_APPLIANCE_RESTART_POLICY_FILE: /run/teamaibox/appliance-restart-policy.v1.json
+      TEAMAIBOX_APPLIANCE_RESTART_POLICY_DIGEST: ${TEAMAIBOX_APPLIANCE_RESTART_POLICY_DIGEST:?}
+      TEAMAIBOX_PROTECTED_SET_QUALIFICATION_POLICY_FILE: /run/teamaibox/protected-set-qualification-policy.v1.json
+      TEAMAIBOX_PROTECTED_SET_QUALIFICATION_POLICY_DIGEST: ${TEAMAIBOX_PROTECTED_SET_QUALIFICATION_POLICY_DIGEST:?}
+    volumes:
+      - ${TEAMAIBOX_EXCLUSIVE_DRAIN_TARGETS_FILE:?}:/run/teamaibox/protected-targets.v1.json:ro
+      - ${TEAMAIBOX_APPLIANCE_RESTART_POLICY_FILE:?}:/run/teamaibox/appliance-restart-policy.v1.json:ro
+      - ${TEAMAIBOX_PROTECTED_SET_QUALIFICATION_POLICY_FILE:?}:/run/teamaibox/protected-set-qualification-policy.v1.json:ro
+
+networks:
+  plugin-ingress:
+    external: true
+    name: ${TEAMAIBOX_PLUGIN_INGRESS_NETWORK:?prepare the installation-owned plugin network}
+  phone-control:
+    external: true
+    name: ${TEAMAIBOX_PHONE_CONTROL_NETWORK:?preserve the installed local phone control network}
+  compute-internal:
+    external: true
+    name: ${TEAMAIBOX_COMPUTE_INTERNAL_NETWORK:?prepare the installation-owned compute network}

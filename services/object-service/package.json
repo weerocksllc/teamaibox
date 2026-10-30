@@ -1,0 +1,28 @@
+{
+  "name": "@teamaibox/object-service",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@teamaibox/persistence": "workspace:*"
+  },
+  "exports": {
+    "./artifact-provenance-service": "./src/artifact-provenance-service.mjs",
+    "./memory-artifact-provenance-repository": "./src/memory-artifact-provenance-repository.mjs",
+    "./postgres-artifact-provenance-repository": "./src/postgres-artifact-provenance-repository.mjs",
+    "./filesystem-blob-store": "./src/filesystem-blob-store.mjs",
+    "./postgres-envelope-metadata-repository": "./src/postgres-envelope-metadata-repository.mjs",
+    "./postgres-object-grant-repository": "./src/postgres-object-grant-repository.mjs",
+    "./postgres-object-repository": "./src/postgres-object-repository.mjs",
+    "./internal-rpc-client": "./src/internal-rpc-client.mjs",
+    "./internal-rpc-server": "./src/internal-rpc-server.mjs",
+    "./team-drive-artifact-handoff": "./src/team-drive-artifact-handoff.mjs",
+    "./team-drive-service": "./src/team-drive-service.mjs",
+    "./memory-file-repository": "./src/memory-file-repository.mjs",
+    "./postgres-file-repository": "./src/postgres-file-repository.mjs"
+  },
+  "scripts": {
+    "test": "node --test test/*.test.mjs"
+  },
+  "license": "MIT"
+}

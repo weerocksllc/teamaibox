@@ -1,0 +1,8 @@
+# Single installation entry point. No test identities or remote nodes are seeded.
+include:
+  - path:
+      - ../compose/core.yaml
+      - compose.yaml
+      - applications.compose.yaml
+      - protected-office.compose.yaml
+      - maintenance.compose.yaml

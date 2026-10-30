@@ -1,0 +1,72 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.teamaibox.local/http/image-result.v1.schema.json",
+  "x-teamaibox-contract": {"family": "http", "role": "response", "major": 1},
+  "title": "Encrypted AI image result v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "job_id", "operation", "prompt", "outputs", "reproducibility", "provenance"],
+  "properties": {
+    "schema": {"const": "teamaibox.ai.image-result.v1"},
+    "job_id": {"type": "string", "format": "uuid"},
+    "operation": {"enum": ["images.generations", "images.edits"]},
+    "prompt": {"type": "string"},
+    "revised_prompt": {"type": ["string", "null"]},
+    "outputs": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 10,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["reference_id", "object_id", "object_version", "media_type", "size_bytes", "sha256", "width", "height", "encrypted", "preview_path", "download_path"],
+        "properties": {
+          "reference_id": {"type": "string", "format": "uuid"},
+          "object_id": {"type": "string", "format": "uuid"},
+          "object_version": {"type": "integer", "minimum": 1},
+          "media_type": {"enum": ["image/png", "image/jpeg", "image/webp"]},
+          "size_bytes": {"type": "integer", "minimum": 1},
+          "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+          "width": {"type": "integer", "minimum": 1, "maximum": 16384},
+          "height": {"type": "integer", "minimum": 1, "maximum": 16384},
+          "encrypted": {"const": true},
+          "preview_path": {"type": "string", "pattern": "^/api/v1/objects/references/[0-9a-f-]{36}/content$"},
+          "download_path": {"type": "string", "pattern": "^/api/v1/objects/references/[0-9a-f-]{36}/content\\?download=1$"},
+          "saved_file_id": {"type": ["string", "null"], "format": "uuid"}
+        }
+      }
+    },
+    "reproducibility": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["preset_key", "seed", "size", "steps", "guidance_scale", "strength", "output_format"],
+      "properties": {
+        "preset_key": {"type": "string"},
+        "seed": {"type": "integer", "minimum": 0, "maximum": 4294967295},
+        "size": {"type": "string"},
+        "steps": {"type": "integer", "minimum": 1},
+        "guidance_scale": {"type": "number", "minimum": 0},
+        "strength": {"type": ["number", "null"], "exclusiveMinimum": 0, "maximum": 1},
+        "output_format": {"enum": ["png", "jpeg", "webp"]}
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["request_digest", "model_profile_id", "profile_key", "profile_fingerprint", "engine_image_digest", "completed_at"],
+      "properties": {
+        "request_digest": {"$ref": "#/$defs/digest"},
+        "model_profile_id": {"type": "string", "format": "uuid"},
+        "profile_key": {"type": "string"},
+        "profile_fingerprint": {"$ref": "#/$defs/digest"},
+        "engine_image_digest": {"$ref": "#/$defs/digest"},
+        "source_reference_id": {"type": ["string", "null"], "format": "uuid"},
+        "mask_reference_id": {"type": ["string", "null"], "format": "uuid"},
+        "completed_at": {"type": "string", "format": "date-time"}
+      }
+    }
+  },
+  "$defs": {
+    "digest": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"}
+  }
+}

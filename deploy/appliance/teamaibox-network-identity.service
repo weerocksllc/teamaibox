@@ -1,0 +1,10 @@
+[Unit]
+Description=Refresh this appliance HTTPS addresses
+After=network-online.target docker.service
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/python3 /usr/local/lib/teamaibox/appliance_network_identity.py --configuration /etc/teamaibox/network-identity.json
+TimeoutStartSec=90
+# No Requires/PartOf links: certificate refresh must never restart Docker/guests.

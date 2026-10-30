@@ -1,0 +1,12 @@
+DROP TRIGGER external_attempt_events_append_only ON compute.external_attempt_events;
+DROP FUNCTION compute.reject_external_attempt_event_mutation();
+DROP TRIGGER external_attempt_update_boundary ON compute.external_attempt_dispatches;
+DROP FUNCTION compute.enforce_external_attempt_update();
+DROP TRIGGER external_attempt_create_boundary ON compute.external_attempt_dispatches;
+DROP FUNCTION compute.enforce_external_attempt_create();
+DROP TABLE compute.external_attempt_events;
+DROP TABLE compute.external_attempt_dispatches;
+ALTER TABLE compute.providers DROP COLUMN execution_contract;
+DROP FUNCTION compute.valid_external_provider_execution_contract(jsonb);
+DROP FUNCTION compute.valid_external_replay_contract(jsonb);
+DROP SEQUENCE compute.external_dispatch_fence_sequence;

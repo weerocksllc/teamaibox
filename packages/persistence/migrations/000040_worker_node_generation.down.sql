@@ -1,0 +1,5 @@
+DROP INDEX compute.worker_instances_node_generation_idx;
+
+ALTER TABLE compute.worker_instances
+DROP CONSTRAINT worker_instances_node_generation_positive,
+DROP COLUMN node_generation;

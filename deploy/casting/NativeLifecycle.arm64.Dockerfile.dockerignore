@@ -1,0 +1,3 @@
+*
+!deploy/casting/uxplay-*.patch
+!services/trusted_media_service/native/**

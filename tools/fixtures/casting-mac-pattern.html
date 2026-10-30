@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="zh-CN">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Team AI Box — Mac 投屏测试画面</title>
+<style>
+  :root { color-scheme: dark; font: 18px system-ui; background: #101a25; color: #fff }
+  body { margin: 0; display: grid; place-items: center; min-height: 100vh }
+  main { width: min(100%, 1200px) }
+  canvas { display: block; width: 100%; aspect-ratio: 16/9; background: #101a25 }
+  section { display: flex; align-items: center; gap: 1rem; padding: 1rem; flex-wrap: wrap }
+  button { padding: .75rem 1rem; font: inherit; cursor: pointer }
+  p { margin: 0; line-height: 1.5 }
+</style>
+<main>
+  <canvas id="pattern" width="1920" height="1080" aria-label="1920×1080 合成运动测试画面"></canvas>
+  <section>
+    <button id="start">开始 90 秒画面与测试音</button>
+    <button id="stop" disabled>停止</button>
+    <button id="fullscreen">全屏画面</button>
+    <p id="status" role="status">仅合成图案；不读取摄像头、麦克风或个人文件。</p>
+  </section>
+</main>
+<script>
+  const canvas = document.querySelector('#pattern'), ctx = canvas.getContext('2d');
+  const start = document.querySelector('#start'), stop = document.querySelector('#stop');
+  const status = document.querySelector('#status');
+  let audio = null, started = 0, active = false, nextPulse = 0, raf = 0;
+  function paint(seconds = 0) {
+    ctx.fillStyle = '#101a25'; ctx.fillRect(0, 0, 1920, 1080);
+    const flash = active && seconds >= 2 && seconds % 2 < .1;
+    ctx.fillStyle = flash ? '#fff' : '#263e54'; ctx.fillRect(80, 220, 1760, 620);
+    ctx.fillStyle = '#72e0a4';
+    ctx.beginPath(); ctx.arc(160 + (seconds * 300) % 1600, 530, 100, 0, Math.PI * 2); ctx.fill();
+    ctx.strokeStyle = '#fff'; ctx.lineWidth = 8; ctx.strokeRect(40, 40, 1840, 1000);
+    ctx.fillStyle = '#fff'; ctx.font = '60px monospace';
+    ctx.fillText('MAC AIRPLAY — SYNTHETIC ONLY', 100, 140);
+    ctx.fillText(seconds.toFixed(2).padStart(6, '0') + ' s', 100, 960);
+    ctx.fillText('1920 × 1080', 1170, 960);
+  }
+  function finish() {
+    active = false; cancelAnimationFrame(raf);
+    if (audio) { audio.close(); audio = null; }
+    start.disabled = false; stop.disabled = true;
+    status.textContent = '已停止。此画面用于兼容性观察，不是校准过的音画延迟测量。';
+  }
+  function tick(now) {
+    const seconds = (now - started) / 1000;
+    if (!active || seconds >= 90) { finish(); return; }
+    if (seconds >= nextPulse && nextPulse < 90) {
+      const osc = audio.createOscillator(), gain = audio.createGain(), t = audio.currentTime;
+      osc.frequency.value = 1000; gain.gain.value = 0;
+      gain.gain.setValueAtTime(0, t); gain.gain.linearRampToValueAtTime(.08, t + .005);
+      gain.gain.setValueAtTime(.08, t + .095); gain.gain.linearRampToValueAtTime(0, t + .1);
+      osc.connect(gain).connect(audio.destination); osc.start(t); osc.stop(t + .11);
+      nextPulse += 2;
+    }
+    paint(seconds); raf = requestAnimationFrame(tick);
+  }
+  start.onclick = async () => {
+    audio = new AudioContext(); await audio.resume();
+    active = true; started = performance.now(); nextPulse = 2;
+    start.disabled = true; stop.disabled = false;
+    status.textContent = '播放中：移动圆形，每两秒白色闪光与短音；90 秒后自动停止。';
+    raf = requestAnimationFrame(tick);
+  };
+  stop.onclick = finish;
+  document.querySelector('#fullscreen').onclick = () => canvas.requestFullscreen();
+  window.addEventListener('pagehide', finish);
+  paint();
+</script>
+</html>

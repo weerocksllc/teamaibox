@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "routes": [
+    {
+      "pluginId": "official.drawing",
+      "pathPrefix": "/plugins/official.drawing",
+      "origin": "http://drawing-plugin:8080"
+    },
+    {
+      "pluginId": "official.messaging",
+      "pathPrefix": "/plugins/official.messaging",
+      "origin": "http://messaging-plugin:8080"
+    },
+    {
+      "pluginId": "official.team-drive",
+      "pathPrefix": "/plugins/official.team-drive",
+      "origin": "http://team-drive-plugin:8080"
+    },
+    {
+      "pluginId": "official.ocr",
+      "pathPrefix": "/plugins/official.ocr",
+      "origin": "http://ocr-plugin:8080"
+    },
+    {
+      "pluginId": "official.asr",
+      "pathPrefix": "/plugins/official.asr",
+      "origin": "http://asr-plugin:8080"
+    },
+    {
+      "pluginId": "official.translation",
+      "pathPrefix": "/plugins/official.translation",
+      "origin": "http://translation-plugin:8080"
+    },
+    {
+      "pluginId": "official.wireless-casting",
+      "pathPrefix": "/plugins/official.wireless-casting",
+      "origin": "http://wireless-casting-plugin:8080"
+    }
+  ]
+}

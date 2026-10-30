@@ -1,0 +1,45 @@
+name: teamaibox-unlock
+
+services:
+  unlock-service:
+    image: ${TEAMAIBOX_UNLOCK_IMAGE:?set TEAMAIBOX_UNLOCK_IMAGE to an ARM64 digest reference}
+    platform: linux/arm64/v8
+    restart: unless-stopped
+    init: true
+    read_only: true
+    user: "1000:1000"
+    cap_drop: [ALL]
+    security_opt:
+      - no-new-privileges:true
+    pids_limit: 96
+    mem_limit: 256m
+    cpus: 0.25
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,nodev,size=16m
+    ports:
+      - target: 8443
+        published: ${TEAMAIBOX_UNLOCK_HTTPS_PORT:-8443}
+        host_ip: ${TEAMAIBOX_UNLOCK_BIND_ADDRESS:-0.0.0.0}
+        protocol: tcp
+    environment:
+      TEAMAIBOX_UNLOCK_LISTEN_ADDRESS: 0.0.0.0
+      TEAMAIBOX_UNLOCK_LISTEN_PORT: "8443"
+      TEAMAIBOX_UNLOCK_ORIGIN: ${TEAMAIBOX_UNLOCK_ORIGIN:?set the exact trusted HTTPS unlock origin}
+      TEAMAIBOX_UNLOCK_TLS_SERVER_NAME: ${TEAMAIBOX_UNLOCK_TLS_SERVER_NAME:?set the certificate DNS name used by the local health probe}
+      TEAMAIBOX_UNLOCK_TLS_CERT_FILE: /run/teamaibox-unlock/tls/server.crt
+      TEAMAIBOX_UNLOCK_TLS_KEY_FILE: /run/teamaibox-unlock/tls/server.key
+      TEAMAIBOX_UNLOCK_HELPER_SOCKET: /run/teamaibox-unlock/helper.sock
+      TEAMAIBOX_UNLOCK_AUDIT_PATH: /var/lib/teamaibox-unlock/audit/pending.jsonl
+    volumes:
+      - ${TEAMAIBOX_UNLOCK_ROOT:-/var/lib/teamaibox-unlock}/tls:/run/teamaibox-unlock/tls:ro
+      - ${TEAMAIBOX_UNLOCK_ROOT:-/var/lib/teamaibox-unlock}/audit:/var/lib/teamaibox-unlock/audit
+      - ${TEAMAIBOX_UNLOCK_HELPER_SOCKET_HOST:-/run/teamaibox-unlock/helper.sock}:/run/teamaibox-unlock/helper.sock
+    healthcheck:
+      test: [CMD, node, -e, "const h=require('node:https'),f=require('node:fs');h.get({host:'127.0.0.1',port:8443,path:'/v1/status',ca:f.readFileSync('/run/teamaibox-unlock/tls/server.crt'),servername:process.env.TEAMAIBOX_UNLOCK_TLS_SERVER_NAME},r=>{if(r.statusCode!==200)process.exit(1);r.resume()}).on('error',()=>process.exit(1))"]
+      interval: 10s
+      timeout: 3s
+      retries: 6
+      start_period: 5s
+    labels:
+      com.teamaibox.managed: "true"
+      com.teamaibox.pre-unlock-only: "true"

@@ -1,0 +1,223 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://teamaibox.local/schemas/legacy-protected-office-set-migration-plan.v1.json",
+  "title": "Team AI Box legacy-to-canonical protected office set migration plan",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "nodeId",
+    "nodeGeneration",
+    "planId",
+    "setId",
+    "sourceSetDigest",
+    "desiredSetDigest",
+    "faultInjection",
+    "targets"
+  ],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "nodeId": { "$ref": "#/$defs/uuid" },
+    "nodeGeneration": { "type": "integer", "minimum": 1 },
+    "planId": { "type": "string", "pattern": "^[a-z][a-z0-9_.-]{2,127}$" },
+    "setId": { "const": "office.baseline" },
+    "sourceSetDigest": { "$ref": "#/$defs/sha256" },
+    "desiredSetDigest": { "$ref": "#/$defs/sha256" },
+    "faultInjection": { "$ref": "#/$defs/faultInjection" },
+    "targets": {
+      "type": "array",
+      "minItems": 6,
+      "maxItems": 6,
+      "prefixItems": [
+        { "allOf": [{ "$ref": "#/$defs/target" }, { "properties": { "targetKey": { "const": "office.embedding-qwen3" } } }] },
+        { "allOf": [{ "$ref": "#/$defs/target" }, { "properties": { "targetKey": { "const": "office.asr-whisper" } } }] },
+        { "allOf": [{ "$ref": "#/$defs/target" }, { "properties": { "targetKey": { "const": "office.ocr-hunyuan" } } }] },
+        { "allOf": [{ "$ref": "#/$defs/target" }, { "properties": { "targetKey": { "const": "office.translation-lmt4" } } }] },
+        { "allOf": [{ "$ref": "#/$defs/target" }, { "properties": { "targetKey": { "const": "office.assistant-qwen38" } } }] },
+        { "allOf": [{ "$ref": "#/$defs/target" }, { "properties": { "targetKey": { "const": "office.drawing-flux2" } } }] }
+      ],
+      "items": false
+    }
+  },
+  "$defs": {
+    "uuid": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+    },
+    "sha256": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+    "containerId": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "containerName": { "type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]{0,127}$" },
+    "faultInjection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["stageOrder", "targetKey", "injectionPoint", "failureCode", "oneShot"],
+      "properties": {
+        "stageOrder": { "const": 4 },
+        "targetKey": { "const": "office.translation-lmt4" },
+        "injectionPoint": { "const": "after-stage-health" },
+        "failureCode": { "const": "protected_set_transition_stage_failed" },
+        "oneShot": { "const": true }
+      }
+    },
+    "imageReference": { "type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/@-]{0,511}$" },
+    "labelMap": {
+      "type": "object",
+      "minProperties": 1,
+      "maxProperties": 32,
+      "propertyNames": { "pattern": "^[A-Za-z0-9][A-Za-z0-9_./-]{0,127}$" },
+      "additionalProperties": { "type": "string", "minLength": 1, "maxLength": 512 }
+    },
+    "mount": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "source", "target", "readOnly"],
+      "properties": {
+        "type": { "enum": ["volume", "bind"] },
+        "source": { "type": "string", "minLength": 1, "maxLength": 4096 },
+        "target": { "type": "string", "pattern": "^/[^\\u0000]*$" },
+        "readOnly": { "type": "boolean" }
+      }
+    },
+    "healthCheck": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["test", "intervalNanoseconds", "timeoutNanoseconds", "startPeriodNanoseconds", "retries"],
+      "properties": {
+        "test": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 32,
+          "prefixItems": [{ "enum": ["CMD", "CMD-SHELL"] }],
+          "items": { "type": "string", "minLength": 1, "maxLength": 4096 }
+        },
+        "intervalNanoseconds": { "type": "integer", "minimum": 1000000000, "maximum": 300000000000 },
+        "timeoutNanoseconds": { "type": "integer", "minimum": 1000000000, "maximum": 300000000000 },
+        "startPeriodNanoseconds": { "type": "integer", "minimum": 0, "maximum": 1800000000000 },
+        "retries": { "type": "integer", "minimum": 1, "maximum": 30 }
+      }
+    },
+    "legacyIdentity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "containerName",
+        "containerId",
+        "requiredImageId",
+        "requiredImageReference",
+        "requiredNetworkMode",
+        "requiredRuntimeDigest",
+        "requiredMounts",
+        "requiredEnvironmentDigest",
+        "requiredCommandDigest",
+        "requiredHealthcheckDigest",
+        "requiredLabels"
+      ],
+      "properties": {
+        "containerName": { "$ref": "#/$defs/containerName" },
+        "containerId": { "$ref": "#/$defs/containerId" },
+        "requiredImageId": { "$ref": "#/$defs/sha256" },
+        "requiredImageReference": { "$ref": "#/$defs/imageReference" },
+        "requiredNetworkMode": { "type": "string", "minLength": 1, "maxLength": 256 },
+        "requiredRuntimeDigest": { "$ref": "#/$defs/sha256" },
+        "requiredMounts": { "type": "array", "maxItems": 16, "items": { "$ref": "#/$defs/mount" } },
+        "requiredEnvironmentDigest": { "$ref": "#/$defs/sha256" },
+        "requiredCommandDigest": { "$ref": "#/$defs/sha256" },
+        "requiredHealthcheckDigest": { "$ref": "#/$defs/sha256" },
+        "requiredLabels": { "$ref": "#/$defs/labelMap" }
+      }
+    },
+    "limits": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["memoryBytes", "cpuQuotaMicros", "pidsLimit", "ephemeralBytes", "openFilesLimit"],
+      "properties": {
+        "memoryBytes": { "type": "integer", "minimum": 67108864, "maximum": 17179869184 },
+        "cpuQuotaMicros": { "type": "integer", "minimum": 1000, "maximum": 2000000 },
+        "pidsLimit": { "type": "integer", "minimum": 1, "maximum": 4096 },
+        "ephemeralBytes": { "type": "integer", "minimum": 1 },
+        "workspaceQuotaBytes": { "type": "integer", "minimum": 0 },
+        "openFilesLimit": { "type": "integer", "minimum": 64, "maximum": 1048576 }
+      }
+    },
+    "security": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "runAsUid", "runAsGid", "readOnlyRoot", "dropAllCapabilities", "noNewPrivileges",
+        "privileged", "hostPid", "hostIpc", "hostNetwork", "dockerSocket"
+      ],
+      "properties": {
+        "runAsUid": { "type": "integer", "minimum": 1 },
+        "runAsGid": { "type": "integer", "minimum": 1 },
+        "readOnlyRoot": { "const": true },
+        "dropAllCapabilities": { "const": true },
+        "noNewPrivileges": { "const": true },
+        "privileged": { "const": false },
+        "hostPid": { "const": false },
+        "hostIpc": { "const": false },
+        "hostNetwork": { "const": false },
+        "dockerSocket": { "const": false },
+        "seccompProfile": { "type": "string", "maxLength": 128 }
+      }
+    },
+    "publishedPort": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["containerPort", "hostPort", "hostIp"],
+      "properties": {
+        "containerPort": { "type": "integer", "minimum": 1024, "maximum": 65535 },
+        "hostPort": { "type": "integer", "minimum": 1024, "maximum": 65535 },
+        "hostIp": { "type": "string", "minLength": 2, "maxLength": 64 }
+      }
+    },
+    "companion": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "containerName", "parentWorkerId", "image", "requiredImageId", "configDigest", "network",
+        "limits", "security", "healthCheck", "requiredLabels"
+      ],
+      "properties": {
+        "containerName": { "$ref": "#/$defs/containerName" },
+        "parentWorkerId": { "$ref": "#/$defs/uuid" },
+        "image": { "type": "string", "pattern": "^[a-z0-9][a-z0-9._:/-]*@sha256:[0-9a-f]{64}$" },
+        "requiredImageId": { "$ref": "#/$defs/sha256" },
+        "configDigest": { "$ref": "#/$defs/sha256" },
+        "network": { "const": "compute-internal" },
+        "limits": { "$ref": "#/$defs/limits" },
+        "security": { "$ref": "#/$defs/security" },
+        "mounts": { "type": "array", "maxItems": 16, "items": { "$ref": "#/$defs/mount" } },
+        "publishedPorts": { "type": "array", "maxItems": 8, "items": { "$ref": "#/$defs/publishedPort" } },
+        "environment": {
+          "type": "object",
+          "maxProperties": 64,
+          "propertyNames": { "pattern": "^[A-Z][A-Z0-9_]{0,127}$" },
+          "additionalProperties": { "type": "string", "maxLength": 4096 }
+        },
+        "command": { "type": "array", "maxItems": 128, "items": { "type": "string", "minLength": 1, "maxLength": 4096 } },
+        "healthCheck": { "$ref": "#/$defs/healthCheck" },
+        "requiredLabels": { "$ref": "#/$defs/labelMap" }
+      }
+    },
+    "target": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["targetKey", "desiredWorkerId", "desiredStartSpecDigest", "legacyPreviousTarget"],
+      "properties": {
+        "targetKey": { "type": "string", "pattern": "^[a-z][a-z0-9_.-]{2,127}$" },
+        "desiredWorkerId": { "$ref": "#/$defs/uuid" },
+        "desiredStartSpecDigest": { "$ref": "#/$defs/sha256" },
+        "legacyPreviousTarget": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["primary"],
+          "properties": {
+            "primary": { "$ref": "#/$defs/legacyIdentity" },
+            "dependentContainers": { "type": "array", "maxItems": 4, "items": { "$ref": "#/$defs/legacyIdentity" } }
+          }
+        },
+        "desiredCompanions": { "type": "array", "maxItems": 4, "items": { "$ref": "#/$defs/companion" } }
+      }
+    }
+  }
+}

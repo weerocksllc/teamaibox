@@ -1,0 +1,15 @@
+DROP TRIGGER access_events_append_only ON objects.access_events;
+DROP FUNCTION objects.reject_access_event_mutation();
+DROP TABLE objects.access_events;
+DROP TRIGGER access_grant_update_boundary ON objects.access_grants;
+DROP TRIGGER access_grant_create_boundary ON objects.access_grants;
+DROP FUNCTION objects.enforce_access_grant_update();
+DROP FUNCTION objects.enforce_access_grant_boundary();
+DROP TABLE objects.access_grants;
+DROP TABLE objects.namespace_bindings;
+DROP FUNCTION objects.valid_reference_operations(jsonb);
+DROP FUNCTION objects.valid_namespace_operations(jsonb);
+ALTER TABLE objects.namespaces DROP CONSTRAINT namespaces_supported_kind;
+ALTER TABLE objects.namespaces DROP COLUMN namespace_kind;
+DELETE FROM iam.role_permissions WHERE permission_key = 'object_reference:revoke:any';
+DELETE FROM iam.permissions WHERE permission_key = 'object_reference:revoke:any';

@@ -1,0 +1,6 @@
+**
+!apps/
+!apps/platform-api/
+!apps/platform-api/src/
+!apps/platform-api/src/casting/
+!apps/platform-api/src/casting/casting-session-service.mjs

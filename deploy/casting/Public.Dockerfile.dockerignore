@@ -1,0 +1,9 @@
+*
+!deploy/casting/*.patch
+!deploy/casting/Public.Dockerfile
+!deploy/legal/airplay-compatible/NOTICE.v4.txt
+!services/trusted_media_service/**
+!services/trusted_media_runtime/**
+**/__pycache__
+**/*.pyc
+**/.env*

@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 1,
+  "allowedSources": ["marketplace", "private-registry", "offline-bundle"],
+  "requiredArchitecture": "linux/arm64/v8",
+  "platformVersion": "0.1.0",
+  "pluginApiVersion": "1.0.0",
+  "supplyChain": {
+    "sbomMediaTypes": ["application/spdx+json"],
+    "provenanceMediaTypes": ["application/vnd.in-toto+json"],
+    "provenancePredicateTypes": ["https://slsa.dev/provenance/v1"],
+    "vulnerabilityMediaTypes": ["application/vnd.teamaibox.vulnerability-report+json"],
+    "maximumScanAgeHours": 72,
+    "maximumDatabaseAgeHours": 72,
+    "maximumCriticalFindings": 0,
+    "maximumHighFindings": 0,
+    "maximumEvidenceBytes": 4194304
+  },
+  "permissions": {
+    "allowedPlatformApiScopes": [
+      "compute:submit",
+      "compute:report",
+      "events:read",
+      "files:read",
+      "files:write",
+      "identity:read",
+      "messages:read",
+      "messages:write",
+      "notifications:write"
+    ],
+    "maximumScopes": 64,
+    "maximumObjectNamespaces": 32,
+    "maximumEgressHosts": 32
+  }
+}

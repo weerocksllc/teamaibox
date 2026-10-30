@@ -1,0 +1,12 @@
+DROP FUNCTION compute.orphan_model_encrypted_blobs(timestamptz, integer);
+DROP FUNCTION compute.fail_model_artifact_import(uuid, text);
+DROP FUNCTION compute.finalize_model_artifact_import(uuid);
+DROP FUNCTION compute.record_model_import_chunk(uuid, integer, bigint, bytea, integer, text, text, text);
+DROP TRIGGER model_cache_chunk_protected_storage ON compute.model_cache_chunks;
+DROP FUNCTION compute.enforce_protected_model_chunk();
+DROP TABLE compute.model_artifact_chunk_map;
+DROP TABLE compute.model_artifact_import_chunks;
+DROP TABLE compute.model_artifacts;
+DROP TABLE compute.model_cache_chunks;
+DROP TABLE compute.model_artifact_imports;
+DROP TABLE compute.model_cache_accounts;

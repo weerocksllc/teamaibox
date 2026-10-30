@@ -1,0 +1,84 @@
+name: teamaibox-drawing-e2e
+
+x-labels: &labels
+  com.teamaibox.managed: "true"
+  com.teamaibox.feature: ${TEAMAIBOX_FEATURE_KEY:?}
+  com.teamaibox.validation-class: drawing-e2e
+
+x-hardened: &hardened
+  platform: linux/arm64/v8
+  init: true
+  read_only: true
+  cap_drop: [ALL]
+  security_opt: [no-new-privileges:true]
+  pids_limit: 256
+  labels: *labels
+
+services:
+  model-fetcher:
+    <<: *hardened
+    image: ${TEAMAIBOX_DRAWING_WORKER_IMAGE:?}
+    restart: unless-stopped
+    entrypoint: [python, /opt/teamaibox/drawing-worker/download_model.py]
+    environment:
+      TEAMAIBOX_DRAWING_MODEL_REPOSITORY: ${TEAMAIBOX_DRAWING_MODEL_REPOSITORY:?}
+      TEAMAIBOX_DRAWING_MODEL_REVISION: ${TEAMAIBOX_DRAWING_MODEL_REVISION:?}
+      TEAMAIBOX_DRAWING_MODEL_ROOT: /models/sdxl-base-1.0-fp16
+      TEAMAIBOX_DOWNLOAD_KEEP_ALIVE: "1"
+      HF_HUB_DISABLE_TELEMETRY: "1"
+      HF_HOME: /tmp/huggingface
+      HF_XET_CACHE: /tmp/huggingface/xet
+    volumes: [drawing_model:/models]
+    tmpfs: ["/tmp:rw,noexec,nosuid,nodev,size=128m"]
+    network_mode: host
+    mem_limit: 4g
+    mem_reservation: 256m
+    cpus: 2.0
+    healthcheck:
+      test: [CMD, python, -c, "import json,pathlib; p=pathlib.Path('/models/sdxl-base-1.0-fp16/teamaibox-model-manifest.json'); v=json.loads(p.read_text()); raise SystemExit(0 if v.get('revision')=='462165984030d82259a11f4367a4eed129e94a7b' and 0<v.get('totalBytes',0)<=16000000000 else 1)"]
+      interval: 15s
+      timeout: 5s
+      retries: 120
+      start_period: 30s
+
+  drawing-worker:
+    <<: *hardened
+    image: ${TEAMAIBOX_DRAWING_WORKER_IMAGE:?}
+    restart: unless-stopped
+    gpus: all
+    environment:
+      TEAMAIBOX_DRAWING_MODEL_REPOSITORY: ${TEAMAIBOX_DRAWING_MODEL_REPOSITORY:?}
+      TEAMAIBOX_DRAWING_MODEL_REVISION: ${TEAMAIBOX_DRAWING_MODEL_REVISION:?}
+      TEAMAIBOX_DRAWING_MODEL_ROOT: /models/sdxl-base-1.0-fp16
+      TEAMAIBOX_DRAWING_SERVED_MODEL: ${TEAMAIBOX_DRAWING_SERVED_MODEL:?}
+      TEAMAIBOX_DRAWING_IDLE_UNLOAD_SECONDS: ${TEAMAIBOX_DRAWING_IDLE_UNLOAD_SECONDS:-300}
+      HF_HUB_OFFLINE: "1"
+      TRANSFORMERS_OFFLINE: "1"
+      HF_HUB_DISABLE_TELEMETRY: "1"
+      HF_HOME: /tmp/huggingface
+      HF_XET_CACHE: /tmp/huggingface/xet
+      NVIDIA_VISIBLE_DEVICES: all
+      NVIDIA_DRIVER_CAPABILITIES: compute,utility
+    volumes: [drawing_model:/models:ro]
+    tmpfs: ["/tmp:rw,noexec,nosuid,nodev,size=256m"]
+    networks: [worker, ingress]
+    ports:
+      - target: 8000
+        published: ${TEAMAIBOX_DRAWING_HOST_PORT:?}
+        host_ip: ${TEAMAIBOX_DRAWING_HOST_ADDRESS:?}
+        protocol: tcp
+    mem_limit: 80g
+    mem_reservation: 20g
+    cpus: 12.0
+    depends_on: {model-fetcher: {condition: service_healthy}}
+
+networks:
+  worker:
+    internal: true
+  ingress:
+    driver: bridge
+    driver_opts:
+      com.docker.network.bridge.enable_ip_masquerade: "false"
+
+volumes:
+  drawing_model:

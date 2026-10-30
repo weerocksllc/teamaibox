@@ -1,0 +1,109 @@
+{
+  "schemaVersion": 1,
+  "suiteId": "model.initial-certification-coexistence.v1",
+  "prerequisites": {
+    "soakRunId": "soak-20260811-nvfp4-24h-a2",
+    "soakProfileKey": "llm.qwen36-35b-a3b.nvfp4.spark-32k.v1",
+    "requiredSoakOutcome": "passed"
+  },
+  "target": {
+    "nodeKey": "dgx-spark-dev-01",
+    "architecture": "linux/arm64/v8",
+    "llmProfileKey": "llm.qwen36-35b-a3b.nvfp4.spark-32k.v1",
+    "coreReserveBytes": 12884901888
+  },
+  "coreDomains": [
+    "identity",
+    "administration",
+    "files",
+    "messaging",
+    "database",
+    "object",
+    "queue"
+  ],
+  "sharedCapabilityEnvelopes": [
+    {
+      "capability": "drawing",
+      "candidateId": "sdxl-base-1.0-fp16",
+      "memoryTouchBytes": 6442450944,
+      "memoryLimitBytes": 8589934592,
+      "cpuCores": 1.5
+    },
+    {
+      "capability": "ocr",
+      "candidateId": "paddleocr-vl-1.5-bf16",
+      "memoryTouchBytes": 3221225472,
+      "memoryLimitBytes": 4294967296,
+      "cpuCores": 1
+    },
+    {
+      "capability": "asr",
+      "candidateId": "whisper-large-v3-fp16",
+      "memoryTouchBytes": 3221225472,
+      "memoryLimitBytes": 4294967296,
+      "cpuCores": 1
+    },
+    {
+      "capability": "translation",
+      "candidateId": "madlad400-3b-mt-bf16",
+      "memoryTouchBytes": 4294967296,
+      "memoryLimitBytes": 6442450944,
+      "cpuCores": 1
+    },
+    {
+      "capability": "realtime-speech-reservation",
+      "candidateId": null,
+      "memoryTouchBytes": 2147483648,
+      "memoryLimitBytes": 3221225472,
+      "cpuCores": 1
+    }
+  ],
+  "exclusiveEnvelopes": {
+    "llmPressure": {
+      "memoryTouchBytes": 25769803776,
+      "memoryLimitBytes": 27917287424,
+      "cpuCores": 2
+    }
+  },
+  "phases": [
+    {
+      "phaseId": "shared-capabilities",
+      "requiredActive": [
+        "drawing",
+        "ocr",
+        "asr",
+        "translation",
+        "realtime-speech-reservation"
+      ],
+      "requiredDrained": [],
+      "probeRounds": 12
+    },
+    {
+      "phaseId": "node-exclusive-llm",
+      "requiredActive": [
+        "llm",
+        "llm-pressure"
+      ],
+      "requiredDrained": [
+        "drawing",
+        "ocr",
+        "asr",
+        "translation",
+        "realtime-speech-reservation"
+      ],
+      "probeRounds": 12
+    }
+  ],
+  "acceptance": {
+    "maximumFailedCapabilityProbes": 0,
+    "maximumFailedCoreProbes": 0,
+    "maximumWorkerCrashes": 0,
+    "maximumCoreLatencyMillisecondsP95": 1000,
+    "maximumRealtimeLatencyMillisecondsP95": 250,
+    "maximumTemperatureCelsius": 90,
+    "minimumHostAvailableMemoryBytes": 12884901888,
+    "maximumLlmPhaseAvailableMemoryBytes": 68719476736,
+    "requireSchedulerContractEvidence": true,
+    "requireExactCleanup": true
+  }
+}

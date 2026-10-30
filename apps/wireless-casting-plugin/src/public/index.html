@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>Wireless Casting</title>
+  <link rel="stylesheet" href="/plugins/official.wireless-casting/app.css">
+  <link rel="stylesheet" href="/plugins/official.wireless-casting/platform-preferences.css">
+  <link rel="stylesheet" href="/plugins/official.wireless-casting/focus.css">
+<link rel="stylesheet" href="/plugins/official.wireless-casting/ui-system.css"></head>
+<body data-ui-app="wireless-casting">
+  <main class="cast-shell">
+    <header class="hero">
+      <div class="hero__mark" aria-hidden="true">
+        <svg viewBox="0 0 24 24"><path d="M5 19a2 2 0 0 0-2-2m7 2a7 7 0 0 0-7-7m12 7h3a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3H8a3 3 0 0 0-3 3v1"/><circle cx="3" cy="19" r="1"/></svg>
+      </div>
+      <div class="hero__copy">
+        <p class="eyebrow" data-i18n="eyebrow">团队演示</p>
+        <h1 data-i18n="title">无线投屏</h1>
+        <p data-i18n="subtitle">把 Apple 设备的画面和声音投到网页，或邀请同事一起观看。</p>
+      </div>
+      <span id="service-chip" class="status-chip status-chip--checking" role="status">
+        <span class="status-dot" aria-hidden="true"></span><span data-i18n="checking">正在检查</span>
+      </span>
+    </header>
+
+    <aside id="global-error" class="notice notice--error" role="alert" hidden></aside>
+    <button id="retry-bootstrap" class="button button--secondary" type="button" data-i18n="retryConnection" hidden>重新连接</button>
+    <aside id="global-notice" class="notice notice--success" role="status" aria-live="polite" hidden></aside>
+
+    <section id="availability-card" class="panel availability-panel" aria-labelledby="availability-title" hidden>
+      <div class="panel__heading">
+        <div><p class="step">00</p><h2 id="availability-title" data-i18n="availabilityTitle">投屏准备进度</h2></div>
+        <span id="availability-state" class="subtle-badge">—</span>
+      </div>
+      <p id="availability-summary" class="availability-summary"></p>
+      <div class="availability-claims" aria-live="polite">
+        <strong id="availability-receiver">—</strong>
+        <strong id="availability-session">—</strong>
+      </div>
+      <div id="availability-outputs" class="availability-outputs"></div>
+      <ol id="availability-gates" class="availability-gates"></ol>
+    </section>
+
+    <div id="casting-workspace" class="workspace" hidden>
+      <section id="invitations-card" class="panel invitation-inbox" aria-labelledby="invitations-title" hidden>
+        <div class="side-heading"><h2 id="invitations-title" data-i18n="invitations">观看邀请</h2><span id="invitation-count">0</span></div>
+        <div id="invitation-list" class="invitation-list"></div>
+        <p id="invitation-empty" class="side-empty" data-i18n="noInvitations">没有待处理的邀请。</p>
+      </section>
+      <div class="workspace__main">
+        <section id="session-card" class="panel panel--session" aria-labelledby="session-title">
+          <div class="panel__heading">
+            <div><p class="step">02</p><h2 id="session-title" data-i18n="sessionTitle">当前投屏</h2></div>
+            <a class="button button--secondary more-shortcut" href="#cast-more" id="open-more" data-i18n="more">更多</a>
+            <div class="session-actions">
+              <button id="stop" class="button button--danger" type="button" data-i18n="stop" hidden>停止投屏</button>
+              <button id="force-stop" class="button button--danger" type="button" data-i18n="forceStop" hidden>管理员强制停止</button>
+            </div>
+            <button id="refresh" class="icon-button" type="button" data-i18n-aria="refresh" aria-label="刷新" title="Refresh">↻</button>
+          </div>
+
+          <div id="session-loading" class="empty-state"><span class="spinner" aria-hidden="true"></span><p data-i18n="loading">正在读取会话…</p></div>
+          <div id="session-empty" class="empty-state" hidden><span class="empty-state__icon" aria-hidden="true">◌</span><h3 data-i18n="noSession">当前没有可见投屏会话</h3><p data-i18n="noSessionHint">有权限的用户可以在上方创建临时接收器；受邀用户会在邀请区域看到通知。</p></div>
+
+          <div id="session-detail" hidden>
+            <p id="manager-boundary" data-i18n="managerBoundary" hidden>你可以查看服务状态或停止投屏。观看画面需要邀请；投屏码和来源设备仅对有权限的用户显示。</p>
+            <p id="source-feedback" class="source-feedback" role="status" aria-live="polite" hidden></p>
+            <div class="session-summary" role="status" aria-live="polite">
+              <div><span id="session-state-dot" class="state-dot" aria-hidden="true"></span><div><small data-i18n="stateLabel">会话状态</small><strong id="session-state">—</strong></div></div>
+              <div><small data-i18n="expires">到期时间</small><strong id="session-expiry">—</strong></div>
+              <div id="manager-viewer-count-wrap" hidden><small data-i18n="viewerCount">观看人数</small><strong id="manager-viewer-count">0</strong></div>
+            </div>
+
+            <section id="browser-player" class="browser-player" hidden aria-labelledby="browser-player-title">
+              <div class="section-title"><h3 id="browser-player-title" data-i18n="browserPlayback">浏览器观看</h3><span id="media-status" data-i18n="notJoined">尚未加入</span></div>
+              <div class="video-frame">
+                <video id="browser-video" controls playsinline muted hidden></video>
+                <div id="video-placeholder" class="video-placeholder"><span aria-hidden="true">▶</span><p data-i18n="explicitJoin">点击“加入观看”，在此浏览器接收画面和声音。</p></div>
+              </div>
+              <button id="unmute" class="button button--secondary" type="button" data-i18n="unmute" hidden>打开声音</button>
+              <p id="media-detail" class="inline-hint" data-i18n="mediaBoundary">退出观看不会结束投屏。</p>
+              <div class="inline-actions">
+                <button id="join" class="button button--primary" type="button" data-i18n="join">加入观看</button>
+                <button id="leave" class="button button--secondary" type="button" data-i18n="leave" hidden>离开观看</button>
+              </div>
+            </section>
+
+
+            <div id="receiver-secrets" class="receiver-card" hidden>
+              <div><small data-i18n="receiverName">临时接收器名称</small><strong id="receiver-name">—</strong></div>
+              <div><small data-i18n="receiverPin">随机 PIN</small><strong id="receiver-pin" class="pin">—</strong></div>
+              <ol>
+                <li data-i18n="pairStep1">在 Apple 设备打开屏幕镜像。</li>
+                <li data-i18n="pairStep2">选择上方临时名称并输入 PIN。</li>
+                <li data-i18n="pairStep3">PIN 和名称仅在本次会话内有效。</li>
+              </ol>
+            </div>
+
+          </div>
+        </section>
+      </div>
+
+      <details id="cast-more" class="cast-more" open>
+        <summary data-i18n="more">分享与设置</summary>
+        <div class="more-content">
+        <section id="configuration-card" class="panel panel--configuration" aria-labelledby="configuration-title">
+          <div class="panel__heading">
+            <div><h2 id="configuration-title" data-i18n="configureTitle">投屏设置</h2></div>
+            <span id="configuration-mode" class="subtle-badge" data-i18n="newSession">新会话</span>
+          </div>
+          <form id="casting-form" novalidate>
+            <p data-i18n="browserHint">在网页中观看画面和声音，无需连接显示器。</p>
+            <section id="browser-options" class="browser-options">
+              <fieldset>
+                <legend data-i18n="audienceLegend">谁可以在浏览器观看</legend>
+                <div class="audience-grid">
+                  <label><input type="radio" name="audience" value="owner_only" checked><span><strong data-i18n="audienceOwner">仅自己</strong><small data-i18n="audienceOwnerHint">管理员也需要邀请才能观看</small></span></label>
+                  <label><input type="radio" name="audience" value="selected_users"><span><strong data-i18n="audienceUsers">指定用户</strong><small data-i18n="audienceUsersHint">只邀请你明确选择的用户</small></span></label>
+                  <label><input type="radio" name="audience" value="selected_team"><span><strong data-i18n="audienceTeam">指定团队</strong><small data-i18n="audienceTeamHint">加入时会再次检查当前团队成员关系</small></span></label>
+                </div>
+              </fieldset>
+
+              <div id="selected-users-control" class="conditional-control" hidden>
+                <div class="field-heading"><label id="users-label" data-i18n="selectUsers">选择用户</label><span id="selected-users-count">0</span></div>
+                <div id="directory-users" class="people-grid" role="group" aria-labelledby="users-label"></div>
+                <p id="directory-empty" class="inline-hint" data-i18n="directoryEmpty" hidden>当前没有可邀请的用户。</p>
+              </div>
+
+              <div id="selected-team-control" class="conditional-control" hidden>
+                <label for="team-select" data-i18n="selectTeam">选择团队</label>
+                <select id="team-select"><option value="" data-i18n="chooseTeam">请选择团队</option></select>
+                <div id="manual-team-wrap" class="manual-team">
+                  <label for="team-id" data-i18n="teamIdLabel">或输入团队 ID</label>
+                  <input id="team-id" type="text" inputmode="text" autocomplete="off" spellcheck="false" data-i18n-placeholder="teamIdPlaceholder" placeholder="00000000-0000-4000-8000-000000000000">
+                </div>
+                <p class="inline-hint" data-i18n="teamRecheck">平台会在接受邀请和每次加入时重新核验团队成员关系。</p>
+              </div>
+            </section>
+
+            <label class="ttl-field" for="ttl">
+              <span><strong data-i18n="duration">接收器有效时间</strong><small data-i18n="durationHint">到期后自动结束投屏</small></span>
+              <select id="ttl">
+                <option value="900" data-i18n="minutes15">15 分钟</option>
+                <option value="1800" selected data-i18n="minutes30">30 分钟</option>
+                <option value="3600" data-i18n="minutes60">60 分钟</option>
+                <option value="7200" data-i18n="minutes120">2 小时</option>
+              </select>
+            </label>
+            <p id="form-error" class="field-error" role="alert" hidden></p>
+            <div class="form-actions">
+              <button id="submit-session" class="button button--primary" type="submit"><span data-i18n="start">开始接收</span><span aria-hidden="true">→</span></button>
+              <p data-i18n="startHint">开始后，iPhone、iPad 或 Mac 仍需选择临时接收器并输入 PIN。</p>
+            </div>
+          </form>
+        </section>
+
+<section id="diagnostics-card" class="panel side-panel" hidden>
+            <div id="source-row" class="source-row" hidden><span data-i18n="sourceDevice">已配对来源</span><strong id="source-label">—</strong><small data-i18n="ephemeral">临时显示，不保存、不审计</small></div>
+
+            <section class="output-health" aria-labelledby="output-health-title">
+              <div class="section-title"><h3 id="output-health-title" data-i18n="outputHealth">输出健康</h3><span id="receiver-health">—</span></div>
+              <div id="output-health-list" class="health-grid"></div>
+            </section>
+
+        </section>
+      <aside class="workspace__side">
+        <section id="share-card" class="panel side-panel" aria-labelledby="share-title" hidden>
+          <div class="side-heading"><h2 id="share-title" data-i18n="invitePeople">邀请观看者</h2><span data-i18n="maxViewers">观看人数按可用资源决定</span></div>
+          <label for="invitee" data-i18n="inviteeLabel">选择当前观看范围内的用户</label>
+          <select id="invitee"><option value="" data-i18n="chooseUser">请选择用户</option></select>
+          <button id="invite" class="button button--secondary button--wide" type="button" data-i18n="sendInvitation">发送邀请</button>
+          <p class="inline-hint" data-i18n="inviteNoAutoplay">对方会在工作台顶部收到提醒；点击“接受并观看”后才会播放。</p>
+        </section>
+
+        <section id="viewers-card" class="panel side-panel" aria-labelledby="viewers-title" hidden>
+          <div class="side-heading"><h2 id="viewers-title" data-i18n="viewers">实时观看者</h2><span id="viewer-count">0</span></div>
+          <div id="viewer-list" class="viewer-list"></div>
+          <p id="viewer-empty" class="side-empty" data-i18n="noViewers">还没有浏览器观看者。</p>
+        </section>
+
+        <section class="panel side-panel limitations" aria-labelledby="limitations-title">
+          <div class="side-heading"><h2 id="limitations-title" data-i18n="limitations">使用范围与限制</h2><span class="safety-mark" aria-hidden="true">◇</span></div>
+          <ul>
+            <li data-i18n="limitLan">发送设备与主盒需要位于已支持的同一局域网。</li>
+            <li data-i18n="limitEnvelope">同一会话接收一个投屏来源，受邀用户可在浏览器观看；流畅度取决于网络和盒子的可用资源。</li>
+            <li data-i18n="limitNoRecording">默认不录制画面和声音，不保存投屏码或来源设备名称。</li>
+            <li data-i18n="limitDrm">不支持 FairPlay/DRM 受保护内容。</li>
+            <li data-i18n="limitTrademark">这是兼容 AirPlay 的功能，不代表 Apple 认证。</li>
+          </ul>
+        </section>
+      </aside>
+        </div>
+      </details>
+    </div>
+  </main>
+  <script type="module" src="/plugins/official.wireless-casting/app.js"></script>
+</body>
+</html>

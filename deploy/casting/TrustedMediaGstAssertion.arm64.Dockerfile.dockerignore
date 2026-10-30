@@ -1,0 +1,4 @@
+**
+!services/
+!services/trusted_media_service/
+!services/trusted_media_service/native_failure.py

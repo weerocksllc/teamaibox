@@ -1,0 +1,39 @@
+Team AI Box Trusted Media Service
+==================================
+
+Product description:
+  AirPlay-compatible wireless casting (not Apple-certified)
+  兼容 AirPlay 的无线投屏（非 Apple 认证）
+
+FairPlay/DRM-protected content is unsupported.
+不支持受 FairPlay/DRM 保护的内容。
+
+Receiver
+--------
+UxPlay 1.73.6, commit 21eef8df25d91e12635c36d8176ad192725baca2
+Copyright and authorship are documented by the UxPlay project.
+License: GNU General Public License version 3 only (GPL-3.0-only).
+Source: https://github.com/FDH2/UxPlay/tree/21eef8df25d91e12635c36d8176ad192725baca2
+
+UxPlay incorporates separately identified code including PlayFair and llhttp.
+Their license files and upstream notices are preserved in the corresponding
+source archive and the image documentation directory.
+
+Runtime libraries
+-----------------
+The image uses Ubuntu 24.04 ARM64 packages, including GStreamer, Avahi,
+OpenSSL and libplist. Package identities and license metadata are enumerated
+in the image SPDX JSON SBOM. Distribution copyright files remain available
+under /usr/share/doc in the image as supplied by Ubuntu.
+
+Team AI Box modifications and corresponding source
+----------------------------------------------------
+Team AI Box does not modify the UxPlay source in this build. It supplies a
+container build, a fixed runtime option boundary, a non-root supervisor and a
+health probe. The complete build inputs and retrieval instructions are in:
+  deploy/casting/TrustedMediaService.arm64.v2.Dockerfile
+  deploy/casting/airplay-compatible-stack.lock.v2.json
+  docs/operations/trusted-media-open-source-build.v2.md
+
+No Apple logo, AirPlay badge, MFi badge or Apple/MFi certification claim is
+included or authorized by this notice.

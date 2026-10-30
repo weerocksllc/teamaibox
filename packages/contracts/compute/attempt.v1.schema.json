@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.teamaibox.local/compute/attempt.v1.schema.json",
+  "title": "Team AI Box compute attempt v1",
+  "x-teamaibox-contract": {"family": "compute", "role": "response", "major": 1},
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion", "attemptId", "jobId", "attemptNumber", "status", "target",
+    "modelProfileId", "dispatchFence", "acceptanceState", "retryClassification",
+    "outputObserved", "createdAt"
+  ],
+  "properties": {
+    "schemaVersion": {"const": 1},
+    "attemptId": {"type": "string", "format": "uuid"},
+    "jobId": {"type": "string", "format": "uuid"},
+    "attemptNumber": {"type": "integer", "minimum": 1},
+    "status": {"type": "string", "enum": ["pending", "dispatched", "accepted", "running", "succeeded", "failed", "cancelled", "lost", "incomplete"]},
+    "target": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "nodeId"],
+          "properties": {
+            "kind": {"const": "managed_node"},
+            "nodeId": {"type": "string", "format": "uuid"}
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "providerId"],
+          "properties": {
+            "kind": {"const": "external_provider"},
+            "providerId": {"type": "string", "format": "uuid"}
+          }
+        }
+      ]
+    },
+    "modelProfileId": {"type": "string", "format": "uuid"},
+    "workerInstanceId": {"type": ["string", "null"], "format": "uuid"},
+    "reservationIds": {
+      "type": "array", "uniqueItems": true,
+      "items": {"type": "string", "format": "uuid"}
+    },
+    "dispatchFence": {"type": "integer", "minimum": 1},
+    "acceptanceState": {"type": "string", "enum": ["not_accepted", "accepted_no_output", "output_observed", "side_effect_uncertain"]},
+    "retryClassification": {"type": "string", "enum": ["unknown", "retryable", "terminal", "manual_reconcile"]},
+    "outputObserved": {"type": "boolean"},
+    "providerError": {"type": ["object", "null"], "additionalProperties": true},
+    "dispatchedAt": {"type": ["string", "null"], "format": "date-time"},
+    "acceptedAt": {"type": ["string", "null"], "format": "date-time"},
+    "startedAt": {"type": ["string", "null"], "format": "date-time"},
+    "finishedAt": {"type": ["string", "null"], "format": "date-time"},
+    "createdAt": {"type": "string", "format": "date-time"},
+    "extensions": {"type": "object", "additionalProperties": true}
+  }
+}

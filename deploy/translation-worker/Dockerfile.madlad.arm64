@@ -1,0 +1,15 @@
+FROM nvcr.io/nvidia/pytorch@sha256:43c018d6a12963f1a1bad85ef8574b5c2a978eec2be0ebcacfb87f69e0d210e1
+
+ARG TRANSFORMERS_VERSION=4.57.6
+
+RUN python -m pip install --no-cache-dir \
+      "transformers==${TRANSFORMERS_VERSION}" \
+      "sentencepiece==0.2.1" \
+      "safetensors==0.6.2" \
+      "pytest==8.4.2" \
+    && python -m pip check
+
+COPY services/translation-worker/madlad_server.py /opt/teamaibox/madlad_server.py
+
+USER 1000:1000
+ENTRYPOINT ["python", "/opt/teamaibox/madlad_server.py", "--dtype", "bfloat16"]

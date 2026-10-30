@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.teamaibox.local/workers/control-envelope.v1.schema.json",
+  "title": "Team AI Box worker control envelope v1",
+  "x-teamaibox-contract": {"family": "worker", "role": "bidirectional", "major": 1},
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["protocolVersion", "messageId", "workerId", "type", "sentAt", "payload"],
+  "properties": {
+    "protocolVersion": {"const": 1},
+    "messageId": {"type": "string", "format": "uuid"},
+    "workerId": {"type": "string", "format": "uuid"},
+    "type": {"type": "string", "pattern": "^[a-z][a-z0-9._-]{2,127}$"},
+    "sentAt": {"type": "string", "format": "date-time"},
+    "correlationId": {"type": ["string", "null"], "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{7,127}$"},
+    "jobId": {"type": ["string", "null"], "format": "uuid"},
+    "attemptId": {"type": ["string", "null"], "format": "uuid"},
+    "leaseId": {"type": ["string", "null"], "format": "uuid"},
+    "fencingToken": {"type": ["integer", "null"], "minimum": 1},
+    "payload": {"type": "object"},
+    "extensions": {"type": "object", "additionalProperties": true}
+  }
+}

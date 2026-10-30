@@ -1,0 +1,19 @@
+{
+  "name": "@teamaibox/messaging",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@teamaibox/persistence": "workspace:*"
+  },
+  "exports": {
+    "./messaging-service": "./src/messaging-service.mjs",
+    "./memory-repository": "./src/memory-repository.mjs",
+    "./postgres-repository": "./src/postgres-repository.mjs",
+    "./realtime-gateway": "./src/realtime-gateway.mjs"
+  },
+  "scripts": {
+    "test": "node --test test/*.test.mjs"
+  },
+  "license": "MIT"
+}

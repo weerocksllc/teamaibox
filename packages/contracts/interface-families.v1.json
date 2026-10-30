@@ -1,0 +1,92 @@
+{
+  "policyVersion": 1,
+  "platformVersion": "0.1.0",
+  "deprecation": {
+    "stablePublicMinimumNoticeDays": 180,
+    "managedInternalMinimumNoticeDays": 90,
+    "minimumOverlappingMinorReleases": 1,
+    "requiredFields": [
+      "announcedAt",
+      "replacement",
+      "earliestSunsetAt",
+      "affectedMajor",
+      "migrationGuide",
+      "evidenceRef"
+    ],
+    "httpHeaders": ["Deprecation", "Sunset", "Link"]
+  },
+  "families": [
+    {
+      "id": "http",
+      "audience": "public-and-plugin",
+      "transport": "https-json",
+      "currentMajor": 1,
+      "versionPlacement": "/api/v1",
+      "negotiation": "route-major",
+      "compatibility": "direction-aware-json-schema"
+    },
+    {
+      "id": "openai",
+      "audience": "public-and-provider",
+      "transport": "https-json-and-sse",
+      "currentMajor": 1,
+      "versionPlacement": "/v1",
+      "negotiation": "route-major-with-profile-conformance",
+      "compatibility": "openai-shape-plus-x_teamaibox-extensions"
+    },
+    {
+      "id": "realtime",
+      "audience": "browser-plugin-and-worker",
+      "transport": "websocket-or-sse",
+      "currentMajor": 1,
+      "versionPlacement": "protocolVersion=1",
+      "negotiation": "supported-major-handshake",
+      "compatibility": "ordered-versioned-envelope"
+    },
+    {
+      "id": "node-agent",
+      "audience": "managed-internal",
+      "transport": "mutually-authenticated-control-channel",
+      "currentMajor": 1,
+      "versionPlacement": "teamaibox.node-agent.v1",
+      "negotiation": "min-max-major-handshake",
+      "compatibility": "rolling-upgrade-overlap"
+    },
+    {
+      "id": "worker",
+      "audience": "compute-plugin-and-managed-worker",
+      "transport": "authenticated-control-channel",
+      "currentMajor": 1,
+      "versionPlacement": "teamaibox.worker.v1",
+      "negotiation": "manifest-plus-handshake",
+      "compatibility": "capability-negotiated-envelope"
+    },
+    {
+      "id": "plugin",
+      "audience": "third-party-and-official-plugin",
+      "transport": "signed-manifest-and-https",
+      "currentMajor": 1,
+      "versionPlacement": "teamaibox.io/plugin/v1",
+      "negotiation": "declared-platform-and-sdk-range",
+      "compatibility": "staged-install-gate"
+    },
+    {
+      "id": "object",
+      "audience": "platform-plugin-worker-and-provider",
+      "transport": "https-json-and-byte-ranges",
+      "currentMajor": 1,
+      "versionPlacement": "/api/v1/objects",
+      "negotiation": "route-major-and-reference-version",
+      "compatibility": "opaque-scoped-immutable-reference"
+    },
+    {
+      "id": "compute",
+      "audience": "platform-plugin-worker-node-and-provider",
+      "transport": "versioned-json-over-managed-interfaces",
+      "currentMajor": 1,
+      "versionPlacement": "teamaibox.compute.v1",
+      "negotiation": "schema-major-and-capability-contract",
+      "compatibility": "direction-aware-json-schema-and-extension-points"
+    }
+  ]
+}

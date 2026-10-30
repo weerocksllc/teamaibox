@@ -1,0 +1,147 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.teamaibox.local/models/candidate-matrix.v1.schema.json",
+  "title": "Team AI Box model discovery candidate matrix v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "researchSnapshotAt", "target", "downloadGate", "coverage", "researchSources", "candidates"],
+  "properties": {
+    "schemaVersion": {"const": 1},
+    "researchSnapshotAt": {"type": "string", "format": "date-time"},
+    "target": {
+      "type": "object", "additionalProperties": false,
+      "required": ["nodeKey", "architecture", "accelerator", "unifiedMemoryBytes", "containerFirst"],
+      "properties": {
+        "nodeKey": {"const": "dgx-spark-dev-01"},
+        "architecture": {"const": "linux/arm64/v8"},
+        "accelerator": {"const": "nvidia-gb10-blackwell"},
+        "unifiedMemoryBytes": {"type": "integer", "minimum": 137000000000},
+        "containerFirst": {"const": true}
+      }
+    },
+    "downloadGate": {
+      "type": "object", "additionalProperties": false,
+      "required": ["metadataOnlyDuringDiscovery", "requireExactRevision", "requireReviewedLicense", "requireChecksumBeforeCommit", "allowedLicenseReviewStates"],
+      "properties": {
+        "metadataOnlyDuringDiscovery": {"const": true},
+        "requireExactRevision": {"const": true},
+        "requireReviewedLicense": {"const": true},
+        "requireChecksumBeforeCommit": {"const": true},
+        "allowedLicenseReviewStates": {"const": ["approved"]}
+      }
+    },
+    "coverage": {
+      "type": "array", "uniqueItems": true,
+      "items": {"enum": ["llm_agent", "large_nvfp4_llm", "image_drawing", "ocr", "asr", "translation"]}
+    },
+    "researchSources": {
+      "type": "array", "minItems": 1, "uniqueItems": true,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["sourceId", "publisher", "uri", "retrievedAt"],
+        "properties": {
+          "sourceId": {"type": "string", "pattern": "^[a-z][a-z0-9_.-]{2,127}$"},
+          "publisher": {"type": "string", "minLength": 1, "maxLength": 128},
+          "uri": {"type": "string", "pattern": "^https://"},
+          "retrievedAt": {"type": "string", "format": "date-time"}
+        }
+      }
+    },
+    "candidates": {
+      "type": "array", "minItems": 7,
+      "items": {"$ref": "#/$defs/candidate"}
+    }
+  },
+  "$defs": {
+    "digest": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+    "candidate": {
+      "type": "object", "additionalProperties": false,
+      "required": ["candidateId", "role", "useCases", "source", "license", "artifactDecision", "precision", "engine", "selection"],
+      "properties": {
+        "candidateId": {"type": "string", "pattern": "^[a-z][a-z0-9_.-]{2,127}$"},
+        "role": {"enum": ["primary", "baseline", "alternate", "fallback", "stretch", "rejected"]},
+        "useCases": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string"}},
+        "source": {
+          "type": "object", "additionalProperties": false,
+          "required": ["publisher", "repository", "revision", "provenanceUri", "artifactSourceUri", "gated", "reportedRepositoryBytes"],
+          "properties": {
+            "publisher": {"type": "string", "minLength": 1, "maxLength": 128},
+            "repository": {"type": "string", "minLength": 3, "maxLength": 256},
+            "revision": {"type": "string", "minLength": 8, "maxLength": 64},
+            "provenanceUri": {"type": "string", "pattern": "^https://"},
+            "artifactSourceUri": {"type": "string", "pattern": "^https://"},
+            "gated": {"type": "boolean"},
+            "reportedRepositoryBytes": {"type": ["integer", "null"], "minimum": 1}
+          }
+        },
+        "license": {
+          "type": "object", "additionalProperties": false,
+          "required": ["identifier", "usage", "reviewStatus", "reviewedAt", "reviewedBy", "evidenceUri", "evidenceDigest", "conditions"],
+          "properties": {
+            "identifier": {"type": "string", "minLength": 1, "maxLength": 128},
+            "usage": {"enum": ["commercial", "conditional-commercial", "non-commercial", "unknown"]},
+            "reviewStatus": {"enum": ["approved", "conditional", "rejected"]},
+            "reviewedAt": {"type": "string", "format": "date-time"},
+            "reviewedBy": {"const": "model-discovery-policy-v1"},
+            "evidenceUri": {"type": "string", "pattern": "^https://"},
+            "evidenceDigest": {"$ref": "#/$defs/digest"},
+            "conditions": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1, "maxLength": 512}}
+          }
+        },
+        "artifactDecision": {
+          "type": "object", "additionalProperties": false,
+          "required": ["status", "reason", "maximumDownloadBytes", "downloadState", "allowPatterns"],
+          "properties": {
+            "status": {"enum": ["allowed", "blocked"]},
+            "reason": {"type": "string", "minLength": 1, "maxLength": 512},
+            "maximumDownloadBytes": {"type": ["integer", "null"], "minimum": 1},
+            "downloadState": {"const": "not_downloaded"},
+            "allowPatterns": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1, "maxLength": 256}}
+          }
+        },
+        "precision": {
+          "type": "object", "additionalProperties": false,
+          "required": ["kind", "nvfp4Applicability", "evidenceUri", "baselineCandidateId", "comparisonReferences"],
+          "properties": {
+            "kind": {"enum": ["bf16", "fp16", "fp8", "nvfp4", "mxfp4"]},
+            "nvfp4Applicability": {"enum": ["official-prequantized", "baseline-for-nvfp4", "different-fp4-format", "not-applicable-no-documented-path", "not-applicable-training-profile"]},
+            "evidenceUri": {"type": ["string", "null"], "pattern": "^https://"},
+            "baselineCandidateId": {"type": ["string", "null"]},
+            "comparisonReferences": {
+              "type": "array", "uniqueItems": true,
+              "items": {
+                "type": "object", "additionalProperties": false,
+                "required": ["repository", "revision", "precision", "executionRequirement", "downloadStatus"],
+                "properties": {
+                  "repository": {"type": "string"}, "revision": {"type": "string"},
+                  "precision": {"enum": ["bf16", "fp16", "fp8", "int4", "awq", "gptq", "mxfp4"]},
+                  "executionRequirement": {"enum": ["single-spark", "two-spark-or-external"]},
+                  "downloadStatus": {"const": "blocked-until-benchmark-plan"}
+                }
+              }
+            }
+          }
+        },
+        "engine": {
+          "type": "object", "additionalProperties": false,
+          "required": ["name", "compatibilityStatus", "targetArchitecture", "resourceMode", "notes"],
+          "properties": {
+            "name": {"type": "string", "minLength": 1, "maxLength": 128},
+            "compatibilityStatus": {"enum": ["documented-on-spark", "probe-required"]},
+            "targetArchitecture": {"const": "linux/arm64/v8"},
+            "resourceMode": {"enum": ["shared", "node-exclusive"]},
+            "notes": {"type": "string", "minLength": 1, "maxLength": 1024}
+          }
+        },
+        "selection": {
+          "type": "object", "additionalProperties": false,
+          "required": ["status", "rationale"],
+          "properties": {
+            "status": {"enum": ["planned", "hold", "rejected"]},
+            "rationale": {"type": "string", "minLength": 1, "maxLength": 1024}
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,7 @@
+**
+!services/
+!services/trusted_media_service/
+!services/trusted_media_service/service_child_process.py
+!services/trusted_media_service/private_discovery.py
+!services/trusted_media_service/native_receiver_process.py
+!services/trusted_media_service/runtime_api.py

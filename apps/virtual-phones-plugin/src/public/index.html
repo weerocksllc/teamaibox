@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>虚拟手机</title><script src="/plugins/official.virtual-phones/theme-prepaint.js"></script><link rel="stylesheet" href="/plugins/official.virtual-phones/app.css">
+<link rel="stylesheet" href="/plugins/official.virtual-phones/phone-workspace.css">
+<link rel="stylesheet" href="/plugins/official.virtual-phones/phone-debug.css">
+<link rel="stylesheet" href="/plugins/official.virtual-phones/phone-roms.css">
+<link rel="stylesheet" href="/plugins/official.virtual-phones/phone-camera.css">
+<link rel="stylesheet" href="/plugins/official.virtual-phones/platform-preferences.css">
+<link rel="stylesheet" href="/plugins/official.virtual-phones/phone-theme.css">
+<script type="module" src="/plugins/official.virtual-phones/app.js"></script><link rel="stylesheet" href="/plugins/official.virtual-phones/ui-system.css"></head>
+<body data-ui-app="virtual-phones"><main>
+  <header><div><span class="eyebrow" data-i18n="eyebrow">个人工作空间</span><h1 data-i18n="title">我的虚拟手机</h1>
+    <p data-i18n="subtitle">独立的工作手机，数据保留在盒子里。</p></div>
+    <button id="create" class="primary" disabled data-i18n="create">＋ 创建手机</button></header>
+  <section id="phone-workspace" hidden aria-label="虚拟手机工作区" data-i18n-aria="workspaceLabel">
+    <div class="workspace-bar"><button id="phone-return" data-i18n="returnList">← 手机列表</button><h2 id="phone-workspace-title"></h2>
+      <span id="phone-connection" role="status"></span><span id="phone-audio-status" role="status" hidden></span><button id="phone-retry" hidden data-i18n="reconnect">重新连接</button>
+      <button id="phone-camera-indicator" hidden>摄像头 · 图片</button></div>
+    <p id="phone-rom-description" class="workspace-hint"></p>
+    <div class="workspace-body"><div id="phone-stage" class="phone-stage">
+      <video id="phone-video" autoplay muted playsinline tabindex="0" aria-label="手机画面；点击后可使用键盘" data-i18n-aria="screenLabel"></video>
+      <audio id="phone-audio" autoplay></audio><button id="phone-enable-audio" hidden data-i18n="enableAudio">开启声音</button>
+    </div><nav class="phone-controls" aria-label="手机控制" data-i18n-aria="controlsLabel">
+      <button data-phone-control="back" data-i18n="androidBack">返回</button><button data-phone-control="home" data-i18n="androidHome">主页</button>
+      <button data-phone-control="menu" data-i18n="androidRecent">最近应用</button><button data-phone-control="volumeup" data-i18n="volumeUp">音量＋</button>
+      <button data-phone-control="volumedown" data-i18n="volumeDown">音量－</button><button id="phone-fullscreen" data-i18n="fullscreen">全屏</button>
+    </nav><aside class="phone-tool-panel" aria-label="手机工具" data-i18n-aria="toolsTitle">
+      <h3 data-i18n="toolsTitle">手机工具</h3>
+      <button id="phone-open-camera" data-i18n="cameraTitle">虚拟摄像头</button>
+      <button id="phone-open-files" data-i18n="filesTitle">文件与 APK</button>
+      <button id="phone-open-diagnostics" data-i18n="statsTitle">连接状态</button>
+      <details id="phone-workspace-more"><summary data-i18n="more">更多</summary><div class="phone-advanced-tools"><button id="phone-open-adb" data-i18n="debugTitle">ADB 调试</button><div id="phone-system-details" class="system-details"><strong data-i18n="romTechnical">系统详情</strong><p id="phone-rom-technical"></p></div></div></details>
+    </aside><aside id="phone-diagnostics" hidden aria-label="连接状态" data-i18n-aria="statsTitle"><h3 data-i18n="statsTitle">连接状态</h3><time></time><dl></dl><p data-i18n="statsHint"></p><button id="phone-close-diagnostics" data-i18n="statsClose">收起</button></aside></div><p class="workspace-hint" data-i18n="workspaceHint">关闭页面或返回列表不会关机。需要释放运行额度，请在列表中关机。</p>
+  </section>
+  <div id="notice" class="notice" role="status" hidden></div>
+  <div id="error" class="notice error" role="alert" hidden></div>
+  <div id="uncertain" class="notice" hidden><span data-i18n="uncertain">上次操作的结果尚未确认。重试会继续同一次操作，不会重复创建。</span>
+    <button id="retry" data-i18n="retry">确认上次操作</button></div>
+  <section class="summary" aria-label="手机概况" data-i18n-aria="quotaLabel"><span id="stored"></span><span id="running"></span>
+    <button id="refresh" class="quiet" data-i18n="refresh">刷新</button></section>
+  <section id="phones" class="phones" aria-live="polite"></section>
+  <section id="empty" class="empty" hidden><div class="phone-outline" aria-hidden="true"><span>＋</span></div>
+    <h2 data-i18n="empty">还没有手机</h2><p data-i18n="emptyHint">创建后即可保存应用和文件，每部手机的数据互相独立。</p></section>
+  <p class="footnote" data-i18n="boundary">每部手机独立存储。关闭页面不会关机。</p>
+  <dialog id="editor" aria-labelledby="dialog-title"><form id="edit-form"><h2 id="dialog-title"></h2><p id="dialog-hint"></p>
+    <label id="name-label"><span data-i18n="name">手机名称</span><input id="name" required autocomplete="off"></label>
+    <fieldset id="rom-picker"><legend data-i18n="romTitle">选择手机系统</legend><div id="rom-choices"></div><p data-i18n="romPinned">系统不会自动更换，手机数据独立保存。</p></fieldset>
+    <label id="delete-label" class="confirmation" hidden><input id="confirm-delete" type="checkbox"><span data-i18n="confirm">我确认删除这部手机及其应用、文件和数据。此操作不能撤销。</span></label>
+    <div class="dialog-actions"><button type="button" id="cancel" data-i18n="cancel">取消</button><button id="submit" class="primary" type="submit" data-i18n="save">保存</button></div>
+  </form></dialog>
+  <dialog id="phone-camera-dialog" aria-labelledby="phone-camera-title">
+    <div class="camera-heading"><h2 id="phone-camera-title" data-camera-label="title">虚拟摄像头</h2><span id="phone-camera-state" role="status"></span></div>
+    <p id="phone-camera-hint" data-camera-label="hint"></p><p id="phone-camera-unavailable" data-camera-label="unavailable"></p>
+    <section id="phone-camera-config" hidden>
+      <div id="phone-camera-source-tabs" class="camera-source-tabs" role="group" aria-label="摄像头来源" data-i18n-aria="cameraSourceLabel" hidden><button id="phone-camera-tab-image" aria-pressed="true" data-camera-label="imageTab">图片</button><button id="phone-camera-tab-browser" aria-pressed="false" data-camera-label="browserTab">浏览器摄像头</button><button id="phone-camera-tab-video" aria-pressed="false" data-camera-label="videoTab" hidden>视频文件</button><button id="phone-camera-tab-usb" aria-pressed="false" data-camera-label="usbTab" hidden>盒子 USB 摄像头</button><button id="phone-camera-tab-udp" aria-pressed="false" data-camera-label="udpTab" hidden>网络推流</button></div>
+      <section id="phone-camera-udp-panel" hidden>
+        <p data-camera-label="udpHint"></p>
+        <label for="phone-camera-udp-source" data-camera-label="udpChoose">请选择入口</label>
+        <select id="phone-camera-udp-source"><option value="" data-camera-label="udpChoose">请选择入口</option></select>
+        <button id="phone-camera-udp-refresh" data-camera-label="refresh">刷新状态</button>
+        <p id="phone-camera-udp-empty" class="footnote" data-camera-label="udpEmpty" hidden></p>
+        <p id="phone-camera-udp-address"></p>
+        <label class="camera-consent"><input id="phone-camera-udp-consent" type="checkbox"><span data-camera-label="udpConsent"></span></label>
+        <p class="footnote" data-camera-label="udpPrivacy"></p>
+        <button id="phone-camera-udp-start" class="primary" data-camera-label="udpStart">开始接收</button>
+      </section>
+      <section id="phone-camera-image-panel">
+      <label><span data-camera-label="choose">选择图片</span><input id="phone-camera-input" type="file" accept="image/jpeg,image/png,image/webp"></label><small data-camera-label="formats"></small>
+      <label class="confirmation"><input id="phone-camera-consent" type="checkbox"><span data-camera-label="consent"></span></label>
+      <label id="phone-camera-loop-label" class="confirmation" hidden><input id="phone-camera-loop" type="checkbox"><span data-camera-label="videoLoop">循环播放；不勾选时，播放结束后清空相机画面。</span></label>
+      <small data-camera-label="output"></small><p class="footnote" data-camera-label="privacy"></p>
+      <div class="dialog-actions"><button id="phone-camera-start" class="primary" disabled data-camera-label="start">使用这张图片</button></div>
+      </section>
+      <section id="phone-camera-browser-panel" hidden><p data-camera-label="browserHint"></p><video id="phone-camera-local-preview" autoplay muted playsinline aria-label="本机摄像头预览" data-i18n-aria="cameraPreviewLabel" hidden></video><small data-camera-label="output"></small><p class="footnote" data-camera-label="browserPrivacy"></p><button id="phone-camera-browser-start" class="primary" data-camera-label="browserStart">开启本机摄像头</button></section>
+      <section id="phone-camera-usb-panel" hidden>
+        <p data-camera-label="usbHint"></p>
+        <div id="phone-camera-usb-picker">
+        <label for="phone-camera-usb-device" data-camera-label="usbDevice">选择摄像头</label>
+        <select id="phone-camera-usb-device"><option value="" data-camera-label="usbChoose">请选择设备</option></select>
+        <button id="phone-camera-usb-refresh" data-camera-label="usbRefresh">刷新设备</button>
+        <p id="phone-camera-usb-empty" class="footnote" data-camera-label="usbEmpty" hidden></p>
+        <label class="camera-consent"><input id="phone-camera-usb-consent" type="checkbox"><span data-camera-label="usbConsent"></span></label>
+        </div>
+        <p class="footnote" data-camera-label="usbPrivacy"></p>
+        <button id="phone-camera-usb-start" class="primary" data-camera-label="usbStart">使用这台摄像头</button>
+      </section>
+      <div class="dialog-actions"><button id="phone-camera-stop" class="danger" hidden data-camera-label="stop">关闭摄像头输入</button></div>
+    </section>
+    <p id="phone-camera-status" role="status"></p><button id="phone-camera-cancel" hidden data-camera-label="cancel">取消准备</button>
+    <div class="dialog-actions"><button id="phone-camera-refresh" data-camera-label="refresh">刷新状态</button><button id="phone-camera-close" data-camera-label="close">返回手机</button></div>
+  </dialog>
+  <dialog id="phone-files-dialog" aria-labelledby="phone-files-title">
+    <h2 id="phone-files-title" data-file-label="title">文件与 APK</h2><p data-file-label="hint"></p>
+    <label><span data-file-label="choose">选择文件</span><input type="file" id="phone-file-input"></label>
+    <div class="dialog-actions"><button id="phone-file-upload" data-file-operation data-file-label="upload">传入文件</button><button id="phone-file-install" data-file-operation data-file-label="install">安装 APK</button></div>
+    <section id="phone-install-confirmation" hidden aria-labelledby="phone-install-prompt">
+      <p id="phone-install-prompt" data-file-label="confirm">将这个 APK 安装到当前手机？只安装你信任的应用。</p>
+      <p id="phone-install-name"></p>
+      <div class="dialog-actions"><button id="phone-install-no" data-file-label="declineInstall">取消安装</button><button id="phone-install-yes" data-file-label="confirmInstall">确认安装</button></div>
+    </section>
+    <p id="phone-file-status" role="status"></p><button id="phone-file-cancel" hidden data-file-label="cancel">取消传输</button>
+    <div id="phone-file-list"></div><div class="dialog-actions"><button id="phone-file-refresh" data-file-operation data-file-label="refresh">刷新文件</button><button id="phone-file-close" data-file-label="close">返回手机</button></div>
+  </dialog>
+  <dialog id="phone-adb-dialog" aria-labelledby="phone-adb-title">
+    <h2 id="phone-adb-title" data-i18n="debugTitle">ADB 调试</h2>
+    <p data-i18n="debugHint">仅连接当前手机，不开放宿主或其他手机。最多 15 分钟，退出登录、关闭调试或到期即断开。</p>
+    <p id="phone-adb-status" role="status"></p>
+    <button id="phone-adb-enable" class="primary" data-i18n="debugEnable">开启 15 分钟</button>
+    <section id="phone-adb-issued" hidden>
+      <ol class="debug-steps"><li><span data-i18n="debugDownload">下载转接工具，在装有 Node.js 24 和标准 adb 的电脑上运行。电脑需信任盒子证书。</span>
+        <a href="/plugins/official.virtual-phones/phone-adb-cli.mjs" download="phone-adb-cli.mjs" data-i18n="debugTool">下载连接工具</a>
+        <a href="/plugins/official.virtual-phones/phone-adb-NOTICE.txt" download data-i18n="debugNotice">开源说明</a></li>
+        <li><span data-i18n="debugRun">在下载目录执行下面的命令。命令不含连接码。</span><pre id="phone-adb-command" tabindex="0"></pre></li>
+        <li><span data-i18n="debugPaste">终端询问时粘贴一次连接码；随后按终端提示执行 adb connect。</span>
+          <div id="phone-adb-secret" hidden><label><span data-i18n="debugCode">一次连接码（60 秒内使用）</span><input id="phone-adb-token" type="password" readonly autocomplete="off" spellcheck="false"></label>
+          <button id="phone-adb-copy" data-i18n="debugCopy">复制连接码</button></div>
+          <p id="phone-adb-code-expired" hidden data-i18n="debugCodeExpired">连接码已过期。已经建立的调试可继续到授权结束；尚未连接请先关闭，再重新开启。</p></li></ol>
+    </section>
+    <div class="dialog-actions"><button id="phone-adb-disable" class="danger" hidden data-i18n="debugDisable">关闭调试</button><button id="phone-adb-dismiss" data-i18n="debugDismiss">返回手机</button></div>
+  </dialog>
+</main></body></html>

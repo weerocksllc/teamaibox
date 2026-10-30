@@ -1,0 +1,7 @@
+**
+!services/
+!services/trusted_media_service/
+!services/trusted_media_service/webrtc_media_output.py
+!deploy/
+!deploy/casting/
+!deploy/casting/TrustedMediaTrackStart.arm64.Dockerfile

@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.teamaibox.local/objects/object-list.v1.schema.json",
+  "x-teamaibox-contract": {"family": "object", "role": "response", "major": 1},
+  "title": "Protected object list v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["object", "data", "next_after"],
+  "properties": {
+    "object": {"const": "list"},
+    "data": {"type": "array", "maxItems": 200, "items": {"$ref": "browser-upload-result.v1.schema.json#/$defs/objectVersion"}},
+    "next_after": {"type": ["string", "null"], "maxLength": 2048}
+  }
+}

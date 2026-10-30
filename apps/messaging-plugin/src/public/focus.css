@@ -1,0 +1,1 @@
+:is(button,a[href],input,textarea,select,[tabindex]):focus-visible{outline:3px solid var(--teamaibox-focus,var(--accent))!important;outline-offset:2px!important}

@@ -1,0 +1,10 @@
+DROP TABLE IF EXISTS platform.messaging_presence_connections;
+DROP TABLE IF EXISTS platform.messaging_presence;
+DROP TABLE IF EXISTS platform.messaging_events;
+DROP TABLE IF EXISTS platform.messaging_notifications;
+DROP TABLE IF EXISTS platform.messaging_delivery_receipts;
+DROP TABLE IF EXISTS platform.messaging_attachments;
+DROP TABLE IF EXISTS platform.messaging_messages;
+DROP TABLE IF EXISTS platform.messaging_participants;
+DROP TRIGGER IF EXISTS messaging_conversations_touch_updated_at ON platform.messaging_conversations;
+DROP TABLE IF EXISTS platform.messaging_conversations;

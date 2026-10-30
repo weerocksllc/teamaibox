@@ -1,0 +1,53 @@
+name: teamaibox-browser-runner-canary
+x-canary: &canary
+  image: ${TEAMAIBOX_BROWSER_CANARY_IMAGE:?set measured ARM64 image ID}
+  platform: linux/arm64/v8
+  init: true
+  read_only: true
+  user: "10001:10001"
+  cap_drop: [ALL]
+  security_opt: [no-new-privileges:true]
+  pids_limit: 64
+  mem_limit: 128m
+  mem_reservation: 32m
+  cpus: 0.25
+  tmpfs: ["/tmp:rw,noexec,nosuid,nodev,size=16m"]
+  volumes: [browser_canary_state:/var/lib/teamaibox-browser-canary]
+  networks: [canary]
+  labels:
+    com.teamaibox.managed: "true"
+    com.teamaibox.feature: integration.local-identity
+    com.teamaibox.validation-class: browser-runner-canary
+services:
+  state-init:
+    <<: *canary
+    user: "0:0"
+    cap_add: [CHOWN]
+    restart: "no"
+    command: [chown, -R, "10001:10001", /var/lib/teamaibox-browser-canary]
+  state:
+    <<: *canary
+    restart: unless-stopped
+    command: [node, state-service.mjs]
+    depends_on: {state-init: {condition: service_completed_successfully}}
+    healthcheck:
+      test: [CMD, node, -e, "fetch('http://127.0.0.1:8081/health/ready').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 2s
+      timeout: 1s
+      retries: 20
+      start_period: 2s
+  browser-canary:
+    <<: *canary
+    restart: unless-stopped
+    depends_on: {state: {condition: service_healthy}}
+    ports: ["${BROWSER_CANARY_BIND_ADDRESS:-127.0.0.1}:${BROWSER_CANARY_PUBLIC_PORT:-18082}:8080"]
+    healthcheck:
+      test: [CMD, node, -e, "fetch('http://127.0.0.1:8080/health/ready').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 2s
+      timeout: 1s
+      retries: 20
+      start_period: 2s
+networks:
+  canary:
+volumes:
+  browser_canary_state:

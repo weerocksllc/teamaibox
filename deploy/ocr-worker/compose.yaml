@@ -1,0 +1,190 @@
+name: teamaibox-ocr-worker
+
+x-runtime: &runtime
+  platform: linux/arm64/v8
+  init: true
+  restart: unless-stopped
+  read_only: true
+  cap_drop: [ALL]
+  security_opt: [no-new-privileges:true]
+  labels:
+    com.teamaibox.managed: "true"
+    com.teamaibox.component: ocr-worker
+    com.teamaibox.model: PaddleOCR-VL-1.5
+
+services:
+  model-fetcher:
+    platform: linux/arm64/v8
+    image: ${TEAMAIBOX_OCR_ADAPTER_IMAGE:?set the exact ARM64 adapter image}
+    user: root
+    init: true
+    restart: "no"
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    network_mode: host
+    environment:
+      TEAMAIBOX_OCR_MODEL_REPOSITORY: PaddlePaddle/PaddleOCR-VL-1.5
+      TEAMAIBOX_OCR_MODEL_REVISION: df2b114327c857f4db801d3d5b6741ad9a24fcd1
+      TEAMAIBOX_OCR_MODEL_ROOT: /models/paddleocr-vl-1.5
+    entrypoint: [python, /opt/teamaibox/ocr-worker/download_model.py]
+    command: []
+    volumes:
+      - ocr_model:/models
+    tmpfs:
+      - /tmp:size=1g,mode=1770
+    mem_limit: 2g
+    cpus: 2
+    pids_limit: 128
+    labels:
+      com.teamaibox.managed: "true"
+      com.teamaibox.component: ocr-model-fetcher
+      com.teamaibox.model: PaddleOCR-VL-1.5
+
+  layout-model-fetcher:
+    platform: linux/arm64/v8
+    image: ${TEAMAIBOX_OCR_ADAPTER_IMAGE:?set the exact ARM64 adapter image}
+    user: root
+    init: true
+    restart: "no"
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    network_mode: host
+    environment:
+      TEAMAIBOX_OCR_LAYOUT_MODEL_ROOT: /models/pp-doclayout-v3
+    entrypoint: [python, /opt/teamaibox/ocr-worker/download_layout_model.py]
+    command: []
+    volumes:
+      - ocr_layout_model:/models
+    tmpfs:
+      - /tmp:size=512m,mode=1770
+    mem_limit: 2g
+    cpus: 2
+    pids_limit: 128
+    labels:
+      com.teamaibox.managed: "true"
+      com.teamaibox.component: ocr-layout-model-fetcher
+      com.teamaibox.model: PP-DocLayoutV3
+
+  vlm:
+    <<: *runtime
+    image: nvcr.io/nvidia/vllm@sha256:9204569b17ee4c0eff75194b8e6e458479c8aee18953b5ab9cf359fcdac659e2
+    # The pinned NVIDIA image provides an unprivileged `ubuntu` account.  vLLM
+    # starts an architecture-inspection subprocess which resolves the current
+    # UID through /etc/passwd, so an arbitrary numeric UID cannot be used here.
+    user: "1000:1000"
+    environment:
+      HOME: /tmp/vllm
+      HF_HOME: /tmp/vllm/huggingface
+      HF_HUB_DISABLE_TELEMETRY: "1"
+      TRANSFORMERS_OFFLINE: "1"
+      HF_HUB_OFFLINE: "1"
+      XDG_CACHE_HOME: /tmp/vllm/cache
+      TORCHINDUCTOR_CACHE_DIR: /tmp/vllm/inductor
+      VLLM_CACHE_ROOT: /tmp/vllm/cache
+    command:
+      - vllm
+      - serve
+      - /models/paddleocr-vl-1.5
+      - --served-model-name
+      - PaddleOCR-VL-1.5-0.9B
+      - --trust-remote-code
+      - --host
+      - 0.0.0.0
+      - --port
+      - "8000"
+      - --dtype
+      - bfloat16
+      - --max-model-len
+      - "16384"
+      - --max-num-batched-tokens
+      - "8192"
+      - --max-num-seqs
+      - "1"
+      # Unified memory is shared with every other application.  The default
+      # vLLM ratio would reserve almost the whole 128 GiB box for a 0.9B model.
+      - --gpu-memory-utilization
+      - "0.16"
+      - --no-enable-prefix-caching
+      - --mm-processor-cache-gb
+      - "0"
+    volumes:
+      - ocr_model:/models:ro
+    tmpfs:
+      # Triton compiles and loads a small CUDA helper from its cache.  The
+      # cache therefore needs executable mappings even though the image root
+      # filesystem stays read-only and all Linux capabilities remain dropped.
+      - /tmp:size=16g,exec,uid=1000,gid=1000,mode=1770
+    networks: [runtime]
+    shm_size: 32g
+    mem_limit: 72g
+    cpus: 12
+    pids_limit: 2048
+    ulimits:
+      memlock: {soft: -1, hard: -1}
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    healthcheck:
+      test: [CMD-SHELL, "curl --fail --silent http://127.0.0.1:8000/health >/dev/null"]
+      interval: 10s
+      timeout: 5s
+      retries: 90
+      start_period: 600s
+    depends_on:
+      model-fetcher: {condition: service_completed_successfully}
+
+  adapter:
+    <<: *runtime
+    image: ${TEAMAIBOX_OCR_ADAPTER_IMAGE:?set the exact ARM64 adapter image}
+    user: "10001:10001"
+    environment:
+      TEAMAIBOX_OCR_SERVED_MODEL: PaddleOCR-VL-1.5-0.9B
+      TEAMAIBOX_OCR_MODEL_REVISION: df2b114327c857f4db801d3d5b6741ad9a24fcd1
+      TEAMAIBOX_OCR_MODEL_ROOT: /models/paddleocr-vl-1.5
+      TEAMAIBOX_OCR_VLLM_ORIGIN: http://vlm:8000
+      TEAMAIBOX_OCR_LAYOUT_MODEL_ROOT: /layout-model/pp-doclayout-v3
+      TEAMAIBOX_OCR_LAYOUT_MODEL_REVISION: 9027d49d3764d465c3d7c4e8506910fb8d9c1498
+      TEAMAIBOX_OCR_LAYOUT_THREADS: "4"
+      TEAMAIBOX_OCR_LAYOUT_THRESHOLD: "0.3"
+    volumes:
+      - ocr_model:/models:ro
+      - ocr_layout_model:/layout-model:ro
+    tmpfs:
+      - /tmp:size=4g,uid=10001,gid=10001,mode=1770
+    networks: [runtime, edge]
+    ports:
+      - target: 8000
+        published: ${TEAMAIBOX_OCR_PORT:-18082}
+        host_ip: ${TEAMAIBOX_OCR_BIND_ADDRESS:-127.0.0.1}
+        protocol: tcp
+    mem_limit: 6g
+    cpus: 4
+    pids_limit: 512
+    healthcheck:
+      test: [CMD, python, -c, "import json,urllib.request; v=json.load(urllib.request.urlopen('http://127.0.0.1:8000/health',timeout=2)); raise SystemExit(0 if v.get('accepting') else 1)"]
+      interval: 10s
+      timeout: 5s
+      retries: 60
+      start_period: 600s
+    depends_on:
+      vlm: {condition: service_healthy}
+      layout-model-fetcher: {condition: service_completed_successfully}
+
+networks:
+  runtime:
+    internal: true
+  edge: {}
+
+volumes:
+  ocr_model:
+    external: true
+    name: teamaibox-ocr-vl15-model
+  ocr_layout_model:
+    external: true
+    name: teamaibox-ocr-layout-v3-model

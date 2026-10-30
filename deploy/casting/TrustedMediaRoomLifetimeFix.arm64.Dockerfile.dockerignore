@@ -1,0 +1,5 @@
+**
+!services
+!services/trusted_media_service
+!services/trusted_media_service/livekit_room_control.py
+!services/trusted_media_service/livekit_browser_sink.py

@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "policyId": "maintenance.luks2-production-migration.v1",
+  "runbook": "docs/operations/luks2-production-migration-runbook.md",
+  "scope": "active appliance data volume",
+  "executionAllowed": false,
+  "humanReviewRequired": true,
+  "reviewStatus": "pending",
+  "runbookReview": null,
+  "requiredApprovals": ["migration_owner", "independent_reviewer", "backup_restore_operator", "console_recovery_operator"],
+  "requiredEvidence": ["appliance_specific_plan_digest", "hardware_inventory_digest", "independent_backup_manifest", "restore_rehearsal", "offline_recovery_factor_test", "luks_header_backup", "boot_recovery_media_test", "power_and_ups_readiness", "rollback_rehearsal"],
+  "forbiddenTargets": ["active_root", "efi", "boot", "recovery", "swap", "unresolved_device_path", "sole_data_copy"],
+  "developmentSparkApproved": false,
+  "approval": null
+}

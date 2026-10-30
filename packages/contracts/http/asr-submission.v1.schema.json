@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.teamaibox.local/http/asr-submission.v1.schema.json",
+  "x-teamaibox-contract": {"family": "http", "role": "request", "major": 1},
+  "title": "Queued speech transcription submission v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["input"],
+  "properties": {
+    "model": {"type": ["string", "null"], "minLength": 1, "maxLength": 512},
+    "input": {"type": "object", "additionalProperties": false, "required": ["reference_id"], "properties": {"reference_id": {"type": "string", "format": "uuid"}}},
+    "language": {"type": ["string", "null"], "pattern": "^[A-Za-z]{2,8}(?:-[A-Za-z0-9]{1,8})*$"},
+    "output_format": {"enum": ["json", "text", "srt", "vtt"], "default": "json"},
+    "timestamp_granularities": {"type": "array", "minItems": 1, "maxItems": 2, "uniqueItems": true, "items": {"enum": ["segment", "word"]}, "default": ["segment"]},
+    "speaker_information": {"type": "boolean", "default": false},
+    "x_teamaibox": {"$ref": "../openai/request-extension.v1.schema.json"}
+  }
+}

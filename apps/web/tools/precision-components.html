@@ -1,0 +1,16 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Precision Workspace · 组件预览</title>
+<link rel="stylesheet" href="/plugins/official.ocr/ui-system.css">
+<style>
+body{font-family:var(--font-ui);max-width:1120px;margin:auto;padding:32px}header{display:flex;align-items:center;justify-content:space-between;gap:24px;margin-bottom:24px}h1{font-size:28px;margin:0}h2{font-size:20px;margin:0 0 20px}p{color:var(--text-muted)}main{display:grid;grid-template-columns:1fr 1fr;gap:24px}.row{display:flex;gap:12px;flex-wrap:wrap}.ui-field+.ui-field{margin-top:20px}.swatch{height:56px;border:1px solid var(--border);border-radius:8px;padding:16px;background:var(--selected-surface);color:var(--selected-text)}dialog{border:1px solid var(--border);border-radius:16px;background:var(--surface);color:var(--text);padding:24px;width:min(480px,calc(100vw - 32px))}dialog::backdrop{background:var(--overlay)}@media(max-width:700px){body{padding:20px}main{grid-template-columns:1fr}header{align-items:start;flex-direction:column}}
+</style></head><body>
+<header><div><p>仅 UI 组件 · 不连接设备</p><h1>Precision Workspace</h1></div><button class="ui-button" id="theme">切换深浅主题</button></header>
+<main>
+<section class="ui-panel"><h2>操作与状态</h2><div class="row"><button class="ui-button ui-button--primary">主要操作</button><button class="ui-button">次要操作</button><button class="ui-button" disabled aria-busy="true">处理中…</button><button class="ui-button ui-button--danger" id="confirm">删除确认</button></div><p>正常、等待和异常都有文字说明，不只依赖颜色。</p><div class="row"><span class="ui-status ui-status--success">已完成</span><span class="ui-status ui-status--warning">等待处理</span><span class="ui-status ui-status--error">连接中断</span></div></section>
+<section class="ui-panel"><h2>表单与键盘焦点</h2><div class="ui-field"><label class="ui-field__label" for="name">手机名称</label><input id="name" placeholder="我的工作手机" aria-describedby="hint"><p class="ui-field__hint" id="hint">关闭页面不会关机。</p></div><div class="ui-field"><label class="ui-field__label" for="invalid">必填项</label><input id="invalid" aria-invalid="true" aria-describedby="error"><p class="ui-field__error" id="error">请输入名称。</p></div></section>
+<section class="ui-panel"><h2>内容层级</h2><p>中文正文与 English content 使用相同的语义层级。字号、留白和边框统一，媒体内容不受主题影响。</p><div class="swatch">选中状态 / Selected</div><p><code>Technical details remain secondary.</code></p></section>
+<section class="ui-panel ui-empty"><h2>还没有文件</h2><p>上传文件，或将应用生成的结果保存到这里。</p><button class="ui-button ui-button--primary">上传文件</button></section>
+</main>
+<dialog id="dialog" aria-labelledby="confirm-title"><h2 id="confirm-title">删除示例项目？</h2><p>这是展示用确认框，不会删除任何实际数据。</p><form method="dialog" class="row"><button class="ui-button" autofocus>取消</button><button class="ui-button ui-button--danger">确认删除</button></form></dialog>
+<script>document.querySelector('#theme').onclick=()=>{document.documentElement.dataset.theme=document.documentElement.dataset.theme==='dark'?'light':'dark'};document.querySelector('#confirm').onclick=()=>document.querySelector('#dialog').showModal();</script>
+</body></html>

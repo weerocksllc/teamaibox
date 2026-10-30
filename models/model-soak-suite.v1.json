@@ -1,0 +1,44 @@
+{
+  "schemaVersion": 1,
+  "suiteId": "model.initial-certification-soak.v1",
+  "faultSuiteDigest": "sha256:28c00c66f93c48f1dcee7fe2ef6cb1d3004aa86ef95b45e914dd01b172b5e2d4",
+  "profiles": [
+    {
+      "profileKey": "llm.qwen36-35b-a3b.bf16.spark-reference-32k.v1",
+      "selection": "not_selected_for_initial_certification",
+      "reason": "High-precision reference retained only 157081600 bytes above the core-service reserve in the worst fault-stage cold-load sample."
+    },
+    {
+      "profileKey": "llm.qwen36-35b-a3b.nvfp4.spark-32k.v1",
+      "selection": "initial_certification_candidate",
+      "riskClasses": [
+        "critical_local_llm",
+        "high_unified_memory",
+        "nvfp4"
+      ],
+      "requiredDurationSeconds": 86400
+    }
+  ],
+  "workload": {
+    "requestIntervalSeconds": 5,
+    "sampleIntervalSeconds": 60,
+    "longEveryJobs": 12,
+    "maximumConcurrency": 2,
+    "deterministicSeed": 1337,
+    "retainPromptOrOutputText": false
+  },
+  "acceptance": {
+    "minimumDurationSeconds": 86400,
+    "maximumFailedJobs": 0,
+    "maximumLostJobs": 0,
+    "maximumDuplicateProviderResponses": 0,
+    "maximumHealthFailures": 0,
+    "minimumHostAvailableMemoryBytes": 12884901888,
+    "maximumMemoryGrowthBytes": 4294967296,
+    "maximumLinearMemoryGrowthBytesPerHour": 536870912,
+    "maximumTemperatureCelsius": 90,
+    "maximumThroughputDegradationFraction": 0.2,
+    "maximumLatencyIncreaseFraction": 0.5,
+    "maximumWorkerCrashes": 0
+  }
+}

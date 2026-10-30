@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.teamaibox.local/objects/browser-upload-result.v1.schema.json",
+  "x-teamaibox-contract": {"family": "object", "role": "response", "major": 1},
+  "title": "Protected browser upload result v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["object", "reference_id", "reference_expires_at"],
+  "properties": {
+    "object": {"$ref": "#/$defs/objectVersion"},
+    "reference_id": {"type": "string", "format": "uuid"},
+    "reference_expires_at": {"type": "string", "format": "date-time"}
+  },
+  "$defs": {
+    "objectVersion": {
+      "type": "object", "additionalProperties": false,
+      "required": ["objectId", "namespaceKey", "objectKey", "version", "size", "contentType", "integrity", "createdAt", "deletedAt"],
+      "properties": {
+        "objectId": {"type": "string", "format": "uuid"},
+        "namespaceKey": {"type": "string", "pattern": "^(?:tenant|user|team):[a-z0-9][a-z0-9._-]{0,184}$"},
+        "objectKey": {"type": "string", "minLength": 1, "maxLength": 1024},
+        "version": {"type": "integer", "minimum": 1},
+        "size": {"type": "integer", "minimum": 1},
+        "contentType": {"type": "string", "minLength": 3, "maxLength": 255},
+        "integrity": {"type": "object", "additionalProperties": false, "required": ["algorithm", "digest"], "properties": {"algorithm": {"const": "sha256"}, "digest": {"type": "string", "pattern": "^[a-f0-9]{64}$"}}},
+        "createdAt": {"type": "string", "format": "date-time"},
+        "deletedAt": {"type": ["string", "null"], "format": "date-time"}
+      }
+    }
+  }
+}

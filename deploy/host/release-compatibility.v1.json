@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "hardware": "NVIDIA GB10",
+  "combinations": [
+    {
+      "architecture": "aarch64",
+      "os": {"id": "ubuntu", "versionId": "24.04"},
+      "kernelRelease": "6.17.0-1026-nvidia",
+      "foundation": {"docker": "28.3.3", "nvidiaContainerToolkit": "1.17.8-1", "nvidiaDriver": "580.159.03"}
+    }
+  ]
+}

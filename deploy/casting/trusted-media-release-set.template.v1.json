@@ -1,0 +1,470 @@
+{
+  "schemaVersion": 1,
+  "manifestId": "teamaibox.trusted-media-release-set.template.v1",
+  "architecture": "linux/arm64/v8",
+  "status": "component-template-blocked",
+  "bindings": {
+    "package": {
+      "path": "deploy/casting/trusted-media-service.package.v1.json",
+      "sha256": "sha256:78bdfa399c4fe354e49f387a70b5f576dc6315e5b0128eba18da1e759570601e"
+    },
+    "runtimePolicy": {
+      "path": "deploy/casting/trusted-media-runtime-policy.v1.json",
+      "sha256": "sha256:30ece7eaaba68c1e3320a20dcc282617fb8000b575a31235b15e86084f207d08"
+    },
+    "seccomp": {
+      "path": "deploy/casting/trusted-media-seccomp.v1.json",
+      "sha256": "sha256:06e0d54fff2b427b6445f33c982759adeab01ded17fba18b42429765783cd374"
+    },
+    "hostExceptions": {
+      "path": "deploy/casting/trusted-media-host-exceptions.v1.json",
+      "sha256": "sha256:18b4081cc6bf08c1bcadd8f5f2ebbb896385f05eb38080dd4d286e329ed4bfb5"
+    },
+    "officialApplicationPlugin": {
+      "path": "apps/wireless-casting-plugin/manifest.release-template.json",
+      "sha256": "sha256:ac94a2b0ecd9bf2838f355ae12914eaafc90281875a5dd69b3b7fc01e4f5ccb3"
+    }
+  },
+  "buildContract": {
+    "mode": "controlled-offline-rootfs",
+    "dockerfile": "deploy/casting/TrustedMediaService.arm64.Dockerfile",
+    "buildContext": "deploy/casting/trusted-media-service-rootfs",
+    "buildNetwork": "none",
+    "runtimeBase": "scratch",
+    "sourceDateEpochRequired": true,
+    "twoIndependentArm64BuildsRequired": true,
+    "matchingOciManifestDigestsRequired": true,
+    "rootfsManifestDigest": null,
+    "trustedMediaImageDigest": null,
+    "twoIndependentBuildDigests": [],
+    "observedGstreamerElements": [],
+    "observedForbiddenGstreamerElements": [],
+    "requiredExecutables": [
+      "/opt/teamaibox/bin/media-health",
+      "/opt/teamaibox/bin/teamaibox-media-supervisor",
+      "/usr/bin/gst-inspect-1.0",
+      "/usr/bin/gst-launch-1.0",
+      "/usr/bin/uxplay"
+    ],
+    "requiredGstreamerElements": [
+      "appsrc",
+      "audioconvert",
+      "audioresample",
+      "avdec_aac",
+      "avdec_alac",
+      "avdec_h264",
+      "decodebin",
+      "h264parse",
+      "livekitwebrtcsink",
+      "nvh264dec",
+      "opusenc",
+      "rtpopuspay",
+      "rtpvp8pay",
+      "videoconvert",
+      "videoscale",
+      "vp8enc",
+      "webrtcbin"
+    ],
+    "forbiddenRuntimePrograms": [
+      "/bin/bash",
+      "/bin/sh",
+      "/usr/bin/apt",
+      "/usr/bin/curl",
+      "/usr/bin/dpkg",
+      "/usr/bin/git",
+      "/usr/bin/wget"
+    ],
+    "forbiddenGstreamerElements": [
+      "avenc_h264",
+      "fdkaacdec",
+      "fdkaacenc",
+      "openh264dec",
+      "openh264enc",
+      "x264enc",
+      "x265enc"
+    ]
+  },
+  "services": {
+    "trustedMedia": {
+      "imageDigest": null,
+      "entrypoint": [
+        "/opt/teamaibox/bin/teamaibox-media-supervisor"
+      ],
+      "user": "65532:65532",
+      "readOnlyRootFilesystem": true,
+      "noNewPrivileges": true,
+      "privileged": false,
+      "network": {
+        "mode": "host",
+        "exceptionKey": "trusted-media.host-network",
+        "advertiseOnlyDuringAdmittedSession": true,
+        "sameLayer2Only": true
+      },
+      "security": {
+        "capDrop": [
+          "ALL"
+        ],
+        "capAdd": [],
+        "seccompProfile": "deploy/casting/trusted-media-seccomp.v1.json",
+        "apparmorProfileRequired": true,
+        "dockerSocketMounted": false,
+        "hostPid": false,
+        "hostIpc": false,
+        "hostDbusMounted": false,
+        "hostFilesystemMounted": false,
+        "hostDisplaySocketMounted": false
+      },
+      "deviceAllowlist": [
+        {
+          "path": "/dev/dri/card0",
+          "access": "rwm",
+          "exceptionKey": "trusted-media.drm-render-devices"
+        },
+        {
+          "path": "/dev/dri/renderD128",
+          "access": "rwm",
+          "exceptionKey": "trusted-media.drm-render-devices"
+        },
+        {
+          "path": "/dev/snd/controlC0",
+          "access": "rw",
+          "exceptionKey": "trusted-media.hdmi-audio-devices"
+        },
+        {
+          "path": "/dev/snd/pcmC0D3p",
+          "access": "rw",
+          "exceptionKey": "trusted-media.hdmi-audio-devices"
+        },
+        {
+          "path": "/dev/snd/pcmC0D7p",
+          "access": "rw",
+          "exceptionKey": "trusted-media.hdmi-audio-devices"
+        },
+        {
+          "path": "/dev/snd/pcmC0D8p",
+          "access": "rw",
+          "exceptionKey": "trusted-media.hdmi-audio-devices"
+        },
+        {
+          "path": "/dev/snd/pcmC0D9p",
+          "access": "rw",
+          "exceptionKey": "trusted-media.hdmi-audio-devices"
+        }
+      ],
+      "devices": [],
+      "deviceSelection": {
+        "fixed": [
+          "/dev/dri/card0",
+          "/dev/dri/renderD128",
+          "/dev/snd/controlC0"
+        ],
+        "hdmiPlaybackAllowlist": [
+          "/dev/snd/pcmC0D3p",
+          "/dev/snd/pcmC0D7p",
+          "/dev/snd/pcmC0D8p",
+          "/dev/snd/pcmC0D9p"
+        ],
+        "selectedHdmiPlayback": null,
+        "exactlyOneHdmiPlaybackRequired": true
+      },
+      "nvidia": {
+        "driverCapabilities": [
+          "utility",
+          "video"
+        ],
+        "deviceNodes": [
+          "/dev/nvidia0",
+          "/dev/nvidiactl"
+        ],
+        "computeCapabilityRequested": false,
+        "broadDeviceMountForbidden": true
+      },
+      "tmpfs": {
+        "/run/teamaibox": "rw,nosuid,nodev,noexec,mode=0700,size=64m",
+        "/tmp": "rw,nosuid,nodev,noexec,mode=0700,size=256m"
+      },
+      "persistentWritableMounts": [],
+      "health": {
+        "command": [
+          "/opt/teamaibox/bin/media-health",
+          "--ready"
+        ],
+        "intervalSeconds": 5,
+        "timeoutSeconds": 2,
+        "startPeriodSeconds": 30,
+        "retries": 6
+      }
+    },
+    "internalSfu": {
+      "imageDigest": "sha256:4eeb7a7af9e133afee7d07fc48623373852a34ad709094345d1761c9b283dc1a",
+      "entrypoint": [
+        "/livekit-server",
+        "--config",
+        "/run/teamaibox/livekit.yaml"
+      ],
+      "user": null,
+      "runAsNonRootRequired": true,
+      "readOnlyRootFilesystem": true,
+      "noNewPrivileges": true,
+      "privileged": false,
+      "network": {
+        "mode": "bridge",
+        "name": "isolated-casting-media-bridge",
+        "control": {
+          "containerPort": 7880,
+          "hostAddress": "127.0.0.1",
+          "hostPort": 7880,
+          "protocol": "tcp"
+        },
+        "rtcTcp": {
+          "containerPort": 7881,
+          "hostAddress": null,
+          "hostPort": 7881,
+          "protocol": "tcp",
+          "approvedSameLayer2AddressRequired": true
+        },
+        "rtcUdp": {
+          "containerPort": 7882,
+          "hostAddress": null,
+          "hostPort": 7882,
+          "protocol": "udp",
+          "approvedSameLayer2AddressRequired": true
+        },
+        "turnEnabled": false,
+        "publicInternetTraversalEnabled": false
+      },
+      "security": {
+        "capDrop": [
+          "ALL"
+        ],
+        "capAdd": [],
+        "seccompProfile": "deploy/casting/trusted-media-seccomp.v1.json",
+        "apparmorProfileRequired": true,
+        "dockerSocketMounted": false,
+        "hostFilesystemMounted": false,
+        "deviceAccess": []
+      },
+      "tmpfs": {
+        "/run/teamaibox": "rw,nosuid,nodev,noexec,mode=0700,size=16m",
+        "/tmp": "rw,nosuid,nodev,noexec,mode=0700,size=128m"
+      },
+      "persistentWritableMounts": [],
+      "health": {
+        "type": "node-agent-tcp-connect",
+        "containerPort": 7880,
+        "intervalSeconds": 5,
+        "timeoutSeconds": 2,
+        "startPeriodSeconds": 30,
+        "retries": 6
+      }
+    }
+  },
+  "mediaContract": {
+    "receiver": "UxPlay 1.73.6",
+    "mediaFramework": "GStreamer 1.28.6",
+    "webrtcPublisher": "gst-plugin-webrtc 0.15.3 livekitwebrtcsink",
+    "sfu": "LiveKit Server 1.13.6",
+    "receiverConfigFile": "/dev/null",
+    "receiverRegistrationState": "/run/teamaibox/uxplay.register",
+    "receiverPrivateKey": "/run/teamaibox/uxplay.pem",
+    "recordingEnabled": false,
+    "hevcEnabled": false,
+    "hlsEnabled": false,
+    "browserVideoCodec": "VP8",
+    "browserAudioCodec": "Opus",
+    "maximumResolution": "1920x1080",
+    "maximumFramesPerSecond": 30,
+    "maximumBrowserViewers": null,
+    "concurrencyAcceptanceViewers": [1, 8],
+    "publisherEncodeRenditions": 1,
+    "browserViewerAuthorization": {
+      "issuer": "trusted-media-service",
+      "implementation": "services/trusted_media_service/viewer_token_issuer.py",
+      "algorithm": "HS256",
+      "tokenTtlSeconds": 30,
+      "tokenState": "memory-only",
+      "oneTimeAdmissionRequired": true,
+      "wssOnly": true,
+      "sessionScopedRoom": true,
+      "subscriberOnly": true,
+      "publishAllowed": false,
+      "dataPublishAllowed": false
+    },
+    "supervisorProcessPolicy": {
+      "shellExecutionAllowed": false,
+      "inheritedUxplayConfigurationAllowed": false,
+      "uxplayrcEnvironmentAllowed": false,
+      "childStdoutPolicy": "discard",
+      "childStderrPolicy": "safe-error-class-only",
+      "fixedArguments": [
+        "-rc",
+        "/dev/null",
+        "-nh",
+        "-m",
+        "-s",
+        "1920x1080",
+        "-fps",
+        "30",
+        "-pin",
+        "-reg",
+        "/run/teamaibox/uxplay.register",
+        "-key",
+        "/run/teamaibox/uxplay.pem"
+      ],
+      "allowedDynamicArguments": [
+        "-n",
+        "-vs",
+        "-as"
+      ],
+      "forbiddenArguments": [
+        "-pw",
+        "-nohold",
+        "-hls",
+        "-mp4",
+        "-h265",
+        "-vdmp",
+        "-admp",
+        "-dacp",
+        "-ca",
+        "-md",
+        "-ble",
+        "-scrsv"
+      ]
+    }
+  },
+  "reservation": {
+    "profileId": "trusted-media-service.arm64.v1",
+    "cpuReservationMillis": 2500,
+    "cpuLimitMillis": 10000,
+    "memoryReservationBytes": 2684354560,
+    "memoryHardLimitBytes": 15032385536,
+    "pidsLimit": 640,
+    "protectedOfficeProfilesEvictable": false,
+    "admitBeforeStart": true,
+    "releaseAfterServiceStopAndStateClear": true
+  },
+  "sessionReservation": {
+    "profileId": "realtime.cast-webrtc.arm64.v1",
+    "decoderReservations": 1,
+    "encoderReservations": 1,
+    "displayReservations": 1,
+    "audioReservations": 1,
+    "networkReservationBitsPerSecond": 100000000,
+    "maximumBrowserViewers": null,
+    "concurrencyAcceptanceViewers": [1, 8],
+    "publisherEncodeRenditions": 1,
+    "protectedOfficeProfilesEvictable": false,
+    "acquireBeforeReceiverStartAndAdvertisement": true,
+    "selectionRules": {
+      "decoder": "always-one",
+      "encoder": "one-only-when-browser-selected",
+      "display": "one-only-when-hdmi-selected",
+      "audio": "one-only-when-hdmi-selected",
+      "network": "bounded-ingress-plus-one-sfu-rendition"
+    },
+    "releaseAfterAdvertisementWithdrawalAndStateClear": true
+  },
+  "healthContract": {
+    "schemaVersion": 1,
+    "phases": [
+      "idle",
+      "active"
+    ],
+    "idle": {
+      "supervisorReady": true,
+      "sfuReady": true,
+      "serviceReservationActive": true,
+      "sessionReservationActive": false,
+      "receiverRunning": false,
+      "mdnsAdvertised": false,
+      "selectedSinks": [],
+      "publisherEncodeRenditions": 0,
+      "ephemeralStateOnTmpfs": true
+    },
+    "active": {
+      "supervisorReady": true,
+      "sfuReadyWhenBrowserSelected": true,
+      "serviceReservationActive": true,
+      "sessionReservationActive": true,
+      "receiverRunning": true,
+      "mdnsAdvertised": true,
+      "selectedSinksRequired": true,
+      "publisherEncodeRenditionsWhenBrowserSelected": 1,
+      "ephemeralStateOnTmpfs": true
+    },
+    "forbiddenFields": [
+      "audio",
+      "decodedFrame",
+      "deviceLabel",
+      "mediaCredential",
+      "pairingPin",
+      "privateKey",
+      "receiverKey",
+      "token",
+      "video"
+    ]
+  },
+  "lifecycle": {
+    "controlBoundary": "signed-mtls-node-agent-narrow-operations-only",
+    "dockerSocketMounted": false,
+    "slots": [
+      "active",
+      "candidate",
+      "previous"
+    ],
+    "activationOrder": [
+      "admission",
+      "service-reservation",
+      "sfu-start",
+      "sfu-health",
+      "trusted-media-start",
+      "release-set-health",
+      "atomic-active-identity-commit"
+    ],
+    "quiesceOrder": [
+      "withdraw-discovery",
+      "trusted-media-stop",
+      "sfu-stop",
+      "clear-ephemeral-state",
+      "release-service-reservation"
+    ],
+    "failedCandidateAction": "remove-candidate-and-restore-previous-exact-release",
+    "journal": "fsync-temporary-plus-atomic-rename-plus-directory-fsync"
+  },
+  "officialApplicationPluginBoundary": {
+    "pluginId": "official.wireless-casting",
+    "networkMode": "none",
+    "deviceAccess": [],
+    "dockerSocketMounted": false,
+    "hostFilesystemMounted": false,
+    "receiverPrivateStateMounted": false,
+    "directHdmiControl": false,
+    "permanentMediaCredentialAccess": false,
+    "allowedBoundary": "authenticated-platform-casting-api-only"
+  },
+  "activationGate": {
+    "materialized": false,
+    "currentBlockers": [
+      "airplay_supply_chain_human_decisions_pending",
+      "controlled_source_archives_missing",
+      "complete_transitive_build_closure_missing",
+      "trusted_media_arm64_image_unbuilt",
+      "two_build_reproducibility_missing",
+      "final_sbom_signature_provenance_and_vulnerability_evidence_missing",
+      "approved_same_l2_sfu_bind_address_missing",
+      "supported_hdmi_audio_codec_runtime_missing",
+      "real_apple_device_protocol_evidence_missing"
+    ]
+  },
+  "claimBoundary": {
+    "componentContractReady": true,
+    "containerBuilt": false,
+    "deploymentPerformed": false,
+    "realMediaProcessed": false,
+    "componentReady": false,
+    "productAccepted": false,
+    "releaseEligible": false,
+    "task22_1Complete": false,
+    "task22_3Complete": false
+  }
+}

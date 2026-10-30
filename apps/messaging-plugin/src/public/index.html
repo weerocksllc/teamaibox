@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="dark" data-mobile-view="list">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="color-scheme" content="light dark">
+  <title>Messaging</title>
+  <link rel="stylesheet" href="/plugins/official.messaging/app.css"><link rel="stylesheet" href="/plugins/official.messaging/platform-preferences.css">
+<link rel="stylesheet" href="/plugins/official.messaging/ui-system.css"></head>
+<body data-ui-app="messaging">
+<main class="messaging-shell">
+  <aside class="conversation-pane" data-i18n-aria="conversations" aria-label="Conversations">
+    <header class="pane-header conversation-header">
+      <div><p class="eyebrow" data-i18n="eyebrow">团队协作</p><h1 data-i18n="title">即时通信</h1></div>
+      <div class="header-actions">
+        <button id="open-notifications" class="icon-button notification-button" type="button" data-i18n-aria="notifications" aria-label="通知"><span aria-hidden="true">♢</span><b id="notification-badge" hidden></b></button>
+        <button id="new-conversation" class="icon-button primary-icon" type="button" data-i18n-aria="newConversation" aria-label="新建聊天">＋</button>
+      </div>
+    </header>
+    <label class="search-box"><span aria-hidden="true">⌕</span><input id="conversation-search" type="search" autocomplete="off" data-i18n-placeholder="search" data-i18n-aria="search" placeholder="搜索聊天与消息" aria-label="搜索聊天与消息"></label>
+    <div class="conversation-filter" role="group" data-i18n-aria="conversationFilter" aria-label="聊天筛选">
+      <button type="button" class="is-active" data-filter="all" data-i18n="all" aria-pressed="true">全部</button>
+      <button type="button" data-filter="unread" data-i18n="unread" aria-pressed="false">未读</button>
+      <button type="button" data-filter="groups" data-i18n="groups" aria-pressed="false">群组</button>
+    </div>
+    <div id="conversation-error" class="inline-error" role="alert" hidden></div>
+    <div id="conversation-loading" class="skeleton-list" role="status" aria-live="polite" aria-busy="true" data-i18n-aria="loading" aria-label="正在载入会话"><i aria-hidden="true"></i><i aria-hidden="true"></i><i aria-hidden="true"></i></div>
+    <section id="message-search-results" class="message-search-results" hidden>
+      <header><strong data-i18n="searchResults">消息搜索结果</strong><span id="search-result-count"></span></header>
+      <div id="message-search-list"></div>
+      <button id="message-search-more" class="history-older" type="button" data-i18n="moreResults" hidden>查看更多结果</button>
+      <p id="message-search-empty" data-i18n="searchEmpty" hidden>没有找到有权限查看的消息</p>
+      <p id="message-search-error" class="search-error" role="alert" hidden></p>
+    </section>
+    <div id="conversation-list" class="conversation-list" role="list"></div>
+    <button id="conversation-more" class="history-older" type="button" data-i18n="moreConversations" hidden>更多聊天</button>
+    <section id="conversation-empty" class="conversation-empty" hidden><b>◌</b><strong data-i18n="emptyConversations">还没有聊天</strong><span data-i18n="emptyConversationsBody">发起单聊或群聊，让团队保持同步。</span><button id="empty-new" type="button" data-i18n="startConversation">开始聊天</button></section>
+    <footer class="connection-status"><i id="connection-dot"></i><span id="connection-label" data-i18n="connecting">正在连接实时服务</span></footer>
+  </aside>
+
+  <section class="chat-pane" data-i18n-aria="messageArea" aria-label="Messages">
+    <section id="chat-placeholder" class="chat-placeholder"><span>◌</span><h2 data-i18n="selectConversation">选择一个聊天</h2><p data-i18n="selectConversationBody">选择左侧聊天，查看消息或继续交流。</p></section>
+    <section id="chat-active" class="chat-active" hidden>
+      <header class="pane-header chat-header">
+        <button id="mobile-back" class="icon-button mobile-only" type="button" data-i18n-aria="back" aria-label="返回">‹</button>
+        <div id="chat-avatar" class="avatar"></div>
+        <div class="chat-identity"><h2 id="chat-title"></h2><p id="chat-subtitle"></p></div>
+        <button id="open-details" class="icon-button" type="button" data-i18n-aria="details" aria-label="聊天详情">⋯</button>
+      </header>
+      <div id="history-error" class="inline-error history-error" role="alert" hidden></div>
+      <button id="history-older" class="history-older" type="button" data-i18n="olderMessages" hidden>查看更早的消息</button>
+      <div id="history-loading" class="history-loading" role="status" aria-live="polite" aria-busy="true" data-i18n-aria="loadingHistory" aria-label="正在载入消息历史"><i aria-hidden="true"></i><i aria-hidden="true"></i><i aria-hidden="true"></i></div>
+      <ol id="message-list" class="message-list" aria-live="polite"></ol>
+      <section id="message-empty" class="message-empty" hidden><b>✦</b><strong data-i18n="emptyMessages">开始这段对话</strong><span data-i18n="emptyMessagesBody">发送消息或文件，只有聊天成员可以查看。</span></section>
+      <section id="attachment-strip" class="attachment-strip" hidden></section>
+      <form id="composer" class="composer">
+        <label class="attach-button" role="button" tabindex="0" data-keyboard-file-trigger data-i18n-aria="attach" aria-label="添加附件">＋<input id="attachment-input" type="file" multiple hidden></label>
+        <textarea id="message-input" rows="1" data-i18n-placeholder="messagePlaceholder" data-i18n-aria="messagePlaceholder" placeholder="发送消息…" aria-label="发送消息"></textarea>
+        <button id="send-message" class="send-button" type="submit" disabled data-i18n-aria="send" aria-label="发送">➤</button>
+      </form>
+      <p id="composer-error" class="composer-error" role="alert" hidden></p>
+    </section>
+  </section>
+
+  <aside id="details-pane" class="details-pane" data-i18n-aria="details" aria-label="Conversation details">
+    <header class="pane-header details-header"><h2 data-i18n="details">聊天详情</h2><button id="close-details" class="icon-button mobile-only" type="button" data-i18n-aria="close" aria-label="关闭">×</button></header>
+    <div id="details-avatar" class="details-avatar">◌</div><h3 id="details-title">选择一个聊天</h3><p id="details-kind">选择聊天后可查看成员和聊天设置。</p>
+    <section class="details-section"><header><strong data-i18n="members">成员</strong><span id="member-count">0</span></header><ul id="member-list"></ul></section>
+    <section class="details-section security-card"><i></i><div><strong data-i18n="protected">受保护的团队数据</strong><span data-i18n="protectedBody">消息与附件保存在盒子的加密存储中。</span></div></section>
+  </aside>
+</main>
+
+<dialog id="new-dialog" aria-labelledby="new-dialog-title">
+  <form id="new-form" method="dialog">
+    <header><div><p class="eyebrow" data-i18n="newEyebrow">新会话</p><h2 id="new-dialog-title" data-i18n="newTitle">和谁开始聊天？</h2></div><button id="cancel-new" class="icon-button" type="button" data-i18n-aria="close" aria-label="关闭">×</button></header>
+    <div class="kind-tabs" role="group" data-i18n-aria="conversationKind" aria-label="聊天类型"><button type="button" class="is-active" data-kind="direct" data-i18n="direct" aria-pressed="true">单聊</button><button type="button" data-kind="group" data-i18n="group" aria-pressed="false">群聊</button></div>
+    <label id="group-title-field" hidden><span data-i18n="groupName">群聊名称</span><input id="group-title" data-i18n-placeholder="groupNamePlaceholder" placeholder="例如：产品发布"></label>
+    <label><span data-i18n="findPeople">查找成员</span><input id="people-search" type="search" autocomplete="off" data-i18n-placeholder="findPeoplePlaceholder" placeholder="输入姓名或用户名"></label>
+    <div id="people-results" class="people-results" role="listbox" data-i18n-aria="contacts" aria-label="联系人"></div>
+    <p id="people-empty" class="people-empty" data-i18n="emptyContacts" hidden>暂无可联系的团队成员</p>
+    <div id="selected-people" class="selected-people"></div>
+    <p id="new-error" class="composer-error" role="alert" hidden></p>
+    <button id="create-conversation" class="primary-button" type="submit" data-i18n="create">创建聊天</button>
+  </form>
+</dialog>
+
+<dialog id="notification-dialog" class="notification-dialog" aria-labelledby="notification-dialog-title">
+  <section>
+    <header><div><p class="eyebrow" data-i18n="notifications">通知</p><h2 id="notification-dialog-title" data-i18n="notificationTitle">消息通知</h2></div><button id="close-notifications" class="icon-button" type="button" data-i18n-aria="close" aria-label="关闭">×</button></header>
+    <p id="notification-error" class="composer-error" role="alert" hidden></p>
+    <div id="notification-list" class="notification-list"></div>
+    <button id="notification-more" class="history-older" type="button" data-i18n="moreNotifications" hidden>更早的通知</button>
+    <div id="notification-empty" class="notification-empty" hidden><b>♢</b><strong data-i18n="notificationEmpty">没有未读通知</strong><span data-i18n="notificationEmptyBody">新消息会显示在这里。</span></div>
+  </section>
+</dialog>
+<script type="module" src="/plugins/official.messaging/app.js"></script>
+</body>
+</html>

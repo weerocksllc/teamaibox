@@ -1,0 +1,124 @@
+# Product applications on this appliance; combine after core.yaml and compose.yaml.
+# Local VM and media runtimes are launched by the Agent, not by remote installers.
+x-plugin: &plugin
+  platform: linux/arm64/v8
+  init: true
+  read_only: true
+  user: "10001:10001"
+  restart: unless-stopped
+  cap_drop: [ALL]
+  security_opt: [no-new-privileges:true]
+  pids_limit: 128
+  tmpfs: ["/tmp:rw,noexec,nosuid,nodev,size=32m"]
+  mem_limit: 128m
+  mem_reservation: 32m
+  cpus: 0.2
+  networks: [edge]
+  healthcheck:
+    test: [CMD, node, -e, "fetch('http://127.0.0.1:8080/health/ready').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+    interval: 10s
+    timeout: 3s
+    retries: 6
+
+services:
+  platform-api:
+    env_file:
+      - ${TEAMAIBOX_APPLIANCE_RUNTIME_ENV_FILE:?set the installation runtime environment file}
+    environment:
+      PLATFORM_API_PUBLIC_ORIGIN: ${TEAMAIBOX_WEB_PUBLIC_ORIGIN:?}
+      PLATFORM_API_BOOTSTRAP_FILE: /run/secrets/appliance_owner_bootstrap
+      PLATFORM_API_CREDENTIAL_PEPPER_FILE: /run/secrets/appliance_credential_pepper
+      PLATFORM_OWNER_RECOVERY_KEY_FILE: /run/secrets/appliance_owner_recovery_key
+      PLATFORM_APPLICATION_ROUTES_FILE: /run/config/appliance/plugin-routes.json
+      PLATFORM_OBJECT_SERVICE_ENDPOINT: http://object-service:8080/internal/v1/call
+      PLATFORM_OBJECT_SERVICE_TOKEN_FILE: /run/secrets/object_rpc_token
+      PLATFORM_OBJECT_SERVICE_HEALTH_ORIGIN: http://object-service:8080
+      PLATFORM_MESSAGING_SERVICE_HEALTH_ORIGIN: http://messaging:8080
+      PLATFORM_EVENT_BUS_HEALTH_ORIGIN: http://event-bus:8222
+      PLATFORM_SELF_HEALTH_ORIGIN: http://127.0.0.1:8080
+      PLATFORM_PLUGIN_NODE_AGENT_COMMAND_KEY_FILE: /run/secrets/node_agent_command_key
+      PLATFORM_PLUGIN_NODE_AGENT_CA_FILE: /run/config/appliance/ca.crt
+      PLATFORM_PLUGIN_NODE_AGENT_CLIENT_CERT_FILE: /run/config/appliance/scheduler.crt
+      PLATFORM_PLUGIN_NODE_AGENT_CLIENT_KEY_FILE: /run/secrets/appliance_scheduler_key
+    secrets:
+      - appliance_owner_bootstrap
+      - appliance_credential_pepper
+      - appliance_owner_recovery_key
+      - object_rpc_token
+    depends_on:
+      object-service: {condition: service_healthy}
+      messaging: {condition: service_healthy}
+
+  object-service:
+    user: "10001:10001"
+    entrypoint: [node, /opt/teamaibox/services/object-service/src/internal-rpc-server.mjs]
+    environment:
+      TEAMAIBOX_OBJECT_RPC_TOKEN_FILE: /run/secrets/object_rpc_token
+      TEAMAIBOX_OBJECT_REFERENCE_KEY_FILE: /run/secrets/object_reference_key
+      TEAMAIBOX_OBJECT_KEK_FILE: /run/secrets/object_kek
+      TEAMAIBOX_OBJECT_BLOB_ROOT: /var/lib/teamaibox/objects/blobs
+    secrets: [object_rpc_token, object_reference_key, object_kek]
+
+  messaging:
+    user: "10002:10002"
+    entrypoint: [node, /opt/teamaibox/services/messaging/src/server.mjs]
+    environment:
+      TEAMAIBOX_EVENT_BUS_HOST: event-bus
+      TEAMAIBOX_EVENT_BUS_PORT: "4222"
+      TEAMAIBOX_EVENT_BUS_TOKEN_FILE: /run/secrets/nats_token
+
+  web:
+    environment:
+      WEB_PLUGIN_ROUTES_FILE: /run/config/appliance/plugin-routes.json
+    volumes:
+      - ${TEAMAIBOX_APPLIANCE_PUBLIC_CONFIG_DIR:?}:/run/config/appliance:ro
+
+  messaging-plugin:
+    <<: *plugin
+    image: ${TEAMAIBOX_MESSAGING_PLUGIN_IMAGE:?set the messaging application image}
+
+  team-drive-plugin:
+    <<: *plugin
+    image: ${TEAMAIBOX_TEAM_DRIVE_PLUGIN_IMAGE:?set the team-drive application image}
+
+  drawing-plugin:
+    <<: *plugin
+    image: ${TEAMAIBOX_DRAWING_PLUGIN_IMAGE:?set the drawing application image}
+
+  ocr-plugin:
+    <<: *plugin
+    image: ${TEAMAIBOX_OCR_PLUGIN_IMAGE:?set the ocr application image}
+
+  asr-plugin:
+    <<: *plugin
+    image: ${TEAMAIBOX_ASR_PLUGIN_IMAGE:?set the asr application image}
+
+  translation-plugin:
+    <<: *plugin
+    image: ${TEAMAIBOX_TRANSLATION_PLUGIN_IMAGE:?set the translation application image}
+
+  virtual-phones-plugin:
+    <<: *plugin
+    image: ${TEAMAIBOX_VIRTUAL_PHONES_PLUGIN_IMAGE:?set the virtual-phones application image}
+
+  virtual-computers-plugin:
+    <<: *plugin
+    image: ${TEAMAIBOX_VIRTUAL_COMPUTERS_PLUGIN_IMAGE:?set the virtual-computers application image}
+
+  wireless-casting-plugin:
+    <<: *plugin
+    image: ${TEAMAIBOX_WIRELESS_CASTING_PLUGIN_IMAGE:?set the wireless-casting application image}
+
+secrets:
+  appliance_owner_bootstrap:
+    file: ${TEAMAIBOX_APPLIANCE_OWNER_BOOTSTRAP_FILE:?}
+  appliance_credential_pepper:
+    file: ${TEAMAIBOX_APPLIANCE_CREDENTIAL_PEPPER_FILE:?}
+  appliance_owner_recovery_key:
+    file: ${TEAMAIBOX_APPLIANCE_OWNER_RECOVERY_KEY_FILE:?}
+  object_rpc_token:
+    file: ${TEAMAIBOX_OBJECT_RPC_TOKEN_FILE:?}
+  object_reference_key:
+    file: ${TEAMAIBOX_OBJECT_REFERENCE_KEY_FILE:?}
+  object_kek:
+    file: ${TEAMAIBOX_OBJECT_KEK_FILE:?}

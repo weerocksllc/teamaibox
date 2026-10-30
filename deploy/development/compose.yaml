@@ -1,0 +1,20 @@
+name: teamaibox-development
+
+services:
+  platform-api:
+    ports:
+      - "127.0.0.1:18081:8080"
+  web:
+    environment:
+      WEB_HOST: 0.0.0.0
+      WEB_MODE: development
+      WEB_PORT: "8080"
+      WEB_ALLOW_INSECURE_HTTP: "true"
+      WEB_DEVELOPMENT_DEMO: "false"
+      WEB_PUBLIC_ORIGIN: http://127.0.0.1:18080
+      WEB_DEPLOYMENT_SLOT: development
+      WEB_RELEASE_ID: ${TEAMAIBOX_RELEASE_ID:?set the immutable development build identifier}
+      WEB_PLUGIN_ROUTES_FILE: /run/config/plugin-routes.json
+      PLATFORM_API_ORIGIN: http://platform-api:8080
+    ports:
+      - "127.0.0.1:18080:8080"

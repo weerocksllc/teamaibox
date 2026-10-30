@@ -1,0 +1,5 @@
+DROP TRIGGER external_attempt_accounting_immutable ON compute.external_attempt_accounting;
+DROP FUNCTION compute.reject_external_attempt_accounting_mutation();
+DROP TRIGGER external_attempt_accounting_boundary ON compute.external_attempt_accounting;
+DROP FUNCTION compute.enforce_external_attempt_accounting_boundary();
+DROP TABLE compute.external_attempt_accounting;

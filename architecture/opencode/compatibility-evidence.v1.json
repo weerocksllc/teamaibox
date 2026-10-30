@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "gateId": "opencode.compatibility.v1.18.16.arm64",
+  "recordedAt": "2026-08-12T10:58:00.000Z",
+  "result": "passed",
+  "facts": {
+    "providedSourceCommit": "d90532a5952c08c4376167294ef7c316b8817f72",
+    "providedSourceTree": "60e7b8849a579c1373cb3488b1b8f16e9f36a66f",
+    "releaseTag": "v1.18.16",
+    "releaseTree": "60e7b8849a579c1373cb3488b1b8f16e9f36a66f",
+    "artifactDigest": "sha256:4fdce5f9bc877d977304d71c0c90ad6e83efa381fe0edf0a61e6142a625e1c41",
+    "runtimePolicySha256": "f209a167cada808dd000ebfd55ed112debb77d0a5dff13abd58733618db78570",
+    "realSparkEvidencePath": "evidence/validation/opencode/opencode-compat-20260812-a6.json",
+    "realSparkEvidenceDigest": "sha256:2653180a65e62e022b0b144cf882e80e2b64ddc6a3b0c2da91e7229681d3ed83",
+    "realModelPromptEvidencePath": "evidence/validation/opencode/opencode-prompt-20260812-a5.json",
+    "realModelPromptEvidenceDigest": "sha256:f63f3b4a01d5548b0010c114a6032c1e4c3e15e374128a61cb00ec8c65d2b187",
+    "sourceTreeMatchesRelease": true,
+    "upstreamModifiedByPlatform": false
+  },
+  "checks": [
+    {"key": "upstream-lock", "result": "passed", "command": "python3 tools/validate_opencode_upstream.py --verify-provided-source"},
+    {"key": "adapter-contract", "result": "passed", "command": "node --test services/agent-bridge/test/opencode-adapter-v1-18.test.mjs"},
+    {"key": "restricted-model-config", "result": "passed", "command": "node --test services/agent-bridge/test/agent-model-access-service.test.mjs services/agent-bridge/test/agent-sandbox.test.mjs services/agent-bridge/test/node-agent-sandbox-projector.test.mjs"},
+    {"key": "node-agent-runtime-boundary", "result": "passed", "command": "go -C services/node-agent test ./..."},
+    {"key": "real-arm64-sidecar", "result": "passed", "command": "python3 tools/validate_opencode_real_compatibility.py --evidence evidence/validation/opencode/opencode-compat-20260812-a6.json"},
+    {"key": "real-nvfp4-prompt", "result": "passed", "command": "python3 tools/validate_opencode_real_agent_prompt.py --evidence evidence/validation/opencode/opencode-prompt-20260812-a5.json"}
+  ],
+  "limitations": [
+    "The gate proves the pinned upstream tree, ARM64 artifact identity, authenticated Bridge HTTP/SSE contract, hardened OpenCode and Bridge containers, loopback-only upstream access, fixed workspace boundary, session creation, independent OpenCode/Bridge restart recovery, and one bounded real NVFP4 model prompt with exact one-time edit confirmation, workspace mutation and recovery on the development Spark. The prompt used an explicitly non-production direct model fixture with queueUsed=false. This remains compatibility evidence only; it does not prove the platform queued model route, complete per-user lifecycle, active interruption outcome, protected artifact ingestion, package-source journeys, authenticated browser use, or product acceptance."
+  ]
+}

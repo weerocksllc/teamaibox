@@ -1,0 +1,217 @@
+{
+  "schemaVersion": 1,
+  "platformVersion": "0.1.0",
+  "components": [
+    {
+      "name": "contracts",
+      "path": "packages/contracts",
+      "kind": "shared-contract",
+      "runtime": "language-neutral-generated-types",
+      "owns": [
+        "Versioned HTTP, event, worker, plugin, object, and realtime schemas",
+        "Compatibility fixtures and generated client/server types"
+      ],
+      "dependsOn": []
+    },
+    {
+      "name": "configuration",
+      "path": "packages/configuration",
+      "kind": "shared-library",
+      "runtime": "node-24-lts",
+      "owns": [
+        "Typed configuration schema and validation",
+        "Non-secret configuration loading conventions"
+      ],
+      "dependsOn": []
+    },
+    {
+      "name": "observability",
+      "path": "packages/observability",
+      "kind": "shared-library",
+      "runtime": "node-24-lts",
+      "owns": [
+        "Correlation context, structured logs, metrics, traces, and safe redaction"
+      ],
+      "dependsOn": ["configuration", "contracts"]
+    },
+    {
+      "name": "secrets",
+      "path": "packages/secrets",
+      "kind": "security-library",
+      "runtime": "node-24-lts",
+      "owns": [
+        "Protected secret records and ciphertext backends",
+        "Redacted metadata, scoped secret use, rotation lineage, and development bootstrap policy"
+      ],
+      "dependsOn": ["configuration", "observability"]
+    },
+    {
+      "name": "service-runtime",
+      "path": "packages/service-runtime",
+      "kind": "shared-library",
+      "runtime": "node-24-lts",
+      "owns": [
+        "Explicit dependency graphs, ordered startup, bounded readiness, draining, and reverse rollback",
+        "Consistent liveness, startup, and readiness HTTP contracts"
+      ],
+      "dependsOn": ["configuration", "observability"]
+    },
+    {
+      "name": "persistence",
+      "path": "packages/persistence",
+      "kind": "infrastructure-adapter",
+      "runtime": "node-24-lts-postgresql",
+      "owns": [
+        "PostgreSQL schema, migrations, transaction boundaries, and repositories",
+        "Transactional outbox and inbox persistence primitives"
+      ],
+      "dependsOn": ["configuration", "observability"]
+    },
+    {
+      "name": "event-bus",
+      "path": "packages/event-bus",
+      "kind": "infrastructure-adapter",
+      "runtime": "node-24-lts-nats-jetstream",
+      "owns": [
+        "Durable event publication and consumption",
+        "Subject naming, envelopes, delivery metadata, and consumer policy"
+      ],
+      "dependsOn": ["configuration", "contracts", "observability"]
+    },
+    {
+      "name": "ui-system",
+      "path": "packages/ui-system",
+      "kind": "shared-ui",
+      "runtime": "react-browser",
+      "owns": [
+        "Semantic design tokens, accessible primitives, Light and Dark themes",
+        "Shared locale-aware UI behavior"
+      ],
+      "dependsOn": []
+    },
+    {
+      "name": "plugin-sdk",
+      "path": "packages/plugin-sdk",
+      "kind": "public-sdk",
+      "runtime": "browser-and-node",
+      "owns": [
+        "ApplicationPlugin and ComputePlugin public types and compatibility helpers",
+        "Delegated platform client and locale/theme host bridge"
+      ],
+      "dependsOn": ["contracts"]
+    },
+    {
+      "name": "web-shell",
+      "path": "apps/web",
+      "kind": "browser-application",
+      "runtime": "react-typescript-browser",
+      "owns": [
+        "User workbench and administrator console shell",
+        "Plugin navigation host, task center, notifications, locale and theme preferences"
+      ],
+      "dependsOn": ["contracts", "plugin-sdk", "ui-system"]
+    },
+    {
+      "name": "platform-api",
+      "path": "apps/platform-api",
+      "kind": "modular-control-plane",
+      "runtime": "node-24-lts",
+      "owns": [
+        "Trusted HTTP and realtime API boundary",
+        "Identity, authorization, configuration, registries, job metadata, audit references",
+        "Cross-module transactions in the modular monolith"
+      ],
+      "dependsOn": ["configuration", "contracts", "event-bus", "observability", "persistence", "secrets", "service-runtime"]
+    },
+    {
+      "name": "scheduler",
+      "path": "services/scheduler",
+      "kind": "control-service",
+      "runtime": "node-24-lts",
+      "owns": [
+        "Capability expansion, filtering, scoring, fairness, reservations, and leases",
+        "Dispatch decisions across local nodes, managed nodes, and external providers"
+      ],
+      "dependsOn": ["configuration", "contracts", "event-bus", "observability", "persistence", "secrets", "service-runtime"]
+    },
+    {
+      "name": "node-agent",
+      "path": "services/node-agent",
+      "kind": "privileged-node-service",
+      "runtime": "go-1.26-linux-arm64",
+      "owns": [
+        "Authenticated local Docker and device control",
+        "Worker lifecycle, cgroup/resource enforcement, node telemetry, and fenced command results"
+      ],
+      "dependsOn": ["contracts"]
+    },
+    {
+      "name": "plugin-runtime",
+      "path": "services/plugin-runtime",
+      "kind": "control-service",
+      "runtime": "node-24-lts",
+      "owns": [
+        "Plugin package validation, staging, lifecycle, and compatibility state",
+        "ApplicationPlugin delegation and ComputePlugin registration policy"
+      ],
+      "dependsOn": ["configuration", "contracts", "event-bus", "observability", "persistence", "plugin-sdk", "secrets", "service-runtime"]
+    },
+    {
+      "name": "agent-bridge",
+      "path": "services/agent-bridge",
+      "kind": "adapter-service",
+      "runtime": "node-24-lts",
+      "owns": [
+        "Stable platform Agent sessions and ordered event streams",
+        "Non-invasive version adapters for digest-pinned OpenCode services",
+        "Per-user sandbox identity and conversation/session mapping"
+      ],
+      "dependsOn": ["configuration", "contracts", "event-bus", "observability", "persistence", "secrets", "service-runtime"]
+    },
+    {
+      "name": "compute-gateway",
+      "path": "services/compute-gateway",
+      "kind": "gateway-service",
+      "runtime": "node-24-lts",
+      "owns": [
+        "Short-lived per-user Agent model credentials and route-scoped verification",
+        "Agent model alias projection into the authenticated durable OpenAI compute queue"
+      ],
+      "dependsOn": ["observability"]
+    },
+    {
+      "name": "object-service",
+      "path": "services/object-service",
+      "kind": "data-service",
+      "runtime": "node-24-lts",
+      "owns": [
+        "Protected object upload, download, range, version, lifecycle, and scoped references",
+        "Envelope-encryption boundary and blob-store adaptation",
+        "Encrypted storage-pool inventory, placement, draining, verified migration, and safe removal control"
+      ],
+      "dependsOn": ["configuration", "contracts", "event-bus", "observability", "persistence", "secrets", "service-runtime"]
+    },
+    {
+      "name": "messaging",
+      "path": "services/messaging",
+      "kind": "data-service",
+      "runtime": "node-24-lts",
+      "owns": [
+        "Durable team conversations and messages",
+        "Realtime delivery, presence projections, and notification events"
+      ],
+      "dependsOn": ["configuration", "contracts", "event-bus", "observability", "persistence", "secrets", "service-runtime"]
+    },
+    {
+      "name": "source-gateway",
+      "path": "services/source-gateway",
+      "kind": "gateway-service",
+      "runtime": "node-24-lts-plus-protocol-data-planes",
+      "owns": [
+        "Shared source policy and routing control plane",
+        "Pip Simple API, NPM registry, and APT repository/proxy adapters"
+      ],
+      "dependsOn": ["configuration", "contracts", "event-bus", "observability", "persistence", "secrets", "service-runtime"]
+    }
+  ]
+}

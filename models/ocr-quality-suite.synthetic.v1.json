@@ -1,0 +1,111 @@
+{
+  "schemaVersion": 1,
+  "suiteKey": "quality.ocr.text-layout",
+  "version": "1.1.0",
+  "status": "release-candidate-policy",
+  "supersedesThresholdPolicy": {
+    "path": "models/quality-suite-catalog.v1.json",
+    "suiteVersion": "1.0.0",
+    "thresholdsChanged": false,
+    "reason": "Bind the declared thresholds to an implemented containerized evaluator and commercial-safe deterministic corpus."
+  },
+  "corpus": {
+    "path": "models/ocr-quality-corpus.synthetic.v1.json",
+    "corpusKey": "corpus.ocr.text-layout",
+    "version": "1.1.0",
+    "minimumCases": 400,
+    "requiredSlices": {
+      "clean-print": 80,
+      "scan-photo": 80,
+      "complex-layout": 80,
+      "tables-formulas": 80,
+      "multilingual": 80
+    },
+    "commercialUseCompatible": true,
+    "syntheticLimitationMustBeDisclosed": true
+  },
+  "evaluator": {
+    "runtimeImage": "python@sha256:a116514e19457bcb7af7efe9c3dd0b9b71e85b317694e7882a1c52aa15a78134",
+    "runtimeImageId": "sha256:b36d5dd2b034a05f0e0306472d25d0cb649a1f42dcade4b99f4d899f732823e0",
+    "architecture": "linux/arm64/v8",
+    "network": "none",
+    "readOnlyRoot": true,
+    "capabilitiesDropped": ["ALL"],
+    "noNewPrivileges": true,
+    "implementation": [
+      {
+        "path": "tools/ocr_quality_metrics.py",
+        "sha256": "sha256:c0f52fc52667fbf3ed292e73629871754feb1168d33243e63a4613065965fb29"
+      },
+      {
+        "path": "tools/evaluate_ocr_quality_predictions.py",
+        "sha256": "sha256:512ef87871f689b776ec17d16628c62572253d612f16e5abcea43af54c964935"
+      }
+    ],
+    "deterministic": true
+  },
+  "metricDefinitions": {
+    "character-error-rate": "Unicode NFKC and whitespace normalized micro Levenshtein distance over characters.",
+    "word-error-rate": "Unicode NFKC normalized micro Levenshtein distance over Latin word and individual Han-character tokens.",
+    "layout-block-f1": "Macro block F1 after label-compatible one-to-one greedy matching at bounding-box IoU >= 0.5.",
+    "reading-order-accuracy": "Micro pairwise order accuracy across layout-matched blocks.",
+    "table-structure-teds": "TEDS = 1 - ordered tree edit distance / maximum non-root node count, with PubTabNet-compatible tag/span/content rename costs."
+  },
+  "metrics": [
+    {
+      "metricKey": "character-error-rate",
+      "direction": "maximum",
+      "threshold": 0.08,
+      "minimumSamples": 80,
+      "requiredSlices": ["clean-print", "scan-photo", "multilingual"]
+    },
+    {
+      "metricKey": "word-error-rate",
+      "direction": "maximum",
+      "threshold": 0.15,
+      "minimumSamples": 80,
+      "requiredSlices": ["clean-print", "scan-photo", "multilingual"]
+    },
+    {
+      "metricKey": "layout-block-f1",
+      "direction": "minimum",
+      "threshold": 0.85,
+      "minimumSamples": 80,
+      "requiredSlices": ["complex-layout"]
+    },
+    {
+      "metricKey": "table-structure-teds",
+      "direction": "minimum",
+      "threshold": 0.8,
+      "minimumSamples": 80,
+      "requiredSlices": ["tables-formulas"]
+    },
+    {
+      "metricKey": "reading-order-accuracy",
+      "direction": "minimum",
+      "threshold": 0.9,
+      "minimumSamples": 80,
+      "requiredSlices": ["complex-layout"]
+    }
+  ],
+  "acceptance": {
+    "policy": "all-required-slices-and-thresholds",
+    "maximumFailedMeasurements": 0,
+    "missingMeasurement": "fail",
+    "nonFiniteMeasurement": "fail",
+    "diagnosticRunsCannotCertify": true
+  },
+  "references": [
+    {
+      "name": "PubTabNet TEDS metric",
+      "url": "https://github.com/ibm-aur-nlp/PubTabNet/blob/master/src/metric.py",
+      "codeLicense": "Apache-2.0"
+    },
+    {
+      "name": "PubTabNet annotation terms",
+      "url": "https://github.com/ibm-aur-nlp/PubTabNet/blob/master/LICENSE.md",
+      "annotationLicense": "CDLA-Permissive-1.0",
+      "datasetImagesUsed": false
+    }
+  ]
+}

@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.teamaibox.local/http/translation-result.v1.schema.json",
+  "title": "Team AI Box translation result v1",
+  "x-teamaibox-contract": {"family": "http", "role": "response", "major": 1},
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "job_id", "input_kind", "source_language", "target_language", "text", "segments", "workflow", "artifacts", "provenance"],
+  "properties": {
+    "schema": {"const": "teamaibox.ai.translation-result.v1"},
+    "job_id": {"type": "string", "format": "uuid"},
+    "input_kind": {"type": "string", "enum": ["text", "image", "document", "audio", "video"]},
+    "source_language": {"type": ["string", "null"]},
+    "target_language": {"type": "string"},
+    "text": {"type": "string"},
+    "segments": {"type": "array", "items": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "source_text", "translated_text", "start_ms", "end_ms", "source_reference_id"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1, "maxLength": 128},
+        "source_text": {"type": "string"}, "translated_text": {"type": "string"},
+        "start_ms": {"type": ["integer", "null"], "minimum": 0},
+        "end_ms": {"type": ["integer", "null"], "minimum": 0},
+        "source_reference_id": {"type": ["string", "null"], "format": "uuid"}
+      }
+    }},
+    "workflow": {"type": "object", "additionalProperties": false, "required": ["stages", "intermediates"], "properties": {
+      "stages": {"type": "array", "minItems": 1, "items": {"type": "object", "additionalProperties": false, "required": ["stage_id", "capability", "status", "profile_key"], "properties": {
+        "stage_id": {"type": "string"}, "capability": {"enum": ["ocr", "asr", "translation", "subtitle-compose"]},
+        "status": {"enum": ["succeeded", "failed", "skipped"]}, "profile_key": {"type": ["string", "null"]}
+      }}},
+      "intermediates": {"type": "array", "items": {"type": "object", "additionalProperties": false, "required": ["kind", "reference_id"], "properties": {
+        "kind": {"enum": ["ocr-text", "asr-transcript", "translated-subtitles"]},
+        "reference_id": {"type": "string", "format": "uuid"}
+      }}}
+    }},
+    "artifacts": {"type": "array", "items": {"$ref": "../compute/artifact-ref.v1.schema.json"}},
+    "provenance": {"type": "object", "additionalProperties": false, "required": ["source_reference_id", "completed_at"], "properties": {
+      "source_reference_id": {"type": ["string", "null"], "format": "uuid"},
+      "completed_at": {"type": "string", "format": "date-time"}
+    }}
+  }
+}

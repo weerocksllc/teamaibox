@@ -1,0 +1,10 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.teamaibox.local/objects/compute-reference-request.v1.schema.json",
+  "x-teamaibox-contract": {"family": "object", "role": "request", "major": 1},
+  "title": "Compute-scoped object reference request v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["capability"],
+  "properties": {"capability": {"enum": ["image", "ocr", "asr", "translation"]}}
+}

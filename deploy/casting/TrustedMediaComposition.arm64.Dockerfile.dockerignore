@@ -1,0 +1,9 @@
+**
+!services/
+!services/trusted_media_service/
+!services/trusted_media_service/**
+!tools/
+!tools/probe_trusted_media_hdmi.py
+**/__pycache__/**
+**/*.pyc
+**/._*

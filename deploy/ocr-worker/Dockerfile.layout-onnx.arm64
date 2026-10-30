@@ -1,0 +1,13 @@
+FROM python@sha256:229a2c5bfa27522db7815ea81f9bed70af17ccb9de9fc7ad142b1877b5830d36
+
+ARG ONNXRUNTIME_VERSION=1.28.0
+ARG OPENCV_VERSION=4.10.0.84
+
+RUN python -m pip install --no-cache-dir \
+      "numpy==2.3.5" \
+      "onnxruntime==${ONNXRUNTIME_VERSION}" \
+      "opencv-python-headless==${OPENCV_VERSION}" \
+    && python -m pip check
+
+USER 10001:10001
+ENTRYPOINT ["python"]

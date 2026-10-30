@@ -1,0 +1,5 @@
+**
+!services/
+!services/speaker-diarization-worker/
+!services/speaker-diarization-worker/supervisor/
+!services/speaker-diarization-worker/supervisor/main.go

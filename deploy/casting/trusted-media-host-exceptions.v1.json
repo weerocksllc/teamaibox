@@ -1,0 +1,96 @@
+{
+  "schemaVersion": 1,
+  "exceptionSetId": "teamaibox.trusted-media-host-exceptions.v1",
+  "target": "dgx-spark-dev-01",
+  "architecture": "aarch64",
+  "policy": "deny-unregistered",
+  "owner": "Team AI Box appliance media boundary",
+  "expiresAt": "2027-09-04T00:00:00Z",
+  "sourceHardwareEvidence": {
+    "path": "evidence/validation/hardware/airplay-main-hardware-inventory-20260904-a1.json",
+    "evidenceDigest": "sha256:5713c7f85dad7711d3e5177fab891b9e58b9d3d917d27d1d254b28d941f0d49a"
+  },
+  "allowedHostFoundation": {
+    "services": [
+      {
+        "name": "docker.service",
+        "requiredState": "active",
+        "mutationAllowed": false
+      },
+      {
+        "name": "avahi-daemon.service",
+        "requiredState": "active",
+        "mutationAllowed": false
+      },
+      {
+        "name": "display-manager.service",
+        "requiredState": "active",
+        "mutationAllowed": false
+      }
+    ],
+    "hostPackageInstalls": [],
+    "hostServiceChanges": [],
+    "hostConfigurationChanges": [],
+    "kernelModuleChanges": [],
+    "firewallOrRouteChanges": []
+  },
+  "exceptions": [
+    {
+      "key": "trusted-media.host-network",
+      "scope": "trusted media service container only",
+      "reason": "Bonjour/mDNS receiver discovery and sender pairing must occur on the administrator-approved same-L2 interface without a reflector.",
+      "securityBoundary": "all capabilities dropped, no Docker socket, no host filesystem, bounded ports, no advertisement outside an admitted session",
+      "uninstall": "stop and remove the exact trusted media container; no host network state is installed",
+      "rollback": "restore the previously healthy exact container release through the media release controller",
+      "validation": "real same-L2 discovery, stale-advertisement cleanup and packet-boundary evidence required before deployment"
+    },
+    {
+      "key": "trusted-media.drm-render-devices",
+      "scope": [
+        "/dev/dri/card0",
+        "/dev/dri/renderD128"
+      ],
+      "reason": "direct HDMI/display and render-buffer access remains inside the trusted service",
+      "securityBoundary": "exact device nodes only; no broad /dev mount; ApplicationPlugin gets no device",
+      "uninstall": "remove exact container device mappings",
+      "rollback": "restore previous exact mappings and image",
+      "validation": "connected HDMI mode, hot-plug and permission evidence required before deployment"
+    },
+    {
+      "key": "trusted-media.hdmi-audio-devices",
+      "scope": [
+        "/dev/snd/controlC0",
+        "/dev/snd/pcmC0D3p",
+        "/dev/snd/pcmC0D7p",
+        "/dev/snd/pcmC0D8p",
+        "/dev/snd/pcmC0D9p"
+      ],
+      "reason": "the selected HDMI PCM output must be opened by the trusted service",
+      "securityBoundary": "exact playback/control nodes only; no capture device; ApplicationPlugin gets no audio device",
+      "uninstall": "remove exact container device mappings",
+      "rollback": "restore previous exact mappings and image",
+      "validation": "real HDMI audio selection and disconnect evidence required before deployment"
+    },
+    {
+      "key": "trusted-media.nvidia-video-runtime",
+      "scope": [
+        "/dev/nvidia0",
+        "/dev/nvidiactl"
+      ],
+      "reason": "the trusted service requires the existing NVIDIA container runtime video/utility boundary for bounded decode and encode",
+      "securityBoundary": "video and utility driver capabilities only; no compute capability request; exact GPU selected by Node Agent",
+      "uninstall": "remove the container; do not alter the host driver or runtime",
+      "rollback": "restore the previous exact image and Node Agent device request",
+      "validation": "real NVDEC/NVENC exposure and one-rendition accounting required before deployment"
+    }
+  ],
+  "driftPolicy": {
+    "readOnly": true,
+    "mutationPerformed": false,
+    "failOnUnknownException": true,
+    "failOnDeviceMetadataChange": true,
+    "failOnServiceStateChange": true,
+    "failOnHostPackageInstall": true,
+    "releaseEvidenceEligibleOnlyWhenNoUnacceptedDrift": true
+  }
+}

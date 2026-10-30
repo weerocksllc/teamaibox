@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.teamaibox.local/http/assistant-submission.v1.schema.json",
+  "x-teamaibox-contract": { "family": "http", "role": "request", "major": 1 },
+  "title": "Assistant message submission v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["input", "mode"],
+  "properties": {
+    "input": { "type": "string", "minLength": 1 },
+    "mode": { "enum": ["auto", "answer", "agent"] }
+  }
+}

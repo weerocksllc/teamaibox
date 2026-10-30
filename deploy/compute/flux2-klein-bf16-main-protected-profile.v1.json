@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "profileKey": "drawing.flux2-klein-4b.bf16.main-protected.v2",
+  "source": {
+    "model": "black-forest-labs/FLUX.2-klein-4B",
+    "revision": "e7b7dc27f91deacad38e78976d1f2b499d76a294",
+    "license": {
+      "name": "Apache License 2.0",
+      "spdxId": "Apache-2.0",
+      "reviewStatus": "approved",
+      "textDigest": "sha256:ca02bc51900ab07789d1b70283329e7137f5af98f5161c23a1c81fc38a4af1fe"
+    }
+  },
+  "engine": {
+    "name": "diffusers",
+    "version": "0.39.0"
+  },
+  "precision": {
+    "databaseValue": "bf16",
+    "weights": "BF16",
+    "activations": "BF16",
+    "kvCache": {
+      "applicability": "not-applicable-image-diffusion-pipeline",
+      "explicitBytes": null,
+      "reason": "Flux2KleinPipeline does not expose or use an autoregressive KV cache"
+    },
+    "quantization": "none"
+  },
+  "runtime": {
+    "servedModel": "flux2-klein-4b-bf16",
+    "hardMemoryBytes": 8809373696,
+    "runtimeEnvironment": {
+      "HF_HUB_OFFLINE": "1",
+      "HOME": "/tmp",
+      "LOGNAME": "teamaibox",
+      "TEAMAIBOX_DRAWING_IDLE_UNLOAD_SECONDS": "0",
+      "TEAMAIBOX_DRAWING_MAX_CONCURRENCY": "1",
+      "TEAMAIBOX_DRAWING_MODEL_ROOT": "/model",
+      "TEAMAIBOX_DRAWING_BEARER_TOKEN_FILE": "/run/secrets/auth/provider.token",
+      "TEAMAIBOX_DRAWING_REQUEST_TIMEOUT_SECONDS": "600",
+      "TEAMAIBOX_DRAWING_WATCHDOG_GRACE_SECONDS": "30",
+      "TEAMAIBOX_DRAWING_SOCKET_READ_TIMEOUT_SECONDS": "10",
+      "TEAMAIBOX_DRAWING_MAX_SERVER_THREADS": "4",
+      "TEAMAIBOX_DRAWING_JOB_TOMBSTONE_SECONDS": "900",
+      "TEAMAIBOX_DRAWING_MAX_JOB_TOMBSTONES": "4096",
+      "TEAMAIBOX_DRAWING_MEMORY_STRATEGY": "leaf-level-group-offload-to-dedicated-disk-volume-with-resident-vae",
+      "TEAMAIBOX_DRAWING_OFFLOAD_ROOT": "/offload",
+      "TEAMAIBOX_DRAWING_SERVED_MODEL": "flux2-klein-4b-bf16",
+      "TORCHINDUCTOR_CACHE_DIR": "/tmp/torchinductor",
+      "TRANSFORMERS_OFFLINE": "1",
+      "USER": "teamaibox"
+    }
+  }
+}

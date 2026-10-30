@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>虚拟电脑</title><script src="/plugins/official.virtual-computers/theme-prepaint.js"></script><link rel="stylesheet" href="/plugins/official.virtual-computers/computers.css"><link rel="stylesheet" href="/plugins/official.virtual-computers/installation.css">
+<script type="module" src="/plugins/official.virtual-computers/computers.mjs?v=sharing-20261022"></script><link rel="stylesheet" href="/plugins/official.virtual-computers/ui-system.css"></head><body data-ui-app="virtual-computers"><main>
+<header><div><p class="eyebrow" data-i18n="eyebrow">个人工作空间</p><h1 data-i18n="title">我的虚拟电脑</h1>
+<p class="muted" data-i18n="subtitle">在浏览器里使用 Windows，应用和文件留在你的电脑里。</p></div>
+<button id="create" class="primary" disabled data-i18n="create">＋ 创建电脑</button></header>
+<div class="toolbar"><p id="summary" aria-live="polite"></p><button id="refresh" data-i18n="refresh">刷新</button></div>
+<p id="notice" role="status" hidden></p><p id="error" role="alert" hidden></p>
+<button id="retry" hidden data-i18n="retry">确认上次操作</button>
+<section id="shared-section" hidden aria-labelledby="shared-title"><h2 id="shared-title" data-i18n="sharedTitle">邀请我的电脑</h2><p class="muted" data-i18n="sharedHint">直接打开查看。允许控制的邀请可由当前控制者交接，主人随时可以收回。</p><div id="shared-computers" class="shared-computers"></div></section>
+<section id="computers" aria-live="polite"></section>
+<section id="empty" hidden><div class="monitor" aria-hidden="true">＋</div><h2 data-i18n="empty">还没有虚拟电脑</h2>
+<p class="muted" data-i18n="emptyHint">选择系统和资源，创建独立的工作电脑。</p></section>
+<p class="muted footnote" data-i18n="boundary">关闭页面不会关机。需要释放运行资源时，请关闭电脑。</p>
+<dialog id="editor" aria-labelledby="editor-title"><form id="create-form"><h2 id="editor-title" data-i18n="create">创建电脑</h2>
+<label><span data-i18n="name">电脑名称</span><input id="name" required autocomplete="off"></label>
+<label><span data-i18n="system">系统</span><select id="system" required></select></label><p id="system-hint" class="muted"></p>
+<section id="installation-choice" hidden><p id="installation-selection"></p><p id="installation-help" class="muted"></p><div class="installation-actions"><button id="choose-iso" type="button"></button><button id="empty-computer" type="button"></button></div></section>
+<div class="resources"><label><span data-i18n="cpu">CPU 核数</span><input id="vcpus" type="number" step="1" required></label>
+<label><span data-i18n="memory">内存（GiB）</span><input id="memoryGiB" type="number" step="1" required></label>
+<label><span data-i18n="disk">磁盘（GiB）</span><input id="diskGiB" type="number" step="1" required></label></div>
+<p class="muted" data-i18n="createHint">创建后在列表中开机；可用资源不足时，请稍后再试。</p>
+<p id="create-error" role="alert" tabindex="-1" hidden></p><button type="button" id="create-retry" hidden data-i18n="retry">确认上次操作</button>
+<div class="dialog-actions"><button type="button" id="cancel" data-i18n="cancel">取消</button><button type="submit" class="primary" data-i18n="save">创建</button></div>
+</form></dialog>
+<dialog id="delete-dialog" aria-labelledby="delete-title"><form id="delete-form"><h2 id="delete-title" data-i18n="delete">删除电脑</h2><p id="delete-name"></p>
+<label class="confirm"><input id="delete-confirm" type="checkbox" required><span data-i18n="confirmDelete">删除这台电脑及全部应用和文件，无法撤销。</span></label>
+<p id="delete-error" role="alert" tabindex="-1" hidden></p><button type="button" id="delete-retry" hidden data-i18n="retry">确认上次操作</button>
+<div class="dialog-actions"><button type="button" id="delete-cancel" data-i18n="cancel">取消</button><button type="submit" class="danger" data-i18n="delete">删除电脑</button></div>
+</form></dialog></main></body></html>

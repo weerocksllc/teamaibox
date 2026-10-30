@@ -1,0 +1,27 @@
+{
+  "name": "@teamaibox/web",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 0.0.0.0",
+    "build": "tsc -b && vite build && node tools/verify-bundle.mjs dist",
+    "test": "node --test test/*.test.mjs"
+  },
+  "dependencies": {
+    "@teamaibox/ui-system": "workspace:*",
+    "@teamaibox/authorization": "workspace:*",
+    "@teamaibox/plugin-sdk": "workspace:*",
+    "lucide-react": "1.30.0",
+    "react": "19.2.8",
+    "react-dom": "19.2.8"
+  },
+  "devDependencies": {
+    "@types/react": "19.2.18",
+    "@types/react-dom": "19.2.4",
+    "@vitejs/plugin-react": "6.0.5",
+    "typescript": "7.0.2",
+    "vite": "8.2.1"
+  },
+  "license": "MIT"
+}

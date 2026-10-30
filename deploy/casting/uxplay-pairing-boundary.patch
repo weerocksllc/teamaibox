@@ -1,0 +1,118 @@
+--- a/lib/pairing.c
++++ b/lib/pairing.c
+@@ -60,6 +60,9 @@
+     char username[SRP_USERNAME_SIZE + 1]; 
+     unsigned char client_pk[ED25519_KEY_SIZE];
+     bool pair_setup;
++#ifdef TEAMAIBOX_PIN_STDIN
++    bool teamaibox_srp_proof_verified;
++#endif
+   
+     /* srp items */
+     srp_t *srp;
+@@ -500,6 +503,10 @@
+ int
+ srp_new_user(pairing_session_t *session, pairing_t *pairing, const char *device_id, const char *pin,
+              const char **salt, int *len_salt, const char **pk, int *len_pk) {
++#ifdef TEAMAIBOX_PIN_STDIN
++    if (!session || !pairing || !device_id || !pin) return -1;
++    session->teamaibox_srp_proof_verified = false;
++#endif
+     if (strlen(device_id) > SRP_USERNAME_SIZE) {
+         return -1;
+     }
+@@ -555,6 +562,10 @@
+ int
+ srp_validate_proof(pairing_session_t *session, pairing_t *pairing, const unsigned char *A,
+                     int len_A, unsigned char *proof, int client_proof_len, int proof_len) {
++#ifdef TEAMAIBOX_PIN_STDIN
++    if (!session || !session->srp || !pairing || !A || !proof || len_A < 1 || len_A > SRP_PK_SIZE
++        || client_proof_len != 20 || proof_len < 20 || session->teamaibox_srp_proof_verified) return -1;
++#endif
+     int authenticated  = 0;
+     const unsigned char *B =  NULL;
+     const unsigned char *b = session->srp->private_key;
+@@ -571,6 +582,7 @@
+                                                     b, len_b,
+                                                     &B, &len_B, NULL, NULL, 1);
+ 
++    if (!verifier) return -1;
+     srp_verifier_verify_session(verifier, proof, &M2);
+     authenticated = srp_verifier_is_authenticated(verifier);
+     if (authenticated == 0) {
+@@ -581,17 +593,29 @@
+         return -1;
+     }
+     session_key = srp_verifier_get_session_key(verifier, &len_K);
+-    if (len_K != SRP_SESSION_KEY_SIZE) {
++    if (len_K != SRP_SESSION_KEY_SIZE || !session_key || !M2) {
++        srp_verifier_delete(verifier);
+         return -2;
+     }
+     memcpy(session->srp->session_key, session_key, len_K);
++#ifdef TEAMAIBOX_PIN_STDIN
++    /* Only the SHA-1 proof is part of this protocol's response. */
++    memcpy(proof, M2, 20);
++    session->teamaibox_srp_proof_verified = true;
++#else
+     memcpy(proof, M2, proof_len);
++#endif
+     srp_verifier_delete(verifier);
+     return 0;
+ }
+ int
+ srp_confirm_pair_setup(pairing_session_t *session, pairing_t *pairing,
+                        unsigned char *epk, unsigned char *auth_tag) {
++#ifdef TEAMAIBOX_PIN_STDIN
++    if (!session || !session->srp || !pairing || !epk || !auth_tag
++        || !session->teamaibox_srp_proof_verified) return -1;
++    session->teamaibox_srp_proof_verified = false;
++#endif
+     unsigned char aesKey[16] = {0}, aesIV[16] = {0};
+     unsigned char hash[SHA512_DIGEST_LENGTH] = {0};
+     unsigned char pk[ED25519_KEY_SIZE] = {0};
+--- a/lib/raop_handlers.h
++++ b/lib/raop_handlers.h
+@@ -316,7 +316,7 @@
+         char *method = NULL;
+         char *user = NULL;
+         plist_get_string_val(req_method_node, &method);
+-        if (strncmp(method, "pin", strlen (method))) {
++        if (!method || strcmp(method, "pin")) {
+             logger_log(raop->logger, LOGGER_ERR, "error, required method is \"pin\", client requested \"%s\"", method);
+             free (method);
+             plist_free (req_root_node);
+@@ -358,6 +358,17 @@
+         uint64_t client_proof_len = 0;
+         plist_get_data_val(req_pk_node, &client_pk, &client_pk_len); 
+         plist_get_data_val(req_proof_node, &client_proof, &client_proof_len);
++#ifdef TEAMAIBOX_PIN_STDIN
++        /* SRP-2048/SHA-1: reject malformed lengths before logging, copying or
++         * passing attacker-controlled sizes into the pairing implementation. */
++        if (!client_pk || !client_proof || client_pk_len < 1 || client_pk_len > SRP_PK_SIZE
++            || client_proof_len != 20) {
++            free(client_pk);
++            free(client_proof);
++            plist_free(req_root_node);
++            goto authentication_failed;
++        }
++#endif
+         if (logger_debug) {
+             char *str = utils_data_to_string((const unsigned char *) client_proof, client_proof_len, 20);
+             logger_log(raop->logger, LOGGER_DEBUG, "client SRP6a proof <M> :\n%s", str);	    
+@@ -396,6 +407,15 @@
+         int ret = 0;
+         plist_get_data_val(req_epk_node, &client_epk, &client_epk_len); 
+         plist_get_data_val(req_authtag_node, &client_authtag, &client_authtag_len);
++#ifdef TEAMAIBOX_PIN_STDIN
++        if (!client_epk || !client_authtag || client_epk_len != ED25519_KEY_SIZE
++            || client_authtag_len != GCM_AUTHTAG_SIZE) {
++            free(client_epk);
++            free(client_authtag);
++            plist_free(req_root_node);
++            goto authentication_failed;
++        }
++#endif
+ 
+         if (logger_debug) {
+             char *str = utils_data_to_string((const unsigned char *) client_epk, client_epk_len, 16);

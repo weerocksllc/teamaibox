@@ -1,0 +1,42 @@
+{
+  "schemaVersion": 1,
+  "runtime": {
+    "runAsUid": 10001,
+    "runAsGid": 10001,
+    "readOnlyRoot": true,
+    "dropAllCapabilities": true,
+    "noNewPrivileges": true,
+    "seccompProfile": "teamaibox-plugin-v1",
+    "maximumPids": 1024,
+    "maximumOpenFiles": 65536,
+    "maximumTmpfsBytes": 1073741824
+  },
+  "filesystem": {
+    "volumePrefix": "teamaibox-plugin-",
+    "dataTarget": "/var/lib/teamaibox/plugin/data",
+    "cacheTarget": "/var/cache/teamaibox/plugin",
+    "runtimeTarget": "/run/teamaibox"
+  },
+  "network": {
+    "noneNetwork": "none",
+    "applicationIngressNetwork": "plugin-ingress",
+    "egressNetwork": "plugin-egress-proxy",
+    "egressProxyOnly": true,
+    "forbiddenHosts": [
+      "localhost",
+      "host.docker.internal",
+      "gateway.docker.internal",
+      "metadata.google.internal",
+      "169.254.169.254"
+    ],
+    "wildcardsAllowed": false
+  },
+  "devices": {
+    "ApplicationPlugin": [],
+    "ComputePlugin": ["accelerator", "video-codec"],
+    "runtimeMapping": {
+      "accelerator": ["nvidia.com/gpu=all"],
+      "video-codec": ["nvidia.com/nvenc=all", "nvidia.com/nvdec=all"]
+    }
+  }
+}

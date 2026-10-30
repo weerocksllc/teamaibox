@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.teamaibox.local/http/file-entry.v1.schema.json",
+  "title": "Team Drive entry v1",
+  "x-teamaibox-contract": {"family": "http", "role": "response", "major": 1},
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "object", "root_id", "parent_id", "kind", "name", "owner_identity_id", "current_version", "revision", "created_at", "updated_at", "trashed_at", "retention_until"],
+  "properties": {
+    "id": {"type": "string", "format": "uuid"},
+    "object": {"const": "files.entry"},
+    "root_id": {"type": "string", "format": "uuid"},
+    "parent_id": {"type": ["string", "null"], "format": "uuid"},
+    "kind": {"type": "string", "enum": ["folder", "file"]},
+    "name": {"type": "string", "minLength": 1, "maxLength": 255, "pattern": "^[^/\\\\\\u0000]+$"},
+    "owner_identity_id": {"type": "string", "format": "uuid"},
+    "current_version": {"type": "integer", "minimum": 0},
+    "revision": {"type": "integer", "minimum": 1},
+    "created_at": {"type": "string", "format": "date-time"},
+    "updated_at": {"type": "string", "format": "date-time"},
+    "trashed_at": {"type": ["string", "null"], "format": "date-time"},
+    "retention_until": {"type": ["string", "null"], "format": "date-time"},
+    "extensions": {"type": "object", "additionalProperties": true}
+  }
+}

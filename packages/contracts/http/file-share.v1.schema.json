@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.teamaibox.local/http/file-share.v1.schema.json",
+  "title": "Team Drive internal share v1",
+  "x-teamaibox-contract": {"family": "http", "role": "response", "major": 1},
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "object", "root_id", "entry_id", "principal_kind", "principal_key", "role", "expires_at", "revoked_at", "revision", "created_by_identity_id", "created_at"],
+  "properties": {
+    "id": {"type": "string", "format": "uuid"},
+    "object": {"const": "files.share"},
+    "root_id": {"type": "string", "format": "uuid"},
+    "entry_id": {"type": "string", "format": "uuid"},
+    "principal_kind": {"type": "string", "enum": ["identity", "team"]},
+    "principal_key": {"type": "string", "minLength": 3, "maxLength": 128},
+    "role": {"type": "string", "enum": ["viewer", "editor"]},
+    "expires_at": {"type": ["string", "null"], "format": "date-time"},
+    "revoked_at": {"type": ["string", "null"], "format": "date-time"},
+    "revision": {"type": "integer", "minimum": 1},
+    "created_by_identity_id": {"type": "string", "format": "uuid"},
+    "created_at": {"type": "string", "format": "date-time"},
+    "extensions": {"type": "object", "additionalProperties": true}
+  }
+}

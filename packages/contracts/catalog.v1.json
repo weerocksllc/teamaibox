@@ -1,0 +1,389 @@
+{
+  "catalogVersion": 1,
+  "contracts": [
+    {
+      "id": "platform-error",
+      "family": "http",
+      "major": 1,
+      "role": "response",
+      "stability": "stable",
+      "path": "errors/platform-error.v1.schema.json"
+    },
+    {
+      "id": "openai-job-extension",
+      "family": "openai",
+      "major": 1,
+      "role": "response",
+      "stability": "stable",
+      "path": "openai/job-extension.v1.schema.json"
+    },
+    {
+      "id": "openai-request-extension",
+      "family": "openai",
+      "major": 1,
+      "role": "request",
+      "stability": "stable",
+      "path": "openai/request-extension.v1.schema.json"
+    },
+    {
+      "id": "http-compute-job",
+      "family": "http",
+      "major": 1,
+      "role": "response",
+      "stability": "stable",
+      "path": "http/compute-job.v1.schema.json"
+    },
+    {
+      "id": "http-ocr-submission",
+      "family": "http",
+      "major": 1,
+      "role": "request",
+      "stability": "stable",
+      "path": "http/ocr-submission.v1.schema.json"
+    },
+    {
+      "id": "http-translation-submission",
+      "family": "http",
+      "major": 1,
+      "role": "request",
+      "stability": "stable",
+      "path": "http/translation-submission.v1.schema.json"
+    },
+    {
+      "id": "http-ocr-result",
+      "family": "http",
+      "major": 1,
+      "role": "response",
+      "stability": "stable",
+      "path": "http/ocr-result.v1.schema.json"
+    },
+    {
+      "id": "http-asr-submission",
+      "family": "http",
+      "major": 1,
+      "role": "request",
+      "stability": "stable",
+      "path": "http/asr-submission.v1.schema.json"
+    },
+    {
+      "id": "http-asr-result",
+      "family": "http",
+      "major": 1,
+      "role": "response",
+      "stability": "stable",
+      "path": "http/asr-result.v1.schema.json"
+    },
+    {
+      "id": "http-translation-result",
+      "family": "http",
+      "major": 1,
+      "role": "response",
+      "stability": "stable",
+      "path": "http/translation-result.v1.schema.json"
+    },
+    {
+      "id": "http-realtime-admission",
+      "family": "http",
+      "major": 1,
+      "role": "request",
+      "stability": "stable",
+      "path": "http/realtime-admission.v1.schema.json"
+    },
+    {
+      "id": "http-realtime-session",
+      "family": "http",
+      "major": 1,
+      "role": "response",
+      "stability": "stable",
+      "path": "http/realtime-session.v1.schema.json"
+    },
+    {
+      "id": "http-assistant-submission",
+      "family": "http",
+      "major": 1,
+      "role": "request",
+      "stability": "stable",
+      "path": "http/assistant-submission.v1.schema.json"
+    },
+    {
+      "id": "http-assistant-conversation",
+      "family": "http",
+      "major": 1,
+      "role": "response",
+      "stability": "stable",
+      "path": "http/assistant-conversation.v1.schema.json"
+    },
+    {
+      "id": "http-assistant-event",
+      "family": "http",
+      "major": 1,
+      "role": "response",
+      "stability": "stable",
+      "path": "http/assistant-event.v1.schema.json"
+    },
+    {
+      "id": "http-image-edit-submission",
+      "family": "http",
+      "major": 1,
+      "role": "request",
+      "stability": "stable",
+      "path": "http/image-edit-submission.v1.schema.json"
+    },
+    {
+      "id": "http-image-result",
+      "family": "http",
+      "major": 1,
+      "role": "response",
+      "stability": "stable",
+      "path": "http/image-result.v1.schema.json"
+    },
+    {
+      "id": "http-model-card",
+      "family": "http",
+      "major": 1,
+      "role": "response",
+      "stability": "stable",
+      "path": "http/model-card.v1.schema.json"
+    },
+    {
+      "id": "http-user-activity",
+      "family": "http",
+      "major": 1,
+      "role": "response",
+      "stability": "stable",
+      "path": "http/user-activity.v1.schema.json"
+    },
+    {
+      "id": "http-diagnostic-bundle",
+      "family": "http",
+      "major": 1,
+      "role": "response",
+      "stability": "stable",
+      "path": "http/diagnostic-bundle.v1.schema.json"
+    },
+    {
+      "id": "http-audit-event-page",
+      "family": "http",
+      "major": 1,
+      "role": "response",
+      "stability": "stable",
+      "path": "http/audit-event-page.v1.schema.json"
+    },
+    {
+      "id": "http-maintenance-administration",
+      "family": "http",
+      "major": 1,
+      "role": "response",
+      "stability": "stable",
+      "path": "http/maintenance-administration.v1.schema.json"
+    },
+    {
+      "id": "realtime-session-envelope",
+      "family": "realtime",
+      "major": 1,
+      "role": "bidirectional",
+      "stability": "stable",
+      "path": "realtime/session-envelope.v1.schema.json"
+    },
+    {
+      "id": "node-agent-command",
+      "family": "node-agent",
+      "major": 1,
+      "role": "request",
+      "stability": "stable",
+      "path": "node-agent/command-envelope.v1.schema.json"
+    },
+    {
+      "id": "node-agent-inventory",
+      "family": "node-agent",
+      "major": 1,
+      "role": "request",
+      "stability": "stable",
+      "path": "node-agent/node-inventory.v1.schema.json"
+    },
+    {
+      "id": "node-agent-metrics",
+      "family": "node-agent",
+      "major": 1,
+      "role": "request",
+      "stability": "stable",
+      "path": "node-agent/node-metrics.v1.schema.json"
+    },
+    {
+      "id": "worker-control",
+      "family": "worker",
+      "major": 1,
+      "role": "bidirectional",
+      "stability": "stable",
+      "path": "workers/control-envelope.v1.schema.json"
+    },
+    {
+      "id": "plugin-manifest",
+      "family": "plugin",
+      "major": 1,
+      "role": "request",
+      "stability": "stable",
+      "path": "plugins/manifest.v1.schema.json"
+    },
+    {
+      "id": "scoped-object-reference",
+      "family": "object",
+      "major": 1,
+      "role": "bidirectional",
+      "stability": "stable",
+      "path": "objects/scoped-reference.v1.schema.json"
+    },
+    {
+      "id": "object-browser-upload-result",
+      "family": "object",
+      "major": 1,
+      "role": "response",
+      "stability": "stable",
+      "path": "objects/browser-upload-result.v1.schema.json"
+    },
+    {
+      "id": "object-compute-reference-request",
+      "family": "object",
+      "major": 1,
+      "role": "request",
+      "stability": "stable",
+      "path": "objects/compute-reference-request.v1.schema.json"
+    },
+    {
+      "id": "object-list",
+      "family": "object",
+      "major": 1,
+      "role": "response",
+      "stability": "stable",
+      "path": "objects/object-list.v1.schema.json"
+    },
+    {
+      "id": "compute-capability",
+      "family": "compute",
+      "major": 1,
+      "role": "response",
+      "stability": "stable",
+      "path": "compute/capability.v1.schema.json"
+    },
+    {
+      "id": "compute-model-profile",
+      "family": "compute",
+      "major": 1,
+      "role": "response",
+      "stability": "stable",
+      "path": "compute/model-profile.v1.schema.json"
+    },
+    {
+      "id": "compute-job",
+      "family": "compute",
+      "major": 1,
+      "role": "response",
+      "stability": "stable",
+      "path": "compute/job.v1.schema.json"
+    },
+    {
+      "id": "compute-attempt",
+      "family": "compute",
+      "major": 1,
+      "role": "response",
+      "stability": "stable",
+      "path": "compute/attempt.v1.schema.json"
+    },
+    {
+      "id": "compute-reservation",
+      "family": "compute",
+      "major": 1,
+      "role": "bidirectional",
+      "stability": "stable",
+      "path": "compute/reservation.v1.schema.json"
+    },
+    {
+      "id": "compute-worker-instance",
+      "family": "compute",
+      "major": 1,
+      "role": "response",
+      "stability": "stable",
+      "path": "compute/worker-instance.v1.schema.json"
+    },
+    {
+      "id": "compute-artifact-ref",
+      "family": "compute",
+      "major": 1,
+      "role": "bidirectional",
+      "stability": "stable",
+      "path": "compute/artifact-ref.v1.schema.json"
+    },
+    {
+      "id": "compute-provider-error",
+      "family": "compute",
+      "major": 1,
+      "role": "response",
+      "stability": "stable",
+      "path": "compute/provider-error.v1.schema.json"
+    },
+    {
+      "id": "http-messaging-conversation",
+      "family": "http",
+      "major": 1,
+      "role": "response",
+      "stability": "stable",
+      "path": "http/messaging-conversation.v1.schema.json"
+    },
+    {
+      "id": "http-messaging-message-submission",
+      "family": "http",
+      "major": 1,
+      "role": "request",
+      "stability": "stable",
+      "path": "http/messaging-message-submission.v1.schema.json"
+    },
+    {
+      "id": "http-messaging-message",
+      "family": "http",
+      "major": 1,
+      "role": "response",
+      "stability": "stable",
+      "path": "http/messaging-message.v1.schema.json"
+    },
+    {
+      "id": "realtime-messaging-event",
+      "family": "realtime",
+      "major": 1,
+      "role": "response",
+      "stability": "stable",
+      "path": "realtime/messaging-event.v1.schema.json"
+    },
+    {
+      "id": "http-file-root",
+      "family": "http",
+      "major": 1,
+      "role": "response",
+      "stability": "stable",
+      "path": "http/file-root.v1.schema.json"
+    },
+    {
+      "id": "http-file-entry",
+      "family": "http",
+      "major": 1,
+      "role": "response",
+      "stability": "stable",
+      "path": "http/file-entry.v1.schema.json"
+    },
+    {
+      "id": "http-file-version",
+      "family": "http",
+      "major": 1,
+      "role": "response",
+      "stability": "stable",
+      "path": "http/file-version.v1.schema.json"
+    },
+    {
+      "id": "http-file-share",
+      "family": "http",
+      "major": 1,
+      "role": "response",
+      "stability": "stable",
+      "path": "http/file-share.v1.schema.json"
+    }
+  ]
+}

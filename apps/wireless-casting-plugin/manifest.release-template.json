@@ -1,0 +1,147 @@
+{
+  "apiVersion": "teamaibox.io/plugin/v1",
+  "id": "official.wireless-casting",
+  "type": "ApplicationPlugin",
+  "version": "0.1.10",
+  "official": true,
+  "publisher": {
+    "id": "teamaibox.official",
+    "displayName": "Team AI Box"
+  },
+  "architectures": [
+    "linux/arm64/v8"
+  ],
+  "images": [
+    {
+      "name": "wireless-casting-application",
+      "role": "application",
+      "variants": [
+        {
+          "architecture": "linux/arm64/v8",
+          "reference": "__RELEASE_PIPELINE_MUST_SET_OCI_REFERENCE__",
+          "digest": "sha256:__RELEASE_PIPELINE_MUST_SET_64_HEX_DIGEST__",
+          "mediaType": "application/vnd.oci.image.manifest.v1+json"
+        }
+      ]
+    }
+  ],
+  "entryPoints": {
+    "web": {
+      "path": "/plugins/official.wireless-casting",
+      "integration": "iframe"
+    }
+  },
+  "apis": [
+    {
+      "name": "platform.casting",
+      "versionRange": ">=1.0.0 <2.0.0",
+      "access": "delegated-user"
+    },
+    {
+      "name": "platform.identity-directory",
+      "versionRange": ">=1.0.0 <2.0.0",
+      "access": "delegated-user"
+    }
+  ],
+  "ui": {
+    "displayNameKey": "app.wireless-casting.name",
+    "summaryKey": "app.wireless-casting.description",
+    "icon": "cast",
+    "category": "collaboration",
+    "launchPath": "/apps/official.wireless-casting",
+    "order": 35
+  },
+  "localization": {
+    "supportedLocales": [
+      "zh-CN",
+      "zh-TW",
+      "en",
+      "ja",
+      "ko",
+      "fr",
+      "de",
+      "es",
+      "pt-BR",
+      "ru",
+      "ar",
+      "hi",
+      "id",
+      "it",
+      "tr",
+      "vi",
+      "th"
+    ],
+    "fallbackLocale": "zh-CN",
+    "supportedDirections": [
+      "ltr",
+      "rtl"
+    ],
+    "rtlReady": true
+  },
+  "themes": {
+    "supported": [
+      "light",
+      "dark"
+    ],
+    "usesSemanticTokens": true,
+    "livePreferenceEvents": true
+  },
+  "permissions": {
+    "platformApiScopes": [],
+    "delegatedUserToken": true,
+    "network": {
+      "mode": "none",
+      "egressHosts": []
+    },
+    "objectNamespaces": [],
+    "devices": []
+  },
+  "resources": {
+    "cpu": {
+      "requestMillicores": 25,
+      "limitMillicores": 150
+    },
+    "unifiedMemoryBytes": 100663296,
+    "ephemeralStorageBytes": 16777216,
+    "persistentStorageBytes": 0,
+    "network": {
+      "ingressBitsPerSecond": 25000000,
+      "egressBitsPerSecond": 25000000
+    }
+  },
+  "health": {
+    "startup": {
+      "path": "/health/startup",
+      "intervalSeconds": 5,
+      "timeoutSeconds": 2,
+      "failureThreshold": 12
+    },
+    "readiness": {
+      "path": "/health/ready",
+      "intervalSeconds": 10,
+      "timeoutSeconds": 2,
+      "failureThreshold": 3
+    },
+    "liveness": {
+      "path": "/health/live",
+      "intervalSeconds": 30,
+      "timeoutSeconds": 3,
+      "failureThreshold": 3
+    }
+  },
+  "migrations": [],
+  "compatibility": {
+    "platform": ">=0.1.0 <1.0.0",
+    "pluginApi": ">=1.0.0 <2.0.0",
+    "runtime": "oci-linux-arm64-v1",
+    "requiredCapabilities": [],
+    "dependencies": []
+  },
+  "signature": {
+    "format": "teamaibox.canonical-json/v1",
+    "algorithm": "Ed25519",
+    "keyId": "__RELEASE_PIPELINE_MUST_SET_KEY_ID__",
+    "payloadDigest": "sha256:__RELEASE_PIPELINE_MUST_SET_64_HEX_DIGEST__",
+    "value": "__RELEASE_PIPELINE_MUST_SIGN_CANONICAL_MANIFEST__"
+  }
+}

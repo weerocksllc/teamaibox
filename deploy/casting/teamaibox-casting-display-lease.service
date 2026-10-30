@@ -1,0 +1,31 @@
+[Unit]
+Description=Team AI Box temporary HDMI greeter handoff
+Requires=teamaibox-casting-identities.service
+After=teamaibox-casting-identities.service
+Before=docker.service
+
+[Service]
+Type=simple
+ExecStartPre=/usr/bin/python3 -B /usr/local/lib/teamaibox/casting-lifecycle-20260909-a1/prepare_casting_hdmi_credentials.py
+ExecStart=/usr/bin/python3 -B /usr/local/lib/teamaibox/casting-lifecycle-20260909-a1/casting_display_lease_host.py
+ExecStopPost=/usr/bin/env CAST_DISPLAY_RESTORE_ONLY=1 /usr/bin/python3 -B /usr/local/lib/teamaibox/casting-lifecycle-20260909-a1/casting_display_lease_host.py
+Restart=on-failure
+RestartSec=3
+TimeoutStopSec=35
+UMask=0077
+RuntimeDirectory=teamaibox/display-lease
+RuntimeDirectoryMode=0755
+RuntimeDirectoryPreserve=yes
+NoNewPrivileges=yes
+ProtectSystem=strict
+ProtectHome=yes
+PrivateTmp=yes
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectControlGroups=yes
+ReadWritePaths=/run/teamaibox
+ReadWritePaths=/sys/class/drm/card1-HDMI-A-1/status
+RestrictAddressFamilies=AF_UNIX AF_NETLINK
+
+[Install]
+WantedBy=multi-user.target

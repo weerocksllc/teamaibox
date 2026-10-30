@@ -1,0 +1,121 @@
+{
+  "apiContracts": ["openai.chat-completions@v1"],
+  "artifactDigest": "sha256:ab6f3caf9681bfbb826c0fe7a93a64345a37bf1e6005b16d0f984623686842e1",
+  "artifacts": [{
+    "digest": "sha256:ab6f3caf9681bfbb826c0fe7a93a64345a37bf1e6005b16d0f984623686842e1",
+    "mediaType": "application/vnd.teamaibox.model-snapshot+json",
+    "name": "model-snapshot",
+    "role": "weights",
+    "sizeBytes": 11782646886
+  }],
+  "capabilityId": "36a56a62-d50d-5970-9553-6df1a31ea923",
+  "coldStart": {
+    "artifactReadBytes": 11782646886,
+    "estimatedMilliseconds": 15000,
+    "evidenceRef": "evidence://validation/models/madlad400-runtime-smoke-20260813-a1"
+  },
+  "compatibility": {
+    "architectures": ["linux/arm64/v8"],
+    "hardware": {
+      "acceleratorFamilies": ["nvidia-gb10-blackwell"],
+      "codecDirections": {"decode": 0, "encode": 0},
+      "minimumComputeCapability": "12.1",
+      "minimumCpuCores": 8,
+      "minimumUnifiedMemoryBytes": 17000000000
+    },
+    "software": {
+      "containerToolkitRange": ">=1.17 <2.0",
+      "cudaRange": ">=13.2 <14.0",
+      "driverRange": ">=580.0 <590.0",
+      "kernelRange": ">=6.17 <7.0",
+      "os": "linux"
+    }
+  },
+  "dataPolicy": {
+    "allowedDataClasses": ["confidential", "internal", "public", "restricted"],
+    "externalProcessing": "forbidden"
+  },
+  "engine": {
+    "configurationDigest": "sha256:c3fcd0ba4580008749dc0036a7dc672dd20a87b30abeef2e52137972fdd3b722",
+    "imageDigest": "sha256:fbf409ac8ff5e21c9f051418f1dcd3d5e59b17974097c7a7b203ef07274c2ad5",
+    "name": "transformers-t5",
+    "runtime": "cuda",
+    "runtimeVersion": "13.2",
+    "version": "4.57.6"
+  },
+  "exclusive": false,
+  "executionKind": "managed_node",
+  "extensions": {
+    "api_gateway_required": true,
+    "candidate_id": "madlad400-3b-mt-bf16",
+    "runtime_network": "isolated-internal",
+    "scheduler_requirements": {"fresh_host_memory_evidence": true, "storage_class": "encrypted_nvme"},
+    "served_model": "madlad400-3b-mt-bf16",
+    "worker_source_digest": "sha256:bcf7ed5b3b49b82ed52151e57e472f6d90f8992ebfb8ff15c9a636637c79f3d0"
+  },
+  "knownLimitations": [
+    "The profile supports bounded text translation batches; OCR, ASR, and subtitle composition remain separate workflow stages.",
+    "No publisher-documented NVFP4 recipe exists for this model; BF16 is the reviewed precision.",
+    "The worker serializes GPU generation and advertises one concurrent request.",
+    "Validation currently covers Chinese/English and selected Japanese/German to English directions."
+  ],
+  "limits": {
+    "maximumBatchSize": 25,
+    "maximumConcurrentRequests": 1,
+    "maximumContextTokens": 1024,
+    "maximumDurationSeconds": 1800,
+    "maximumInputBytes": 2097152,
+    "maximumOutputBytes": 4194304,
+    "maximumOutputTokens": 1024
+  },
+  "precision": "bf16",
+  "profileKey": "translation.madlad400-3b-mt.bf16.spark.v1",
+  "quantizationRecipe": null,
+  "resourceEnvelope": {
+    "acceleratorUnits": 1,
+    "accountingMode": "observed",
+    "codecSessions": 0,
+    "cpuMillis": 8000,
+    "evidenceRef": "evidence://validation/models/madlad400-runtime-smoke-20260813-a1",
+    "networkBitsPerSecond": 0,
+    "storageBytes": 17000000000,
+    "unifiedMemoryBytes": 17000000000
+  },
+  "source": {
+    "license": {
+      "evidenceRef": "https://huggingface.co/google/madlad400-3b-mt/blob/fa184c675da0b5c9e1c8694fccd4e12e2d422094/README.md",
+      "name": "Apache License 2.0",
+      "reviewStatus": "approved",
+      "spdxId": "Apache-2.0",
+      "textDigest": "sha256:7579fd7a40ebb96bc9098b1c817825c572a20763aa8fc80c5261a0517e224979",
+      "usage": "commercial"
+    },
+    "model": "google/madlad400-3b-mt",
+    "provenance": {
+      "evidenceRef": "evidence://models/candidate-matrix.v1",
+      "publisher": "Google",
+      "retrievedAt": "2026-08-10T19:41:32.000Z",
+      "sourceDigest": "sha256:cad399cab799b99409a6ec2d90d72552257c2bb752861261d2016691e0643e7c",
+      "sourceUri": "https://huggingface.co/google/madlad400-3b-mt/tree/fa184c675da0b5c9e1c8694fccd4e12e2d422094"
+    },
+    "revision": "fa184c675da0b5c9e1c8694fccd4e12e2d422094"
+  },
+  "validationEvidence": [
+    {
+      "environmentDigest": "sha256:cb7f3510eb6ee05f323f5bd91cb1e9571390888bd4ff64bdb91add0143501168",
+      "evidenceRef": "evidence://models/candidate-matrix.v1",
+      "observedAt": "2026-08-10T19:41:32.000Z",
+      "result": "passed",
+      "runId": "model-discovery-madlad400-20260810",
+      "stage": "discovery"
+    },
+    {
+      "environmentDigest": "sha256:cb7f3510eb6ee05f323f5bd91cb1e9571390888bd4ff64bdb91add0143501168",
+      "evidenceRef": "evidence://validation/models/madlad400-runtime-smoke-20260813-a1",
+      "observedAt": "2026-08-13T04:56:33.437Z",
+      "result": "passed",
+      "runId": "madlad400-runtime-smoke-20260813-a1",
+      "stage": "smoke"
+    }
+  ]
+}

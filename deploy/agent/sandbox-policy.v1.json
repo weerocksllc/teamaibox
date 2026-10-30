@@ -1,0 +1,70 @@
+{
+  "schemaVersion": 1,
+  "policyId": "official-agent-sandbox.v1",
+  "runtime": {
+    "runAsUid": 65532,
+    "runAsGid": 65532,
+    "readOnlyRoot": true,
+    "dropAllCapabilities": true,
+    "noNewPrivileges": true,
+    "seccompProfile": "builtin",
+    "defaultMemoryBytes": 8589934592,
+    "maximumMemoryBytes": 34359738368,
+    "defaultCpuQuotaMicros": 400000,
+    "maximumCpuQuotaMicros": 800000,
+    "defaultPidsLimit": 512,
+    "maximumPidsLimit": 2048,
+    "defaultEphemeralBytes": 8589934592,
+    "maximumEphemeralBytes": 34359738368,
+    "defaultOpenFilesLimit": 65536,
+    "maximumOpenFilesLimit": 262144,
+    "idleTimeoutSeconds": 900
+  },
+  "filesystem": {
+    "workspaceTarget": "/workspace",
+    "workspaceVolumePrefix": "teamaibox-agent-",
+    "workspaceVolumeSuffix": "-workspace",
+    "defaultWorkspaceQuotaBytes": 107374182400,
+    "maximumWorkspaceQuotaBytes": 1099511627776,
+    "hostMountsAllowed": false,
+    "dockerSocketAllowed": false,
+    "crossUserVolumesAllowed": false
+  },
+  "network": {
+    "networkName": "agent-egress-proxy",
+    "requiredHosts": ["compute-gateway", "source-gateway"],
+    "wildcardsAllowed": false,
+    "forbiddenHosts": ["localhost", "host.docker.internal", "gateway.docker.internal", "169.254.169.254"]
+  },
+  "devices": {
+    "allowed": [],
+    "directGpuAllowed": false
+  },
+  "gateways": {
+    "compute": "http://compute-gateway:8080",
+    "pip": "http://source-gateway:8080/pip/simple/",
+    "npm": "http://source-gateway:8080/npm/registry/",
+    "apt": "http://source-gateway:8080/apt"
+  },
+  "opencode": {
+    "command": ["/opt/opencode/opencode", "serve", "--hostname", "127.0.0.1", "--port", "4096"],
+    "configTarget": "/run/teamaibox/xdg-config/opencode/opencode.json",
+    "disableAutoUpdate": true,
+    "disableShare": true,
+    "approvedPlugins": [],
+    "environment": {
+      "XDG_CONFIG_HOME": "/run/teamaibox/xdg-config",
+      "OPENCODE_CONFIG": "/run/teamaibox/xdg-config/opencode/opencode.json",
+      "OPENCODE_DISABLE_PROJECT_CONFIG": "1",
+      "OPENCODE_DISABLE_AUTOUPDATE": "1",
+      "OPENCODE_DISABLE_SHARE": "1",
+      "OPENCODE_AUTO_SHARE": "false",
+      "OPENCODE_PURE": "1",
+      "OPENCODE_DISABLE_DEFAULT_PLUGINS": "1",
+      "OPENCODE_DISABLE_EXTERNAL_SKILLS": "1",
+      "OPENCODE_DISABLE_MODELS_FETCH": "1",
+      "OPENCODE_DISABLE_EMBEDDED_WEB_UI": "1",
+      "OPENCODE_PERMISSION": "{\"*\":\"ask\"}"
+    }
+  }
+}

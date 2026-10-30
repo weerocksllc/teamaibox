@@ -1,0 +1,23 @@
+[Unit]
+Description=Restore the exact existing office models in dependency order at boot
+Wants=docker.service teamaibox-existing-business-volumes.service
+After=docker.service teamaibox-existing-business-volumes.service
+StartLimitIntervalSec=0
+
+[Service]
+Type=oneshot
+EnvironmentFile=/etc/teamaibox/office-boot.env
+# Readiness failures must reach the service retry policy, not cancel its job.
+# Keep these separate: is-active with several names succeeds if ANY is active.
+ExecStartPre=/usr/bin/systemctl is-active --quiet docker.service
+ExecStartPre=/usr/bin/systemctl is-active --quiet teamaibox-existing-business-volumes.service
+ExecStart=/usr/bin/python3 /usr/local/lib/teamaibox/boot-restore-v1/restore_calibrated_office_workers_v3.py --configuration ${TEAMAIBOX_OFFICE_BOOT_CONFIGURATION_FILE} --manifest ${TEAMAIBOX_OFFICE_BOOT_MANIFEST_FILE}
+RemainAfterExit=yes
+TimeoutStartSec=infinity
+Restart=on-failure
+RestartSec=15
+UMask=0077
+# The boot loop exits after convergence; healthy models are never restarted.
+
+[Install]
+WantedBy=multi-user.target

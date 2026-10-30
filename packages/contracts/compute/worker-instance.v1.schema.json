@@ -1,0 +1,65 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.teamaibox.local/compute/worker-instance.v1.schema.json",
+  "title": "Team AI Box managed worker instance v1",
+  "x-teamaibox-contract": {"family": "compute", "role": "response", "major": 1},
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion", "workerInstanceId", "nodeId", "nodeGeneration", "computePluginId",
+    "modelProfileId", "generation", "imageDigest", "architecture",
+    "lifecycleState", "health", "resources", "activeAttemptIds",
+    "reservationIds", "createdAt", "updatedAt"
+  ],
+  "properties": {
+    "schemaVersion": {"const": 1},
+    "workerInstanceId": {"type": "string", "format": "uuid"},
+    "nodeId": {"type": "string", "format": "uuid"},
+    "nodeGeneration": {"type": "integer", "minimum": 1},
+    "computePluginId": {"type": "string", "format": "uuid"},
+    "modelProfileId": {"type": "string", "format": "uuid"},
+    "generation": {"type": "integer", "minimum": 1},
+    "imageDigest": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+    "architecture": {"type": "string", "enum": ["linux/arm64/v8", "linux/amd64"]},
+    "lifecycleState": {"type": "string", "enum": ["stopped", "starting", "preparing", "ready", "busy", "draining", "stopping", "failed", "circuit_open"]},
+    "health": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["state", "observedAt", "generation"],
+      "properties": {
+        "state": {"type": "string", "enum": ["unknown", "starting", "healthy", "degraded", "unhealthy"]},
+        "observedAt": {"type": "string", "format": "date-time"},
+        "generation": {"type": "integer", "minimum": 1},
+        "reasonCode": {"type": ["string", "null"], "pattern": "^[a-z][a-z0-9_]{2,63}$"}
+      }
+    },
+    "resources": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["cpuMillis", "unifiedMemoryBytes", "storageBytes", "networkBitsPerSecond", "acceleratorUnits", "codecSessions"],
+      "properties": {
+        "cpuMillis": {"type": "integer", "minimum": 0},
+        "unifiedMemoryBytes": {"type": "integer", "minimum": 0},
+        "storageBytes": {"type": "integer", "minimum": 0},
+        "networkBitsPerSecond": {"type": "integer", "minimum": 0},
+        "acceleratorUnits": {"type": "integer", "minimum": 0},
+        "codecSessions": {"type": "integer", "minimum": 0}
+      }
+    },
+    "activeAttemptIds": {
+      "type": "array", "uniqueItems": true,
+      "items": {"type": "string", "format": "uuid"}
+    },
+    "reservationIds": {
+      "type": "array", "uniqueItems": true,
+      "items": {"type": "string", "format": "uuid"}
+    },
+    "loadedAt": {"type": ["string", "null"], "format": "date-time"},
+    "lastHeartbeatAt": {"type": ["string", "null"], "format": "date-time"},
+    "idleSince": {"type": ["string", "null"], "format": "date-time"},
+    "crashCount": {"type": "integer", "minimum": 0},
+    "createdAt": {"type": "string", "format": "date-time"},
+    "updatedAt": {"type": "string", "format": "date-time"},
+    "extensions": {"type": "object", "additionalProperties": true}
+  }
+}

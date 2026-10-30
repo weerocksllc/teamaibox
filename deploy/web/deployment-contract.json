@@ -1,0 +1,52 @@
+{
+  "schemaVersion": 1,
+  "architecture": "linux/arm64/v8",
+  "build": {
+    "dockerfile": "deploy/images/web.Dockerfile",
+    "offlineDevelopmentDockerfile": "deploy/images/web-prebuilt.Dockerfile",
+    "baseImageLock": "deploy/compose/images.arm64.json#images.node-runtime",
+    "packageManager": "pnpm@11.1.3",
+    "releaseImageReference": "registry-digest-required",
+    "offlineDevelopmentEvidence": "locked-local-build-plus-spark-arm64-image"
+  },
+  "developmentHttp": {
+    "allowed": true,
+    "classification": "isolated-no-protected-data",
+    "defaultPort": 18080,
+    "releaseEvidenceEligible": false
+  },
+  "authenticatedIntegration": {
+    "deploymentTool": "tools/deploy_spark_authenticated_preview.py",
+    "defaultPort": 18443,
+    "classification": "development-ca-and-memory-identity",
+    "platformApiDockerfile": "deploy/images/platform-api.Dockerfile",
+    "platformApiPublishedPort": false,
+    "apiNetwork": "internal-docker-bridge",
+    "webEdgeNetwork": "non-masqueraded-published-docker-bridge",
+    "browserTrustRequired": true,
+    "releaseEvidenceEligible": false
+  },
+  "releaseHttps": {
+    "required": true,
+    "defaultPort": 443,
+    "certificateHostnameOrIpMatchRequired": true,
+    "certificateAuthorityAsLeafRejected": true,
+    "certificatePrivateKeyMatchRequired": true,
+    "certificateChainOrder": "server-leaf-first",
+    "certificateReloadSignal": "SIGHUP",
+    "invalidReplacementBehavior": "retain-current-context-and-report-failure"
+  },
+  "slots": {
+    "names": ["blue", "green"],
+    "candidateHealthPath": "/health/ready",
+    "switchVariable": "TEAMAIBOX_ACTIVE_WEB_ORIGIN",
+    "rollback": "restore-previous-slot-origin-and-recreate-web-edge"
+  },
+  "routes": {
+    "platformApiPrefixes": ["/api", "/v1", "/events", "/realtime", "/ws"],
+    "application": "active-slot",
+    "webSocketPrefixes": ["/api", "/v1", "/events", "/realtime", "/ws"],
+    "sse": "stream-without-buffering",
+    "spaFallback": true
+  }
+}

@@ -1,0 +1,6 @@
+*
+!services/realtime-asr-worker/**
+!services/media_io/resources.py
+**/__pycache__
+**/*.pyc
+**/.env*

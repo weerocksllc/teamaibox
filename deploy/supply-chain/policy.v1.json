@@ -1,0 +1,35 @@
+{
+  "policyVersion": 1,
+  "release": {
+    "digestReferenceRequired": true,
+    "signaturesRequired": true,
+    "signatureTool": "cosign",
+    "minimumCosignVersion": "3.0.6",
+    "keylessIssuer": "https://token.actions.githubusercontent.com",
+    "identityMatching": "exact",
+    "sbomRequired": true,
+    "sbomFormat": "spdx-json",
+    "provenanceRequired": true,
+    "provenanceMode": "max"
+  },
+  "build": {
+    "requiredPlatforms": ["linux/arm64/v8"],
+    "buildkitImage": "docker.io/moby/buildkit@sha256:28a898719c18a33f4e8000685287fa36fd0dd9560c6440227d3a732d79bb41d8",
+    "buildkitRelease": "v0.32.2",
+    "sourceDateEpochRequired": true,
+    "independentBuildCount": 2,
+    "reproducibilityIdentity": "oci-manifest-digest",
+    "runtimeUser": "non-root",
+    "mutableBaseTagsAllowed": false
+  },
+  "gates": [
+    "manifest-lint",
+    "database-migrations",
+    "api-schema",
+    "secret-scan",
+    "arm64-build",
+    "sbom",
+    "signature-verification",
+    "reproducible-digest"
+  ]
+}

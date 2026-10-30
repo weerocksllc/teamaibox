@@ -1,0 +1,70 @@
+{
+  "schemaVersion": 1,
+  "profileKey": "asr.whisper-large-v3.fp16.spark.v1",
+  "candidateId": "whisper-large-v3-fp16",
+  "source": {
+    "repository": "openai/whisper",
+    "release": "v20250625",
+    "commit": "31243bad24cc746f07d4c8bfdd2d974872cb1803",
+    "archiveUrl": "https://api.github.com/repos/openai/whisper/tarball/31243bad24cc746f07d4c8bfdd2d974872cb1803",
+    "archiveSha256": "sha256:22dada419206cb2f003f7c7bd75fb780694c204b6909bef5c693e29fefee33f1",
+    "archiveSizeBytes": 7262941
+  },
+  "modelArtifact": {
+    "name": "large-v3.pt",
+    "url": "https://openaipublic.azureedge.net/main/whisper/models/e5b1a55b89c1367dacf97e3e19bfd829a01529dbfdeefa8caeb59b3f1b81dadb/large-v3.pt",
+    "sha256": "sha256:e5b1a55b89c1367dacf97e3e19bfd829a01529dbfdeefa8caeb59b3f1b81dadb",
+    "sizeBytes": 3087371615,
+    "dockerVolume": "teamaibox-model-whisper-large-v3-e5b1a55b"
+  },
+  "runtime": {
+    "platform": "linux/arm64/v8",
+    "baseImage": "nvcr.io/nvidia/vllm@sha256:9204569b17ee4c0eff75194b8e6e458479c8aee18953b5ab9cf359fcdac659e2",
+    "baseImageId": "sha256:46591c6e4a018d8d197fa246b1e3d682c907654aab4e9402302abb3e6a7dd916",
+    "engine": "openai-whisper-pytorch",
+    "precision": "fp16",
+    "audioDecoder": "soundfile-0.13.1+scipy-resample-poly",
+    "workerSource": "tools/whisper_asr_worker.py",
+    "dockerfile": "deploy/images/whisper-asr-worker.Dockerfile",
+    "dependencyArtifacts": [
+      {
+        "name": "more-itertools",
+        "version": "10.8.0",
+        "url": "https://files.pythonhosted.org/packages/a4/8e/469e5a4a2f5855992e425f3cb33804cc07bf18d48f2db061aec61ce50270/more_itertools-10.8.0-py3-none-any.whl",
+        "sha256": "sha256:52d4362373dcf7c52546bc4af9a86ee7c4579df9a8dc268be0a2f949d376cc9b",
+        "sizeBytes": 69667,
+        "buildContextPath": "dependencies/more_itertools-10.8.0-py3-none-any.whl"
+      }
+    ]
+  },
+  "api": {
+    "contracts": ["openai.audio-transcriptions@v1"],
+    "modelAlias": "whisper-large-v3-fp16",
+    "maximumUploadBytes": 268435456,
+    "acceptedAudioFormats": ["wav", "flac", "ogg", "mp3", "aiff", "aif", "au", "caf", "w64"],
+    "responseFormats": ["json", "verbose_json", "text", "srt", "vtt"],
+    "timestampGranularities": ["segment", "word"],
+    "maximumConcurrentRequests": 1
+  },
+  "scheduling": {
+    "resourceMode": "shared",
+    "memoryLimitBytes": 12884901888,
+    "cpuCores": 4,
+    "pidsLimit": 1024,
+    "coreServiceReserveBytes": 12884901888
+  },
+  "security": {
+    "runAs": "1000:1000",
+    "readOnlyRootFilesystem": true,
+    "capabilitiesDropped": ["ALL"],
+    "noNewPrivileges": true,
+    "modelArtifactReadOnly": true,
+    "internetAtRuntime": false,
+    "publishedPorts": []
+  },
+  "validation": {
+    "target": "dgx-spark-worker-02",
+    "claimBoundary": "development deployment and functional/quality probe on the second Spark; certification and 10GbE multi-node claims remain separate",
+    "required": ["artifact-integrity", "arm64-cuda-load", "openai-api-shape", "timestamp-quality", "content-safe-evidence", "exact-cleanup"]
+  }
+}

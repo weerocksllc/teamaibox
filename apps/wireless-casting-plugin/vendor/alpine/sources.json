@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "packages": [
+    {
+      "name": "libcrypto3-3.5.8-r0.apk",
+      "source": "https://dl-cdn.alpinelinux.org/alpine/v3.24/main/aarch64/libcrypto3-3.5.8-r0.apk",
+      "sha256": "35b892813c23664a3592e4fc8c12a03538a22c579057655361c7043305272a9a",
+      "sizeBytes": 2284775
+    },
+    {
+      "name": "libssl3-3.5.8-r0.apk",
+      "source": "https://dl-cdn.alpinelinux.org/alpine/v3.24/main/aarch64/libssl3-3.5.8-r0.apk",
+      "sha256": "d6ec970cc10e01539e41626f720c4e0ac69016eaa2079a10ef776ffd3243db5b",
+      "sizeBytes": 370156
+    }
+  ],
+  "signatureVerification": "required by apk add during offline image build"
+}

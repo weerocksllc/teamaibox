@@ -1,0 +1,36 @@
+/* Shared appearance only. Native elements and existing event handlers own behavior. */
+:root { font-size: 14px; line-height: 1.5; background: var(--canvas); color: var(--text); }
+*, *::before, *::after { box-sizing: border-box; }
+body { margin: 0; background: var(--canvas); color: var(--text); }
+[hidden] { display: none !important; }
+button, input, select, textarea { font: inherit; }
+button, a { -webkit-tap-highlight-color: transparent; }
+:where(button, a, input, select, textarea, summary, [tabindex]):focus-visible {
+  outline: 2px solid var(--focus); outline-offset: 3px;
+}
+:where(button, .ui-button) { cursor: pointer; }
+:where(button:disabled, input:disabled, select:disabled, textarea:disabled) { cursor: not-allowed; }
+.ui-button { display: inline-flex; min-height: var(--control-height); align-items: center; justify-content: center; gap: 8px; padding: 10px 16px; border: 1px solid var(--border); border-radius: var(--radius-control); background: var(--surface); color: var(--text); font-size: 14px; font-weight: 500; text-decoration: none; transition: background-color 150ms, border-color 150ms; }
+.ui-button:hover:not(:disabled) { background: var(--surface-subtle); border-color: var(--border-strong); }
+.ui-button--primary { background: var(--interactive); border-color: var(--interactive); color: var(--on-interactive); }
+.ui-button--primary:hover:not(:disabled) { background: var(--interactive-hover); border-color: var(--interactive-hover); }
+.ui-button--danger { background: var(--error-soft); border-color: color-mix(in srgb, var(--error) 35%, var(--border)); color: var(--error); }
+.ui-button--quiet { background: transparent; border-color: transparent; color: var(--text-muted); }
+.ui-button:disabled { background: var(--disabled-surface); border-color: var(--disabled-border); color: var(--disabled-text); }
+.ui-panel { min-width: 0; padding: 24px; border: 1px solid var(--border); border-radius: var(--radius-workspace); background: var(--surface); box-shadow: var(--shadow-sm); }
+.ui-status { display: inline-flex; align-items: center; gap: 6px; width: fit-content; padding: 4px 12px; border-radius: 999px; background: var(--surface-subtle); color: var(--text-muted); font-size: 12px; line-height: 20px; }
+.ui-status--success { color: var(--success); background: var(--success-soft); }
+.ui-status--warning { color: var(--warning); background: var(--warning-soft); }
+.ui-status--error { color: var(--error); background: var(--error-soft); }
+.ui-field { display: grid; gap: 8px; min-width: 0; }
+.ui-field__label { font-size: 12px; font-weight: 500; color: var(--text-muted); }
+.ui-field :where(input, select, textarea) { width: 100%; min-width: 0; min-height: 44px; padding: 10px 12px; border: 1px solid var(--border); border-radius: var(--radius-control); background: var(--surface); color: var(--text); }
+.ui-field [aria-invalid="true"] { border-color: var(--error); }
+.ui-field__hint { margin: 0; color: var(--text-muted); font-size: 12px; }
+.ui-field__error { margin: 0; color: var(--error); font-size: 12px; }
+.ui-empty { display: grid; min-height: 240px; align-content: center; justify-items: center; gap: 12px; padding: 32px; text-align: center; color: var(--text-muted); }
+.ui-empty h2, .ui-empty h3 { color: var(--text); margin: 0; font-size: 20px; }
+.ui-empty p { max-width: 44ch; margin: 0; }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; transition-duration: 0s !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; }
+}

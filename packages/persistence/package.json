@@ -1,0 +1,16 @@
+{
+  "name": "@teamaibox/persistence",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./postgres-database": "./src/postgres-database.mjs"
+  },
+  "dependencies": {
+    "pg": "8.22.0"
+  },
+  "scripts": {
+    "test": "node --test test/*.test.mjs"
+  },
+  "license": "MIT"
+}

@@ -1,0 +1,171 @@
+{
+  "schemaVersion": 1,
+  "nodeId": "11111111-1111-4111-8111-111111111111",
+  "nodeGeneration": 1,
+  "planId": "legacy-office-example-v1",
+  "setId": "office.baseline",
+  "sourceSetDigest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "desiredSetDigest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+  "faultInjection": {
+    "stageOrder": 4,
+    "targetKey": "office.translation-lmt4",
+    "injectionPoint": "after-stage-health",
+    "failureCode": "protected_set_transition_stage_failed",
+    "oneShot": true
+  },
+  "targets": [
+    {
+      "targetKey": "office.embedding-qwen3",
+      "desiredWorkerId": "4ac86c89-ef71-5fe5-8a6a-0e8979fff66d",
+      "desiredStartSpecDigest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+      "legacyPreviousTarget": {
+        "primary": {
+          "containerName": "legacy-office-embedding",
+          "containerId": "1111111111111111111111111111111111111111111111111111111111111111",
+          "requiredImageId": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+          "requiredImageReference": "legacy/office-embedding:exact",
+          "requiredNetworkMode": "bridge",
+          "requiredRuntimeDigest": "sha256:2111111111111111111111111111111111111111111111111111111111111111",
+          "requiredMounts": [{"type": "volume", "source": "legacy-office-embedding-model", "target": "/model", "readOnly": true}],
+          "requiredEnvironmentDigest": "sha256:3111111111111111111111111111111111111111111111111111111111111111",
+          "requiredCommandDigest": "sha256:4111111111111111111111111111111111111111111111111111111111111111",
+          "requiredHealthcheckDigest": "sha256:5111111111111111111111111111111111111111111111111111111111111111",
+          "requiredLabels": {"legacy.teamaibox.slot": "embedding-qwen3"}
+        }
+      }
+    },
+    {
+      "targetKey": "office.asr-whisper",
+      "desiredWorkerId": "7f97d6a6-d63c-5383-8cf8-a93841437494",
+      "desiredStartSpecDigest": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+      "legacyPreviousTarget": {
+        "primary": {
+          "containerName": "legacy-office-asr",
+          "containerId": "2222222222222222222222222222222222222222222222222222222222222222",
+          "requiredImageId": "sha256:1222222222222222222222222222222222222222222222222222222222222222",
+          "requiredImageReference": "legacy/office-asr:exact",
+          "requiredNetworkMode": "bridge",
+          "requiredRuntimeDigest": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+          "requiredMounts": [{"type": "volume", "source": "legacy-office-asr-model", "target": "/model", "readOnly": true}],
+          "requiredEnvironmentDigest": "sha256:3222222222222222222222222222222222222222222222222222222222222222",
+          "requiredCommandDigest": "sha256:4222222222222222222222222222222222222222222222222222222222222222",
+          "requiredHealthcheckDigest": "sha256:5222222222222222222222222222222222222222222222222222222222222222",
+          "requiredLabels": {"legacy.teamaibox.slot": "asr-whisper"}
+        }
+      }
+    },
+    {
+      "targetKey": "office.ocr-hunyuan",
+      "desiredWorkerId": "b3ea0138-4acf-5840-ad1d-5b698cc89cf5",
+      "desiredStartSpecDigest": "sha256:3333333333333333333333333333333333333333333333333333333333333333",
+      "legacyPreviousTarget": {
+        "primary": {
+          "containerName": "legacy-office-ocr-worker",
+          "containerId": "3333333333333333333333333333333333333333333333333333333333333333",
+          "requiredImageId": "sha256:1333333333333333333333333333333333333333333333333333333333333333",
+          "requiredImageReference": "legacy/office-ocr-worker:exact",
+          "requiredNetworkMode": "bridge",
+          "requiredRuntimeDigest": "sha256:2333333333333333333333333333333333333333333333333333333333333333",
+          "requiredMounts": [{"type": "volume", "source": "legacy-office-ocr-model", "target": "/model", "readOnly": true}],
+          "requiredEnvironmentDigest": "sha256:3333333333333333333333333333333333333333333333333333333333333333",
+          "requiredCommandDigest": "sha256:4333333333333333333333333333333333333333333333333333333333333333",
+          "requiredHealthcheckDigest": "sha256:5333333333333333333333333333333333333333333333333333333333333333",
+          "requiredLabels": {"legacy.teamaibox.slot": "ocr-hunyuan"}
+        },
+        "dependentContainers": [
+          {
+            "containerName": "legacy-office-ocr-provider",
+            "containerId": "9999999999999999999999999999999999999999999999999999999999999999",
+            "requiredImageId": "sha256:1999999999999999999999999999999999999999999999999999999999999999",
+            "requiredImageReference": "legacy/office-ocr-provider:exact",
+            "requiredNetworkMode": "container:3333333333333333333333333333333333333333333333333333333333333333",
+            "requiredRuntimeDigest": "sha256:2999999999999999999999999999999999999999999999999999999999999999",
+            "requiredMounts": [{"type": "bind", "source": "/var/lib/teamaibox-provider-runtime/ocr/tls", "target": "/run/tls", "readOnly": true}],
+            "requiredEnvironmentDigest": "sha256:3999999999999999999999999999999999999999999999999999999999999999",
+            "requiredCommandDigest": "sha256:4999999999999999999999999999999999999999999999999999999999999999",
+            "requiredHealthcheckDigest": "sha256:5999999999999999999999999999999999999999999999999999999999999999",
+            "requiredLabels": {"legacy.teamaibox.companion": "ocr-provider"}
+          }
+        ]
+      },
+      "desiredCompanions": [
+        {
+          "containerName": "teamaibox-ocr-provider-canonical",
+          "parentWorkerId": "b3ea0138-4acf-5840-ad1d-5b698cc89cf5",
+          "image": "registry.local/teamaibox/ocr-provider@sha256:6999999999999999999999999999999999999999999999999999999999999999",
+          "requiredImageId": "sha256:7999999999999999999999999999999999999999999999999999999999999999",
+          "configDigest": "sha256:8999999999999999999999999999999999999999999999999999999999999999",
+          "network": "compute-internal",
+          "limits": {"memoryBytes": 268435456, "cpuQuotaMicros": 100000, "pidsLimit": 128, "ephemeralBytes": 67108864, "openFilesLimit": 4096},
+          "security": {"runAsUid": 10001, "runAsGid": 10001, "readOnlyRoot": true, "dropAllCapabilities": true, "noNewPrivileges": true, "privileged": false, "hostPid": false, "hostIpc": false, "hostNetwork": false, "dockerSocket": false},
+          "mounts": [{"type": "bind", "source": "/var/lib/teamaibox-provider-runtime/ocr/tls", "target": "/run/tls", "readOnly": true}],
+          "publishedPorts": [{"containerPort": 19095, "hostPort": 19103, "hostIp": "127.0.0.1"}],
+          "environment": {"TEAMAIBOX_OCR_UPSTREAM": "http://teamaibox-worker-b3ea0138-4acf-5840-ad1d-5b698cc89cf5:19095"},
+          "command": ["serve"],
+          "healthCheck": {"test": ["CMD-SHELL", "test -r /proc/1/status"], "intervalNanoseconds": 10000000000, "timeoutNanoseconds": 2000000000, "startPeriodNanoseconds": 30000000000, "retries": 3},
+          "requiredLabels": {"com.teamaibox.office-companion": "ocr-provider"}
+        }
+      ]
+    },
+    {
+      "targetKey": "office.translation-lmt4",
+      "desiredWorkerId": "c2e3e722-08da-5141-89f5-b8244deb817f",
+      "desiredStartSpecDigest": "sha256:4444444444444444444444444444444444444444444444444444444444444444",
+      "legacyPreviousTarget": {
+        "primary": {
+          "containerName": "legacy-office-lmt4",
+          "containerId": "4444444444444444444444444444444444444444444444444444444444444444",
+          "requiredImageId": "sha256:1444444444444444444444444444444444444444444444444444444444444444",
+          "requiredImageReference": "legacy/office-lmt4:exact",
+          "requiredNetworkMode": "host",
+          "requiredRuntimeDigest": "sha256:2444444444444444444444444444444444444444444444444444444444444444",
+          "requiredMounts": [{"type": "bind", "source": "/srv/teamaibox/legacy/translation-models/LMT4", "target": "/model", "readOnly": true}],
+          "requiredEnvironmentDigest": "sha256:3444444444444444444444444444444444444444444444444444444444444444",
+          "requiredCommandDigest": "sha256:4444444444444444444444444444444444444444444444444444444444444444",
+          "requiredHealthcheckDigest": "sha256:5444444444444444444444444444444444444444444444444444444444444444",
+          "requiredLabels": {"legacy.teamaibox.slot": "translation-lmt4"}
+        }
+      }
+    },
+    {
+      "targetKey": "office.assistant-qwen38",
+      "desiredWorkerId": "50ed0d01-9b60-5ec3-a840-d8f56127c53e",
+      "desiredStartSpecDigest": "sha256:5555555555555555555555555555555555555555555555555555555555555555",
+      "legacyPreviousTarget": {
+        "primary": {
+          "containerName": "legacy-office-qwen38",
+          "containerId": "5555555555555555555555555555555555555555555555555555555555555555",
+          "requiredImageId": "sha256:1555555555555555555555555555555555555555555555555555555555555555",
+          "requiredImageReference": "legacy/office-qwen38:exact",
+          "requiredNetworkMode": "bridge",
+          "requiredRuntimeDigest": "sha256:2555555555555555555555555555555555555555555555555555555555555555",
+          "requiredMounts": [{"type": "volume", "source": "legacy-office-qwen38-model", "target": "/model", "readOnly": true}],
+          "requiredEnvironmentDigest": "sha256:3555555555555555555555555555555555555555555555555555555555555555",
+          "requiredCommandDigest": "sha256:4555555555555555555555555555555555555555555555555555555555555555",
+          "requiredHealthcheckDigest": "sha256:5555555555555555555555555555555555555555555555555555555555555555",
+          "requiredLabels": {"legacy.teamaibox.slot": "assistant-qwen38"}
+        }
+      }
+    },
+    {
+      "targetKey": "office.drawing-flux2",
+      "desiredWorkerId": "45dece00-515c-5658-b903-e7b68689cebb",
+      "desiredStartSpecDigest": "sha256:6666666666666666666666666666666666666666666666666666666666666666",
+      "legacyPreviousTarget": {
+        "primary": {
+          "containerName": "legacy-office-flux2",
+          "containerId": "6666666666666666666666666666666666666666666666666666666666666666",
+          "requiredImageId": "sha256:1666666666666666666666666666666666666666666666666666666666666666",
+          "requiredImageReference": "legacy/office-flux2:exact",
+          "requiredNetworkMode": "bridge",
+          "requiredRuntimeDigest": "sha256:2666666666666666666666666666666666666666666666666666666666666666",
+          "requiredMounts": [{"type": "volume", "source": "legacy-office-flux2-model", "target": "/model", "readOnly": true}],
+          "requiredEnvironmentDigest": "sha256:3666666666666666666666666666666666666666666666666666666666666666",
+          "requiredCommandDigest": "sha256:4666666666666666666666666666666666666666666666666666666666666666",
+          "requiredHealthcheckDigest": "sha256:5666666666666666666666666666666666666666666666666666666666666666",
+          "requiredLabels": {"legacy.teamaibox.slot": "drawing-flux2"}
+        }
+      }
+    }
+  ]
+}

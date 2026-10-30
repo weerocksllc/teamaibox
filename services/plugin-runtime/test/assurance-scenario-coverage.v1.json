@@ -1,0 +1,45 @@
+{
+  "schemaVersion": 1,
+  "scenarios": [
+    {
+      "key": "offline_install",
+      "file": "plugin-import-service.test.mjs",
+      "test": "signed offline bundle verifies retained supply-chain evidence before atomic installation"
+    },
+    {
+      "key": "incompatible_architecture",
+      "file": "plugin-import-service.test.mjs",
+      "test": "rejects source or OCI architecture mismatch and wrong offline selection checksum"
+    },
+    {
+      "key": "excessive_permission",
+      "file": "plugin-import-service.test.mjs",
+      "test": "excessive permission counts fail closed before verified persistence"
+    },
+    {
+      "key": "signature_failure",
+      "file": "plugin-import-service.test.mjs",
+      "test": "verifies manifest and bundle Ed25519 signatures against publisher-scoped active trust"
+    },
+    {
+      "key": "migration_failure",
+      "file": "plugin-lifecycle-service.test.mjs",
+      "test": "migration failure never starts or cuts over the staged version"
+    },
+    {
+      "key": "rollback",
+      "file": "plugin-lifecycle-service.test.mjs",
+      "test": "failed upgrade health rolls back the migration session and keeps the old slot active"
+    },
+    {
+      "key": "persistent_data_preservation",
+      "file": "plugin-lifecycle-service.test.mjs",
+      "test": "uninstall removes runtime only, preserves data and migration evidence, and refuses implicit purge"
+    },
+    {
+      "key": "supply_chain_evidence",
+      "file": "plugin-import-service.test.mjs",
+      "test": "requires complete SPDX, SLSA, and fresh passing vulnerability evidence for all image subjects"
+    }
+  ]
+}

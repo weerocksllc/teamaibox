@@ -1,0 +1,78 @@
+/* Product interiors. No selectors change guest pixels, content, or application state. */
+:root {
+  --experience-edge: color-mix(in srgb, var(--interactive) 22%, var(--border));
+  --experience-light: color-mix(in srgb, var(--selected-surface) 52%, transparent);
+  --experience-shadow: 0 8px 28px color-mix(in srgb, var(--text) 5%, transparent), 0 1px 2px color-mix(in srgb, var(--text) 4%, transparent);
+}
+:root[data-theme=dark] {
+  --experience-edge: color-mix(in srgb, var(--interactive) 27%, var(--border));
+  --experience-light: color-mix(in srgb, var(--interactive) 7%, transparent);
+  --experience-shadow: 0 12px 32px #0003, inset 0 1px 0 #ffffff08;
+}
+body[data-ui-app] { background: radial-gradient(ellipse at 96% 0%,var(--experience-light),transparent 48%),var(--canvas); }
+body[data-ui-app] :is(.app-header,.drawing-header,main > header) { padding-block: 8px 20px; border-bottom: 1px solid var(--border); gap: 20px; }
+body[data-ui-app] :is(.app-header,.drawing-header,main > header) h1 { font-size: clamp(26px,2.4vw,36px); letter-spacing: -.035em; line-height: 1.3; text-wrap: balance; }
+body[data-ui-app] .eyebrow { display: inline-flex; align-items: center; gap: 8px; color: var(--interactive); font-size: 11px; letter-spacing: .1em; font-weight: 650; }
+body[data-ui-app] :is(.app-header,.drawing-header,main > header) .eyebrow::before { content: ''; width: 16px; height: 3px; border-radius: 4px; background: currentColor; }
+body[data-ui-app] :is(.source,.source-panel,.control-panel,.result,.result-panel,.preview-panel,.card) { border-color: var(--border); border-radius: 18px; background: var(--surface); box-shadow: var(--experience-shadow); }
+body[data-ui-app] :is(.result,.result-panel,.preview-panel) { background: linear-gradient(150deg,var(--experience-light),transparent 32%),var(--surface); }
+body[data-ui-app] :is(.job-head,.section-heading,.workspace-bar,.phone-toolbar) { gap: 16px; flex-wrap: wrap; }
+body[data-ui-app] :is(.source-tabs,.tabs,.view-tabs) { padding: 5px; border: 1px solid var(--border); border-radius: 12px; }
+body[data-ui-app] :is(.source-tabs,.tabs,.view-tabs) button { white-space: normal; height: auto; min-width: 0; line-height: 1.4; }
+body[data-ui-app] :is(.source-tabs,.tabs,.view-tabs) :is([aria-selected=true],[aria-pressed=true],.active,.is-active) { box-shadow: 0 2px 8px #0000000b; background: var(--surface-raised); color: var(--interactive); }
+body[data-ui-app] :is(.primary,.primary-button,.submit-button,.primary-icon,.send-button) { border: 1px solid transparent; border-radius: 10px; background: linear-gradient(145deg,var(--interactive),var(--interactive-hover)); box-shadow: 0 4px 12px color-mix(in srgb,var(--interactive) 14%,transparent); }
+body[data-ui-app] :is(button,.button) { transition: background-color .16s ease,border-color .16s ease,box-shadow .16s ease; }
+body[data-ui-app] :is(button,.button):not(:disabled):hover { border-color: var(--experience-edge); }
+body[data-ui-app] :is(.primary,.primary-button,.submit-button,.primary-icon,.send-button):disabled { background: var(--surface-muted); color: var(--text-muted); box-shadow: none; cursor: not-allowed; }
+body[data-ui-app] :is(input,textarea,select):focus-visible { box-shadow: 0 0 0 4px var(--experience-light); }
+body[data-ui-app] :is(input:not([type=checkbox]):not([type=radio]):not([type=file]):not([type=range]),select,textarea) { border-radius: 10px; }
+body[data-ui-app] .dropzone { background: linear-gradient(140deg,var(--experience-light),transparent 65%),var(--canvas); border-color: var(--experience-edge); border-radius: 14px; }
+body[data-ui-app] .dropzone:hover { border-color: var(--interactive); }
+body[data-ui-app] :is(.dropzone > span,.empty-result > span,.empty-orb,.preview-empty > span) { border: 1px solid var(--experience-edge); box-shadow: inset 0 1px 0 #ffffff26,0 6px 18px var(--experience-light); background: var(--selected-surface); border-radius: 16px; }
+body[data-ui-app] :is(.empty-result,.empty-state,.preview-empty) h2 { letter-spacing: -.025em; font-weight: 600; }
+body[data-ui-app] :is(.empty-result,.empty-state,.preview-empty) p { max-width: 48ch; line-height: 1.75; }
+body[data-ui-app] :is(.progress,.progress-track) { border-radius: 999px; overflow: hidden; background: var(--surface-subtle); }
+body[data-ui-app] :is(.progress > i,.progress > span) { background: linear-gradient(90deg,var(--interactive),color-mix(in srgb,var(--interactive) 70%,var(--info))); }
+body[data-ui-app] :is(.error,.inline-error,.composer-error) { border-inline-start: 3px solid var(--error); border-radius: 10px; padding: 12px 16px; line-height: 1.65; }
+body[data-ui-app] :is(#error,#job-error,#form-error,.danger,[role=alert]:not(:empty)) { color: var(--error); }
+body[data-ui-app] :is(#error,#job-error,#form-error):not(:empty) { background: var(--error-soft); border-color: color-mix(in srgb,var(--error) 35%,var(--border)); }
+body[data-ui-app] :is(.badge,.status-badge,.rom-badge) { border: 1px solid color-mix(in srgb,currentColor 15%,transparent); border-radius: 999px; font-size: 12px; font-weight: 550; padding: 5px 10px; line-height: 1.4; }
+body[data-ui-app] dialog { border-color: var(--experience-edge); box-shadow: var(--shadow-lg),inset 0 1px 0 #ffffff12; }
+body[data-ui-app] dialog::backdrop { background: var(--overlay); backdrop-filter: blur(6px); }
+body[data-ui-app] :is(.result-actions,.card-actions,.actions,.toolbar) { flex-wrap: wrap; }
+body[data-ui-app] :is(.result-actions a,.card-actions > a,.card-actions > button) { height: auto; white-space: normal; }
+body[data-ui-app=messaging] :is(.conversation-pane,.details-pane) { background: color-mix(in srgb,var(--surface) 75%,var(--canvas)); }
+body[data-ui-app=messaging] .pane-header { border-bottom-color: var(--border); }
+body[data-ui-app=messaging] .conversation-item.is-active { background: linear-gradient(110deg,var(--selected-surface),var(--experience-light)); box-shadow: inset 3px 0 0 var(--interactive); }
+body[data-ui-app=messaging] .message-bubble { border: 1px solid var(--border); box-shadow: 0 2px 4px #00000005; }
+body[data-ui-app=messaging] .message-row.is-own .message-bubble { background: linear-gradient(145deg,var(--selected-surface),color-mix(in srgb,var(--selected-surface) 80%,var(--surface))); border-color: var(--experience-edge); }
+body[data-ui-app=messaging] .composer { background: var(--surface); border-top: 1px solid var(--border); }
+body[data-ui-app=messaging] .composer textarea { border-color: var(--experience-edge); }
+body[data-ui-app=team-drive] .drive-nav { background: color-mix(in srgb,var(--surface) 78%,var(--canvas)); }
+body[data-ui-app=team-drive] .file-row:hover { background: var(--experience-light); }
+body[data-ui-app=virtual-phones] .card,body[data-ui-app=virtual-computers] .card { border-top: 2px solid var(--experience-edge); }
+body[data-ui-app=virtual-phones] .card h2,body[data-ui-app=virtual-computers] .card h2 { font-size: 22px; letter-spacing: -.025em; }
+body[data-ui-app=virtual-phones] .workspace-body { background: linear-gradient(135deg,var(--experience-light),transparent 50%),var(--surface); box-shadow: var(--experience-shadow); }
+body[data-ui-app=virtual-desktop] header { background: var(--surface); border-bottom: 1px solid var(--experience-edge); box-shadow: 0 2px 12px #00000012; }
+/* Shared safety for translated controls: wrap without compressing content or losing actions. */
+body[data-ui-app] :is(label,button,summary,.button,.muted) { overflow-wrap: anywhere; }
+body[data-ui-app] :is(input,select,textarea) { max-width: 100%; min-width: 0; }
+body[data-ui-app] :is(.workspace,.studio-grid,.card,.source,.source-panel,.result,.result-panel,.preview-panel,.chat-pane) { min-width: 0; }
+:root:lang(ar) { --font-ui: "Noto Sans Arabic","Geeza Pro",Tahoma,system-ui,sans-serif; letter-spacing: normal; }
+:root:lang(ar) :is(.eyebrow,h1,h2,h3) { letter-spacing: normal; }
+:root:lang(ja) { --font-ui: "Hiragino Kaku Gothic ProN","Yu Gothic",system-ui,sans-serif; }
+:root:lang(ko) { --font-ui: "Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif; }
+:root:lang(hi) { --font-ui: "Noto Sans Devanagari","Devanagari Sangam MN",system-ui,sans-serif; }
+:root:lang(th) { --font-ui: "Noto Sans Thai","Thonburi",system-ui,sans-serif; }
+:root[dir=rtl] body[data-ui-app=messaging] .conversation-item.is-active { box-shadow: inset -3px 0 0 var(--interactive); }
+:root[dir=rtl] body[data-ui-app] :is(.phone-tool-panel,.file-row,.details-pane,.conversation-item,.intent-card) { text-align: start; }
+body[data-ui-app] :is(.message-text,.segment-text,.file-name,.computer-name,.phone-name) { unicode-bidi: plaintext; }
+body[data-ui-app] :is(code,pre,.phone-stage,#screen,.screen-container,[data-ui-code]) { direction: ltr; unicode-bidi: isolate; }
+@media (max-width:700px) {
+ body[data-ui-app] :is(.source,.source-panel,.control-panel,.result,.result-panel,.preview-panel,.card) { border-radius: 14px; }
+ body[data-ui-app] :is(.app-header,.drawing-header,main > header) { padding-block: 4px 16px; }
+ body[data-ui-app] :is(.empty-result,.preview-empty) { min-height: 240px; }
+ body[data-ui-app] :is(.source-tabs,.tabs,.view-tabs) { flex-wrap: wrap; }
+ body[data-ui-app=virtual-desktop] header { max-height: 38dvh; overflow: auto; }
+}
+@media (prefers-reduced-motion:reduce) { body[data-ui-app] *,body[data-ui-app] *::before,body[data-ui-app] *::after { animation:none!important;transition:none!important;scroll-behavior:auto!important; } }

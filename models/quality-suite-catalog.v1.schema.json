@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.teamaibox.local/models/quality-suite-catalog.v1.schema.json",
+  "title": "Team AI Box model quality suite catalog v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "catalogVersion", "status", "suites"],
+  "properties": {
+    "schemaVersion": {"const": 1},
+    "catalogVersion": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"},
+    "status": {"const": "initial-threshold-policy"},
+    "suites": {
+      "type": "array",
+      "minItems": 5,
+      "maxItems": 5,
+      "items": {"$ref": "#/$defs/suite"}
+    }
+  },
+  "$defs": {
+    "key": {"type": "string", "pattern": "^[a-z][a-z0-9_.-]{2,191}$"},
+    "suite": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["suiteKey", "version", "taskType", "corpus", "evaluator", "metrics", "acceptance"],
+      "properties": {
+        "suiteKey": {"$ref": "#/$defs/key"},
+        "version": {"type": "string"},
+        "taskType": {"enum": ["llm_reasoning_instruction", "ocr_text_layout", "asr_language_timestamp_speaker", "translation", "image_quality_prompt_adherence"]},
+        "corpus": {"type": "object"},
+        "evaluator": {"type": "object"},
+        "metrics": {"type": "array", "minItems": 1},
+        "acceptance": {"type": "object"}
+      }
+    }
+  }
+}

@@ -1,0 +1,9 @@
+DROP TRIGGER model_engine_deployment_reproducible_source ON compute.model_engine_deployment_jobs;
+DROP FUNCTION compute.enforce_reproducible_deployment_source();
+DROP TRIGGER model_engine_deployment_job_transition ON compute.model_engine_deployment_jobs;
+DROP TRIGGER model_engine_build_job_transition ON compute.model_engine_build_jobs;
+DROP FUNCTION compute.enforce_model_engine_job_transition();
+DROP TABLE compute.model_engine_deployment_operations;
+DROP TABLE compute.model_engine_deployment_jobs;
+DROP TABLE compute.model_engine_build_operations;
+DROP TABLE compute.model_engine_build_jobs;

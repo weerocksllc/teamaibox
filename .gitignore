@@ -1,0 +1,27 @@
+.DS_Store
+.env
+.env.*
+!.env.example
+node_modules/
+.pnpm-store/
+dist/
+build/
+coverage/
+.turbo/
+*.tsbuildinfo
+*.log
+__pycache__/
+*.py[cod]
+.pytest_cache/
+bin/
+.runtime/
+.teamaibox-cache/
+# Keep local temporary credentials, builds and exported container bundles out of Git.
+/tmp/
+/evidence/**/*.tar
+/evidence/**/*.tar.gz
+vendor/usb-key-sdk/
+# The marketing website is maintained only in the private repository.
+/website/
+# OpenSpec planning and specifications stay local, outside the public repository.
+/openspec/

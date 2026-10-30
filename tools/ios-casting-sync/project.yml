@@ -1,0 +1,28 @@
+name: CastingSync
+options:
+  deploymentTarget:
+    iOS: "18.0"
+settings:
+  base:
+    DEVELOPMENT_TEAM: LUTWA364P4
+    CODE_SIGN_STYLE: Automatic
+    SWIFT_VERSION: "5.0"
+targets:
+  CastingSync:
+    type: application
+    platform: iOS
+    sources: [App, Resources]
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.teamaibox.casting.sync
+        GENERATE_INFOPLIST_FILE: YES
+        INFOPLIST_KEY_CFBundleDisplayName: 投屏同步测试
+        INFOPLIST_KEY_UILaunchScreen_Generation: YES
+        INFOPLIST_KEY_UIApplicationSceneManifest_Generation: NO
+        INFOPLIST_KEY_UISupportedInterfaceOrientations: UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight
+        TARGETED_DEVICE_FAMILY: "1,2"
+schemes:
+  CastingSync:
+    build:
+      targets:
+        CastingSync: all

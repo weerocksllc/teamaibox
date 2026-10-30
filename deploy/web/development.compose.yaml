@@ -1,0 +1,231 @@
+name: teamaibox-web-development
+
+services:
+  web-development:
+    image: ${TEAMAIBOX_WEB_IMAGE:?set the exact locally built image ID or registry digest reference}
+    platform: linux/arm64/v8
+    init: true
+    read_only: true
+    user: "1000:1000"
+    cap_drop: [ALL]
+    security_opt:
+      - no-new-privileges:true
+    pids_limit: 128
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,nodev,size=32m
+    environment:
+      WEB_ALLOW_INSECURE_HTTP: "true"
+      WEB_DEVELOPMENT_DEMO: ${TEAMAIBOX_WEB_DEVELOPMENT_DEMO:-false}
+      WEB_DEVELOPMENT_PERMISSIONS: ${TEAMAIBOX_WEB_DEVELOPMENT_PERMISSIONS:-}
+      WEB_DEPLOYMENT_SLOT: development
+      WEB_HOST: 0.0.0.0
+      WEB_MODE: development
+      WEB_PORT: 8080
+      WEB_PUBLIC_ORIGIN: ${TEAMAIBOX_WEB_DEVELOPMENT_ORIGIN:?set the exact isolated HTTP origin}
+      WEB_RELEASE_ID: ${TEAMAIBOX_WEB_RELEASE_ID:?set the source/image release identifier}
+      PLATFORM_API_ORIGIN: ${TEAMAIBOX_PLATFORM_API_ORIGIN:-http://platform-api:8080}
+      WEB_PLUGIN_ROUTES_FILE: /run/config/plugin-routes.json
+    volumes:
+      - ../plugins/web-routes.v1.json:/run/config/plugin-routes.json:ro
+    ports:
+      - target: 8080
+        published: ${TEAMAIBOX_WEB_DEVELOPMENT_PORT:-18080}
+        host_ip: ${TEAMAIBOX_WEB_DEVELOPMENT_BIND_ADDRESS:-0.0.0.0}
+        protocol: tcp
+    mem_limit: 384m
+    mem_reservation: 128m
+    cpus: 0.35
+    restart: unless-stopped
+    stop_grace_period: 15s
+    healthcheck:
+      test: [CMD, node, -e, "fetch('http://127.0.0.1:8080/health/ready').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 10s
+      timeout: 3s
+      retries: 6
+      start_period: 5s
+    labels:
+      com.teamaibox.managed: "true"
+      com.teamaibox.component: web
+      com.teamaibox.environment: isolated-development
+      com.teamaibox.resource-class: core-standard
+    depends_on:
+      messaging-plugin: {condition: service_healthy}
+      team-drive-plugin: {condition: service_healthy}
+      drawing-plugin: {condition: service_healthy}
+      ocr-plugin: {condition: service_healthy}
+      asr-plugin: {condition: service_healthy}
+      translation-plugin: {condition: service_healthy}
+
+  messaging-plugin:
+    image: ${TEAMAIBOX_MESSAGING_PLUGIN_IMAGE:?set the exact locally built image ID or registry digest reference}
+    platform: linux/arm64/v8
+    init: true
+    read_only: true
+    user: "10001:10001"
+    cap_drop: [ALL]
+    security_opt:
+      - no-new-privileges:true
+    pids_limit: 64
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,nodev,size=16m
+    expose: ["8080"]
+    mem_limit: 128m
+    mem_reservation: 64m
+    cpus: 0.25
+    restart: unless-stopped
+    healthcheck:
+      test: [CMD, node, -e, "fetch('http://127.0.0.1:8080/health/ready').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 10s
+      timeout: 3s
+      retries: 6
+      start_period: 5s
+    labels:
+      com.teamaibox.managed: "true"
+      com.teamaibox.component: plugin
+      com.teamaibox.plugin.id: official.messaging
+      com.teamaibox.resource-class: plugin-small
+
+  team-drive-plugin:
+    image: ${TEAMAIBOX_TEAM_DRIVE_PLUGIN_IMAGE:?set the exact locally built image ID or registry digest reference}
+    platform: linux/arm64/v8
+    init: true
+    read_only: true
+    user: "10001:10001"
+    cap_drop: [ALL]
+    security_opt:
+      - no-new-privileges:true
+    pids_limit: 64
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,nodev,size=16m
+    expose: ["8080"]
+    mem_limit: 128m
+    mem_reservation: 64m
+    cpus: 0.25
+    restart: unless-stopped
+    healthcheck:
+      test: [CMD, node, -e, "fetch('http://127.0.0.1:8080/health/ready').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 10s
+      timeout: 3s
+      retries: 6
+      start_period: 5s
+    labels:
+      com.teamaibox.managed: "true"
+      com.teamaibox.component: plugin
+      com.teamaibox.plugin.id: official.team-drive
+      com.teamaibox.resource-class: plugin-small
+
+  drawing-plugin:
+    image: ${TEAMAIBOX_DRAWING_PLUGIN_IMAGE:?set the exact locally built image ID or registry digest reference}
+    platform: linux/arm64/v8
+    init: true
+    read_only: true
+    user: "10001:10001"
+    cap_drop: [ALL]
+    security_opt:
+      - no-new-privileges:true
+    pids_limit: 64
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,nodev,size=16m
+    expose: ["8080"]
+    mem_limit: 128m
+    mem_reservation: 64m
+    cpus: 0.25
+    restart: unless-stopped
+    healthcheck:
+      test: [CMD, node, -e, "fetch('http://127.0.0.1:8080/health/ready').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 10s
+      timeout: 3s
+      retries: 6
+      start_period: 5s
+    labels:
+      com.teamaibox.managed: "true"
+      com.teamaibox.component: plugin
+      com.teamaibox.plugin.id: official.drawing
+      com.teamaibox.resource-class: plugin-small
+
+  ocr-plugin:
+    image: ${TEAMAIBOX_OCR_PLUGIN_IMAGE:?set the exact locally built image ID or registry digest reference}
+    platform: linux/arm64/v8
+    init: true
+    read_only: true
+    user: "10001:10001"
+    cap_drop: [ALL]
+    security_opt:
+      - no-new-privileges:true
+    pids_limit: 64
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,nodev,size=16m
+    expose: ["8080"]
+    mem_limit: 128m
+    mem_reservation: 64m
+    cpus: 0.25
+    restart: unless-stopped
+    healthcheck:
+      test: [CMD, node, -e, "fetch('http://127.0.0.1:8080/health/ready').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 10s
+      timeout: 3s
+      retries: 6
+      start_period: 5s
+    labels:
+      com.teamaibox.managed: "true"
+      com.teamaibox.component: plugin
+      com.teamaibox.plugin.id: official.ocr
+      com.teamaibox.resource-class: plugin-small
+
+  asr-plugin:
+    image: ${TEAMAIBOX_ASR_PLUGIN_IMAGE:?set the exact locally built image ID or registry digest reference}
+    platform: linux/arm64/v8
+    init: true
+    read_only: true
+    user: "10001:10001"
+    cap_drop: [ALL]
+    security_opt:
+      - no-new-privileges:true
+    pids_limit: 64
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,nodev,size=16m
+    expose: ["8080"]
+    mem_limit: 128m
+    mem_reservation: 64m
+    cpus: 0.25
+    restart: unless-stopped
+    healthcheck:
+      test: [CMD, node, -e, "fetch('http://127.0.0.1:8080/health/ready').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 10s
+      timeout: 3s
+      retries: 6
+      start_period: 5s
+    labels:
+      com.teamaibox.managed: "true"
+      com.teamaibox.component: plugin
+      com.teamaibox.plugin.id: official.asr
+      com.teamaibox.resource-class: plugin-small
+
+  translation-plugin:
+    image: ${TEAMAIBOX_TRANSLATION_PLUGIN_IMAGE:?set the exact locally built image ID or registry digest reference}
+    platform: linux/arm64/v8
+    init: true
+    read_only: true
+    user: "10001:10001"
+    cap_drop: [ALL]
+    security_opt:
+      - no-new-privileges:true
+    pids_limit: 64
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,nodev,size=16m
+    expose: ["8080"]
+    mem_limit: 128m
+    mem_reservation: 64m
+    cpus: 0.25
+    restart: unless-stopped
+    healthcheck:
+      test: [CMD, node, -e, "fetch('http://127.0.0.1:8080/health/ready').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 10s
+      timeout: 3s
+      retries: 6
+      start_period: 5s
+    labels:
+      com.teamaibox.managed: "true"
+      com.teamaibox.component: plugin
+      com.teamaibox.plugin.id: official.translation
+      com.teamaibox.resource-class: plugin-small

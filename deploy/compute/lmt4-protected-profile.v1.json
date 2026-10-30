@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "profileKey": "translation.lmt4-4b.modelopt-nvfp4-fp8.main-protected.v1",
+  "source": {
+    "model": "NiuTrans/LMT-60-4B",
+    "revision": "f3d1043332179618de226eab7dd38c7290a7dfb9",
+    "license": {
+      "name": "Apache License 2.0",
+      "spdxId": "Apache-2.0",
+      "reviewStatus": "approved"
+    }
+  },
+  "engine": {
+    "name": "vLLM",
+    "version": "0.20.1+7124b12a"
+  },
+  "precision": {
+    "weights": "ModelOpt NVFP4 on interior MLP projections; BF16 attention and edge MLP layers",
+    "kvCache": "FP8",
+    "recipeSha256": "sha256:63397e9caa386c5dec8024ec13529a21eea38dd5ad637ad7d036edc29f7da0f1"
+  },
+  "runtime": {
+    "hardMemoryBytes": 12884901888,
+    "runtimeEnvironment": {
+      "HOME": "/tmp",
+      "LOGNAME": "teamaibox",
+      "TORCHINDUCTOR_CACHE_DIR": "/tmp/torchinductor",
+      "USER": "teamaibox",
+      "VLLM_CACHE_ROOT": "/tmp/vllm"
+    }
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "candidateKey": "drawing.flux2-klein-4b.nvfp4.spark23.v1",
+  "certificationState": "candidate",
+  "license": "Apache-2.0",
+  "base": {
+    "repository": "black-forest-labs/FLUX.2-klein-4B",
+    "revision": "e7b7dc27f91deacad38e78976d1f2b499d76a294"
+  },
+  "quantizedTransformer": {
+    "repository": "black-forest-labs/FLUX.2-klein-4b-nvfp4",
+    "revision": "1db2b2f776c24b76f1122e5f69ab1949fc620068",
+    "filename": "flux-2-klein-4b-nvfp4.safetensors",
+    "expectedBytes": 2460413488,
+    "format": "NVFP4"
+  },
+  "runtime": {
+    "pipelineClass": "Flux2KleinPipeline",
+    "transformerClass": "Flux2Transformer2DModel",
+    "dtype": "bfloat16",
+    "inferenceSteps": 4,
+    "guidanceScale": 1.0,
+    "exclusive": true,
+    "targetNode": "dgx-spark-worker-02"
+  },
+  "claimBoundary": {
+    "downloaded": false,
+    "smokeQualified": false,
+    "qualityQualified": false,
+    "certified": false,
+    "productRouted": false
+  }
+}

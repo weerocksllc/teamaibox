@@ -1,0 +1,40 @@
+{
+  "schema_version": "1.0",
+  "plan_id": "replace-with-stable-plan-id",
+  "target": "dgx-spark-dev-01",
+  "operation": "replace-with-protected-operation",
+  "status": "draft",
+  "owner": "replace-with-maintainer",
+  "reason": "Explain why this protected change is necessary.",
+  "maintenance_window": {
+    "starts_at": "2099-01-01T00:00:00Z",
+    "ends_at": "2099-01-01T01:00:00Z"
+  },
+  "data_risk_acknowledged": false,
+  "backup_or_recovery": "Identify verified backup, recovery media, or replacement-only recovery.",
+  "out_of_band_access": "Identify console and recovery access if networking or boot fails.",
+  "prechecks": [
+    "Record relevant health and configuration evidence."
+  ],
+  "implementation_steps": [
+    "List exact bounded commands and stopping points."
+  ],
+  "validation_steps": [
+    "Define success checks and evidence to retain."
+  ],
+  "rollback_triggers": [
+    "Define the condition that stops the change and begins rollback."
+  ],
+  "rollback_steps": [
+    "Define tested rollback or recovery steps."
+  ],
+  "evidence_destination": "evidence/maintenance/replace-with-plan-id",
+  "approvals": [
+    {
+      "approved_by": "replace-with-authorizer",
+      "role": "lab-owner",
+      "approved_at": "2099-01-01T00:00:00Z"
+    }
+  ]
+}
+

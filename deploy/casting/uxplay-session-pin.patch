@@ -1,0 +1,43 @@
+--- a/uxplay.cpp
++++ b/uxplay.cpp
+@@ -23,3 +23,6 @@
++#ifdef TEAMAIBOX_PIN_STDIN
++#include "teamaibox_session_pin.h"
++#endif
+ #include <stddef.h>
+ #include <cstring>
+ #include <unistd.h>
+@@ -2189,2 +2192,6 @@
+ extern "C" void display_pin(void *cls, char *pin) {
++#ifdef TEAMAIBOX_PIN_STDIN
++    /* The authorized Web session already displays the PIN. Never log it. */
++    return;
++#endif
+     int margin = 10;
+@@ -2938,3 +2945,14 @@
+     parse_arguments (argc, argv);
++#ifdef TEAMAIBOX_PIN_STDIN
++    uint16_t session_pin = 0;
++    if (!teamaibox_read_session_pin(STDIN_FILENO, &session_pin)) {
++        fputs("cast_receiver_pin_delivery_failed\n", stderr);
++        exit(64);
++    }
++    pin = session_pin + 10000;
++    session_pin = 0;
++    pin_pw = 1;
++    setup_legacy_pairing = true;
++#endif
+ 
+     log_level = (debug_log ? LOGGER_DEBUG_DATA : LOGGER_INFO);
+--- a/lib/raop_handlers.h
++++ b/lib/raop_handlers.h
+@@ -273 +273,3 @@
+-    logger_log(raop->logger, LOGGER_INFO, "*** CLIENT MUST NOW ENTER PIN = \"%s\" AS AIRPLAY PASSWORD", pin);
++#ifndef TEAMAIBOX_PIN_STDIN
++    logger_log(raop->logger, LOGGER_INFO, "*** CLIENT MUST NOW ENTER PIN = \"%s\" AS AIRPLAY PASSWORD", pin);
++#endif
+@@ -684 +686,3 @@
+-                logger_log(raop->logger, LOGGER_INFO, "*** CLIENT MUST NOW ENTER PIN = \"%s\" AS AIRPLAY PASSWORD", raop->random_pw);
++#ifndef TEAMAIBOX_PIN_STDIN
++                logger_log(raop->logger, LOGGER_INFO, "*** CLIENT MUST NOW ENTER PIN = \"%s\" AS AIRPLAY PASSWORD", raop->random_pw);
++#endif

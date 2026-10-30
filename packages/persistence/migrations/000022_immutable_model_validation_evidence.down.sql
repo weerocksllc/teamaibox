@@ -1,0 +1,10 @@
+DROP FUNCTION compute.complete_model_validation_stage(uuid, smallint, text, bytea, jsonb);
+DROP TRIGGER model_validation_stage_transition ON compute.model_validation_stages;
+DROP FUNCTION compute.enforce_model_validation_stage_transition();
+DROP TRIGGER model_validation_run_transition ON compute.model_validation_runs;
+DROP FUNCTION compute.enforce_model_validation_run_transition();
+DROP TRIGGER model_validation_run_lineage ON compute.model_validation_runs;
+DROP FUNCTION compute.enforce_model_validation_lineage();
+DROP TABLE compute.model_validation_stages;
+DROP TABLE compute.model_validation_operations;
+DROP TABLE compute.model_validation_runs;

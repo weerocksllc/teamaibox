@@ -1,0 +1,58 @@
+.phone-admin { display: grid; gap: 16px; min-width: 0; font-size: 14px; }
+.phone-admin h2 { font-size: 17px; line-height: 1.4; }
+.phone-admin h3 { font-size: 16px; }
+.phone-admin-toolbar { margin-top: -8px; }
+.phone-admin-muted, .phone-admin td small { color: var(--text-muted); font-size: 13px; }
+.phone-admin-state i { width: 9px; height: 9px; border-radius: 50%; background: var(--text-muted); flex: none; }
+.phone-admin-state i.is-ready { background: var(--success); }
+.phone-admin-grid { display: grid; grid-template-columns: minmax(0,1.2fr) minmax(0,1fr); gap: 16px; }
+.phone-admin-node-name { display: flex; align-items: center; gap: 10px; }
+.phone-admin-node-name small { display: block; color: var(--text-muted); margin-top: 4px; }
+.phone-admin-metrics { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); margin: 6px 0; padding: 12px; gap: 10px; border-radius: 10px; background: var(--surface-subtle); }
+.phone-admin-metrics dt { font-size: 12px; color: var(--text-muted); }
+.phone-admin-metrics dd { margin: 6px 0 0; font-size: 22px; font-weight: 650; font-variant-numeric: tabular-nums; }
+.phone-admin-details { font-size: 12px; color: var(--text-muted); }
+.phone-admin-details summary { cursor: pointer; padding: 8px 0; width: fit-content; }
+.phone-admin-tag { display: inline-block; width: fit-content; padding: 5px 9px; margin: 16px 0 12px; background: var(--selected-surface); color: var(--selected-text); border-radius: 7px; font-size: 12px; font-weight: 650; }
+.phone-admin-privacy { display: flex; align-items: flex-start; gap: 7px; color: var(--text-muted); font-size: 12px; }
+.phone-admin-privacy svg { flex: none; margin-top: 3px; }
+.phone-admin h2, .phone-admin h3, .phone-admin h4 { margin: 0; }
+.phone-admin h2, .phone-admin-actions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.phone-admin-header { display: flex; align-items: center; justify-content: space-between; gap: 14px; flex-wrap: wrap; }
+.phone-admin-card { background: var(--surface-raised); border: 1px solid var(--border); border-radius: 14px; padding: 20px; min-width: 0; }
+.phone-admin-overview p { margin-bottom: 0; }
+.phone-admin p { line-height: 1.65; overflow-wrap: anywhere; }
+.phone-admin-notice { border-inline-start: 3px solid currentColor; padding: 8px 12px; }
+.phone-admin-search, .phone-admin-fields { display: flex; align-items: end; flex-wrap: wrap; gap: 10px; margin: 16px 0; }
+.phone-admin-search label { flex: 1; max-width: 400px; }
+.phone-admin label { display: grid; gap: 8px; min-width: 0; }
+.phone-admin input { border: 1px solid var(--border-strong); background: var(--surface); color: inherit; border-radius: 8px; padding: 10px 12px; min-height: 40px; max-width: 100%; box-sizing: border-box; }
+.phone-admin input::placeholder { color: var(--text-muted); }
+.phone-admin input:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+.phone-admin input[type=number] { width: 150px; }
+.phone-admin-editor { padding: 16px; margin: 16px 0; border: 1px solid var(--border); background: var(--surface-subtle); border-radius: 12px; }
+.phone-admin-nodes { list-style: none; margin: 12px 0 0; padding: 0; display: grid; gap: 12px; }
+.phone-admin-nodes li { display: flex; flex-direction: column; gap: 6px; }
+.phone-admin-nodes code { overflow-wrap: anywhere; }
+.phone-admin-table { position: relative; min-width: 0; max-width: 100%; overflow-x: auto; }
+.phone-admin table { width: 100%; border-collapse: collapse; text-align: start; }
+.phone-admin th, .phone-admin td { padding: 12px 8px; border-bottom: 1px solid var(--border); }
+.phone-admin th { color: var(--text-muted); font-size: 12px; font-weight: 600; }
+.phone-admin td small { display: block; overflow-wrap: anywhere; }
+.phone-admin-actions { margin-top: 12px; }
+.phone-admin-rom-entry + .phone-admin-rom-entry { margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border); }
+.phone-admin-storage { margin: 8px 0; padding: 14px 0; border-block: 1px solid var(--border); }
+.phone-admin-storage-metrics { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 10px; }
+.phone-admin-storage-metrics dt, .phone-admin-storage small { font-size: 12px; color: var(--text-muted); }
+.phone-admin-storage-metrics dd { margin: 5px 0 0; font-size: 17px; font-weight: 650; font-variant-numeric: tabular-nums; }
+.phone-admin-storage a { color: var(--selected-text); text-underline-offset: 3px; }
+#phone-user-quotas { scroll-margin-top: 80px; }
+.phone-admin-usb { border-top: 1px solid var(--border); padding-top: 10px; }
+.phone-admin-usb summary { cursor: pointer; padding: 8px 0; font-weight: 600; }
+.phone-admin-usb-device { display: flex; gap: 12px; align-items: center; justify-content: space-between; padding: 12px 0; flex-wrap: wrap; }
+.phone-admin-usb-device p { margin: 4px 0; }
+.phone-admin .phone-admin-check { display: flex; align-items: center; gap: 8px; margin-block: 8px; }
+.phone-admin-check input[type=checkbox] { width: 18px; height: 18px; min-height: 0; padding: 0; accent-color: var(--selected-text); }
+.phone-admin-user-checks { max-height: 240px; overflow: auto; }
+@media(max-width:800px) { .phone-admin-grid { grid-template-columns: minmax(0,1fr); } }
+@media(max-width:600px) { .phone-admin-card { padding: 14px; } .phone-admin-search label { flex-basis: 200px; } .phone-admin table { min-width: 440px; } }

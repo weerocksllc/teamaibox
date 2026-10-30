@@ -1,0 +1,98 @@
+import fs from 'node:fs/promises';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { localeDefinitions } from '../packages/ui-system/src/locale-registry.mjs';
+
+const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
+const check=process.argv.includes('--check');
+const filename=code=>code==='en'?'README.md':`README.${code}.md`;
+const languages=[...localeDefinitions].sort((a,b)=>a.code==='en'?-1:b.code==='en'?1:0);
+const languageLinks=languages.map(l=>`[${l.name}](${filename(l.code)})`).join(' · ');
+const escape=s=>s.replaceAll('&','&amp;').replaceAll('"','&quot;').replaceAll('<','&lt;');
+const keys=['intro','whyTitle','why','featuresTitle','features','screensTitle','screensNote','light','dark','installTitle','requirements','installExplanation','resumeTitle','resume','firstTitle','first','limitsTitle','limits','contributeTitle','contribute','resourcesTitle','resources'];
+for(const locale of languages){
+  const t=JSON.parse(await fs.readFile(path.join(root,'docs/readme-locales',locale.code+'.json'),'utf8'));
+  for(const key of keys)if(!t[key])throw new Error(`${locale.code}: missing ${key}`);
+  if(t.features.length!==11||t.first.length!==4||t.resources.length!==6)throw new Error(`${locale.code}: incomplete sections`);
+  for(const theme of ['light','dark'])await fs.access(path.join(root,`docs/assets/screenshots/${locale.code}/workbench-${theme}.jpg`));
+  const shot=`docs/assets/screenshots/${locale.code}/workbench`;
+  const links=['install/SOURCE-INSTALL.md','install/README.md','docs/open-source/BUILDING.md','CONTRIBUTING.md','SECURITY.md','THIRD_PARTY_NOTICES.md'];
+  const output=`<!-- Generated from docs/readme-locales/${locale.code}.json by tools/render-readmes.mjs. -->
+# Team AI Box
+
+**Powered by NVIDIA DGX Spark · MIT · Weerocks LLC**
+
+${languageLinks}
+
+${t.intro}
+
+[teamaibox.com](https://teamaibox.com/) · [GitHub](https://github.com/weerocksllc/teamaibox) · [MIT](LICENSE) · [teamaibox@weerocks.llc](mailto:teamaibox@weerocks.llc)
+
+## ${t.whyTitle}
+
+${t.why.map(x=>`- ${x}`).join('\n')}
+
+## ${t.screensTitle}
+
+${t.screensNote}
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="${shot}-dark.jpg">
+  <source media="(prefers-color-scheme: light)" srcset="${shot}-light.jpg">
+  <img src="${shot}-light.jpg" alt="${escape(t.screensTitle)} — ${escape(locale.name)}" width="1280">
+</picture>
+
+[${t.light}](${shot}-light.jpg) · [${t.dark}](${shot}-dark.jpg)
+
+## ${t.featuresTitle}
+
+${t.features.map(([name,body])=>`### ${name}\n\n${body}`).join('\n\n')}
+
+## ${t.installTitle}
+
+${t.requirements}
+
+\`\`\`sh
+git clone https://github.com/weerocksllc/teamaibox.git
+cd teamaibox
+sudo bash install/from-source.sh
+\`\`\`
+
+${t.installExplanation}
+
+### ${t.resumeTitle}
+
+${t.resume}
+
+\`\`\`sh
+sudo bash install/from-source.sh --check
+sudo bash install/from-source.sh
+\`\`\`
+
+### ${t.firstTitle}
+
+${t.first.map((x,i)=>`${i+1}. ${x}`).join('\n')}
+
+## ${t.limitsTitle}
+
+${t.limits}
+
+## ${t.contributeTitle}
+
+${t.contribute}
+
+[Issues](https://github.com/weerocksllc/teamaibox/issues) · [Pull requests](https://github.com/weerocksllc/teamaibox/pulls) · [CONTRIBUTING](CONTRIBUTING.md) · [SECURITY](SECURITY.md)
+
+## ${t.resourcesTitle}
+
+${links.map((link,i)=>`- [${t.resources[i]}](${link})`).join('\n')}
+
+\`apps/\` · \`services/\` · \`packages/\` · \`install/\` · \`deploy/\` · \`docs/\`
+
+© 2026 Weerocks LLC. [MIT](LICENSE) · [${t.resources[5]}](docs/open-source/RELEASING.md)
+`;
+  const target=path.join(root,filename(locale.code));
+  if(check){if(await fs.readFile(target,'utf8')!==output)throw new Error(`${filename(locale.code)} is out of date`);}
+  else await fs.writeFile(target,output);
+}
+console.log(`${check?'Verified':'Rendered'} ${languages.length} README languages and ${languages.length*2} localized screenshots.`);

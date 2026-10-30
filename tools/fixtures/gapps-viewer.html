@@ -1,0 +1,14 @@
+<!doctype html>
+<html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Google Play · 独立测试手机</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#101914;color:#edf4ee;font:15px system-ui}
+header{display:flex;gap:20px;align-items:center;padding:14px 20px;border-bottom:1px solid #35453b}h1{font-size:18px;margin:0}p{color:#a7b9ad;margin:6px 0}#state{margin-left:auto}
+main{display:flex;align-items:flex-start;justify-content:center;gap:20px;padding:16px;height:calc(100dvh - 80px)}
+video{display:block;height:100%;max-width:calc(100vw - 150px);aspect-ratio:9/16;object-fit:contain;background:#000;touch-action:none;outline:0;border-radius:12px}
+aside{width:96px;display:grid;gap:12px}button{background:#24392c;border:1px solid #52755b;border-radius:8px;color:inherit;padding:12px;cursor:pointer}button:hover{background:#345641}small{line-height:1.6;color:#a7b9ad}output{font-variant-numeric:tabular-nums}
+</style>
+<header><div><h1>Google Play · 独立测试手机</h1><p>仅本机测试入口，不是正式 Google 版；原来的手机保持不变。</p></div><output id="state">连接中</output></header>
+<main><video id="phone" autoplay muted playsinline tabindex="0" aria-label="测试手机画面，点击后可使用键盘"></video>
+<aside><button data-control="back">返回</button><button data-control="home">主页</button><button id="sound">开启声音</button><output id="resolution">等待画面</output><output id="frames">接收帧：0</output><small>画面内可点击、滑动和输入。账号只在手机内登录；本页面不保存密码。</small></aside></main>
+<script type="module" src="/test-client.mjs"></script></html>

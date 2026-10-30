@@ -1,0 +1,206 @@
+{
+  "schemaVersion": 1,
+  "policyId": "teamaibox.trusted-media-runtime.v1",
+  "architecture": "linux/arm64/v8",
+  "releaseState": "source-scaffold-not-deployable",
+  "trustedMediaService": {
+    "containerUser": "65532:65532",
+    "readOnlyRootFilesystem": true,
+    "noNewPrivileges": true,
+    "privileged": false,
+    "pidMode": "private",
+    "ipcMode": "private",
+    "utsMode": "private",
+    "networkMode": "host",
+    "networkExceptionReason": "The on-demand receiver must advertise and pair on the approved same-L2 interface without a multicast reflector; host networking is confined to this first-party trusted service.",
+    "capDrop": [
+      "ALL"
+    ],
+    "capAdd": [],
+    "seccompProfile": "deploy/casting/trusted-media-seccomp.v1.json",
+    "apparmorProfileRequiredAtRelease": true,
+    "dockerSocketMounted": false,
+    "hostFilesystemMounted": false,
+    "hostDbusMounted": false,
+    "hostDisplaySocketMounted": false,
+    "nvidiaDriverCapabilities": [
+      "utility",
+      "video"
+    ],
+    "deviceAccess": {
+      "direct": [
+        {
+          "path": "/dev/dri/card0",
+          "access": "rwm",
+          "purpose": "selected DRM/KMS HDMI sink only"
+        },
+        {
+          "path": "/dev/dri/renderD128",
+          "access": "rwm",
+          "purpose": "render and codec buffer interop"
+        },
+        {
+          "path": "/dev/snd/controlC0",
+          "access": "rw",
+          "purpose": "selected HDMI audio control"
+        },
+        {
+          "path": "/dev/snd/pcmC0D3p",
+          "access": "rw",
+          "purpose": "candidate HDMI PCM playback"
+        },
+        {
+          "path": "/dev/snd/pcmC0D7p",
+          "access": "rw",
+          "purpose": "candidate HDMI PCM playback"
+        },
+        {
+          "path": "/dev/snd/pcmC0D8p",
+          "access": "rw",
+          "purpose": "candidate HDMI PCM playback"
+        },
+        {
+          "path": "/dev/snd/pcmC0D9p",
+          "access": "rw",
+          "purpose": "candidate HDMI PCM playback"
+        }
+      ],
+      "nvidiaInjection": {
+        "selection": "exact-node-agent-observed-gpu",
+        "requiredDeviceNodes": [
+          "/dev/nvidia0",
+          "/dev/nvidiactl"
+        ],
+        "broadDeviceMountForbidden": true,
+        "computeCapabilityRequested": false
+      }
+    },
+    "tmpfs": {
+      "/run/teamaibox": "rw,nosuid,nodev,noexec,mode=0700,size=64m",
+      "/tmp": "rw,nosuid,nodev,noexec,mode=0700,size=256m"
+    },
+    "persistentWritableMounts": [],
+    "browserViewerAuthorization": {
+      "issuerBoundary": "trusted-media-service",
+      "algorithm": "HS256",
+      "apiSecretDelivery": "node-agent-runtime-secret-on-tmpfs",
+      "apiSecretPath": "/run/teamaibox/livekit-api-secret",
+      "apiSecretPersistent": false,
+      "tokenState": "memory-only",
+      "tokenTtlSeconds": 30,
+      "oneTimeAdmissionRequired": true,
+      "wssOnly": true,
+      "sessionScopedRoom": true,
+      "opaqueParticipantIdentity": true,
+      "canSubscribe": true,
+      "canPublish": false,
+      "canPublishData": false,
+      "maximumViewers": 8,
+      "publisherEncodeRenditions": 1
+    },
+    "health": {
+      "command": [
+        "/opt/teamaibox/bin/media-health",
+        "--ready"
+      ],
+      "intervalSeconds": 5,
+      "timeoutSeconds": 2,
+      "startPeriodSeconds": 30,
+      "retries": 6,
+      "mustProve": [
+        "receiver-process",
+        "session-local-state-tmpfs",
+        "mdns-advertisement-absent-before-session",
+        "selected-output-sink",
+        "single-publisher-pipeline",
+        "internal-sfu-connectivity"
+      ]
+    },
+    "resources": {
+      "cpuReservationMillis": 2000,
+      "cpuLimitMillis": 8000,
+      "memoryReservationBytes": 2147483648,
+      "memoryHardLimitBytes": 12884901888,
+      "pidsLimit": 384,
+      "decoderReservations": 1,
+      "encoderReservations": 1,
+      "displayReservations": 1,
+      "audioReservations": 1,
+      "networkReservationBitsPerSecond": 100000000,
+      "maximumResolution": "1920x1080",
+      "maximumFramesPerSecond": 30,
+      "maximumBrowserViewers": 8,
+      "browserEncodeRenditions": 1
+    }
+  },
+  "internalSfu": {
+    "image": "docker.io/livekit/livekit-server@sha256:4eeb7a7af9e133afee7d07fc48623373852a34ad709094345d1761c9b283dc1a",
+    "networkMode": "isolated-casting-media-bridge",
+    "hostNetwork": false,
+    "deviceAccess": [],
+    "dockerSocketMounted": false,
+    "readOnlyRootFilesystem": true,
+    "noNewPrivileges": true,
+    "privileged": false,
+    "capDrop": [
+      "ALL"
+    ],
+    "capAdd": [],
+    "runAsNonRootRequired": true,
+    "persistentWritableMounts": [],
+    "viewerAuthorization": {
+      "apiSecretDelivery": "same-node-tmpfs-runtime-secret",
+      "apiSecretPersistent": false,
+      "issuer": "trusted-media-service",
+      "algorithm": "HS256",
+      "maximumTokenTtlSeconds": 30,
+      "roomJoinOnly": true,
+      "subscriberOnly": true,
+      "publishAllowed": false,
+      "dataPublishAllowed": false
+    },
+    "tmpfs": {
+      "/tmp": "rw,nosuid,nodev,noexec,mode=0700,size=128m"
+    },
+    "resources": {
+      "cpuReservationMillis": 500,
+      "cpuLimitMillis": 2000,
+      "memoryReservationBytes": 536870912,
+      "memoryHardLimitBytes": 2147483648,
+      "pidsLimit": 256
+    }
+  },
+  "officialApplicationPlugin": {
+    "pluginId": "official.wireless-casting",
+    "hostNetwork": false,
+    "deviceAccess": [],
+    "dockerSocketMounted": false,
+    "hostFilesystemMounted": false,
+    "receiverPrivateStateMounted": false,
+    "directHdmiControl": false,
+    "permanentMediaCredentialAccess": false,
+    "capDrop": [
+      "ALL"
+    ],
+    "capAdd": [],
+    "readOnlyRootFilesystem": true,
+    "noNewPrivileges": true,
+    "allowedBoundary": "authenticated-platform-casting-api-only"
+  },
+  "forbidden": [
+    "privileged-container",
+    "docker-socket",
+    "host-root-mount",
+    "broad-/dev-mount",
+    "host-pid",
+    "host-ipc",
+    "host-dbus",
+    "host-display-socket",
+    "application-plugin-device-access",
+    "application-plugin-host-network",
+    "persistent-receiver-key",
+    "persistent-registration-state",
+    "recording",
+    "user-media-evidence"
+  ]
+}

@@ -1,0 +1,10 @@
+DROP TRIGGER IF EXISTS fleet_operation_targets_identity_guard ON compute.fleet_operation_targets;
+DROP FUNCTION IF EXISTS compute.guard_fleet_target_identity();
+DROP TRIGGER IF EXISTS fleet_operations_terminal_guard ON compute.fleet_operations;
+DROP FUNCTION IF EXISTS compute.guard_terminal_fleet_operation();
+DROP TRIGGER IF EXISTS fleet_operations_group_guard ON compute.fleet_operations;
+DROP FUNCTION IF EXISTS compute.enforce_fleet_operation_group();
+DROP TABLE IF EXISTS compute.fleet_operation_orphans;
+DROP TABLE IF EXISTS compute.fleet_operation_targets;
+DROP TABLE IF EXISTS compute.fleet_operations;
+DROP FUNCTION IF EXISTS compute.fleet_target_set_valid(jsonb);

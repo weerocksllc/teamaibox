@@ -1,0 +1,28 @@
+name: CastingDeviceProbe
+options:
+  bundleIdPrefix: com.teamaibox
+  deploymentTarget:
+    iOS: "18.0"
+settings:
+  base:
+    DEVELOPMENT_TEAM: LUTWA364P4
+    CODE_SIGN_STYLE: Automatic
+    SWIFT_VERSION: "5.0"
+targets:
+  CastingDeviceProbe:
+    type: bundle.ui-testing
+    platform: iOS
+    sources: [Tests]
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.teamaibox.casting.deviceprobe
+        GENERATE_INFOPLIST_FILE: YES
+        TARGETED_DEVICE_FAMILY: "1,2"
+schemes:
+  CastingDeviceProbe:
+    build:
+      targets:
+        CastingDeviceProbe: [test]
+    test:
+      targets: [CastingDeviceProbe]
+      gatherCoverageData: false

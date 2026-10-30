@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.teamaibox.local/node-agent/command-envelope.v1.schema.json",
+  "title": "Team AI Box Node Agent command envelope v1",
+  "x-teamaibox-contract": {"family": "node-agent", "role": "request", "major": 1},
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["protocolVersion", "commandId", "nodeId", "nodeGeneration", "type", "issuedAt", "deadlineAt", "idempotency", "payload"],
+  "properties": {
+    "protocolVersion": {"const": 1},
+    "commandId": {"type": "string", "format": "uuid"},
+    "nodeId": {"type": "string", "format": "uuid"},
+    "nodeGeneration": {"type": "integer", "minimum": 1},
+    "type": {"type": "string", "pattern": "^[a-z][a-z0-9._-]{2,127}$"},
+    "issuedAt": {"type": "string", "format": "date-time"},
+    "deadlineAt": {"type": "string", "format": "date-time"},
+    "correlationId": {"type": ["string", "null"], "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{7,127}$"},
+    "leaseId": {"type": ["string", "null"], "format": "uuid"},
+    "fencingToken": {"type": ["integer", "null"], "minimum": 1},
+    "idempotency": {"type": "string", "enum": ["safe", "keyed", "non_replayable"]},
+    "payload": {"type": "object"},
+    "extensions": {"type": "object", "additionalProperties": true}
+  }
+}

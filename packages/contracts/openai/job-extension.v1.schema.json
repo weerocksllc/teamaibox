@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.teamaibox.local/openai/job-extension.v1.schema.json",
+  "title": "Team AI Box OpenAI-style job extension v1",
+  "x-teamaibox-contract": {"family": "openai", "role": "response", "major": 1},
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["job_id", "state", "route"],
+  "properties": {
+    "job_id": {"type": "string", "format": "uuid"},
+    "state": {"type": "string", "enum": ["queued", "admitted", "preparing", "running", "succeeded", "failed", "cancelled", "expired", "incomplete"]},
+    "route": {"type": "string", "enum": ["unassigned", "local", "managed_node", "external_provider"]},
+    "profile_id": {"type": ["string", "null"], "format": "uuid"},
+    "attempt_id": {"type": ["string", "null"], "format": "uuid"},
+    "extensions": {"type": "object", "additionalProperties": true}
+  }
+}

@@ -1,0 +1,97 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.teamaibox.local/http/user-activity.v1.schema.json",
+  "title": "Authenticated user activity and service availability v1",
+  "x-teamaibox-contract": { "family": "http", "role": "response", "major": 1 },
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["generatedAt", "availability", "tasks", "summary"],
+  "properties": {
+    "generatedAt": { "type": "string", "format": "date-time" },
+    "availability": { "type": "array", "maxItems": 128, "items": { "$ref": "#/$defs/availability" } },
+    "tasks": { "type": "array", "maxItems": 100, "items": { "$ref": "#/$defs/task" } },
+    "summary": {
+      "type": "object", "additionalProperties": false,
+      "required": ["total", "active", "waiting", "failed"],
+      "properties": {
+        "total": { "type": "integer", "minimum": 0, "maximum": 100 },
+        "active": { "type": "integer", "minimum": 0, "maximum": 100 },
+        "waiting": { "type": "integer", "minimum": 0, "maximum": 100 },
+        "failed": { "type": "integer", "minimum": 0, "maximum": 100 }
+      }
+    }
+  },
+  "$defs": {
+    "key": { "type": "string", "pattern": "^[a-z][a-z0-9_.-]{1,127}$" },
+    "timestamp": { "type": ["string", "null"], "format": "date-time" },
+    "wait": {
+      "type": "object", "additionalProperties": false,
+      "required": ["estimateStatus", "estimatedSeconds", "basis"],
+      "properties": {
+        "estimateStatus": { "enum": ["estimated", "unavailable"] },
+        "estimatedSeconds": { "type": ["integer", "null"], "minimum": 0, "maximum": 604800 },
+        "basis": { "type": ["string", "null"], "enum": ["no_queue", "queue_age_proxy", null] }
+      }
+    },
+    "availability": {
+      "type": "object", "additionalProperties": false,
+      "required": ["applicationKey", "capabilityKey", "state", "reasonKey", "wait", "observedAt"],
+      "properties": {
+        "applicationKey": { "$ref": "#/$defs/key" },
+        "capabilityKey": { "$ref": "#/$defs/key" },
+        "state": { "enum": ["available", "busy", "degraded", "unavailable", "unknown"] },
+        "reasonKey": { "$ref": "#/$defs/key" },
+        "wait": { "$ref": "#/$defs/wait" },
+        "observedAt": { "$ref": "#/$defs/timestamp" }
+      }
+    },
+    "taskWait": {
+      "type": "object", "additionalProperties": false,
+      "required": ["reasonKey", "estimateStatus", "estimatedSeconds"],
+      "properties": {
+        "reasonKey": { "oneOf": [{ "$ref": "#/$defs/key" }, { "type": "null" }] },
+        "estimateStatus": { "enum": ["estimated", "unavailable", "not_applicable"] },
+        "estimatedSeconds": { "type": ["integer", "null"], "minimum": 0, "maximum": 604800 }
+      }
+    },
+    "failure": {
+      "type": ["object", "null"],
+      "additionalProperties": false,
+      "required": ["code", "guidanceKey", "retryable", "retryAction"],
+      "properties": {
+        "code": { "$ref": "#/$defs/key" },
+        "guidanceKey": { "$ref": "#/$defs/key" },
+        "retryable": { "type": "boolean" },
+        "retryAction": { "oneOf": [{ "$ref": "#/$defs/key" }, { "type": "null" }] }
+      }
+    },
+    "result": {
+      "type": "object", "additionalProperties": false,
+      "required": ["label", "artifactRef"],
+      "properties": {
+        "label": { "type": "string", "minLength": 1, "maxLength": 80 },
+        "artifactRef": { "type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,255}$" }
+      }
+    },
+    "task": {
+      "type": "object", "additionalProperties": false,
+      "required": ["taskId", "taskKind", "titleKey", "state", "progress", "progressRevision", "cancellationRequested", "wait", "failure", "results", "canCancel", "createdAt", "updatedAt", "terminalAt"],
+      "properties": {
+        "taskId": { "type": "string", "format": "uuid" },
+        "taskKind": { "$ref": "#/$defs/key" },
+        "titleKey": { "$ref": "#/$defs/key" },
+        "state": { "enum": ["queued", "preparing", "running", "completed", "failed", "cancelled"] },
+        "progress": { "type": "number", "minimum": 0, "maximum": 100 },
+        "progressRevision": { "type": "integer", "minimum": 1 },
+        "cancellationRequested": { "type": "boolean" },
+        "wait": { "$ref": "#/$defs/taskWait" },
+        "failure": { "$ref": "#/$defs/failure" },
+        "results": { "type": "array", "maxItems": 64, "items": { "$ref": "#/$defs/result" } },
+        "canCancel": { "type": "boolean" },
+        "createdAt": { "$ref": "#/$defs/timestamp" },
+        "updatedAt": { "$ref": "#/$defs/timestamp" },
+        "terminalAt": { "$ref": "#/$defs/timestamp" }
+      }
+    }
+  }
+}

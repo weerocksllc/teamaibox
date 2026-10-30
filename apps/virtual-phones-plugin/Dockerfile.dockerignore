@@ -1,0 +1,9 @@
+*
+!packages/plugin-sdk/**
+!packages/application-plugin-runtime/**
+!packages/ui-system/**
+!apps/virtual-phones-plugin/**
+!apps/wireless-casting-plugin/vendor/alpine/**
+**/node_modules
+**/.DS_Store
+**/._*

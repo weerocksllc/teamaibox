@@ -1,0 +1,2 @@
+DROP TRIGGER queue_admission_policies_touch_updated_at ON compute.queue_admission_policies;
+DROP TABLE compute.queue_admission_policies;

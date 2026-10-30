@@ -1,0 +1,118 @@
+{
+  "apiContracts": ["openai.chat-completions@v1", "openai.responses@v1"],
+  "artifactDigest": "sha256:f0cb7bf428f35eb53b376bd27231f12208d1095ea026576beed5c0799b0123d1",
+  "artifacts": [{
+    "digest": "sha256:f0cb7bf428f35eb53b376bd27231f12208d1095ea026576beed5c0799b0123d1",
+    "mediaType": "application/vnd.teamaibox.model-snapshot+json",
+    "name": "model-snapshot",
+    "role": "weights",
+    "sizeBytes": 23457714000
+  }],
+  "capabilityId": "855f08c1-e305-5246-a6dd-e50adb29c540",
+  "coldStart": {
+    "artifactReadBytes": 23457714000,
+    "estimatedMilliseconds": 180000,
+    "evidenceRef": "evidence://validation/models/baseline-plan-qwen36-nvfp4-v1"
+  },
+  "compatibility": {
+    "architectures": ["linux/arm64/v8"],
+    "hardware": {
+      "acceleratorFamilies": ["nvidia-gb10-blackwell"],
+      "codecDirections": {"decode": 0, "encode": 0},
+      "minimumComputeCapability": "12.1",
+      "minimumCpuCores": 16,
+      "minimumUnifiedMemoryBytes": 128000000000
+    },
+    "software": {
+      "containerToolkitRange": ">=1.17 <2.0",
+      "cudaRange": ">=13.0 <14.0",
+      "driverRange": ">=580.0 <590.0",
+      "kernelRange": ">=6.17 <7.0",
+      "os": "linux"
+    }
+  },
+  "dataPolicy": {
+    "allowedDataClasses": ["confidential", "internal", "public", "restricted"],
+    "externalProcessing": "forbidden"
+  },
+  "engine": {
+    "configurationDigest": "sha256:9b07284eed424a21933c94ca0a886704e58aeb07aba8fa1ba82e2a3b64ca6b72",
+    "imageDigest": "sha256:9204569b17ee4c0eff75194b8e6e458479c8aee18953b5ab9cf359fcdac659e2",
+    "name": "ngc-vllm",
+    "runtime": "cuda",
+    "runtimeVersion": "13.2-forward-compatible",
+    "version": "0.21.0+2325b6f0.nvinternal.26.5.post1.53039255"
+  },
+  "exclusive": true,
+  "executionKind": "managed_node",
+  "extensions": {
+    "api_gateway_required": true,
+    "candidate_id": "qwen36-35b-a3b-nvfp4",
+    "runtime_network": "isolated-internal",
+    "scheduler_requirements": {"fresh_host_memory_evidence": true, "storage_class": "encrypted_nvme"}
+  },
+  "knownLimitations": [
+    "Initial validation uses bounded quality smoke and is not a certification result.",
+    "Linux cgroup memory excludes some accelerator-backed unified-memory allocations; admission also requires fresh host memory evidence.",
+    "NVFP4 weights are publisher-prequantized W4A16 with FP8 KV cache; evidence applies only to this exact recipe.",
+    "On this Spark/vLLM build, Marlin reported weight-only FP4 compression and did not expose a native FP4 computation claim.",
+    "Prefix caching for the Qwen3.5/3.6 hybrid Mamba cache is reported experimental by this vLLM build.",
+    "This profile serves the language model only; multimodal encoders are disabled."
+  ],
+  "limits": {
+    "maximumBatchSize": 2,
+    "maximumConcurrentRequests": 2,
+    "maximumContextTokens": 32768,
+    "maximumDurationSeconds": 1800,
+    "maximumInputBytes": 16777216,
+    "maximumOutputBytes": 16777216,
+    "maximumOutputTokens": 8192
+  },
+  "precision": "nvfp4",
+  "profileKey": "llm.qwen36-35b-a3b.nvfp4.spark-32k.v1",
+  "quantizationRecipe": {
+    "calibrationDatasetDigest": null,
+    "parametersDigest": "sha256:926868e31a724313268c7b69f4bdd050713633f2cb9000a95c52a2be1d2e3276",
+    "recipeDigest": "sha256:c20fe6eb55909d8be667bf5cfd5e4918525a3b36ae507c3bc848142f32368356",
+    "scheme": "nvfp4",
+    "tool": "nvidia-modelopt-publisher-prequantized",
+    "toolVersion": "revision-491c2f1ea524"
+  },
+  "resourceEnvelope": {
+    "acceleratorUnits": 1,
+    "accountingMode": "observed",
+    "codecSessions": 0,
+    "cpuMillis": 18000,
+    "evidenceRef": "evidence://validation/models/baseline-plan-qwen36-nvfp4-v1",
+    "networkBitsPerSecond": 0,
+    "storageBytes": 53687091200,
+    "unifiedMemoryBytes": 68719476736
+  },
+  "source": {
+    "license": {
+      "evidenceRef": "https://huggingface.co/nvidia/Qwen3.6-35B-A3B-NVFP4/blob/491c2f1ea524c639598bf8fa787a93fed5a6fbce/README.md",
+      "name": "Apache License 2.0",
+      "reviewStatus": "approved",
+      "spdxId": "Apache-2.0",
+      "textDigest": "sha256:bb3a29ef8870dd68be8a0e0d508880dd49a4db5aafb034bb9b3f475ca5740481",
+      "usage": "commercial"
+    },
+    "model": "nvidia/Qwen3.6-35B-A3B-NVFP4",
+    "provenance": {
+      "evidenceRef": "evidence://models/candidate-matrix.v1",
+      "publisher": "NVIDIA/Qwen",
+      "retrievedAt": "2026-08-10T19:41:32.000Z",
+      "sourceDigest": "sha256:58aefa1c9eff7989f431d748f2ddec39446cb1fd2a69acc46e285c6a37b0cecc",
+      "sourceUri": "https://huggingface.co/nvidia/Qwen3.6-35B-A3B-NVFP4/tree/491c2f1ea524c639598bf8fa787a93fed5a6fbce"
+    },
+    "revision": "491c2f1ea524c639598bf8fa787a93fed5a6fbce"
+  },
+  "validationEvidence": [{
+    "environmentDigest": "sha256:a26ee908fdadf7e17338372848ff729332c2d456272c8adfb7b267d9b9b912d5",
+    "evidenceRef": "evidence://models/candidate-matrix.v1",
+    "observedAt": "2026-08-10T19:41:32.000Z",
+    "result": "passed",
+    "runId": "model-discovery-qwen36-nvfp4-20260810",
+    "stage": "discovery"
+  }]
+}

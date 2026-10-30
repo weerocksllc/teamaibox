@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "policyId": "official-host-maintenance.v1",
+  "channel": "host-maintenance",
+  "administratorPermission": "update:manage",
+  "executor": "node-agent-host-maintenance",
+  "sourceConfigurationOwner": "host-maintenance-service",
+  "separateFromSandboxApt": true,
+  "sandboxWorkloadsAllowed": false,
+  "approvedSourceKeys": [
+    "dgx-os",
+    "nvidia-compute",
+    "nvidia-container-runtime",
+    "ubuntu-base"
+  ],
+  "allowedCategories": [
+    "dgx-os",
+    "kernel",
+    "nvidia-driver",
+    "firmware",
+    "boot",
+    "docker-runtime",
+    "nvidia-container-toolkit"
+  ],
+  "requiredEvidence": [
+    "before-snapshot",
+    "approved-package-plan",
+    "recovery-or-rollback-plan",
+    "after-snapshot",
+    "host-drift-result",
+    "affected-model-revalidation"
+  ],
+  "forbiddenSandboxEndpoints": [
+    "http://source-gateway:8080/apt"
+  ]
+}

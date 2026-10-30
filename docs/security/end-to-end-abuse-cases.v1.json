@@ -1,0 +1,186 @@
+{
+  "schemaVersion": 1,
+  "model": "team-ai-box-end-to-end-threat-model-v1",
+  "cases": [
+    {
+      "id": "ABUSE-ACCOUNT-001",
+      "domain": "local_accounts",
+      "threat": "An attacker guesses credentials or distributes attempts across network sources.",
+      "control": "Argon2id verification, per-account lockout, and network-source throttling fail closed.",
+      "recovery": "A legitimate administrator waits for the bounded lockout or uses the separately controlled owner recovery path.",
+      "testFile": "apps/platform-api/test/local-auth.test.mjs",
+      "testName": "locks an account and throttles abusive network sources"
+    },
+    {
+      "id": "ABUSE-ACCOUNT-002",
+      "domain": "local_accounts",
+      "threat": "A disabled or departed local user reuses an existing session while an attacker tries to remove the last owner.",
+      "control": "Account disablement revokes sessions and the final active owner cannot be disabled.",
+      "recovery": "An active owner restores an account deliberately; revoked sessions are never revived.",
+      "testFile": "apps/platform-api/test/local-auth.test.mjs",
+      "testName": "disables accounts, revokes sessions, and protects the final active owner"
+    },
+    {
+      "id": "ABUSE-SESSION-001",
+      "domain": "browser_sessions",
+      "threat": "A browser creates a credential-bearing session over plaintext transport or a cross-origin request.",
+      "control": "Session creation requires HTTPS and exact same-origin validation.",
+      "recovery": "The request is rejected before a session exists and can be retried only through the trusted HTTPS origin.",
+      "testFile": "apps/platform-api/test/platform-api-server.test.mjs",
+      "testName": "requires HTTPS and same-origin before creating a browser session"
+    },
+    {
+      "id": "ABUSE-SESSION-002",
+      "domain": "browser_sessions",
+      "threat": "A forged state-changing request or duplicated cookie attempts to confuse session selection.",
+      "control": "Host-only Secure cookies, unambiguous parsing, CSRF binding, expiry, and server-side revocation are mandatory.",
+      "recovery": "Invalid requests receive no mutation; sign-out or account disablement revokes the server-side session.",
+      "testFile": "apps/platform-api/test/local-auth.test.mjs",
+      "testName": "uses a host-only secure session cookie and rejects ambiguous duplicates"
+    },
+    {
+      "id": "ABUSE-PLUGIN-001",
+      "domain": "plugins",
+      "threat": "A registry, marketplace, or offline bundle substitutes a plugin signed by an untrusted or wrong publisher key.",
+      "control": "Canonical content and Ed25519 signatures are verified against active publisher-scoped trust before persistence.",
+      "recovery": "The candidate remains uninstalled; the administrator may import a newly signed immutable version after trust review.",
+      "testFile": "services/plugin-runtime/test/plugin-import-service.test.mjs",
+      "testName": "verifies manifest and bundle Ed25519 signatures against publisher-scoped active trust"
+    },
+    {
+      "id": "ABUSE-PLUGIN-002",
+      "domain": "plugins",
+      "threat": "A plugin requests root, privileged mode, host namespaces, the Docker socket, or undeclared host mounts.",
+      "control": "The sandbox compiler denies and audits forbidden privileges before Node Agent staging.",
+      "recovery": "No container is started; only a new reviewed manifest with bounded permissions can be staged.",
+      "testFile": "services/plugin-runtime/test/sandbox-policy.test.mjs",
+      "testName": "root, privileged, host namespace/network, Docker socket, and undeclared host mounts are denied and audited"
+    },
+    {
+      "id": "ABUSE-AGENT-001",
+      "domain": "agent_code_execution",
+      "threat": "Agent-generated code attempts a host escape through mounts, devices, namespaces, or runtime controls.",
+      "control": "Each user receives a non-root isolated sandbox without host mounts, Docker socket, direct devices, or GPU.",
+      "recovery": "The start is rejected before execution and the sandbox remains isolated for a corrected operation.",
+      "testFile": "services/agent-bridge/test/agent-sandbox.test.mjs",
+      "testName": "host escape controls and direct devices are denied before runtime start"
+    },
+    {
+      "id": "ABUSE-AGENT-002",
+      "domain": "agent_code_execution",
+      "threat": "A tool action is approved by the wrong actor, widened beyond its exact scope, or reused.",
+      "control": "Confirmation is authenticated, exact-scope, one-shot, expiring, audited, and never grants permanent approval.",
+      "recovery": "A denied or expired action requires a new scoped proposal and confirmation.",
+      "testFile": "services/agent-bridge/test/agent-operation-confirmation.test.mjs",
+      "testName": "authenticated approval is exact-scope, one-shot, audited, and never grants always"
+    },
+    {
+      "id": "ABUSE-AGENT-003",
+      "domain": "agent_code_execution",
+      "threat": "A Bridge or OpenCode crash makes a side-effecting approval outcome uncertain and invites blind replay.",
+      "control": "Unknown outcomes are fenced as incomplete and automatic replay is forbidden.",
+      "recovery": "The user or administrator reconciles external state before issuing a new operation.",
+      "testFile": "services/agent-bridge/test/agent-operation-confirmation.test.mjs",
+      "testName": "unknown approval outcome and crash require manual reconciliation without blind replay"
+    },
+    {
+      "id": "ABUSE-PROVIDER-001",
+      "domain": "external_providers",
+      "threat": "Provider credentials or endpoints leak through administrator reads, metrics, or durable configuration.",
+      "control": "Credentials are stored only through protected ciphertext references and public projections are redacted.",
+      "recovery": "The credential can be rotated independently without exposing the prior secret or changing public routing identity.",
+      "testFile": "apps/platform-api/test/external-provider-service.test.mjs",
+      "testName": "administrator registration stores credentials only in protected ciphertext and returns redacted configuration"
+    },
+    {
+      "id": "ABUSE-PROVIDER-002",
+      "domain": "external_providers",
+      "threat": "A failed external request is replayed after partial output and duplicates a visible result or side effect.",
+      "control": "The acceptance boundary and observed output fence blind failover and retry.",
+      "recovery": "The attempt remains incomplete until provider reconciliation establishes one authoritative result.",
+      "testFile": "services/scheduler/test/external-attempt-coordinator.test.mjs",
+      "testName": "partial streamed output always blocks blind replay and requires provider reconciliation"
+    },
+    {
+      "id": "ABUSE-OBJECT-001",
+      "domain": "object_grants",
+      "threat": "A stolen object reference is used for another version, audience, operation, or after expiry.",
+      "control": "Signed references bind immutable version, audience, allowed operations, expiry, and live grant state.",
+      "recovery": "The reference is rejected; the authorized issuer must create a fresh narrowly scoped reference.",
+      "testFile": "services/object-service/test/object-service.test.mjs",
+      "testName": "scoped references bind immutable version, audience, operations, expiry, and signature"
+    },
+    {
+      "id": "ABUSE-OBJECT-002",
+      "domain": "object_grants",
+      "threat": "A workload tries to read object bytes outside its user, operation, or current short-lived grant.",
+      "control": "Local workers receive only server-tracked operation-bound grants that can be revoked immediately.",
+      "recovery": "Revoking the grant blocks later reads; a new authorized request must obtain a new grant.",
+      "testFile": "services/object-service/test/access-grants.test.mjs",
+      "testName": "worker grants are short-lived, server-tracked, least-privilege, and immediately revocable"
+    },
+    {
+      "id": "ABUSE-SOURCE-001",
+      "domain": "software_sources",
+      "threat": "An upstream or cache supplies package bytes that do not match the approved digest.",
+      "control": "Artifacts are verified before caching and corrupted cache entries fail closed.",
+      "recovery": "The bad entry remains unavailable until trusted bytes matching immutable metadata are imported.",
+      "testFile": "services/source-gateway/test/pip-gateway.test.mjs",
+      "testName": "checksum mismatch and a corrupted cache fail closed"
+    },
+    {
+      "id": "ABUSE-SOURCE-002",
+      "domain": "software_sources",
+      "threat": "Removed offline media is silently treated as present, or a reattached disk inherits prior approval.",
+      "control": "Removal detaches the inventory immediately and attachment identity must be approved again.",
+      "recovery": "An administrator re-indexes and reapproves the current immutable media manifest.",
+      "testFile": "services/source-gateway/test/offline-media-service.test.mjs",
+      "testName": "disk removal immediately detaches approved inventory and reattachment requires reapproval"
+    },
+    {
+      "id": "ABUSE-NODE-001",
+      "domain": "local_appliance",
+      "threat": "Another machine claims to be the appliance and submits misleading workload or health information.",
+      "control": "Only the installed local identity may report through the authenticated loopback service boundary.",
+      "recovery": "Reject the report without changing capacity or stopping any previously running local workload.",
+      "testFile": "apps/platform-api/test/appliance-runtime.test.mjs",
+      "testName": "only the installed local identity can report appliance health"
+    },
+    {
+      "id": "ABUSE-NODE-002",
+      "domain": "local_appliance",
+      "threat": "A browser forges internal identity headers or replays an earlier valid health report to change local availability.",
+      "control": "Internal identity is authenticated and bound to the exact request path, timestamp and single-use nonce.",
+      "recovery": "Reject forged and replayed requests without altering the appliance identity, capacity or guest state.",
+      "testFile": "apps/platform-api/test/appliance-runtime.test.mjs",
+      "testName": "forged local gateway identity is rejected and valid reports cannot be replayed"
+    },
+    {
+      "id": "ABUSE-MEDIA-001",
+      "domain": "physical_media",
+      "threat": "A thief boots the appliance or moves its NVMe media and reaches protected services without an unlock factor.",
+      "control": "LOCKED deployment exposes only the minimal unlock surface and mounts no protected data service or volume.",
+      "recovery": "An authorized factor unlocks the data volume; no application service reads protected data beforehand.",
+      "testFile": "services/unlock-service/test/unlock-boundary.test.mjs",
+      "testName": "LOCKED deployment exposes no protected data service or protected volume"
+    },
+    {
+      "id": "ABUSE-MEDIA-002",
+      "domain": "physical_media",
+      "threat": "A valid LUKS passphrase is retained in application state after Web unlock.",
+      "control": "The factor authenticates one bounded unlock and plaintext passphrase material is not retained.",
+      "recovery": "The passphrase can be rotated through the controlled key-slot lifecycle without persisting the old value.",
+      "testFile": "services/unlock-service/test/unlock-service.test.mjs",
+      "testName": "correct LUKS passphrase factor authenticates one bounded unlock without retaining it"
+    },
+    {
+      "id": "ABUSE-MEDIA-003",
+      "domain": "physical_media",
+      "threat": "A lost USB factor cannot be revoked safely because recovery or the LUKS header operation fails.",
+      "control": "Offline recovery is separate and failed revocation restores an independently held header backup.",
+      "recovery": "The appliance remains in minimal recovery mode until the lost factor is revoked and a challenged replacement is enrolled.",
+      "testFile": "services/unlock-service/test/recovery-lifecycle-service.test.mjs",
+      "testName": "lost USB revocation failure restores the independent header backup"
+    }
+  ]
+}

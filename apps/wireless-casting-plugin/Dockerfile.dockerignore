@@ -1,0 +1,15 @@
+**
+!packages/
+!packages/plugin-sdk/
+!packages/plugin-sdk/**
+!packages/application-plugin-runtime/
+!packages/application-plugin-runtime/**
+!packages/ui-system/
+!packages/ui-system/**
+!apps/
+!apps/wireless-casting-plugin/
+!apps/wireless-casting-plugin/**
+**/node_modules
+**/._*
+**/.DS_Store
+**/test

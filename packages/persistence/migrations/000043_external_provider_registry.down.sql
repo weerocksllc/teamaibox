@@ -1,0 +1,36 @@
+DROP TRIGGER provider_contract_test_runs_append_only ON compute.provider_contract_test_runs;
+DROP TRIGGER provider_health_events_append_only ON compute.provider_health_events;
+DROP FUNCTION compute.reject_provider_evidence_mutation();
+DROP INDEX compute.provider_contract_test_runs_provider_time_idx;
+DROP TABLE compute.provider_contract_test_runs;
+DROP INDEX compute.provider_health_events_provider_time_idx;
+DROP TABLE compute.provider_health_events;
+ALTER TABLE compute.provider_model_profiles
+    DROP COLUMN contract_state,
+    DROP COLUMN maximum_output_tokens,
+    DROP COLUMN context_window,
+    DROP COLUMN operations;
+ALTER TABLE compute.providers
+    DROP CONSTRAINT providers_contract_evidence_pair,
+    DROP CONSTRAINT providers_trust_secret_pair,
+    DROP CONSTRAINT providers_auth_secret_pair,
+    DROP CONSTRAINT providers_external_https_check,
+    DROP CONSTRAINT providers_display_name_check,
+    DROP COLUMN created_by,
+    DROP COLUMN revision,
+    DROP COLUMN contract_failed_checks,
+    DROP COLUMN contract_tested_at,
+    DROP COLUMN contract_evidence_digest,
+    DROP COLUMN contract_state,
+    DROP COLUMN cost_accounting,
+    DROP COLUMN health,
+    DROP COLUMN health_check,
+    DROP COLUMN timeout_policy,
+    DROP COLUMN rate_limits,
+    DROP COLUMN concurrency_limit,
+    DROP COLUMN allowed_data_classes,
+    DROP COLUMN trust_policy,
+    DROP COLUMN ca_secret_ref,
+    DROP COLUMN auth_header_name,
+    DROP COLUMN auth_scheme,
+    DROP COLUMN display_name;

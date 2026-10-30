@@ -1,0 +1,55 @@
+{
+  "build": "15076761",
+  "target": "kernel_aarch64",
+  "artifacts": [
+    {
+      "name": "kernel_aarch64_ddk_headers_archive.tar.gz",
+      "size": 10406307,
+      "sha256": "17cce4021ef77f3bb06f3b188174214ce5406c837505e49bb166f577d8d679d3",
+      "md5": "d789dc9d8cee31f0446292b4279156ce"
+    },
+    {
+      "name": "kernel_aarch64_filegroup_decl.tar.gz",
+      "size": 50207876,
+      "sha256": "9e583de9138f5b21c45a5541288aa25afe92c09bfcee51cde09c3c9feea4da61",
+      "md5": "df07cc1842ce29b4c4be3b479ca4254d"
+    },
+    {
+      "name": "kernel-headers.tar.gz",
+      "size": 17032523,
+      "sha256": "5c09150bff2e1c89057eff12be33f915237c0735837c062093a7ab3b598b7a4e",
+      "md5": "bd993c7c618fd6a6263a2a2724de536a"
+    },
+    {
+      "name": "kernel_aarch64_Module.symvers",
+      "size": 637498,
+      "sha256": "8dd90cabe112d1d9a2e9e1ca18c269cc81d7648a6e2f988e6efcdcb07a4b9de7",
+      "md5": "c9d735a05a4c670934590056bb5e6014"
+    },
+    {
+      "name": "kernel_aarch64_dot_config",
+      "size": 223293,
+      "sha256": "4c065ae7247d878dc34438e61230fb4c3e4a9ce286cd585bf49db03dd7e69726",
+      "md5": "f2690ae5629e3c9506a2361974657e15"
+    },
+    {
+      "name": "BUILD_INFO",
+      "size": 42652,
+      "sha256": "8ad3ce329ba956c9beca3052bd8983263af28cd37deb3414eaa93f3cf627fd5d",
+      "md5": "dadd6f5f47b007a61921bcdfb7774bc7"
+    },
+    {
+      "name": "manifest_15076761.xml",
+      "size": 7902,
+      "sha256": "8b0cc7ace73c565c8c21a19a3e808cc1f625aa69ba3bede7256c8c2d5813d9f6",
+      "md5": "9b1023b441a547d007aa71af936a5823"
+    },
+    {
+      "name": "repo.prop",
+      "size": 3689,
+      "sha256": "36ab0e59a501c740243bca4f909deca6d5d07388677efda7f726f8c41440a3ad",
+      "md5": "03d5d5be9f0be3e531ddfe0c28455105"
+    }
+  ],
+  "artifactBaseUrl": "https://ci.android.com/builds/submitted/15076761/kernel_aarch64/latest/raw/"
+}

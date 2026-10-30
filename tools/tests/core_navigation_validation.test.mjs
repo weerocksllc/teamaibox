@@ -1,0 +1,15 @@
+import assert from 'node:assert/strict';
+import {readFile} from 'node:fs/promises';
+import test from 'node:test';
+import {validateNavigation} from '../validate_core_navigation_browser.mjs';
+import {canonical,digest} from '../validate_casting_iphone_browser.mjs';
+const fixture=JSON.parse(await readFile(new URL('../../evidence/validation/browser/core-navigation-browser-20260911-a2.json',import.meta.url),'utf8'));
+const changed=edit=>{const v=structuredClone(fixture);edit(v);delete v.evidenceDigest;v.evidenceDigest=digest(canonical(v));return v;};
+test('24 real navigation checks stay a page-only claim',()=>assert.equal(validateNavigation(fixture).fullReleaseAccepted,false));
+test('reject incomplete page coverage',()=>assert.throws(()=>validateNavigation(changed(v=>v.pages.pop()))));
+test('reject a failed run even with a recomputed digest',()=>assert.throws(()=>validateNavigation(changed(v=>v.status='failed'))));
+test('reject certificate bypass',()=>assert.throws(()=>validateNavigation(changed(v=>v.certificateChecksDisabled=true))));
+test('reject expanding navigation to node enrollment',()=>assert.throws(()=>validateNavigation(changed(v=>v.scope.nodeEnrollmentTested=true))));
+test('reject hidden backend failures',()=>assert.throws(()=>validateNavigation(changed(v=>v.serverFailures.push({status:503})))));
+test('reject failed browser cleanup',()=>assert.throws(()=>validateNavigation(changed(v=>v.cleanup.signedOut=false))));
+test('reject a Worker identity change',()=>assert.throws(()=>validateNavigation(changed(v=>v.after.workers[0].id='different'))));

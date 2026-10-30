@@ -1,0 +1,45 @@
+{
+  "schemaVersion": 1,
+  "scenarios": [
+    {
+      "key": "access-control",
+      "file": "team-drive-service.test.mjs",
+      "test": "ACLs are inherited, permission-scoped, and do not leak roots to unrelated users"
+    },
+    {
+      "key": "concurrent-version",
+      "file": "team-drive-service.test.mjs",
+      "test": "concurrent team editors create exactly one next version and stale writer fails closed"
+    },
+    {
+      "key": "retention",
+      "file": "team-drive-service.test.mjs",
+      "test": "recycle retention supports restore and blocks early permanent deletion"
+    },
+    {
+      "key": "orphan-reconciliation",
+      "file": "metadata-transactions.test.mjs",
+      "test": "failed metadata commit remains invisible and a later reconciliation reclaims the registered blob"
+    },
+    {
+      "key": "expired-share",
+      "file": "team-drive-service.test.mjs",
+      "test": "internal shares expire and revoke without exposing a reusable object credential"
+    },
+    {
+      "key": "attachment-isolation",
+      "file": "../../messaging/test/object-attachment-integration.test.mjs",
+      "test": "messaging consumes a real audience-bound object reference and persists only immutable attachment facts"
+    },
+    {
+      "key": "search-leakage",
+      "file": "../../messaging/test/messaging-service.test.mjs",
+      "test": "history search notifications and delivery receipts are membership scoped"
+    },
+    {
+      "key": "team-quota-isolation",
+      "file": "team-drive-service.test.mjs",
+      "test": "team roots isolate access, search results, and quota accounting"
+    }
+  ]
+}

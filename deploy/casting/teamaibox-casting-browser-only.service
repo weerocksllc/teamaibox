@@ -1,0 +1,27 @@
+[Unit]
+Description=Prepare browser-only casting configuration in RAM
+Requires=teamaibox-casting-identities.service
+After=teamaibox-casting-identities.service
+Before=docker.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/bin/python3 -B /usr/local/lib/teamaibox/casting-browser-only-20260910-a3/derive_casting_browser_only_credentials.py --run-id casting-browser-only-20260910-a3
+UMask=0077
+TimeoutStartSec=30
+NoNewPrivileges=yes
+ProtectSystem=strict
+ProtectHome=yes
+PrivateTmp=yes
+PrivateNetwork=yes
+PrivateDevices=yes
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectControlGroups=yes
+ReadWritePaths=/run/teamaibox/casting
+CapabilityBoundingSet=CAP_CHOWN CAP_DAC_OVERRIDE CAP_FOWNER
+RestrictAddressFamilies=AF_UNIX
+
+[Install]
+WantedBy=multi-user.target

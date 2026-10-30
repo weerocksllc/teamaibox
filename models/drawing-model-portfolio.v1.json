@@ -1,0 +1,600 @@
+{
+  "schemaVersion": 1,
+  "portfolioId": "teamaibox.drawing.portfolio.v1",
+  "researchSnapshotAt": "2026-08-31T04:30:00.000Z",
+  "target": {
+    "architecture": "linux/arm64/v8",
+    "accelerator": "nvidia-gb10-blackwell",
+    "unifiedMemoryBytes": 137438953472,
+    "containerFirst": true
+  },
+  "routingRules": {
+    "automaticAlias": "drawing.automatic",
+    "requireAvailableProfile": true,
+    "discloseActualProfile": true,
+    "discloseExternalProcessing": true,
+    "excludeLegacyFromAutomatic": true,
+    "candidateIsNotCertified": true,
+    "aliases": [
+      {
+        "alias": "drawing.automatic",
+        "inputKinds": [
+          "text",
+          "image"
+        ],
+        "strategy": "policy-score-available-profile",
+        "localCandidates": [
+          "flux2-klein-4b-nvfp4",
+          "z-image-turbo",
+          "sensenova-u1.5-8b-mot",
+          "glm-image",
+          "longcat-image",
+          "longcat-image-edit-turbo",
+          "qwen-image-2512-lightning"
+        ],
+        "externalCandidates": [
+          "qwen-image-3.0-pro",
+          "wan2.7-image-pro"
+        ]
+      },
+      {
+        "alias": "drawing.fast",
+        "inputKinds": [
+          "text"
+        ],
+        "strategy": "lowest-qualified-latency",
+        "localCandidates": [
+          "flux2-klein-4b-nvfp4",
+          "z-image-turbo"
+        ],
+        "externalCandidates": []
+      },
+      {
+        "alias": "drawing.high-quality",
+        "inputKinds": [
+          "text"
+        ],
+        "strategy": "highest-qualified-quality",
+        "localCandidates": [
+          "qwen-image-2512-lightning",
+          "sensenova-u1.5-8b-mot",
+          "glm-image"
+        ],
+        "externalCandidates": [
+          "qwen-image-3.0-pro",
+          "wan2.7-image-pro"
+        ]
+      },
+      {
+        "alias": "drawing.chinese-poster",
+        "inputKinds": [
+          "text"
+        ],
+        "strategy": "highest-qualified-bilingual-text-score",
+        "localCandidates": [
+          "z-image-turbo",
+          "sensenova-u1.5-8b-mot",
+          "glm-image",
+          "longcat-image",
+          "qwen-image-2512-lightning"
+        ],
+        "externalCandidates": [
+          "qwen-image-3.0-pro",
+          "wan2.7-image-pro"
+        ]
+      },
+      {
+        "alias": "drawing.infographic",
+        "inputKinds": [
+          "text"
+        ],
+        "strategy": "highest-qualified-layout-score",
+        "localCandidates": [
+          "sensenova-u1.5-8b-mot",
+          "glm-image",
+          "longcat-image",
+          "qwen-image-2512-lightning"
+        ],
+        "externalCandidates": [
+          "qwen-image-3.0-pro",
+          "wan2.7-image-pro"
+        ]
+      },
+      {
+        "alias": "drawing.edit",
+        "inputKinds": [
+          "image"
+        ],
+        "strategy": "highest-qualified-edit-score",
+        "localCandidates": [
+          "flux2-klein-4b-nvfp4",
+          "sensenova-u1.5-8b-mot",
+          "glm-image",
+          "longcat-image-edit-turbo"
+        ],
+        "externalCandidates": [
+          "qwen-image-3.0-pro",
+          "wan2.7-image-pro"
+        ]
+      },
+      {
+        "alias": "drawing.external-quality",
+        "inputKinds": [
+          "text",
+          "image"
+        ],
+        "strategy": "approved-provider-policy",
+        "localCandidates": [],
+        "externalCandidates": [
+          "qwen-image-3.0-pro",
+          "wan2.7-image-pro"
+        ]
+      },
+      {
+        "alias": "drawing.legacy",
+        "inputKinds": [
+          "text"
+        ],
+        "strategy": "explicit-profile-only",
+        "localCandidates": [
+          "sdxl-base-1.0-fp16"
+        ],
+        "externalCandidates": []
+      }
+    ]
+  },
+  "localCandidates": [
+    {
+      "candidateId": "flux2-klein-4b-bf16",
+      "displayName": "FLUX.2 Klein 4B Distilled BF16",
+      "source": {
+        "publisher": "Black Forest Labs",
+        "repository": "black-forest-labs/FLUX.2-klein-4B",
+        "revision": "e7b7dc27f91deacad38e78976d1f2b499d76a294",
+        "reportedBytes": 23735489815,
+        "artifactManifestDigest": "sha256:17a487c25d814cce591c03ab1ad832c210de65d26513fd9adb73893ee09b18ca"
+      },
+      "license": {
+        "identifier": "Apache-2.0",
+        "evidencePath": "LICENSE.md",
+        "evidenceDigest": "sha256:ca02bc51900ab07789d1b70283329e7137f5af98f5161c23a1c81fc38a4af1fe",
+        "reviewState": "approved"
+      },
+      "engine": {
+        "name": "diffusers",
+        "pipeline": "Flux2KleinPipeline",
+        "compatibility": "container-probe-required"
+      },
+      "capabilities": {
+        "generation": true,
+        "editing": true,
+        "multiReference": true,
+        "bilingualText": "benchmark-required"
+      },
+      "runtime": {
+        "precision": "bf16",
+        "inferenceSteps": 4,
+        "resourceMode": "exclusive"
+      },
+      "lifecycle": {
+        "state": "planned",
+        "automaticEligible": false,
+        "downloadState": "not-downloaded"
+      },
+      "dependencies": []
+    },
+    {
+      "candidateId": "flux2-klein-4b-nvfp4",
+      "displayName": "FLUX.2 Klein 4B Distilled NVFP4",
+      "source": {
+        "publisher": "Black Forest Labs",
+        "repository": "black-forest-labs/FLUX.2-klein-4b-nvfp4",
+        "revision": "1db2b2f776c24b76f1122e5f69ab1949fc620068",
+        "reportedBytes": 2469162323,
+        "artifactManifestDigest": "sha256:375fce254c032fb54c751b59221f06d030c1ff25169f7adc3dad47a1063c2ea0"
+      },
+      "license": {
+        "identifier": "Apache-2.0",
+        "evidencePath": "LICENSE.md",
+        "evidenceDigest": "sha256:ca02bc51900ab07789d1b70283329e7137f5af98f5161c23a1c81fc38a4af1fe",
+        "reviewState": "approved"
+      },
+      "engine": {
+        "name": "diffusers-torchao",
+        "pipeline": "Flux2KleinPipeline",
+        "compatibility": "prepared-for-spark-probe"
+      },
+      "capabilities": {
+        "generation": true,
+        "editing": true,
+        "multiReference": true,
+        "bilingualText": "benchmark-required"
+      },
+      "runtime": {
+        "precision": "nvfp4",
+        "inferenceSteps": 4,
+        "resourceMode": "exclusive"
+      },
+      "lifecycle": {
+        "state": "planned",
+        "automaticEligible": false,
+        "downloadState": "not-downloaded"
+      },
+      "dependencies": [
+        "flux2-klein-4b-bf16"
+      ]
+    },
+    {
+      "candidateId": "z-image-turbo",
+      "displayName": "Z-Image-Turbo",
+      "source": {
+        "publisher": "Tongyi-MAI",
+        "repository": "Tongyi-MAI/Z-Image-Turbo",
+        "revision": "f332072aa78be7aecdf3ee76d5c247082da564a6",
+        "reportedBytes": 53980522390,
+        "artifactManifestDigest": "sha256:98f3df519b019e538bc2a94f111253652e38a5e43f24229f5eb7a77e632b13a0"
+      },
+      "license": {
+        "identifier": "Apache-2.0",
+        "evidencePath": "README.md",
+        "evidenceDigest": "sha256:87af5e1d7933dbfe091c4048a20805541130690ee813b8039b7f396b47e64338",
+        "reviewState": "approved"
+      },
+      "engine": {
+        "name": "diffusers",
+        "pipeline": "ZImagePipeline",
+        "compatibility": "container-probe-required"
+      },
+      "capabilities": {
+        "generation": true,
+        "editing": false,
+        "multiReference": false,
+        "bilingualText": "publisher-declared-benchmark-required"
+      },
+      "runtime": {
+        "precision": "bf16",
+        "inferenceSteps": 9,
+        "resourceMode": "exclusive"
+      },
+      "lifecycle": {
+        "state": "planned",
+        "automaticEligible": false,
+        "downloadState": "not-downloaded"
+      },
+      "dependencies": []
+    },
+    {
+      "candidateId": "sensenova-u1.5-8b-mot",
+      "displayName": "SenseNova U1.5 8B-MoT",
+      "source": {
+        "publisher": "SenseNova",
+        "repository": "sensenova/SenseNova-U1.5-8B-MoT",
+        "revision": "19bc874ef6ffc97fda9837b40fc1d1301806158a",
+        "reportedBytes": 85288011088,
+        "artifactManifestDigest": "sha256:6e78d3261e40072da5f048cadf619341ef847962fda37b76cc2a4f78aab9dacf"
+      },
+      "license": {
+        "identifier": "Apache-2.0",
+        "evidencePath": "README.md",
+        "evidenceDigest": "sha256:cf56857f5cca44c45353e015bb0b4da7ebc5449c6473a0af2aaa9f9ed8b345cb",
+        "reviewState": "approved"
+      },
+      "engine": {
+        "name": "transformers-custom-code",
+        "pipeline": "NeoChat",
+        "compatibility": "arm64-security-and-container-probe-required"
+      },
+      "capabilities": {
+        "generation": true,
+        "editing": true,
+        "multiReference": true,
+        "bilingualText": "publisher-declared-benchmark-required"
+      },
+      "runtime": {
+        "precision": "bf16",
+        "inferenceSteps": 50,
+        "resourceMode": "exclusive"
+      },
+      "lifecycle": {
+        "state": "planned",
+        "automaticEligible": false,
+        "downloadState": "not-downloaded"
+      },
+      "dependencies": []
+    },
+    {
+      "candidateId": "glm-image",
+      "displayName": "GLM-Image",
+      "source": {
+        "publisher": "Z.ai",
+        "repository": "zai-org/GLM-Image",
+        "revision": "2c433cc0cbc293bde2ac8ca9624f279b5d23fcf4",
+        "reportedBytes": 35790534671,
+        "artifactManifestDigest": "sha256:2f7dceb2ced2366c5a2c6b46a2c326ac15fe9a20096e6ffcc56e601a40e57128"
+      },
+      "license": {
+        "identifier": "MIT-and-Apache-2.0-components",
+        "evidencePath": "README.md",
+        "evidenceDigest": "sha256:fc5861c29cda8b542b0f258a55d9bb8b44d56e9592a021c74f4eeebf7a159ce0",
+        "reviewState": "approved"
+      },
+      "engine": {
+        "name": "diffusers-transformers",
+        "pipeline": "GlmImagePipeline",
+        "compatibility": "container-probe-required"
+      },
+      "capabilities": {
+        "generation": true,
+        "editing": true,
+        "multiReference": true,
+        "bilingualText": "publisher-declared-benchmark-required"
+      },
+      "runtime": {
+        "precision": "bf16",
+        "inferenceSteps": 50,
+        "resourceMode": "exclusive"
+      },
+      "lifecycle": {
+        "state": "planned",
+        "automaticEligible": false,
+        "downloadState": "not-downloaded"
+      },
+      "dependencies": []
+    },
+    {
+      "candidateId": "longcat-image",
+      "displayName": "LongCat-Image",
+      "source": {
+        "publisher": "Meituan LongCat",
+        "repository": "meituan-longcat/LongCat-Image",
+        "revision": "d2ea50b79a930074c37b9b97ce45e3b2ea8cf4d8",
+        "reportedBytes": 29307202280,
+        "artifactManifestDigest": "sha256:ca60785bce8a4456fb69114e305ca75aa17052329427468807acef3bb51c42da"
+      },
+      "license": {
+        "identifier": "Apache-2.0",
+        "evidencePath": "README.md",
+        "evidenceDigest": "sha256:c658c0c349bdde0fb51fe83328416f43ba4770d03a0442b93b26e23d839fe6f5",
+        "reviewState": "approved"
+      },
+      "engine": {
+        "name": "diffusers",
+        "pipeline": "LongCatImagePipeline",
+        "compatibility": "container-probe-required"
+      },
+      "capabilities": {
+        "generation": true,
+        "editing": false,
+        "multiReference": false,
+        "bilingualText": "publisher-declared-benchmark-required"
+      },
+      "runtime": {
+        "precision": "bf16",
+        "inferenceSteps": 50,
+        "resourceMode": "exclusive"
+      },
+      "lifecycle": {
+        "state": "planned",
+        "automaticEligible": false,
+        "downloadState": "not-downloaded"
+      },
+      "dependencies": []
+    },
+    {
+      "candidateId": "longcat-image-edit-turbo",
+      "displayName": "LongCat-Image-Edit-Turbo",
+      "source": {
+        "publisher": "Meituan LongCat",
+        "repository": "meituan-longcat/LongCat-Image-Edit-Turbo",
+        "revision": "6a7262de5549f0bf0ec54c08ef7d283ef41f3214",
+        "reportedBytes": 29299377333,
+        "artifactManifestDigest": "sha256:221ab1a4b64d0626363bd9e75a8ac1a243ee348d8471752ac33882f5470ba53e"
+      },
+      "license": {
+        "identifier": "Apache-2.0",
+        "evidencePath": "README.md",
+        "evidenceDigest": "sha256:0fedf7a06ac7e8f5800b32b0ecb35a07780cb0327d7b37c8165d01daa91c22b5",
+        "reviewState": "approved"
+      },
+      "engine": {
+        "name": "diffusers",
+        "pipeline": "LongCatImageEditPipeline",
+        "compatibility": "container-probe-required"
+      },
+      "capabilities": {
+        "generation": false,
+        "editing": true,
+        "multiReference": false,
+        "bilingualText": "publisher-declared-benchmark-required"
+      },
+      "runtime": {
+        "precision": "bf16",
+        "inferenceSteps": 8,
+        "resourceMode": "exclusive"
+      },
+      "lifecycle": {
+        "state": "planned",
+        "automaticEligible": false,
+        "downloadState": "not-downloaded"
+      },
+      "dependencies": []
+    },
+    {
+      "candidateId": "qwen-image-2512",
+      "displayName": "Qwen-Image-2512",
+      "source": {
+        "publisher": "Qwen",
+        "repository": "Qwen/Qwen-Image-2512",
+        "revision": "25468b98e3276ca6700de15c6628e51b7de54a26",
+        "reportedBytes": 57699806247,
+        "artifactManifestDigest": "sha256:8ac8d0f208cdefe172c219f7bf107081eb61332ab2839b9748a3230affb939fd"
+      },
+      "license": {
+        "identifier": "Apache-2.0",
+        "evidencePath": "README.md",
+        "evidenceDigest": "sha256:db371596007403d9588e0d78d9798ecafa59bf7772fbdc12952e581b1562920b",
+        "reviewState": "approved"
+      },
+      "engine": {
+        "name": "diffusers",
+        "pipeline": "QwenImagePipeline",
+        "compatibility": "container-probe-required"
+      },
+      "capabilities": {
+        "generation": true,
+        "editing": false,
+        "multiReference": false,
+        "bilingualText": "publisher-declared-benchmark-required"
+      },
+      "runtime": {
+        "precision": "bf16",
+        "inferenceSteps": 50,
+        "resourceMode": "exclusive"
+      },
+      "lifecycle": {
+        "state": "planned",
+        "automaticEligible": false,
+        "downloadState": "not-downloaded"
+      },
+      "dependencies": []
+    },
+    {
+      "candidateId": "qwen-image-2512-lightning",
+      "displayName": "Qwen-Image-2512 Lightning",
+      "source": {
+        "publisher": "LightX2V",
+        "repository": "lightx2v/Qwen-Image-2512-Lightning",
+        "revision": "a52649c9d0f6e1a248bff13f0df33bb8a2abdb52",
+        "reportedBytes": 107484898470,
+        "artifactManifestDigest": "sha256:83ac748b6e7f19d6508e2d7544203469691ad840f4805ebba00fcbfe9e093dad"
+      },
+      "license": {
+        "identifier": "Apache-2.0",
+        "evidencePath": "README.md",
+        "evidenceDigest": "sha256:964f5118f4b72180e7e0d44233ab6ba51ac4b29836b87fc555b48204767184a9",
+        "reviewState": "approved"
+      },
+      "engine": {
+        "name": "diffusers-lightx2v",
+        "pipeline": "QwenImagePipeline-plus-adapter",
+        "compatibility": "exact-artifact-selection-and-container-probe-required"
+      },
+      "capabilities": {
+        "generation": true,
+        "editing": false,
+        "multiReference": false,
+        "bilingualText": "benchmark-required"
+      },
+      "runtime": {
+        "precision": "bf16-or-fp8-selected-file",
+        "inferenceSteps": 4,
+        "resourceMode": "exclusive"
+      },
+      "lifecycle": {
+        "state": "planned",
+        "automaticEligible": false,
+        "downloadState": "not-downloaded"
+      },
+      "dependencies": [
+        "qwen-image-2512"
+      ]
+    },
+    {
+      "candidateId": "sdxl-base-1.0-fp16",
+      "displayName": "Stable Diffusion XL Base 1.0 FP16",
+      "source": {
+        "publisher": "Stability AI",
+        "repository": "stabilityai/stable-diffusion-xl-base-1.0",
+        "revision": "462165984030d82259a11f4367a4eed129e94a7b",
+        "reportedBytes": 77369456618,
+        "artifactManifestDigest": "sha256:52d82ac4bd0531d2bbc2c5dda6120439526f8b9c3c3ca487303bd993a6bbf2a3"
+      },
+      "license": {
+        "identifier": "CreativeML-OpenRAIL++-M",
+        "evidencePath": "LICENSE.md",
+        "evidenceDigest": "sha256:19b6998b569b53ac1fc2158a8a3202c8699a9a4605b47075715d9c96be7fb6d0",
+        "reviewState": "approved-with-use-restrictions"
+      },
+      "engine": {
+        "name": "diffusers",
+        "pipeline": "StableDiffusionXLPipeline",
+        "compatibility": "spark-qualified"
+      },
+      "capabilities": {
+        "generation": true,
+        "editing": false,
+        "multiReference": false,
+        "bilingualText": "diagnostic-failed"
+      },
+      "runtime": {
+        "precision": "fp16",
+        "inferenceSteps": 20,
+        "resourceMode": "exclusive"
+      },
+      "lifecycle": {
+        "state": "legacy-experimental",
+        "automaticEligible": false,
+        "downloadState": "deployed"
+      },
+      "dependencies": []
+    }
+  ],
+  "externalCandidates": [
+    {
+      "candidateId": "qwen-image-3.0-pro",
+      "provider": "Alibaba Cloud Model Studio",
+      "modelId": "qwen-image-3.0-pro",
+      "contractUri": "https://www.alibabacloud.com/help/en/model-studio/qwen-image-generation-and-editing-api-reference",
+      "contractFacts": {
+        "modelId": "qwen-image-3.0-pro",
+        "generation": true,
+        "editing": true,
+        "maxReferenceImages": 3,
+        "maxGenerationPixels": "2048x2048",
+        "maxEditPixels": "2048x2048"
+      },
+      "contractSnapshotDigest": "sha256:25d773f2d1ff5d456398b3e22c2305d939f492abec59d5973a61591759ac8e95",
+      "capabilities": {
+        "generation": true,
+        "editing": true,
+        "multiReference": true
+      },
+      "dataPolicy": "external-processing-requires-admin-policy-and-user-disclosure",
+      "lifecycle": {
+        "state": "provider-advertised",
+        "automaticEligible": false
+      }
+    },
+    {
+      "candidateId": "wan2.7-image-pro",
+      "provider": "Alibaba Cloud Model Studio",
+      "modelId": "wan2.7-image-pro",
+      "contractUri": "https://www.alibabacloud.com/help/en/model-studio/image-model",
+      "contractFacts": {
+        "modelId": "wan2.7-image-pro",
+        "generation": true,
+        "editing": true,
+        "maxReferenceImages": 9,
+        "maxGenerationPixels": "4096x4096",
+        "maxEditPixels": "2048x2048"
+      },
+      "contractSnapshotDigest": "sha256:405fccb8e8a538a9427f8e8406dbcae541e2679ae29ebb1b9465bf074a4074a0",
+      "capabilities": {
+        "generation": true,
+        "editing": true,
+        "multiReference": true
+      },
+      "dataPolicy": "external-processing-requires-admin-policy-and-user-disclosure",
+      "lifecycle": {
+        "state": "provider-advertised",
+        "automaticEligible": false
+      }
+    }
+  ],
+  "namingClarifications": [
+    {
+      "ambiguousName": "Qwen Image Turbo",
+      "resolution": "No official local checkpoint with this exact identity is registered. Use Qwen-Image-2512 plus the pinned Lightning adapter, or the external Qwen Image 3.0 provider profile. Z-Image-Turbo is a separate Tongyi-MAI model family."
+    }
+  ]
+}

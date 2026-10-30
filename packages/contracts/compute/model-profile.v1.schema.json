@@ -1,0 +1,213 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.teamaibox.local/compute/model-profile.v1.schema.json",
+  "title": "Team AI Box immutable model profile v1",
+  "x-teamaibox-contract": {"family": "compute", "role": "response", "major": 1},
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion", "profileId", "profileKey", "capabilityId", "executionKind",
+    "source", "artifacts", "artifactDigest", "engine", "precision",
+    "quantizationRecipe", "compatibility", "apiContracts", "limits",
+    "resourceEnvelope", "coldStart", "dataPolicy", "knownLimitations",
+    "validationEvidence", "certification", "exclusive", "createdAt"
+  ],
+  "properties": {
+    "schemaVersion": {"const": 1},
+    "profileId": {"type": "string", "format": "uuid"},
+    "profileKey": {"type": "string", "pattern": "^[a-z][a-z0-9_.-]{2,191}$"},
+    "capabilityId": {"type": "string", "format": "uuid"},
+    "executionKind": {"type": "string", "enum": ["local", "managed_node", "external_provider"]},
+    "source": {"$ref": "#/$defs/source"},
+    "artifacts": {"type": "array", "minItems": 1, "maxItems": 1024, "items": {"$ref": "#/$defs/artifact"}},
+    "artifactDigest": {"$ref": "#/$defs/digest"},
+    "engine": {"$ref": "#/$defs/engine"},
+    "precision": {"type": "string", "enum": ["fp32", "bf16", "fp16", "fp8", "nvfp4", "int8", "int4", "awq", "gptq", "other"]},
+    "quantizationRecipe": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/quantizationRecipe"}]},
+    "compatibility": {"$ref": "#/$defs/compatibility"},
+    "apiContracts": {
+      "type": "array", "minItems": 1, "maxItems": 128, "uniqueItems": true,
+      "items": {"type": "string", "pattern": "^[a-z][a-z0-9_.-]{2,127}@v[0-9]+$"}
+    },
+    "limits": {"$ref": "#/$defs/limits"},
+    "resourceEnvelope": {"$ref": "#/$defs/resourceEnvelope"},
+    "coldStart": {"$ref": "#/$defs/coldStart"},
+    "dataPolicy": {"$ref": "#/$defs/dataPolicy"},
+    "knownLimitations": {"type": "array", "maxItems": 128, "uniqueItems": true, "items": {"type": "string", "minLength": 1, "maxLength": 2048}},
+    "validationEvidence": {"type": "array", "maxItems": 256, "items": {"$ref": "#/$defs/validationEvidence"}},
+    "certification": {"$ref": "#/$defs/certification"},
+    "exclusive": {"type": "boolean"},
+    "createdAt": {"type": "string", "format": "date-time"},
+    "extensions": {"type": "object", "maxProperties": 128, "additionalProperties": true}
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"executionKind": {"const": "external_provider"}}},
+      "then": {"properties": {"resourceEnvelope": {"properties": {
+        "accountingMode": {"const": "provider_contract"}, "cpuMillis": {"const": 0},
+        "unifiedMemoryBytes": {"const": 0}, "storageBytes": {"const": 0},
+        "networkBitsPerSecond": {"const": 0}, "acceleratorUnits": {"const": 0}, "codecSessions": {"const": 0}
+      }}}},
+      "else": {"properties": {"resourceEnvelope": {"properties": {
+        "accountingMode": {"const": "observed"}, "cpuMillis": {"minimum": 1}, "unifiedMemoryBytes": {"minimum": 1}
+      }}}}
+    },
+    {
+      "if": {"properties": {"precision": {"const": "nvfp4"}}},
+      "then": {"properties": {"quantizationRecipe": {"allOf": [
+        {"$ref": "#/$defs/quantizationRecipe"}, {"properties": {"scheme": {"const": "nvfp4"}}}
+      ]}}}
+    },
+    {
+      "if": {"properties": {"precision": {"enum": ["fp32", "bf16", "fp16"]}}},
+      "then": {"properties": {"quantizationRecipe": {"type": "null"}}},
+      "else": {"properties": {"quantizationRecipe": {"$ref": "#/$defs/quantizationRecipe"}}}
+    }
+  ],
+  "$defs": {
+    "digest": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+    "evidenceRef": {"oneOf": [
+      {"type": "null"},
+      {"type": "string", "minLength": 1, "maxLength": 2048, "pattern": "^(evidence|object|https)://"}
+    ]},
+    "source": {
+      "type": "object", "additionalProperties": false, "required": ["model", "revision", "license", "provenance"],
+      "properties": {
+        "model": {"type": "string", "minLength": 1, "maxLength": 512},
+        "revision": {"type": "string", "minLength": 1, "maxLength": 256},
+        "license": {
+          "type": "object", "additionalProperties": false,
+          "required": ["name", "spdxId", "usage", "reviewStatus", "textDigest", "evidenceRef"],
+          "properties": {
+            "name": {"type": "string", "minLength": 1, "maxLength": 256},
+            "spdxId": {"type": ["string", "null"], "pattern": "^[A-Za-z0-9.+-]{1,64}$"},
+            "usage": {"type": "string", "enum": ["commercial", "non-commercial", "research", "unknown"]},
+            "reviewStatus": {"type": "string", "enum": ["pending", "approved", "rejected"]},
+            "textDigest": {"$ref": "#/$defs/digest"}, "evidenceRef": {"$ref": "#/$defs/evidenceRef"}
+          }
+        },
+        "provenance": {
+          "type": "object", "additionalProperties": false,
+          "required": ["publisher", "sourceUri", "retrievedAt", "sourceDigest", "evidenceRef"],
+          "properties": {
+            "publisher": {"type": "string", "minLength": 1, "maxLength": 256},
+            "sourceUri": {"type": "string", "minLength": 1, "maxLength": 2048, "pattern": "^(https|object)://"},
+            "retrievedAt": {"type": "string", "format": "date-time"},
+            "sourceDigest": {"$ref": "#/$defs/digest"}, "evidenceRef": {"$ref": "#/$defs/evidenceRef"}
+          }
+        }
+      }
+    },
+    "artifact": {
+      "type": "object", "additionalProperties": false, "required": ["name", "role", "digest", "sizeBytes", "mediaType"],
+      "properties": {
+        "name": {"type": "string", "pattern": "^[a-z][a-z0-9_.-]{1,127}$"},
+        "role": {"type": "string", "enum": ["weights", "tokenizer", "config", "engine", "adapter", "provider-contract", "other"]},
+        "digest": {"$ref": "#/$defs/digest"}, "sizeBytes": {"type": "integer", "minimum": 1},
+        "mediaType": {"type": "string", "minLength": 1, "maxLength": 256}, "signatureDigest": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "engine": {
+      "type": "object", "additionalProperties": false,
+      "required": ["name", "version", "runtime", "runtimeVersion", "imageDigest", "configurationDigest"],
+      "properties": {
+        "name": {"type": "string", "pattern": "^[a-z][a-z0-9_.-]{1,127}$"},
+        "version": {"type": "string", "minLength": 1, "maxLength": 128},
+        "runtime": {"type": "string", "pattern": "^[a-z][a-z0-9_.-]{1,127}$"},
+        "runtimeVersion": {"type": "string", "minLength": 1, "maxLength": 128},
+        "imageDigest": {"$ref": "#/$defs/digest"}, "configurationDigest": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "quantizationRecipe": {
+      "type": "object", "additionalProperties": false,
+      "required": ["scheme", "tool", "toolVersion", "recipeDigest", "parametersDigest", "calibrationDatasetDigest"],
+      "properties": {
+        "scheme": {"type": "string", "pattern": "^[a-z][a-z0-9_.-]{1,127}$"},
+        "tool": {"type": "string", "minLength": 1, "maxLength": 256},
+        "toolVersion": {"type": "string", "minLength": 1, "maxLength": 128},
+        "recipeDigest": {"$ref": "#/$defs/digest"}, "parametersDigest": {"$ref": "#/$defs/digest"},
+        "calibrationDatasetDigest": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/digest"}]}
+      }
+    },
+    "compatibility": {
+      "type": "object", "additionalProperties": false, "required": ["architectures", "hardware", "software"],
+      "properties": {
+        "architectures": {"type": "array", "minItems": 1, "maxItems": 2, "uniqueItems": true, "items": {"type": "string", "enum": ["linux/arm64/v8", "linux/amd64"]}},
+        "hardware": {
+          "type": "object", "additionalProperties": false,
+          "required": ["acceleratorFamilies", "minimumComputeCapability", "minimumUnifiedMemoryBytes", "minimumCpuCores", "codecDirections"],
+          "properties": {
+            "acceleratorFamilies": {"type": "array", "maxItems": 32, "uniqueItems": true, "items": {"type": "string", "pattern": "^[a-z][a-z0-9_.-]{1,127}$"}},
+            "minimumComputeCapability": {"type": ["string", "null"], "maxLength": 128},
+            "minimumUnifiedMemoryBytes": {"type": "integer", "minimum": 0}, "minimumCpuCores": {"type": "integer", "minimum": 0},
+            "codecDirections": {
+              "type": "object", "additionalProperties": false, "required": ["encode", "decode"],
+              "properties": {"encode": {"type": "integer", "minimum": 0, "maximum": 1024}, "decode": {"type": "integer", "minimum": 0, "maximum": 1024}}
+            }
+          }
+        },
+        "software": {
+          "type": "object", "additionalProperties": false,
+          "required": ["os", "kernelRange", "driverRange", "cudaRange", "containerToolkitRange"],
+          "properties": {
+            "os": {"type": "string", "minLength": 1, "maxLength": 128},
+            "kernelRange": {"type": ["string", "null"], "maxLength": 128}, "driverRange": {"type": ["string", "null"], "maxLength": 128},
+            "cudaRange": {"type": ["string", "null"], "maxLength": 128}, "containerToolkitRange": {"type": ["string", "null"], "maxLength": 128}
+          }
+        }
+      }
+    },
+    "limits": {
+      "type": "object", "additionalProperties": false,
+      "required": ["maximumInputBytes", "maximumOutputBytes", "maximumContextTokens", "maximumOutputTokens", "maximumBatchSize", "maximumDurationSeconds", "maximumConcurrentRequests"],
+      "properties": {
+        "maximumInputBytes": {"type": ["integer", "null"], "minimum": 1}, "maximumOutputBytes": {"type": ["integer", "null"], "minimum": 1},
+        "maximumContextTokens": {"type": ["integer", "null"], "minimum": 1}, "maximumOutputTokens": {"type": ["integer", "null"], "minimum": 1},
+        "maximumBatchSize": {"type": "integer", "minimum": 1}, "maximumDurationSeconds": {"type": ["integer", "null"], "minimum": 1},
+        "maximumConcurrentRequests": {"type": "integer", "minimum": 1}
+      }
+    },
+    "resourceEnvelope": {
+      "type": "object", "additionalProperties": false,
+      "required": ["accountingMode", "cpuMillis", "unifiedMemoryBytes", "storageBytes", "networkBitsPerSecond", "acceleratorUnits", "codecSessions", "evidenceRef"],
+      "properties": {
+        "accountingMode": {"type": "string", "enum": ["observed", "provider_contract"]},
+        "cpuMillis": {"type": "integer", "minimum": 0}, "unifiedMemoryBytes": {"type": "integer", "minimum": 0},
+        "storageBytes": {"type": "integer", "minimum": 0}, "networkBitsPerSecond": {"type": "integer", "minimum": 0},
+        "acceleratorUnits": {"type": "integer", "minimum": 0, "maximum": 1024}, "codecSessions": {"type": "integer", "minimum": 0, "maximum": 65536},
+        "evidenceRef": {"$ref": "#/$defs/evidenceRef"}
+      }
+    },
+    "coldStart": {
+      "type": "object", "additionalProperties": false, "required": ["estimatedMilliseconds", "artifactReadBytes", "evidenceRef"],
+      "properties": {
+        "estimatedMilliseconds": {"type": "integer", "minimum": 0}, "artifactReadBytes": {"type": "integer", "minimum": 0}, "evidenceRef": {"$ref": "#/$defs/evidenceRef"}
+      }
+    },
+    "dataPolicy": {
+      "type": "object", "additionalProperties": false, "required": ["allowedDataClasses", "externalProcessing"],
+      "properties": {
+        "allowedDataClasses": {"type": "array", "minItems": 1, "maxItems": 4, "uniqueItems": true, "items": {"type": "string", "enum": ["public", "internal", "confidential", "restricted"]}},
+        "externalProcessing": {"type": "string", "enum": ["forbidden", "approved_only", "allowed"]}
+      }
+    },
+    "validationEvidence": {
+      "type": "object", "additionalProperties": false,
+      "required": ["stage", "result", "runId", "evidenceRef", "observedAt", "environmentDigest"],
+      "properties": {
+        "stage": {"type": "string", "enum": ["discovery", "build", "smoke", "conformance", "quality", "benchmark", "stress_soak", "coexistence_cluster", "security"]},
+        "result": {"type": "string", "enum": ["passed", "failed", "incomplete"]},
+        "runId": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{7,127}$"},
+        "evidenceRef": {"type": "string", "minLength": 1, "maxLength": 2048, "pattern": "^(evidence|object|https)://"},
+        "observedAt": {"type": "string", "format": "date-time"}, "environmentDigest": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "certification": {
+      "type": "object", "additionalProperties": false, "required": ["state", "evidenceRefs"],
+      "properties": {
+        "state": {"type": "string", "enum": ["experimental", "validating", "certified", "deprecated", "failed", "revalidation_required", "discovery", "build", "smoke", "conformance", "quality", "benchmark", "stress_soak", "coexistence_cluster", "security", "rejected", "retired"]},
+        "evidenceRefs": {"type": "array", "maxItems": 256, "uniqueItems": true, "items": {"type": "string", "minLength": 1, "maxLength": 2048, "pattern": "^(evidence|object|https)://"}}
+      }
+    }
+  }
+}

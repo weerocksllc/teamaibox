@@ -1,0 +1,43 @@
+{
+  "schemaVersion": 1,
+  "profileKey": "embedding.qwen3-0.6b.bf16.main-protected.v1",
+  "source": {
+    "model": "Qwen/Qwen3-Embedding-0.6B",
+    "revision": "97b0c614be4d77ee51c0cef4e5f07c00f9eb65b3",
+    "license": {
+      "name": "Apache License 2.0",
+      "spdxId": "Apache-2.0",
+      "reviewStatus": "approved"
+    }
+  },
+  "engine": {
+    "name": "vLLM",
+    "version": "0.22.1+7b9cb5b7.nv26.6.55915567"
+  },
+  "precision": {
+    "databaseValue": "bf16",
+    "weights": "BF16",
+    "kvCache": {
+      "applicable": false,
+      "configuredBytes": null,
+      "dtype": null,
+      "reason": "pooling-only embedding inference does not retain autoregressive KV state"
+    }
+  },
+  "runtime": {
+    "servedModel": "qwen3-embedding-0.6b",
+    "hardMemoryBytes": 8589934592,
+    "runtimeEnvironment": {
+      "HF_HUB_OFFLINE": "1",
+      "HOME": "/cache",
+      "LOGNAME": "teamaibox",
+      "TIKTOKEN_CACHE_DIR": "/cache/tiktoken",
+      "TORCHINDUCTOR_CACHE_DIR": "/cache/torchinductor",
+      "TRANSFORMERS_OFFLINE": "1",
+      "USER": "teamaibox",
+      "VLLM_CACHE_ROOT": "/cache/vllm",
+      "VLLM_USAGE_SOURCE": "production",
+      "XDG_CONFIG_HOME": "/cache/config"
+    }
+  }
+}

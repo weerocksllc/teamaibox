@@ -1,0 +1,309 @@
+name: teamaibox-web
+
+x-web-runtime: &web-runtime
+  platform: linux/arm64/v8
+  init: true
+  read_only: true
+  user: "1000:1000"
+  cap_drop: [ALL]
+  security_opt:
+    - no-new-privileges:true
+  pids_limit: 128
+  tmpfs:
+    - /tmp:rw,noexec,nosuid,nodev,size=32m
+  restart: unless-stopped
+  stop_grace_period: 15s
+  healthcheck:
+    test:
+      - CMD
+      - node
+      - -e
+      - const https=require('node:https');const tls=process.env.WEB_TLS_CERT_FILE;const p=process.env.WEB_PORT||(tls?'8443':'8080');const r=(tls?https:require('node:http')).get({host:'127.0.0.1',port:p,path:'/health/ready',rejectUnauthorized:false},x=>process.exit(x.statusCode===200?0:1));r.setTimeout(2000,()=>r.destroy());r.on('error',()=>process.exit(1))
+    interval: 10s
+    timeout: 3s
+    retries: 6
+    start_period: 5s
+  labels:
+    com.teamaibox.managed: "true"
+    com.teamaibox.component: web
+    com.teamaibox.resource-class: core-standard
+
+x-web-slot: &web-slot
+  <<: *web-runtime
+  expose: ["8080"]
+  environment:
+    WEB_HOST: 0.0.0.0
+    WEB_MODE: internal
+    WEB_PORT: 8080
+    PLATFORM_API_ORIGIN: ${TEAMAIBOX_PLATFORM_API_ORIGIN:-http://platform-api:8080}
+  networks: [web_slots]
+  mem_limit: 384m
+  mem_reservation: 128m
+  cpus: 0.35
+
+services:
+  web-blue:
+    <<: *web-slot
+    image: ${TEAMAIBOX_WEB_BLUE_IMAGE:?set a registry digest reference for the blue Web slot}
+    environment:
+      WEB_HOST: 0.0.0.0
+      WEB_MODE: internal
+      WEB_PORT: 8080
+      WEB_DEPLOYMENT_SLOT: blue
+      WEB_RELEASE_ID: ${TEAMAIBOX_WEB_BLUE_RELEASE:?set the blue Web release identifier}
+      PLATFORM_API_ORIGIN: ${TEAMAIBOX_PLATFORM_API_ORIGIN:-http://platform-api:8080}
+
+  web-green:
+    <<: *web-slot
+    image: ${TEAMAIBOX_WEB_GREEN_IMAGE:?set a registry digest reference for the green Web slot}
+    environment:
+      WEB_HOST: 0.0.0.0
+      WEB_MODE: internal
+      WEB_PORT: 8080
+      WEB_DEPLOYMENT_SLOT: green
+      WEB_RELEASE_ID: ${TEAMAIBOX_WEB_GREEN_RELEASE:?set the green Web release identifier}
+      PLATFORM_API_ORIGIN: ${TEAMAIBOX_PLATFORM_API_ORIGIN:-http://platform-api:8080}
+
+  web-edge:
+    <<: *web-runtime
+    image: ${TEAMAIBOX_WEB_EDGE_IMAGE:?set the stable Web-boundary registry digest reference}
+    environment:
+      WEB_HOST: 0.0.0.0
+      WEB_MODE: release
+      WEB_PORT: 8443
+      WEB_PUBLIC_ORIGIN: ${TEAMAIBOX_WEB_PUBLIC_ORIGIN:?set the supported HTTPS appliance origin}
+      WEB_APPLICATION_ORIGIN: ${TEAMAIBOX_ACTIVE_WEB_ORIGIN:?set http://web-blue:8080 or http://web-green:8080}
+      WEB_DEPLOYMENT_SLOT: edge
+      WEB_RELEASE_ID: ${TEAMAIBOX_WEB_EDGE_RELEASE:?set the Web-boundary release identifier}
+      WEB_TLS_CERT_FILE: /run/secrets/web_tls_certificate
+      WEB_TLS_KEY_FILE: /run/secrets/web_tls_private_key
+      WEB_PLUGIN_ROUTES_FILE: /run/config/plugin-routes.json
+      PLATFORM_API_ORIGIN: ${TEAMAIBOX_PLATFORM_API_ORIGIN:-http://platform-api:8080}
+    configs:
+      - source: plugin_routes
+        target: /run/config/plugin-routes.json
+    secrets:
+      - web_tls_certificate
+      - web_tls_private_key
+    ports:
+      - target: 8443
+        published: ${TEAMAIBOX_WEB_HTTPS_PORT:-443}
+        host_ip: ${TEAMAIBOX_WEB_BIND_ADDRESS:-0.0.0.0}
+        protocol: tcp
+    networks: [web_slots, platform_edge]
+    mem_limit: 384m
+    mem_reservation: 128m
+    cpus: 0.35
+    depends_on:
+      web-blue: {condition: service_healthy}
+      web-green: {condition: service_healthy}
+      messaging-plugin: {condition: service_healthy}
+      team-drive-plugin: {condition: service_healthy}
+      drawing-plugin: {condition: service_healthy}
+      ocr-plugin: {condition: service_healthy}
+      asr-plugin: {condition: service_healthy}
+      translation-plugin: {condition: service_healthy}
+
+  messaging-plugin:
+    image: ${TEAMAIBOX_MESSAGING_PLUGIN_IMAGE:?set the signed Messaging plugin registry digest reference}
+    platform: linux/arm64/v8
+    init: true
+    read_only: true
+    user: "10001:10001"
+    cap_drop: [ALL]
+    security_opt:
+      - no-new-privileges:true
+    pids_limit: 64
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,nodev,size=16m
+    expose: ["8080"]
+    networks: [web_slots]
+    mem_limit: 128m
+    mem_reservation: 64m
+    cpus: 0.25
+    restart: unless-stopped
+    stop_grace_period: 10s
+    healthcheck:
+      test: [CMD, node, -e, "fetch('http://127.0.0.1:8080/health/ready').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 10s
+      timeout: 3s
+      retries: 6
+      start_period: 5s
+    labels:
+      com.teamaibox.managed: "true"
+      com.teamaibox.component: plugin
+      com.teamaibox.plugin.id: official.messaging
+      com.teamaibox.resource-class: plugin-small
+
+  team-drive-plugin:
+    image: ${TEAMAIBOX_TEAM_DRIVE_PLUGIN_IMAGE:?set the signed Team Drive plugin registry digest reference}
+    platform: linux/arm64/v8
+    init: true
+    read_only: true
+    user: "10001:10001"
+    cap_drop: [ALL]
+    security_opt:
+      - no-new-privileges:true
+    pids_limit: 64
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,nodev,size=16m
+    expose: ["8080"]
+    networks: [web_slots]
+    mem_limit: 128m
+    mem_reservation: 64m
+    cpus: 0.25
+    restart: unless-stopped
+    stop_grace_period: 10s
+    healthcheck:
+      test: [CMD, node, -e, "fetch('http://127.0.0.1:8080/health/ready').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 10s
+      timeout: 3s
+      retries: 6
+      start_period: 5s
+    labels:
+      com.teamaibox.managed: "true"
+      com.teamaibox.component: plugin
+      com.teamaibox.plugin.id: official.team-drive
+      com.teamaibox.resource-class: plugin-small
+
+  drawing-plugin:
+    image: ${TEAMAIBOX_DRAWING_PLUGIN_IMAGE:?set the signed drawing plugin registry digest reference}
+    platform: linux/arm64/v8
+    init: true
+    read_only: true
+    user: "10001:10001"
+    cap_drop: [ALL]
+    security_opt:
+      - no-new-privileges:true
+    pids_limit: 64
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,nodev,size=16m
+    expose: ["8080"]
+    networks: [web_slots]
+    mem_limit: 128m
+    mem_reservation: 64m
+    cpus: 0.25
+    restart: unless-stopped
+    stop_grace_period: 10s
+    healthcheck:
+      test: [CMD, node, -e, "fetch('http://127.0.0.1:8080/health/ready').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 10s
+      timeout: 3s
+      retries: 6
+      start_period: 5s
+    labels:
+      com.teamaibox.managed: "true"
+      com.teamaibox.component: plugin
+      com.teamaibox.plugin.id: official.drawing
+      com.teamaibox.resource-class: plugin-small
+
+  ocr-plugin:
+    image: ${TEAMAIBOX_OCR_PLUGIN_IMAGE:?set the signed OCR plugin registry digest reference}
+    platform: linux/arm64/v8
+    init: true
+    read_only: true
+    user: "10001:10001"
+    cap_drop: [ALL]
+    security_opt:
+      - no-new-privileges:true
+    pids_limit: 64
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,nodev,size=16m
+    expose: ["8080"]
+    networks: [web_slots]
+    mem_limit: 128m
+    mem_reservation: 64m
+    cpus: 0.25
+    restart: unless-stopped
+    stop_grace_period: 10s
+    healthcheck:
+      test: [CMD, node, -e, "fetch('http://127.0.0.1:8080/health/ready').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 10s
+      timeout: 3s
+      retries: 6
+      start_period: 5s
+    labels:
+      com.teamaibox.managed: "true"
+      com.teamaibox.component: plugin
+      com.teamaibox.plugin.id: official.ocr
+      com.teamaibox.resource-class: plugin-small
+
+  asr-plugin:
+    image: ${TEAMAIBOX_ASR_PLUGIN_IMAGE:?set the signed ASR plugin registry digest reference}
+    platform: linux/arm64/v8
+    init: true
+    read_only: true
+    user: "10001:10001"
+    cap_drop: [ALL]
+    security_opt:
+      - no-new-privileges:true
+    pids_limit: 64
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,nodev,size=16m
+    expose: ["8080"]
+    networks: [web_slots]
+    mem_limit: 128m
+    mem_reservation: 64m
+    cpus: 0.25
+    restart: unless-stopped
+    stop_grace_period: 10s
+    healthcheck:
+      test: [CMD, node, -e, "fetch('http://127.0.0.1:8080/health/ready').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 10s
+      timeout: 3s
+      retries: 6
+      start_period: 5s
+    labels:
+      com.teamaibox.managed: "true"
+      com.teamaibox.component: plugin
+      com.teamaibox.plugin.id: official.asr
+      com.teamaibox.resource-class: plugin-small
+
+  translation-plugin:
+    image: ${TEAMAIBOX_TRANSLATION_PLUGIN_IMAGE:?set the signed Translation plugin registry digest reference}
+    platform: linux/arm64/v8
+    init: true
+    read_only: true
+    user: "10001:10001"
+    cap_drop: [ALL]
+    security_opt:
+      - no-new-privileges:true
+    pids_limit: 64
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,nodev,size=16m
+    expose: ["8080"]
+    networks: [web_slots]
+    mem_limit: 128m
+    mem_reservation: 64m
+    cpus: 0.25
+    restart: unless-stopped
+    stop_grace_period: 10s
+    healthcheck:
+      test: [CMD, node, -e, "fetch('http://127.0.0.1:8080/health/ready').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 10s
+      timeout: 3s
+      retries: 6
+      start_period: 5s
+    labels:
+      com.teamaibox.managed: "true"
+      com.teamaibox.component: plugin
+      com.teamaibox.plugin.id: official.translation
+      com.teamaibox.resource-class: plugin-small
+
+networks:
+  web_slots:
+    driver: bridge
+    internal: true
+  platform_edge:
+    external: true
+    name: ${TEAMAIBOX_PLATFORM_EDGE_NETWORK:-teamaibox-foundation_edge}
+
+secrets:
+  web_tls_certificate:
+    file: ${TEAMAIBOX_WEB_TLS_CERTIFICATE_FILE:?set an absolute certificate-chain path}
+  web_tls_private_key:
+    file: ${TEAMAIBOX_WEB_TLS_PRIVATE_KEY_FILE:?set an absolute private-key path}
+
+configs:
+  plugin_routes:
+    file: ../plugins/web-routes.v1.json

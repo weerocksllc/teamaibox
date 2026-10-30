@@ -1,0 +1,6 @@
+*
+!services/trusted_media_service/*.py
+!services/trusted_media_runtime/main.py
+!deploy/casting/uxplay-source-lifecycle.patch
+!deploy/casting/NativeLifecycle.arm64.Dockerfile
+!deploy/casting/TrustedMediaLifecycle.arm64.Dockerfile

@@ -1,0 +1,47 @@
+<!doctype html><html lang="en"><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Cuttlefish synthetic AV / input test</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#101923;color:white;font:14px sans-serif}
+header{height:104px;padding:8px}button,input{font:inherit;height:36px;margin:2px;padding:4px}
+input{width:210px}canvas{display:block;width:100%;height:calc(100vh - 104px)}
+</style>
+<header><button id="start">Start AV</button><button id="tap">Tap marker</button><br>
+<input aria-label="Text test" placeholder="TEST-123"><span id="status">Ready</span></header>
+<canvas width="720" height="1000"></canvas>
+<script>
+'use strict';
+const canvas=document.querySelector('canvas'),ctx=canvas.getContext('2d');
+let start=null,frames=0,taps=0,pulse=-1,audio=null;
+const events=[],intervals=[];let previous=null;
+document.querySelector('#start').onclick=async()=>{
+  if(audio)await audio.close();audio=new AudioContext();await audio.resume();
+  start=performance.now();frames=0;pulse=-1;previous=null;intervals.length=0;
+  events.push({kind:'start',t:start});
+};
+document.querySelector('#tap').onclick=()=>{taps++;events.push({kind:'tap',n:taps,t:performance.now()});};
+document.querySelector('input').oninput=e=>{localStorage.setItem('testText',e.target.value);events.push({kind:'input',value:e.target.value,t:performance.now()});};
+document.querySelector('input').value=localStorage.getItem('testText')||'';
+function render(now){
+ const elapsed=start===null?0:now-start;
+ ctx.fillStyle='#101923';ctx.fillRect(0,0,720,1000);
+ ctx.fillStyle=taps%2?'#e98942':'#53cba7';ctx.fillRect(0,0,720,150);
+ ctx.fillStyle='white';ctx.font='bold 44px monospace';ctx.fillText('FRAME '+frames,25,60);ctx.fillText('TAP '+taps,25,125);
+ ctx.font='34px monospace';ctx.fillText((elapsed/1000).toFixed(3)+' sec',25,205);
+ ctx.beginPath();ctx.arc(360+230*Math.sin(elapsed/700),530+200*Math.cos(elapsed/1000),55,0,2*Math.PI);ctx.fill();
+ for(let bit=0;bit<16;bit++){ctx.fillStyle=(frames>>bit)&1?'white':'#101923';ctx.fillRect(bit*45,900,45,65);}
+ if(start!==null){
+  if(previous!==null)intervals.push(now-previous);previous=now;
+  if(intervals.length>18000)intervals.shift();
+  const index=Math.floor(elapsed/2000);
+  if(index!==pulse){pulse=index;const oscillator=audio.createOscillator(),gain=audio.createGain();
+   oscillator.frequency.value=1000;gain.gain.value=.15;oscillator.connect(gain).connect(audio.destination);
+   oscillator.start();oscillator.stop(audio.currentTime+.08);events.push({kind:'pulse',n:pulse,t:now,frame:frames});}
+  if(elapsed%2000<100){ctx.fillStyle='white';ctx.fillRect(0,775,720,85);}frames++;
+ }
+ document.querySelector('#status').textContent='Tap '+taps;
+ requestAnimationFrame(render);
+}
+window.androidLabFixture={events,intervals,clock:'Android WebView performance.now; not synchronized to viewer'};
+requestAnimationFrame(render);
+</script></html>

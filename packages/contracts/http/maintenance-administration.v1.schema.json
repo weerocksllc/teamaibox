@@ -1,0 +1,427 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.teamaibox.local/http/maintenance-administration.v1.schema.json",
+  "title": "Platform update and host maintenance administration",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "generatedAt",
+    "candidates",
+    "nodes",
+    "plans"
+  ],
+  "properties": {
+    "generatedAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "candidates": {
+      "type": "array",
+      "maxItems": 128,
+      "items": {
+        "$ref": "#/$defs/candidate"
+      }
+    },
+    "nodes": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 256,
+      "items": {
+        "$ref": "#/$defs/node"
+      }
+    },
+    "plans": {
+      "type": "array",
+      "maxItems": 100,
+      "items": {
+        "$ref": "#/$defs/plan"
+      }
+    }
+  },
+  "$defs": {
+    "digest": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "codeList": {
+      "type": "array",
+      "maxItems": 64,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z][a-z0-9_.-]{1,127}$"
+      }
+    },
+    "candidate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "candidateKey",
+        "displayName",
+        "kind",
+        "version",
+        "digest",
+        "requiresReboot",
+        "rollbackAvailable",
+        "minimumServingNodes"
+      ],
+      "properties": {
+        "candidateKey": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_.-]{1,127}$"
+        },
+        "displayName": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "kind": {
+          "enum": [
+            "platform",
+            "host"
+          ]
+        },
+        "version": {
+          "type": "string",
+          "pattern": "^[0-9]+(?:\\.[0-9]+){1,3}(?:-[a-z0-9.-]+)?$"
+        },
+        "digest": {
+          "$ref": "#/$defs/digest"
+        },
+        "requiresReboot": {
+          "type": "boolean"
+        },
+        "rollbackAvailable": {
+          "type": "boolean"
+        },
+        "minimumServingNodes": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 16
+        }
+      }
+    },
+    "node": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "nodeId",
+        "nodeKey",
+        "lifecycleState",
+        "healthState"
+      ],
+      "properties": {
+        "nodeId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "nodeKey": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "lifecycleState": {
+          "enum": [
+            "ready",
+            "draining",
+            "offline",
+            "disabled",
+            "joining"
+          ]
+        },
+        "healthState": {
+          "enum": [
+            "healthy",
+            "degraded",
+            "offline",
+            "unknown"
+          ]
+        }
+      }
+    },
+    "preflight": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "evidenceDigest",
+        "passed",
+        "blockers",
+        "warnings",
+        "secureBootCompatible",
+        "runtimeCompatible"
+      ],
+      "properties": {
+        "evidenceDigest": {
+          "$ref": "#/$defs/digest"
+        },
+        "passed": {
+          "type": "boolean"
+        },
+        "blockers": {
+          "$ref": "#/$defs/codeList"
+        },
+        "warnings": {
+          "$ref": "#/$defs/codeList"
+        },
+        "secureBootCompatible": {
+          "type": "boolean"
+        },
+        "runtimeCompatible": {
+          "type": "boolean"
+        }
+      }
+    },
+    "compatibility": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "evidenceDigest",
+        "incompatibleProfileIds",
+        "requiresRevalidationProfileIds"
+      ],
+      "properties": {
+        "evidenceDigest": {
+          "$ref": "#/$defs/digest"
+        },
+        "incompatibleProfileIds": {
+          "type": "array",
+          "maxItems": 256,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "requiresRevalidationProfileIds": {
+          "type": "array",
+          "maxItems": 256,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      }
+    },
+    "nodeEvidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "nodeId",
+        "drainDigest",
+        "applyDigest",
+        "postCheckDigest"
+      ],
+      "properties": {
+        "nodeId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "drainDigest": {
+          "$ref": "#/$defs/digest"
+        },
+        "applyDigest": {
+          "$ref": "#/$defs/digest"
+        },
+        "postCheckDigest": {
+          "$ref": "#/$defs/digest"
+        }
+      }
+    },
+    "postCheck": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "evidenceDigest",
+        "passed"
+      ],
+      "properties": {
+        "evidenceDigest": {
+          "$ref": "#/$defs/digest"
+        },
+        "passed": {
+          "type": "boolean"
+        }
+      }
+    },
+    "plan": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "planId",
+        "kind",
+        "candidate",
+        "targetNodes",
+        "strategy",
+        "state",
+        "blockers",
+        "warnings",
+        "preflight",
+        "compatibility",
+        "revalidationDecision",
+        "recoveryInstructions",
+        "rollbackInstructions",
+        "currentNodeId",
+        "completedNodeIds",
+        "nodeEvidence",
+        "postCheck",
+        "failureCode",
+        "revision",
+        "requestedBy",
+        "createdAt",
+        "updatedAt",
+        "completedAt"
+      ],
+      "properties": {
+        "planId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "kind": {
+          "enum": [
+            "platform",
+            "host"
+          ]
+        },
+        "candidate": {
+          "$ref": "#/$defs/candidate"
+        },
+        "targetNodes": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 64,
+          "items": {
+            "$ref": "#/$defs/node"
+          }
+        },
+        "strategy": {
+          "enum": [
+            "rolling",
+            "single_node_downtime"
+          ]
+        },
+        "state": {
+          "enum": [
+            "blocked",
+            "ready",
+            "executing",
+            "completed",
+            "rolled_back",
+            "manual_recovery_required"
+          ]
+        },
+        "blockers": {
+          "$ref": "#/$defs/codeList"
+        },
+        "warnings": {
+          "$ref": "#/$defs/codeList"
+        },
+        "preflight": {
+          "$ref": "#/$defs/preflight"
+        },
+        "compatibility": {
+          "$ref": "#/$defs/compatibility"
+        },
+        "revalidationDecision": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "enum": [
+            "fence_and_revalidate",
+            null
+          ]
+        },
+        "recoveryInstructions": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 32,
+          "items": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 512
+          }
+        },
+        "rollbackInstructions": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 32,
+          "items": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 512
+          }
+        },
+        "currentNodeId": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "uuid"
+        },
+        "completedNodeIds": {
+          "type": "array",
+          "maxItems": 64,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "nodeEvidence": {
+          "type": "array",
+          "maxItems": 64,
+          "items": {
+            "$ref": "#/$defs/nodeEvidence"
+          }
+        },
+        "postCheck": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/postCheck"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "failureCode": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^update_[a-z0-9_.-]{1,120}$"
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "requestedBy": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "completedAt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        }
+      }
+    }
+  },
+  "x-teamaibox-contract": {
+    "family": "http",
+    "role": "response",
+    "major": 1
+  }
+}

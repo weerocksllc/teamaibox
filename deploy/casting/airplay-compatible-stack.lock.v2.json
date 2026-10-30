@@ -1,0 +1,65 @@
+{
+  "schemaVersion": 2,
+  "lockId": "teamaibox.airplay-compatible-stack.open-source.v2",
+  "asOf": "2026-09-06",
+  "target": "linux/arm64/v8",
+  "receiver": {
+    "name": "UxPlay",
+    "version": "1.73.6",
+    "commitSha1": "21eef8df25d91e12635c36d8176ad192725baca2",
+    "treeSha1": "ece31de373433cf042ecb3ab801abb6ceb23fba3",
+    "archiveUrl": "https://github.com/FDH2/UxPlay/archive/21eef8df25d91e12635c36d8176ad192725baca2.tar.gz",
+    "archiveSha256": "sha256:03a92523cf750af87be594974819cd6709c5e7a6f8863f109b418b246acf9c5c",
+    "licenseExpression": "GPL-3.0-only",
+    "sourceModified": false
+  },
+  "baseImage": {
+    "reference": "ubuntu@sha256:95fa486768020359141f1318720f43e7982ef926c792891d984aef9aaf05e7ea",
+    "architecture": "arm64",
+    "os": "linux",
+    "version": "24.04"
+  },
+  "directRuntimePackages": {
+    "dbus": "1.14.10-4ubuntu4.1",
+    "gstreamer1.0-libav": "1.24.1-1build1",
+    "gstreamer1.0-plugins-bad": "1.24.2-1ubuntu4",
+    "gstreamer1.0-plugins-base": "1.24.2-1ubuntu0.4",
+    "gstreamer1.0-plugins-good": "1.24.2-1ubuntu1.5",
+    "gstreamer1.0-tools": "1.24.2-1ubuntu0.1",
+    "libavahi-compat-libdnssd1": "0.8-13ubuntu6.2",
+    "libplist-2.0-4": "2.3.0-1~exp2build2"
+  },
+  "separateBrowserDelivery": {
+    "sfuSource": {
+      "repository": "https://github.com/livekit/livekit",
+      "version": "1.13.6",
+      "commitSha1": "3cfbd1242618a61178f7a05b126d6c0c4cac3731",
+      "archiveUrl": "https://github.com/livekit/livekit/archive/3cfbd1242618a61178f7a05b126d6c0c4cac3731.tar.gz",
+      "archiveSha256": "sha256:e737e746e8f2f8d9ca7f23cbebf4b6e50526b6088831f86f0ef2e1c5a6b2ffd5",
+      "licenseExpression": "Apache-2.0"
+    },
+    "sfuImage": "docker.io/livekit/livekit-server@sha256:4eeb7a7af9e133afee7d07fc48623373852a34ad709094345d1761c9b283dc1a",
+    "browserPackage": "livekit-client@2.21.0",
+    "browserPackageIntegrity": "sha512-RBUhPkV/sl1nzl8lokVlK5uATPwn0AlsudCBZXissw/kDl9yz8ac4pNJ43iPpMVoHOeBYH/BZ3vUC1adqa/zFQ==",
+    "browserPackageTarball": "https://registry.npmjs.org/livekit-client/-/livekit-client-2.21.0.tgz",
+    "browserPackageTarballSha256": "sha256:205a3d49070d350702dc44b6c20045c0cc2aae22f19117efa8ebea7375caf097"
+  },
+  "verificationTools": {
+    "syft": "docker.io/anchore/syft@sha256:142a0f42f34a4bef64c15e1720c504ff3f2840ae6ce4d5bfd2b26948cbfac82a",
+    "grype": "docker.io/anchore/grype@sha256:84a1e5435228172a0e56e8bfda49fa7ca62159f5eefcf7ae4b7851952e72315f",
+    "cosign": "ghcr.io/sigstore/cosign/cosign@sha256:de9c65609e6bde17e6b48de485ee788407c9502fa08b8f4459f595b21f56cd00"
+  },
+  "releaseMinimum": {
+    "review": "architecture/validation/airplay-compatible-supply-chain-review.v3.json",
+    "notice": "deploy/legal/airplay-compatible/NOTICE.v2.txt",
+    "correspondingSourceAndBuild": "docs/operations/trusted-media-open-source-build.v2.md",
+    "dockerfile": "deploy/casting/TrustedMediaService.arm64.v2.Dockerfile",
+    "sbomFormat": "spdx-json",
+    "maximumUnacceptedCriticalVulnerabilities": 0,
+    "platformSignatureRequired": true,
+    "privateMirrorRequired": false,
+    "airplaySpecificSlsaRequired": false,
+    "cycloneDxRequired": false,
+    "independentBuildCount": 1
+  }
+}

@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "gateId": "opencode.compatibility.v1.18.16.arm64",
+  "adapterKey": "opencode.http.v1.18",
+  "upstreamVersion": "1.18.16",
+  "releaseTag": "v1.18.16",
+  "releaseTree": "60e7b8849a579c1373cb3488b1b8f16e9f36a66f",
+  "artifact": {
+    "platform": "linux/arm64/v8",
+    "digest": "sha256:4fdce5f9bc877d977304d71c0c90ad6e83efa381fe0edf0a61e6142a625e1c41"
+  },
+  "implementation": {
+    "adapterPath": "services/agent-bridge/src/opencode-adapter-v1-18.mjs",
+    "adapterSha256": "f7e129a30b25f2e95877c2494457e1f05238ee2c9869ac4a8ec8f55a4250e9a6",
+    "registryPath": "services/agent-bridge/src/opencode-adapter-registry.mjs",
+    "registrySha256": "6531444b3507ae78d5ad200d44f8e3b8dca604eaa67f45f7f0193e56630a5e03"
+  },
+  "runtimePolicy": {
+    "policyPath": "deploy/agent/sandbox-policy.v1.json",
+    "policySha256": "f209a167cada808dd000ebfd55ed112debb77d0a5dff13abd58733618db78570",
+    "configurationTarget": "/run/teamaibox/xdg-config/opencode/opencode.json",
+    "configurationOwner": "root:root",
+    "configurationMode": "0444",
+    "approvedProviders": ["teamaibox"],
+    "approvedPlugins": [],
+    "requiredEnvironment": {
+      "XDG_CONFIG_HOME": "/run/teamaibox/xdg-config",
+      "OPENCODE_CONFIG": "/run/teamaibox/xdg-config/opencode/opencode.json",
+      "OPENCODE_DISABLE_PROJECT_CONFIG": "1",
+      "OPENCODE_DISABLE_AUTOUPDATE": "1",
+      "OPENCODE_DISABLE_SHARE": "1",
+      "OPENCODE_AUTO_SHARE": "false",
+      "OPENCODE_PURE": "1",
+      "OPENCODE_DISABLE_DEFAULT_PLUGINS": "1",
+      "OPENCODE_DISABLE_EXTERNAL_SKILLS": "1",
+      "OPENCODE_DISABLE_MODELS_FETCH": "1",
+      "OPENCODE_DISABLE_EMBEDDED_WEB_UI": "1",
+      "OPENCODE_PERMISSION": "{\"*\":\"ask\"}"
+    }
+  },
+  "requiredCapabilities": [
+    {"key": "health", "evidence": "services/agent-bridge/test/opencode-adapter-v1-18.test.mjs"},
+    {"key": "session-creation", "evidence": "services/agent-bridge/test/opencode-adapter-v1-18.test.mjs"},
+    {"key": "prompt", "evidence": "services/agent-bridge/test/opencode-adapter-v1-18.test.mjs"},
+    {"key": "ordered-sse-events", "evidence": "services/agent-bridge/test/opencode-adapter-v1-18.test.mjs"},
+    {"key": "questions", "evidence": "services/agent-bridge/test/opencode-adapter-v1-18.test.mjs"},
+    {"key": "tool-confirmations", "evidence": "services/agent-bridge/test/agent-operation-confirmation.test.mjs"},
+    {"key": "interrupt", "evidence": "services/agent-bridge/test/opencode-adapter-v1-18.test.mjs"},
+    {"key": "diff", "evidence": "services/agent-bridge/test/opencode-adapter-v1-18.test.mjs"},
+    {"key": "artifacts", "evidence": "services/agent-bridge/test/opencode-adapter-v1-18.test.mjs"},
+    {"key": "bounded-errors", "evidence": "services/agent-bridge/test/opencode-adapter-v1-18.test.mjs"}
+  ],
+  "upgradeRule": "all-lock-policy-source-and-contract-checks-must-pass-before-registry-version-change"
+}

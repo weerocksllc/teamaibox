@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.teamaibox.local/compute/artifact-ref.v1.schema.json",
+  "title": "Team AI Box compute artifact reference v1",
+  "x-teamaibox-contract": {"family": "compute", "role": "bidirectional", "major": 1},
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion", "artifactId", "relationship", "dataClass", "object",
+    "mediaType", "sizeBytes", "integrity", "lifecycleState", "createdAt"
+  ],
+  "properties": {
+    "schemaVersion": {"const": 1},
+    "artifactId": {"type": "string", "format": "uuid"},
+    "relationship": {"type": "string", "enum": ["input", "output", "log", "checkpoint", "evidence", "error"]},
+    "label": {"type": ["string", "null"], "maxLength": 256},
+    "dataClass": {"type": "string", "enum": ["public", "internal", "confidential", "restricted"]},
+    "object": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["objectId", "objectVersion", "referenceId"],
+      "properties": {
+        "objectId": {"type": "string", "format": "uuid"},
+        "objectVersion": {"type": "integer", "minimum": 1},
+        "referenceId": {"type": "string", "format": "uuid"}
+      }
+    },
+    "mediaType": {"type": "string", "minLength": 3, "maxLength": 255},
+    "sizeBytes": {"type": "integer", "minimum": 0},
+    "integrity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["algorithm", "digest"],
+      "properties": {
+        "algorithm": {"const": "sha256"},
+        "digest": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
+      }
+    },
+    "lifecycleState": {"type": "string", "enum": ["pending", "verified", "deleted", "quarantined"]},
+    "createdAt": {"type": "string", "format": "date-time"},
+    "extensions": {"type": "object", "additionalProperties": true}
+  }
+}

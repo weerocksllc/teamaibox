@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "applications": [
+    {
+      "applicationKey": "official.assistant",
+      "installedVersion": "0.1.0",
+      "route": {"pathPrefix": "/apps/assistant", "integration": "workbench"},
+      "requiredPermissions": ["ai:invoke"],
+      "requiredCapabilities": ["chat"],
+      "requiredModelProfiles": {
+        "chat": "llm.qwen38-27b.modelopt-nvfp4-fp8.spark23-32k.v1"
+      },
+      "requiredCoreServices": ["platform-api", "scheduler"],
+      "ui": {
+        "labelKey": "app.assistant.name",
+        "descriptionKey": "app.assistant.description",
+        "iconKey": "sparkles",
+        "categoryKey": "ai-application",
+        "order": 10,
+        "fallbackLabel": "AI Assistant",
+        "official": true,
+        "localization": {"supportedLocales": ["zh-CN", "zh-TW", "en", "ja", "ko", "fr", "de", "es", "pt-BR", "ru", "ar", "hi", "id", "it", "tr", "vi", "th"], "fallbackLocale": "zh-CN", "supportedDirections": ["ltr", "rtl"], "rtlReady": true},
+        "themes": {"supported": ["light", "dark"], "usesSemanticTokens": true, "livePreferenceEvents": true}
+      }
+    }
+  ]
+}

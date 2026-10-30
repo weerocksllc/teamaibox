@@ -1,0 +1,270 @@
+{
+  "schemaVersion": 1,
+  "researchSnapshotAt": "2026-08-11T00:00:00.000Z",
+  "candidateMatrixDigest": "sha256:d5615d3105bfad6a93439e06f23fda7de451f86c6ae849b33a5930ad1c7f4df0",
+  "target": {
+    "architecture": "linux/arm64/v8",
+    "accelerator": "nvidia-gb10-blackwell"
+  },
+  "policy": {
+    "workloads": [
+      "image_drawing",
+      "ocr",
+      "asr",
+      "translation"
+    ],
+    "noForcedConversion": true,
+    "downloadDuringApplicabilityEvaluation": false,
+    "productionProfileRequiresExactModelEngineRecipe": true,
+    "applicableIsNotCertified": true
+  },
+  "researchSources": [
+    {
+      "sourceId": "comfy.nvfp4.current",
+      "uri": "https://blog.comfy.org/p/new-comfyui-optimizations-for-nvidia",
+      "retrievedAt": "2026-08-11T00:00:00.000Z",
+      "finding": "ComfyUI supports NVFP4 only for supported checkpoint layouts with CUDA 13; that does not create an exact NVFP4 artifact for either reviewed drawing revision."
+    },
+    {
+      "sourceId": "nvidia.spark.comfyui",
+      "uri": "https://build.nvidia.com/spark/comfy-ui/overview",
+      "retrievedAt": "2026-08-11T00:00:00.000Z",
+      "finding": "DGX Spark supports containerized ComfyUI workloads, but the reviewed Spark workflow does not identify an NVFP4 recipe for the exact FLUX.1-schnell or SDXL revisions."
+    },
+    {
+      "sourceId": "paddle.ocr.precision",
+      "uri": "https://github.com/PaddlePaddle/PaddleOCR/blob/main/docs/version3.x/pipeline_usage/PaddleOCR-VL.md",
+      "retrievedAt": "2026-08-11T00:00:00.000Z",
+      "finding": "The publisher pipeline documents FP32/FP16 execution, not an exact NVFP4 or other reviewed low-precision recipe for PaddleOCR-VL-1.5."
+    },
+    {
+      "sourceId": "openai.whisper.release",
+      "uri": "https://github.com/openai/whisper/tree/v20250625",
+      "retrievedAt": "2026-08-11T00:00:00.000Z",
+      "finding": "The exact OpenAI Whisper engine/checkpoint path is the FP16 reference; INT8 engines are different immutable engine profiles and cannot be inferred here."
+    }
+  ],
+  "evaluations": [
+    {
+      "candidateId": "flux1-schnell-bf16",
+      "workload": "image_drawing",
+      "source": {
+        "repository": "black-forest-labs/FLUX.1-schnell",
+        "revision": "741f7c3ce8b383c54771c7003378a50191e9efe9"
+      },
+      "engine": "comfyui-pytorch",
+      "paths": [
+        {
+          "precision": "nvfp4",
+          "outcome": "failed",
+          "reasonCode": "artifact-gate-requires-human-acceptance",
+          "exactRecipeAvailable": false,
+          "conversionAttempted": false,
+          "artifactDownloaded": false,
+          "productionEligible": false,
+          "evidenceRefs": [
+            "https://build.nvidia.com/spark/comfy-ui/overview"
+          ]
+        },
+        {
+          "precision": "other-low-precision",
+          "outcome": "failed",
+          "reasonCode": "artifact-gate-precedes-precision-evaluation",
+          "exactRecipeAvailable": false,
+          "conversionAttempted": false,
+          "artifactDownloaded": false,
+          "productionEligible": false,
+          "evidenceRefs": [
+            "https://huggingface.co/black-forest-labs/FLUX.1-schnell/tree/741f7c3ce8b383c54771c7003378a50191e9efe9"
+          ]
+        }
+      ]
+    },
+    {
+      "candidateId": "sdxl-base-1.0-fp16",
+      "workload": "image_drawing",
+      "source": {
+        "repository": "stabilityai/stable-diffusion-xl-base-1.0",
+        "revision": "462165984030d82259a11f4367a4eed129e94a7b"
+      },
+      "engine": "comfyui-pytorch",
+      "paths": [
+        {
+          "precision": "nvfp4",
+          "outcome": "not_applicable",
+          "reasonCode": "no-exact-model-engine-recipe",
+          "exactRecipeAvailable": false,
+          "conversionAttempted": false,
+          "artifactDownloaded": false,
+          "productionEligible": false,
+          "evidenceRefs": [
+            "https://build.nvidia.com/spark/comfy-ui/overview",
+            "https://blog.comfy.org/p/new-comfyui-optimizations-for-nvidia"
+          ]
+        },
+        {
+          "precision": "other-low-precision",
+          "outcome": "not_applicable",
+          "reasonCode": "only-reviewed-fp16-variant",
+          "exactRecipeAvailable": false,
+          "conversionAttempted": false,
+          "artifactDownloaded": false,
+          "productionEligible": false,
+          "evidenceRefs": [
+            "https://huggingface.co/stabilityai/stable-diffusion-xl-base-1.0/tree/462165984030d82259a11f4367a4eed129e94a7b"
+          ]
+        }
+      ]
+    },
+    {
+      "candidateId": "paddleocr-vl-1.5-bf16",
+      "workload": "ocr",
+      "source": {
+        "repository": "PaddlePaddle/PaddleOCR-VL-1.5",
+        "revision": "df2b114327c857f4db801d3d5b6741ad9a24fcd1"
+      },
+      "engine": "paddleocr-transformers",
+      "paths": [
+        {
+          "precision": "nvfp4",
+          "outcome": "not_applicable",
+          "reasonCode": "no-publisher-nvfp4-path",
+          "exactRecipeAvailable": false,
+          "conversionAttempted": false,
+          "artifactDownloaded": false,
+          "productionEligible": false,
+          "evidenceRefs": [
+            "https://github.com/PaddlePaddle/PaddleOCR/blob/main/docs/version3.x/pipeline_usage/PaddleOCR-VL.md"
+          ]
+        },
+        {
+          "precision": "other-low-precision",
+          "outcome": "not_applicable",
+          "reasonCode": "no-exact-arm64-engine-recipe",
+          "exactRecipeAvailable": false,
+          "conversionAttempted": false,
+          "artifactDownloaded": false,
+          "productionEligible": false,
+          "evidenceRefs": [
+            "https://huggingface.co/PaddlePaddle/PaddleOCR-VL-1.5/tree/df2b114327c857f4db801d3d5b6741ad9a24fcd1"
+          ]
+        }
+      ]
+    },
+    {
+      "candidateId": "whisper-large-v3-fp16",
+      "workload": "asr",
+      "source": {
+        "repository": "openai/whisper",
+        "revision": "v20250625"
+      },
+      "engine": "openai-whisper-pytorch",
+      "paths": [
+        {
+          "precision": "nvfp4",
+          "outcome": "not_applicable",
+          "reasonCode": "no-publisher-nvfp4-path",
+          "exactRecipeAvailable": false,
+          "conversionAttempted": false,
+          "artifactDownloaded": false,
+          "productionEligible": false,
+          "evidenceRefs": [
+            "https://github.com/openai/whisper/tree/v20250625"
+          ]
+        },
+        {
+          "precision": "other-low-precision",
+          "outcome": "not_applicable",
+          "reasonCode": "int8-requires-different-engine-profile",
+          "exactRecipeAvailable": false,
+          "conversionAttempted": false,
+          "artifactDownloaded": false,
+          "productionEligible": false,
+          "evidenceRefs": [
+            "https://github.com/openai/whisper/tree/v20250625"
+          ]
+        }
+      ]
+    },
+    {
+      "candidateId": "madlad400-3b-mt-bf16",
+      "workload": "translation",
+      "source": {
+        "repository": "google/madlad400-3b-mt",
+        "revision": "fa184c675da0b5c9e1c8694fccd4e12e2d422094"
+      },
+      "engine": "transformers-t5",
+      "paths": [
+        {
+          "precision": "nvfp4",
+          "outcome": "not_applicable",
+          "reasonCode": "no-publisher-nvfp4-path",
+          "exactRecipeAvailable": false,
+          "conversionAttempted": false,
+          "artifactDownloaded": false,
+          "productionEligible": false,
+          "evidenceRefs": [
+            "https://huggingface.co/google/madlad400-3b-mt/tree/fa184c675da0b5c9e1c8694fccd4e12e2d422094"
+          ]
+        },
+        {
+          "precision": "other-low-precision",
+          "outcome": "not_applicable",
+          "reasonCode": "generic-quantization-is-not-an-exact-recipe",
+          "exactRecipeAvailable": false,
+          "conversionAttempted": false,
+          "artifactDownloaded": false,
+          "productionEligible": false,
+          "evidenceRefs": [
+            "https://huggingface.co/google/madlad400-3b-mt/tree/fa184c675da0b5c9e1c8694fccd4e12e2d422094"
+          ]
+        }
+      ]
+    },
+    {
+      "candidateId": "nllb-200-1.3b-noncommercial",
+      "workload": "translation",
+      "source": {
+        "repository": "facebook/nllb-200-distilled-1.3B",
+        "revision": "7be3e24664b38ce1cac29b8aeed6911aa0cf0576"
+      },
+      "engine": "transformers-nllb",
+      "paths": [
+        {
+          "precision": "nvfp4",
+          "outcome": "failed",
+          "reasonCode": "license-rejected-before-technical-work",
+          "exactRecipeAvailable": false,
+          "conversionAttempted": false,
+          "artifactDownloaded": false,
+          "productionEligible": false,
+          "evidenceRefs": [
+            "https://huggingface.co/facebook/nllb-200-distilled-1.3B/blob/7be3e24664b38ce1cac29b8aeed6911aa0cf0576/README.md"
+          ]
+        },
+        {
+          "precision": "other-low-precision",
+          "outcome": "failed",
+          "reasonCode": "license-rejected-before-technical-work",
+          "exactRecipeAvailable": false,
+          "conversionAttempted": false,
+          "artifactDownloaded": false,
+          "productionEligible": false,
+          "evidenceRefs": [
+            "https://huggingface.co/facebook/nllb-200-distilled-1.3B/blob/7be3e24664b38ce1cac29b8aeed6911aa0cf0576/README.md"
+          ]
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "candidateCount": 6,
+    "pathCount": 12,
+    "applicable": 0,
+    "notApplicable": 8,
+    "failed": 4,
+    "artifactsDownloaded": 0,
+    "conversionsAttempted": 0,
+    "productionProfilesEnabled": 0
+  }
+}

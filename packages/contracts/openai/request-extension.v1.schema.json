@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.teamaibox.local/openai/request-extension.v1.schema.json",
+  "title": "Team AI Box OpenAI-style request extension v1",
+  "x-teamaibox-contract": {"family": "openai", "role": "request", "major": 1},
+  "type": "object",
+  "additionalProperties": false,
+  "required": [],
+  "properties": {
+    "background": {"type": "boolean", "default": false},
+    "data_class": {"type": "string", "enum": ["public", "internal", "confidential", "restricted"], "default": "internal"},
+    "priority": {"type": "integer", "minimum": 0, "maximum": 100, "default": 50},
+    "deadline_at": {"type": ["string", "null"], "format": "date-time"},
+    "idempotency_key": {"type": ["string", "null"], "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,511}$"},
+    "model_profile_id": {"type": ["string", "null"], "format": "uuid"},
+    "extensions": {"type": "object", "additionalProperties": true}
+  }
+}

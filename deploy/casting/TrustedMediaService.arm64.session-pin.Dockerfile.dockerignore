@@ -1,0 +1,17 @@
+*
+!deploy/casting/uxplay-session-pin.patch
+!deploy/casting/uxplay-pairing-boundary.patch
+!deploy/casting/uxplay-ephemeral-identity.patch
+!deploy/casting/uxplay-pairing-budget.patch
+!deploy/casting/uxplay-paired-peer.patch
+!deploy/casting/uxplay-platform-pairing-ack.patch
+!deploy/casting/uxplay-setup-secret.patch
+!services/trusted_media_service/native/setup_secret.h
+!services/trusted_media_service/native/session_pin.h
+!services/trusted_media_service/native/pairing_budget.h
+!services/trusted_media_service/native/paired_peer.h
+!services/trusted_media_service/native/platform_pairing_ack.h
+!services/trusted_media_service/native/platform_pairing_ack_test.c
+!services/trusted_media_service/native/pairing_boundary_test.c
+!deploy/casting/trusted-media-container/**
+!deploy/legal/airplay-compatible/NOTICE.v2.txt

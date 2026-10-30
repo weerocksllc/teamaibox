@@ -1,0 +1,44 @@
+name: CastingAcceptance
+options:
+  deploymentTarget:
+    iOS: "18.0"
+settings:
+  base:
+    DEVELOPMENT_TEAM: LUTWA364P4
+    CODE_SIGN_STYLE: Automatic
+    SWIFT_VERSION: "5.0"
+targets:
+  CastingPattern:
+    type: application
+    platform: iOS
+    sources: [App]
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.teamaibox.casting.pattern
+        GENERATE_INFOPLIST_FILE: YES
+        INFOPLIST_KEY_UILaunchScreen_Generation: YES
+        INFOPLIST_KEY_UIApplicationSceneManifest_Generation: NO
+        TARGETED_DEVICE_FAMILY: "1,2"
+  CastingAcceptance:
+    type: bundle.ui-testing
+    platform: iOS
+    sources: [Tests]
+    dependencies:
+      - target: CastingPattern
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.teamaibox.casting.acceptance
+        GENERATE_INFOPLIST_FILE: YES
+        TEST_TARGET_NAME: CastingPattern
+        TARGETED_DEVICE_FAMILY: "1,2"
+schemes:
+  CastingAcceptance:
+    build:
+      targets:
+        CastingPattern: [test]
+        CastingAcceptance: [test]
+    test:
+      targets: [CastingAcceptance]
+      gatherCoverageData: false
+      environmentVariables:
+        TEAMAIBOX_PROBE_BIND: ${TEAMAIBOX_PROBE_BIND}

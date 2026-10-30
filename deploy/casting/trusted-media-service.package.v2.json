@@ -1,0 +1,135 @@
+{
+  "schemaVersion": 2,
+  "packageId": "teamaibox.trusted-media-service.open-source.v2",
+  "architecture": "linux/arm64/v8",
+  "status": "open-source-release-minimum-complete-hardware-blocked",
+  "sourceLock": {
+    "path": "deploy/casting/airplay-compatible-stack.lock.v2.json",
+    "sha256": "sha256:6ad5a95ba4e16bc4e0e64a1bff91be95f462a3fc64f467b377fc1433a532e6cb",
+    "lockId": "teamaibox.airplay-compatible-stack.open-source.v2"
+  },
+  "supplyChainReview": {
+    "path": "architecture/validation/airplay-compatible-supply-chain-review.v3.json",
+    "sha256": "sha256:2c357df62076e3a2dede0d02e60cbe48c74f7794827d120f9727b238222a7116",
+    "reviewId": "teamaibox.airplay-compatible-supply-chain-review.v3",
+    "allRequiredHumanDecisionsApproved": true,
+    "requiredHumanDecisionCount": 5,
+    "pendingHumanDecisionCount": 0
+  },
+  "releaseMinimumEvidence": {
+    "path": "evidence/validation/supply-chain/airplay-open-source-release-minimum-20260906-a4.json",
+    "fileSha256": "sha256:d741b9fdacf5485f1e5e6737e9bacd98971a965289e4acf54c825993c8d95abb",
+    "evidenceDigest": "sha256:335147b5ac36705a957e25a82d3f5d3af3545712199ed62e8ba4c817eacca0be",
+    "strictlyValidated": true
+  },
+  "hardwareInventory": {
+    "path": "evidence/validation/hardware/airplay-main-hardware-inventory-20260905-a2.json",
+    "fileSha256": "sha256:f480386ea04324b2dd81448957d708c0d5aa4dc665752a742ba75a0a956df92b",
+    "evidenceDigest": "sha256:c0f7ffde879d57561d3ac3527828f47b752bb69b3e37d72f2f087ece8c0b565f",
+    "supportedEnvironment": false
+  },
+  "build": {
+    "dockerfile": {
+      "path": "deploy/casting/TrustedMediaService.arm64.v2.Dockerfile",
+      "sha256": "sha256:a7a1454ada7105f5e34720e0ec862a73caa42eda379c1a48dd96ef14f452582a"
+    },
+    "instructions": {
+      "path": "docs/operations/trusted-media-open-source-build.v2.md",
+      "sha256": "sha256:8c41db6e222f11a19e0899a8275b2f7e246d9a2d6e8a05233019cc74c766fc55"
+    },
+    "network": "dependency-fetch-only",
+    "baseImage": "ubuntu@sha256:95fa486768020359141f1318720f43e7982ef926c792891d984aef9aaf05e7ea",
+    "buildPerformed": true,
+    "independentBuildCount": 1,
+    "reproducibleBuildRequired": false
+  },
+  "images": {
+    "trustedMediaService": {
+      "repository": "teamaibox/trusted-media-service",
+      "tag": "open-source-v2",
+      "arm64Digest": "sha256:9c91d3b318805ff08f4a7173a58aa4c8f4b99e68819c4fa35b91a491c8b302e9",
+      "signatureVerified": true,
+      "spdxSbomVerified": true,
+      "vulnerabilitiesAccepted": true,
+      "unacceptedCriticalCount": 0,
+      "provenanceRequired": false,
+      "cycloneDxRequired": false
+    },
+    "internalSfu": {
+      "repository": "docker.io/livekit/livekit-server",
+      "arm64Digest": "sha256:4eeb7a7af9e133afee7d07fc48623373852a34ad709094345d1761c9b283dc1a",
+      "reference": "docker.io/livekit/livekit-server@sha256:4eeb7a7af9e133afee7d07fc48623373852a34ad709094345d1761c9b283dc1a"
+    }
+  },
+  "releaseArtifacts": {
+    "notice": {
+      "path": "deploy/legal/airplay-compatible/NOTICE.v2.txt",
+      "sha256": "sha256:c224acf09c6028e4723fa2163521dccd828599ed2efcb2b51cd15b99a6239381"
+    },
+    "spdx": {
+      "path": "evidence/validation/supply-chain/airplay-open-source-release-minimum-20260906-a4/trusted-media-service.spdx.json",
+      "sha256": "sha256:923c5dfd731ef3d38188fdee9997336badb5dfa3fce7ad969f5fc9bf64301794"
+    },
+    "vulnerabilityReport": {
+      "path": "evidence/validation/supply-chain/airplay-open-source-release-minimum-20260906-a4/trusted-media-service.grype.json",
+      "sha256": "sha256:1ab21697fa1a23be2e3ffe1cffe981513ea140b7eab7297070fd5dc1588e247c"
+    },
+    "signatureSubject": {
+      "path": "evidence/validation/supply-chain/airplay-open-source-release-minimum-20260906-a4/image-signing-subject.json",
+      "sha256": "sha256:9b70de4bc9d494a006d37e03f15a92a009ee21ece00637e31fd170d53cca631d"
+    },
+    "signature": {
+      "path": "evidence/validation/supply-chain/airplay-open-source-release-minimum-20260906-a4/image-signature.sig",
+      "sha256": "sha256:426127ca3c11fe5cd5b8793e7e795dc49e3984a1a2f7975627599607b7c67c77"
+    },
+    "publicKey": {
+      "path": "evidence/validation/supply-chain/airplay-open-source-release-minimum-20260906-a4/release.pub",
+      "sha256": "sha256:b6817cb7a38c350ace6a6486b0fae49a5d8011b98d024064654ee2cba4bce35b"
+    }
+  },
+  "policies": {
+    "runtime": {
+      "path": "deploy/casting/trusted-media-runtime-policy.v1.json",
+      "sha256": "sha256:30ece7eaaba68c1e3320a20dcc282617fb8000b575a31235b15e86084f207d08"
+    },
+    "seccomp": {
+      "path": "deploy/casting/trusted-media-seccomp.v1.json",
+      "sha256": "sha256:06e0d54fff2b427b6445f33c982759adeab01ded17fba18b42429765783cd374"
+    },
+    "hostExceptions": {
+      "path": "deploy/casting/trusted-media-host-exceptions.v1.json",
+      "sha256": "sha256:18b4081cc6bf08c1bcadd8f5f2ebbb896385f05eb38080dd4d286e329ed4bfb5"
+    }
+  },
+  "admission": {
+    "failClosed": true,
+    "requiredForReleaseMinimum": [
+      "supplyChainReview.allRequiredHumanDecisionsApproved",
+      "build.buildPerformed",
+      "images.trustedMediaService.arm64Digest",
+      "images.trustedMediaService.signatureVerified",
+      "images.trustedMediaService.spdxSbomVerified",
+      "images.trustedMediaService.vulnerabilitiesAccepted"
+    ],
+    "optionalNotRequired": [
+      "privateSourceMirror",
+      "airplaySpecificSlsaProvenance",
+      "cycloneDxSbom",
+      "twoIndependentByteIdenticalBuilds"
+    ],
+    "currentActivationBlockers": [
+      "trusted_media_component_not_deployed",
+      "hardware_supported_environment_not_yet_proven",
+      "real_apple_sender_not_exercised"
+    ]
+  },
+  "claimBoundary": {
+    "openSourceReleaseMinimumComplete": true,
+    "task22_1Complete": true,
+    "deploymentPerformed": false,
+    "componentReady": false,
+    "productAccepted": false,
+    "task22_3Complete": false,
+    "task22_10Complete": false
+  }
+}

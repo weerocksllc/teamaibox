@@ -1,0 +1,29 @@
+{
+  "name": "@teamaibox/plugin-runtime",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test test/*.test.mjs"
+  },
+  "exports": {
+    "./manifest-validator": "./src/manifest-validator.mjs",
+    "./plugin-import-service": "./src/plugin-import-service.mjs",
+    "./memory-import-repository": "./src/memory-import-repository.mjs",
+    "./postgres-import-repository": "./src/postgres-import-repository.mjs",
+    "./plugin-lifecycle-service": "./src/plugin-lifecycle-service.mjs",
+    "./memory-lifecycle-repository": "./src/memory-lifecycle-repository.mjs",
+    "./postgres-lifecycle-repository": "./src/postgres-lifecycle-repository.mjs",
+    "./sandbox-policy": "./src/sandbox-policy.mjs",
+    "./delegated-user-token-service": "./src/delegated-user-token-service.mjs",
+    "./compute-capability-registration-service": "./src/compute-capability-registration-service.mjs",
+    "./memory-plugin-access-repository": "./src/memory-plugin-access-repository.mjs",
+    "./postgres-plugin-access-repository": "./src/postgres-plugin-access-repository.mjs",
+    "./postgres-delegated-access-control": "./src/postgres-delegated-access-control.mjs",
+    "./internal-scheduler-plugin-authority": "./src/internal-scheduler-plugin-authority.mjs",
+    "./plugin-compatibility-suite": "./src/plugin-compatibility-suite.mjs",
+    "./file-plugin-source-catalog": "./src/file-plugin-source-catalog.mjs",
+    "./real-plugin-sources": "./src/real-plugin-sources.mjs"
+  },
+  "license": "MIT"
+}

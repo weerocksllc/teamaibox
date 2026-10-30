@@ -1,0 +1,16 @@
+-- Preserve administrator policy values; remove the product's secondary ceilings.
+ALTER TABLE compute.queue_admission_policies DROP CONSTRAINT queue_admission_policies_max_queued_per_owner_check;
+ALTER TABLE compute.queue_admission_policies ALTER COLUMN max_queued_per_owner TYPE bigint;
+ALTER TABLE compute.queue_admission_policies ADD CONSTRAINT queue_admission_policies_max_queued_per_owner_check CHECK (max_queued_per_owner BETWEEN 1 AND 9007199254740991);
+ALTER TABLE compute.queue_admission_policies DROP CONSTRAINT queue_admission_policies_max_active_per_owner_check;
+ALTER TABLE compute.queue_admission_policies ALTER COLUMN max_active_per_owner TYPE bigint;
+ALTER TABLE compute.queue_admission_policies ADD CONSTRAINT queue_admission_policies_max_active_per_owner_check CHECK (max_active_per_owner BETWEEN 1 AND 9007199254740991);
+ALTER TABLE compute.queue_admission_policies DROP CONSTRAINT queue_admission_policies_max_queued_per_capability_check;
+ALTER TABLE compute.queue_admission_policies ALTER COLUMN max_queued_per_capability TYPE bigint;
+ALTER TABLE compute.queue_admission_policies ADD CONSTRAINT queue_admission_policies_max_queued_per_capability_check CHECK (max_queued_per_capability BETWEEN 1 AND 9007199254740991);
+ALTER TABLE compute.queue_admission_policies DROP CONSTRAINT queue_admission_policies_max_daily_submissions_per_owner_check;
+ALTER TABLE compute.queue_admission_policies ALTER COLUMN max_daily_submissions_per_owner TYPE bigint;
+ALTER TABLE compute.queue_admission_policies ADD CONSTRAINT queue_admission_policies_max_daily_submissions_per_owner_check CHECK (max_daily_submissions_per_owner BETWEEN 1 AND 9007199254740991);
+ALTER TABLE compute.queue_admission_policies DROP CONSTRAINT queue_admission_policies_max_request_bytes_check;
+ALTER TABLE compute.queue_admission_policies ALTER COLUMN max_request_bytes TYPE bigint;
+ALTER TABLE compute.queue_admission_policies ADD CONSTRAINT queue_admission_policies_max_request_bytes_check CHECK (max_request_bytes BETWEEN 1 AND 9007199254740991);

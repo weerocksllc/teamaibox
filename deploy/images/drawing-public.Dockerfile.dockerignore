@@ -1,0 +1,3 @@
+*
+!services/drawing-worker/requirements.txt
+!services/drawing-worker/flux2_bf16_protected_server.py

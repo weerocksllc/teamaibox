@@ -1,0 +1,97 @@
+{
+  "schemaVersion": 1,
+  "adapterKey": "opencode.http.v1.18",
+  "supportState": "pinned",
+  "inventoriedAt": "2026-08-11T03:20:00.000Z",
+  "upstream": {
+    "repository": "https://github.com/anomalyco/opencode.git",
+    "license": "MIT",
+    "defaultBranch": "dev",
+    "providedSource": {
+      "relativeWorkspace": "../opencode",
+      "commit": "d90532a5952c08c4376167294ef7c316b8817f72",
+      "tree": "60e7b8849a579c1373cb3488b1b8f16e9f36a66f",
+      "package": "opencode",
+      "packageVersion": "1.18.16",
+      "modifiedByPlatform": false
+    },
+    "release": {
+      "tag": "v1.18.16",
+      "commit": "a3647eb025c7615159d417dcc49fc39fdaeba65b",
+      "tree": "60e7b8849a579c1373cb3488b1b8f16e9f36a66f",
+      "publishedAt": "2026-08-10T06:07:08.000Z",
+      "sourceTreeMatchesProvidedSource": true
+    }
+  },
+  "runtimeArtifact": {
+    "kind": "upstream-binary-archive",
+    "platform": "linux/arm64/v8",
+    "name": "opencode-linux-arm64.tar.gz",
+    "uri": "https://github.com/anomalyco/opencode/releases/download/v1.18.16/opencode-linux-arm64.tar.gz",
+    "sizeBytes": 60189672,
+    "digest": "sha256:4fdce5f9bc877d977304d71c0c90ad6e83efa381fe0edf0a61e6142a625e1c41",
+    "executableFormat": "ELF 64-bit LSB ARM aarch64",
+    "verification": "verify-size-and-sha256-before-extracting-into-digest-pinned-sandbox-image"
+  },
+  "serveBoundary": {
+    "command": ["/opt/opencode/opencode", "serve", "--hostname", "127.0.0.1", "--port", "4096"],
+    "transport": "sandbox-loopback-http",
+    "authentication": "random-per-sandbox-http-basic-password",
+    "directoryBinding": "x-opencode-directory",
+    "networkClient": "platform-agent-bridge-only",
+    "runtimeNetworkDownload": false
+  },
+  "requiredOperations": [
+    {"key": "health", "method": "GET", "path": "/global/health"},
+    {"key": "session.create", "method": "POST", "path": "/session"},
+    {"key": "session.get", "method": "GET", "path": "/session/:sessionID"},
+    {"key": "session.status", "method": "GET", "path": "/session/status"},
+    {"key": "session.prompt", "method": "POST", "path": "/session/:sessionID/message"},
+    {"key": "session.messages", "method": "GET", "path": "/session/:sessionID/message"},
+    {"key": "session.interrupt", "method": "POST", "path": "/session/:sessionID/abort"},
+    {"key": "session.diff", "method": "GET", "path": "/session/:sessionID/diff"},
+    {"key": "event.subscribe", "method": "GET", "path": "/event"},
+    {"key": "question.list", "method": "GET", "path": "/question"},
+    {"key": "question.reply", "method": "POST", "path": "/question/:requestID/reply"},
+    {"key": "question.reject", "method": "POST", "path": "/question/:requestID/reject"},
+    {"key": "permission.list", "method": "GET", "path": "/permission"},
+    {"key": "permission.reply", "method": "POST", "path": "/permission/:requestID/reply"}
+  ],
+  "blockedOperations": [
+    {"key": "global.upgrade", "method": "POST", "path": "/global/upgrade", "reason": "platform-controls-upstream-version"},
+    {"key": "session.share", "method": "POST", "path": "/session/:sessionID/share", "reason": "public-sharing-disabled"},
+    {"key": "config.update", "method": "PATCH", "path": "/config", "reason": "platform-generates-restricted-config"},
+    {"key": "provider.authorize", "method": "POST", "path": "/provider/:providerID/oauth/authorize", "reason": "platform-gateway-is-the-only-model-provider"}
+  ],
+  "runtimePolicy": {
+    "requiredEnvironment": {
+      "XDG_CONFIG_HOME": "/run/teamaibox/xdg-config",
+      "OPENCODE_CONFIG": "/run/teamaibox/xdg-config/opencode/opencode.json",
+      "OPENCODE_DISABLE_PROJECT_CONFIG": "1",
+      "OPENCODE_DISABLE_AUTOUPDATE": "1",
+      "OPENCODE_DISABLE_SHARE": "1",
+      "OPENCODE_AUTO_SHARE": "false",
+      "OPENCODE_PURE": "1",
+      "OPENCODE_DISABLE_DEFAULT_PLUGINS": "1",
+      "OPENCODE_DISABLE_EXTERNAL_SKILLS": "1",
+      "OPENCODE_DISABLE_MODELS_FETCH": "1",
+      "OPENCODE_DISABLE_EMBEDDED_WEB_UI": "1",
+      "OPENCODE_PERMISSION": "{\"*\":\"ask\"}"
+    },
+    "configurationTarget": "/run/teamaibox/xdg-config/opencode/opencode.json",
+    "configurationOwner": "root:root",
+    "configurationMode": "0444",
+    "approvedProviders": ["teamaibox"],
+    "approvedPlugins": [],
+    "passwordMustBeInjectedAsSecret": true,
+    "passwordMustNotBePersisted": true,
+    "upstreamEventReplayIsNotAssumed": true,
+    "platformPersistsOrderedEventsBeforeDelivery": true
+  },
+  "evidence": [
+    "https://api.github.com/repos/anomalyco/opencode/releases/tags/v1.18.16",
+    "https://github.com/anomalyco/opencode/releases/tag/v1.18.16",
+    "https://github.com/anomalyco/opencode/tree/v1.18.16/packages/opencode/src/cli/cmd/serve.ts",
+    "https://github.com/anomalyco/opencode/tree/v1.18.16/packages/opencode/src/server/routes/instance/httpapi/groups"
+  ]
+}

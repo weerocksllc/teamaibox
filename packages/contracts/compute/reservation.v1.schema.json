@@ -1,0 +1,60 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.teamaibox.local/compute/reservation.v1.schema.json",
+  "title": "Team AI Box compute resource reservation v1",
+  "x-teamaibox-contract": {"family": "compute", "role": "bidirectional", "major": 1},
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion", "reservationId", "reservationKind", "nodeId", "state",
+    "resources", "leaseId", "fencingToken", "acquiredAt", "expiresAt"
+  ],
+  "properties": {
+    "schemaVersion": {"const": 1},
+    "reservationId": {"type": "string", "format": "uuid"},
+    "reservationKind": {"type": "string", "enum": ["batch", "realtime", "exclusive", "core_service_reserve"]},
+    "jobId": {"type": ["string", "null"], "format": "uuid"},
+    "attemptId": {"type": ["string", "null"], "format": "uuid"},
+    "sessionId": {"type": ["string", "null"], "format": "uuid"},
+    "nodeId": {"type": "string", "format": "uuid"},
+    "workerInstanceId": {"type": ["string", "null"], "format": "uuid"},
+    "state": {"type": "string", "enum": ["active", "released", "expired", "revoked"]},
+    "resources": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["cpuMillis", "unifiedMemoryBytes", "storageBytes", "networkBitsPerSecond", "acceleratorUnits", "codecSessions"],
+      "properties": {
+        "cpuMillis": {"type": "integer", "minimum": 0},
+        "unifiedMemoryBytes": {"type": "integer", "minimum": 0},
+        "storageBytes": {"type": "integer", "minimum": 0},
+        "networkBitsPerSecond": {"type": "integer", "minimum": 0},
+        "acceleratorUnits": {"type": "integer", "minimum": 0},
+        "codecSessions": {"type": "integer", "minimum": 0}
+      }
+    },
+    "coreReserveAfter": {
+      "type": ["object", "null"],
+      "additionalProperties": false,
+      "properties": {
+        "cpuMillis": {"type": "integer", "minimum": 0},
+        "unifiedMemoryBytes": {"type": "integer", "minimum": 0},
+        "storageBytes": {"type": "integer", "minimum": 0},
+        "networkBitsPerSecond": {"type": "integer", "minimum": 0},
+        "acceleratorUnits": {"type": "integer", "minimum": 0},
+        "codecSessions": {"type": "integer", "minimum": 0}
+      }
+    },
+    "leaseId": {"type": "string", "format": "uuid"},
+    "fencingToken": {"type": "integer", "minimum": 1},
+    "acquiredAt": {"type": "string", "format": "date-time"},
+    "expiresAt": {"type": "string", "format": "date-time"},
+    "heartbeatAt": {"type": ["string", "null"], "format": "date-time"},
+    "releasedAt": {"type": ["string", "null"], "format": "date-time"},
+    "extensions": {"type": "object", "additionalProperties": true}
+  },
+  "anyOf": [
+    {"required": ["jobId"], "properties": {"jobId": {"type": "string", "format": "uuid"}}},
+    {"required": ["sessionId"], "properties": {"sessionId": {"type": "string", "format": "uuid"}}},
+    {"required": ["reservationKind"], "properties": {"reservationKind": {"const": "core_service_reserve"}}}
+  ]
+}

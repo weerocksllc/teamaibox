@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Android lab synthetic AV fixture</title>
+<style>body{margin:0;background:#101923;color:white;font:18px sans-serif}main{max-width:720px;margin:auto}canvas{display:block;width:100%;aspect-ratio:9/16}button,input{font:inherit;padding:12px;margin:6px}output{display:block;padding:6px}</style>
+<main><button id="start">Start tone and clock</button><button id="tap">Tap marker</button><input aria-label="Text test" placeholder="Type TEST-123"><output id="status">Synthetic content only</output><canvas width="720" height="1280"></canvas></main>
+<script>
+'use strict';
+const canvas=document.querySelector('canvas'),ctx=canvas.getContext('2d'),events=[];
+let started=null,frames=0,taps=0,lastPulse=-1,audio=null;
+document.querySelector('#start').onclick=async()=>{
+  if(audio)await audio.close();
+  audio=new AudioContext();await audio.resume();started=performance.now();frames=0;lastPulse=-1;
+  events.push({kind:'start',t:started,audioSampleRate:audio.sampleRate});
+};
+document.querySelector('#tap').onclick=()=>{taps++;events.push({kind:'tap',n:taps,t:performance.now()});};
+function render(now){
+  const elapsed=started===null?0:now-started, pulse=Math.floor(elapsed/2000);
+  ctx.fillStyle='#101923';ctx.fillRect(0,0,720,1280);
+  ctx.fillStyle=taps%2?'#e98942':'#53cba7';ctx.fillRect(0,0,720,160);
+  ctx.fillStyle='white';ctx.font='bold 52px monospace';
+  ctx.fillText('FRAME '+frames,25,70);ctx.fillText('TAP '+taps,25,135);
+  ctx.font='36px monospace';ctx.fillText((elapsed/1000).toFixed(3)+' sec',25,225);
+  ctx.strokeStyle='white';ctx.lineWidth=8;ctx.strokeRect(8,8,704,1264);
+  ctx.beginPath();ctx.arc(360+240*Math.sin(elapsed/700),640+280*Math.cos(elapsed/1000),65,0,Math.PI*2);ctx.fill();
+  for(let bit=0;bit<16;bit++){ctx.fillStyle=(frames>>bit)&1?'white':'#101923';ctx.fillRect(bit*45,1120,45,80);}
+  if(started!==null&&pulse!==lastPulse){
+    lastPulse=pulse;ctx.fillStyle='white';ctx.fillRect(0,900,720,150);
+    const oscillator=audio.createOscillator(),gain=audio.createGain();
+    oscillator.frequency.value=1000;gain.gain.value=0.15;
+    oscillator.connect(gain).connect(audio.destination);oscillator.start();oscillator.stop(audio.currentTime+0.08);
+    events.push({kind:'pulse',n:pulse,frame:frames,t:now,audioTime:audio.currentTime});
+  }
+  document.querySelector('#status').textContent='Frame '+frames+' · tap '+taps;
+  if(started!==null)frames++;
+  requestAnimationFrame(render);
+}
+window.androidLabFixture={events,clock:'performance.now; clock alignment required for remote latency'};
+requestAnimationFrame(render);
+</script></html>

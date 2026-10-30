@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.teamaibox.local/http/audit-event-page.v1.schema.json",
+  "title": "Tamper-evident administrator audit page v1",
+  "x-teamaibox-contract": { "family": "http", "role": "response", "major": 1 },
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["object", "data", "hasMore", "nextCursor"],
+  "properties": {
+    "object": { "const": "list" },
+    "data": { "type": "array", "maxItems": 500, "items": { "$ref": "#/$defs/event" } },
+    "hasMore": { "type": "boolean" },
+    "nextCursor": { "type": ["string", "null"], "pattern": "^[0-9]{1,19}$" }
+  },
+  "$defs": {
+    "timestamp": { "type": "string", "format": "date-time" },
+    "hash": { "type": ["string", "null"], "pattern": "^sha256:[0-9a-f]{64}$" },
+    "stable": { "type": "string", "minLength": 1, "maxLength": 512, "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/@+ -]*$" },
+    "metadataValue": {
+      "oneOf": [
+        { "type": ["string", "number", "boolean", "null"] },
+        { "type": "array", "maxItems": 64, "items": { "type": ["string", "number", "boolean", "null"] } }
+      ]
+    },
+    "event": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["sequenceId", "schemaVersion", "eventId", "occurredAt", "actor", "action", "domain", "outcome", "resource", "correlationId", "metadata", "previousEventHash", "eventHash", "checkpoint"],
+      "properties": {
+        "sequenceId": { "type": "integer", "minimum": 1 },
+        "schemaVersion": { "const": 1 },
+        "eventId": { "type": "string", "format": "uuid" },
+        "occurredAt": { "$ref": "#/$defs/timestamp" },
+        "actor": { "type": "object", "additionalProperties": false, "required": ["identityId", "kind"], "properties": { "identityId": { "type": ["string", "null"], "format": "uuid" }, "kind": { "enum": ["user", "administrator", "service", "system"] } } },
+        "action": { "type": "string", "pattern": "^[a-z][a-z0-9_.:-]{1,255}$" },
+        "domain": { "enum": ["identity", "data", "plugin", "model", "provider", "routing", "agent_confirmation", "source", "security", "key", "backup", "update", "administrator"] },
+        "outcome": { "enum": ["succeeded", "failed", "denied"] },
+        "resource": { "type": "object", "additionalProperties": false, "required": ["kind", "id"], "properties": { "kind": { "$ref": "#/$defs/stable" }, "id": { "$ref": "#/$defs/stable" } } },
+        "correlationId": { "type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{7,383}$" },
+        "metadata": { "type": "object", "maxProperties": 64, "propertyNames": { "pattern": "^[A-Za-z][A-Za-z0-9_]{0,127}$" }, "additionalProperties": { "$ref": "#/$defs/metadataValue" } },
+        "previousEventHash": { "$ref": "#/$defs/hash" },
+        "eventHash": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+        "checkpoint": { "type": "object", "additionalProperties": false, "required": ["algorithm", "keyId", "signature"], "properties": { "algorithm": { "const": "hmac-sha256" }, "keyId": { "type": "string", "pattern": "^[a-z][a-z0-9._-]{2,127}$" }, "signature": { "type": "string", "pattern": "^hmac-sha256:[0-9a-f]{64}$" } } }
+      }
+    }
+  }
+}

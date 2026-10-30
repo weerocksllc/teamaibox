@@ -1,0 +1,591 @@
+{
+  "schemaVersion": 1,
+  "catalogVersion": "1.0.0",
+  "status": "initial-threshold-policy",
+  "suites": [
+    {
+      "suiteKey": "quality.llm.reasoning-instruction",
+      "version": "1.0.0",
+      "taskType": "llm_reasoning_instruction",
+      "corpus": {
+        "corpusKey": "corpus.llm.reasoning-instruction",
+        "version": "1.0.0",
+        "minimumCases": 500,
+        "requiredSlices": [
+          {
+            "sliceKey": "overall",
+            "minimumCases": 500
+          },
+          {
+            "sliceKey": "reasoning",
+            "minimumCases": 150
+          },
+          {
+            "sliceKey": "instruction",
+            "minimumCases": 150
+          },
+          {
+            "sliceKey": "tool-use",
+            "minimumCases": 100
+          },
+          {
+            "sliceKey": "structured-output",
+            "minimumCases": 100
+          }
+        ]
+      },
+      "evaluator": {
+        "image": "docker.io/library/node@sha256:682f301a9e8e5731d4bb1889182a2186fe65a312cc81ae86cea6038ef8b1603f",
+        "implementationDigest": "sha256:790404500d755316d335d7179d7bcc462a3c98b7251014ed8b56e7048b7f712e",
+        "deterministic": true,
+        "seeds": [
+          17,
+          42,
+          314159
+        ]
+      },
+      "metrics": [
+        {
+          "metricKey": "reasoning-exact-match",
+          "unit": "ratio",
+          "aggregation": "macro",
+          "direction": "minimum",
+          "threshold": 0.68,
+          "maximumRegression": 0.03,
+          "minimumSamples": 150,
+          "requiredSlices": [
+            "reasoning"
+          ]
+        },
+        {
+          "metricKey": "instruction-following-pass-rate",
+          "unit": "ratio",
+          "aggregation": "rate",
+          "direction": "minimum",
+          "threshold": 0.85,
+          "maximumRegression": 0.03,
+          "minimumSamples": 150,
+          "requiredSlices": [
+            "instruction"
+          ]
+        },
+        {
+          "metricKey": "tool-call-schema-valid-rate",
+          "unit": "ratio",
+          "aggregation": "rate",
+          "direction": "minimum",
+          "threshold": 0.98,
+          "maximumRegression": 0.01,
+          "minimumSamples": 100,
+          "requiredSlices": [
+            "tool-use"
+          ]
+        },
+        {
+          "metricKey": "structured-output-valid-rate",
+          "unit": "ratio",
+          "aggregation": "rate",
+          "direction": "minimum",
+          "threshold": 0.99,
+          "maximumRegression": 0.005,
+          "minimumSamples": 100,
+          "requiredSlices": [
+            "structured-output"
+          ]
+        },
+        {
+          "metricKey": "unsupported-claim-rate",
+          "unit": "ratio",
+          "aggregation": "rate",
+          "direction": "maximum",
+          "threshold": 0.08,
+          "maximumRegression": 0.02,
+          "minimumSamples": 150,
+          "requiredSlices": [
+            "instruction",
+            "reasoning"
+          ]
+        }
+      ],
+      "acceptance": {
+        "policy": "all-required-thresholds",
+        "maximumFailedMeasurements": 0,
+        "missingMeasurement": "fail",
+        "nonFiniteMeasurement": "fail"
+      }
+    },
+    {
+      "suiteKey": "quality.ocr.text-layout",
+      "version": "1.0.0",
+      "taskType": "ocr_text_layout",
+      "corpus": {
+        "corpusKey": "corpus.ocr.text-layout",
+        "version": "1.0.0",
+        "minimumCases": 400,
+        "requiredSlices": [
+          {
+            "sliceKey": "overall",
+            "minimumCases": 400
+          },
+          {
+            "sliceKey": "clean-print",
+            "minimumCases": 80
+          },
+          {
+            "sliceKey": "scan-photo",
+            "minimumCases": 80
+          },
+          {
+            "sliceKey": "complex-layout",
+            "minimumCases": 80
+          },
+          {
+            "sliceKey": "tables-formulas",
+            "minimumCases": 80
+          },
+          {
+            "sliceKey": "multilingual",
+            "minimumCases": 80
+          }
+        ]
+      },
+      "evaluator": {
+        "image": "docker.io/library/node@sha256:682f301a9e8e5731d4bb1889182a2186fe65a312cc81ae86cea6038ef8b1603f",
+        "implementationDigest": "sha256:790404500d755316d335d7179d7bcc462a3c98b7251014ed8b56e7048b7f712e",
+        "deterministic": true,
+        "seeds": [
+          17,
+          42
+        ]
+      },
+      "metrics": [
+        {
+          "metricKey": "character-error-rate",
+          "unit": "ratio",
+          "aggregation": "micro",
+          "direction": "maximum",
+          "threshold": 0.08,
+          "maximumRegression": 0.02,
+          "minimumSamples": 80,
+          "requiredSlices": [
+            "clean-print",
+            "multilingual",
+            "scan-photo"
+          ]
+        },
+        {
+          "metricKey": "word-error-rate",
+          "unit": "ratio",
+          "aggregation": "micro",
+          "direction": "maximum",
+          "threshold": 0.15,
+          "maximumRegression": 0.03,
+          "minimumSamples": 80,
+          "requiredSlices": [
+            "clean-print",
+            "multilingual",
+            "scan-photo"
+          ]
+        },
+        {
+          "metricKey": "layout-block-f1",
+          "unit": "ratio",
+          "aggregation": "macro",
+          "direction": "minimum",
+          "threshold": 0.85,
+          "maximumRegression": 0.03,
+          "minimumSamples": 80,
+          "requiredSlices": [
+            "complex-layout"
+          ]
+        },
+        {
+          "metricKey": "table-structure-teds",
+          "unit": "ratio",
+          "aggregation": "macro",
+          "direction": "minimum",
+          "threshold": 0.8,
+          "maximumRegression": 0.04,
+          "minimumSamples": 80,
+          "requiredSlices": [
+            "tables-formulas"
+          ]
+        },
+        {
+          "metricKey": "reading-order-accuracy",
+          "unit": "ratio",
+          "aggregation": "rate",
+          "direction": "minimum",
+          "threshold": 0.9,
+          "maximumRegression": 0.02,
+          "minimumSamples": 80,
+          "requiredSlices": [
+            "complex-layout"
+          ]
+        }
+      ],
+      "acceptance": {
+        "policy": "all-required-thresholds",
+        "maximumFailedMeasurements": 0,
+        "missingMeasurement": "fail",
+        "nonFiniteMeasurement": "fail"
+      }
+    },
+    {
+      "suiteKey": "quality.asr.language-timestamp-speaker",
+      "version": "1.0.0",
+      "taskType": "asr_language_timestamp_speaker",
+      "corpus": {
+        "corpusKey": "corpus.asr.language-timestamp-speaker",
+        "version": "1.0.0",
+        "minimumCases": 300,
+        "requiredSlices": [
+          {
+            "sliceKey": "overall",
+            "minimumCases": 300
+          },
+          {
+            "sliceKey": "zh-cn",
+            "minimumCases": 75
+          },
+          {
+            "sliceKey": "en",
+            "minimumCases": 75
+          },
+          {
+            "sliceKey": "noisy",
+            "minimumCases": 50
+          },
+          {
+            "sliceKey": "long-audio",
+            "minimumCases": 50
+          },
+          {
+            "sliceKey": "multi-speaker",
+            "minimumCases": 50
+          }
+        ]
+      },
+      "evaluator": {
+        "image": "docker.io/library/node@sha256:682f301a9e8e5731d4bb1889182a2186fe65a312cc81ae86cea6038ef8b1603f",
+        "implementationDigest": "sha256:790404500d755316d335d7179d7bcc462a3c98b7251014ed8b56e7048b7f712e",
+        "deterministic": true,
+        "seeds": [
+          17,
+          42
+        ]
+      },
+      "metrics": [
+        {
+          "metricKey": "word-error-rate",
+          "unit": "ratio",
+          "aggregation": "micro",
+          "direction": "maximum",
+          "threshold": 0.15,
+          "maximumRegression": 0.03,
+          "minimumSamples": 50,
+          "requiredSlices": [
+            "en",
+            "long-audio",
+            "noisy",
+            "zh-cn"
+          ]
+        },
+        {
+          "metricKey": "language-id-accuracy",
+          "unit": "ratio",
+          "aggregation": "rate",
+          "direction": "minimum",
+          "threshold": 0.95,
+          "maximumRegression": 0.02,
+          "minimumSamples": 75,
+          "requiredSlices": [
+            "en",
+            "zh-cn"
+          ]
+        },
+        {
+          "metricKey": "timestamp-median-absolute-error",
+          "unit": "milliseconds",
+          "aggregation": "median",
+          "direction": "maximum",
+          "threshold": 500,
+          "maximumRegression": 100,
+          "minimumSamples": 50,
+          "requiredSlices": [
+            "long-audio"
+          ]
+        },
+        {
+          "metricKey": "diarization-error-rate",
+          "unit": "ratio",
+          "aggregation": "micro",
+          "direction": "maximum",
+          "threshold": 0.2,
+          "maximumRegression": 0.04,
+          "minimumSamples": 50,
+          "requiredSlices": [
+            "multi-speaker"
+          ]
+        },
+        {
+          "metricKey": "long-audio-coverage",
+          "unit": "ratio",
+          "aggregation": "rate",
+          "direction": "minimum",
+          "threshold": 0.995,
+          "maximumRegression": 0.005,
+          "minimumSamples": 50,
+          "requiredSlices": [
+            "long-audio"
+          ]
+        }
+      ],
+      "acceptance": {
+        "policy": "all-required-thresholds",
+        "maximumFailedMeasurements": 0,
+        "missingMeasurement": "fail",
+        "nonFiniteMeasurement": "fail"
+      }
+    },
+    {
+      "suiteKey": "quality.translation.multilingual",
+      "version": "1.0.0",
+      "taskType": "translation",
+      "corpus": {
+        "corpusKey": "corpus.translation.multilingual",
+        "version": "1.0.0",
+        "minimumCases": 500,
+        "requiredSlices": [
+          {
+            "sliceKey": "overall",
+            "minimumCases": 500
+          },
+          {
+            "sliceKey": "zh-en",
+            "minimumCases": 125
+          },
+          {
+            "sliceKey": "en-zh",
+            "minimumCases": 125
+          },
+          {
+            "sliceKey": "long-tail",
+            "minimumCases": 100
+          },
+          {
+            "sliceKey": "terminology",
+            "minimumCases": 75
+          },
+          {
+            "sliceKey": "subtitle-segments",
+            "minimumCases": 75
+          }
+        ]
+      },
+      "evaluator": {
+        "image": "127.0.0.1:15000/teamaibox/model-quality/translation-evaluator@sha256:6ea3ed6d61c2aac09cb87cb22e520084a85a4e9b8342c6a2ce4ddbe0489dfd50",
+        "implementationDigest": "sha256:ef81ae8db1be83f34b7d591d46ae57799a789a3dfd68c3253858bcc6960e6fda",
+        "deterministic": true,
+        "seeds": [
+          17,
+          42
+        ]
+      },
+      "metrics": [
+        {
+          "metricKey": "comet-score",
+          "unit": "score",
+          "aggregation": "macro",
+          "direction": "minimum",
+          "threshold": 0.78,
+          "maximumRegression": 0.025,
+          "minimumSamples": 100,
+          "requiredSlices": [
+            "en-zh",
+            "long-tail",
+            "zh-en"
+          ]
+        },
+        {
+          "metricKey": "chrf-score",
+          "unit": "score",
+          "aggregation": "macro",
+          "direction": "minimum",
+          "threshold": 0.55,
+          "maximumRegression": 0.03,
+          "minimumSamples": 100,
+          "requiredSlices": [
+            "en-zh",
+            "long-tail",
+            "zh-en"
+          ]
+        },
+        {
+          "metricKey": "terminology-accuracy",
+          "unit": "ratio",
+          "aggregation": "rate",
+          "direction": "minimum",
+          "threshold": 0.9,
+          "maximumRegression": 0.02,
+          "minimumSamples": 75,
+          "requiredSlices": [
+            "terminology"
+          ]
+        },
+        {
+          "metricKey": "numeric-entity-preservation",
+          "unit": "ratio",
+          "aggregation": "rate",
+          "direction": "minimum",
+          "threshold": 0.98,
+          "maximumRegression": 0.01,
+          "minimumSamples": 100,
+          "requiredSlices": [
+            "en-zh",
+            "long-tail",
+            "zh-en"
+          ]
+        },
+        {
+          "metricKey": "segment-alignment-accuracy",
+          "unit": "ratio",
+          "aggregation": "rate",
+          "direction": "minimum",
+          "threshold": 0.95,
+          "maximumRegression": 0.02,
+          "minimumSamples": 75,
+          "requiredSlices": [
+            "subtitle-segments"
+          ]
+        }
+      ],
+      "acceptance": {
+        "policy": "all-required-thresholds",
+        "maximumFailedMeasurements": 0,
+        "missingMeasurement": "fail",
+        "nonFiniteMeasurement": "fail"
+      }
+    },
+    {
+      "suiteKey": "quality.image.prompt-adherence",
+      "version": "1.0.0",
+      "taskType": "image_quality_prompt_adherence",
+      "corpus": {
+        "corpusKey": "corpus.image.prompt-adherence",
+        "version": "1.0.0",
+        "minimumCases": 240,
+        "requiredSlices": [
+          {
+            "sliceKey": "overall",
+            "minimumCases": 240
+          },
+          {
+            "sliceKey": "composition",
+            "minimumCases": 60
+          },
+          {
+            "sliceKey": "style",
+            "minimumCases": 60
+          },
+          {
+            "sliceKey": "text-rendering",
+            "minimumCases": 40
+          },
+          {
+            "sliceKey": "people-hands",
+            "minimumCases": 40
+          },
+          {
+            "sliceKey": "zh-prompts",
+            "minimumCases": 40
+          }
+        ]
+      },
+      "evaluator": {
+        "image": "docker.io/library/node@sha256:682f301a9e8e5731d4bb1889182a2186fe65a312cc81ae86cea6038ef8b1603f",
+        "implementationDigest": "sha256:790404500d755316d335d7179d7bcc462a3c98b7251014ed8b56e7048b7f712e",
+        "deterministic": true,
+        "seeds": [
+          17,
+          42,
+          314159
+        ]
+      },
+      "metrics": [
+        {
+          "metricKey": "prompt-adherence",
+          "unit": "ratio",
+          "aggregation": "macro",
+          "direction": "minimum",
+          "threshold": 0.8,
+          "maximumRegression": 0.03,
+          "minimumSamples": 40,
+          "requiredSlices": [
+            "composition",
+            "style",
+            "zh-prompts"
+          ]
+        },
+        {
+          "metricKey": "clip-similarity",
+          "unit": "score",
+          "aggregation": "mean",
+          "direction": "minimum",
+          "threshold": 0.28,
+          "maximumRegression": 0.02,
+          "minimumSamples": 40,
+          "requiredSlices": [
+            "composition",
+            "style",
+            "zh-prompts"
+          ]
+        },
+        {
+          "metricKey": "aesthetic-score",
+          "unit": "score",
+          "aggregation": "mean",
+          "direction": "minimum",
+          "threshold": 0.6,
+          "maximumRegression": 0.04,
+          "minimumSamples": 60,
+          "requiredSlices": [
+            "composition",
+            "style"
+          ]
+        },
+        {
+          "metricKey": "severe-visual-defect-rate",
+          "unit": "ratio",
+          "aggregation": "rate",
+          "direction": "maximum",
+          "threshold": 0.08,
+          "maximumRegression": 0.02,
+          "minimumSamples": 40,
+          "requiredSlices": [
+            "people-hands",
+            "text-rendering"
+          ]
+        },
+        {
+          "metricKey": "policy-violation-rate",
+          "unit": "ratio",
+          "aggregation": "rate",
+          "direction": "maximum",
+          "threshold": 0.01,
+          "maximumRegression": 0.005,
+          "minimumSamples": 240,
+          "requiredSlices": [
+            "overall"
+          ]
+        }
+      ],
+      "acceptance": {
+        "policy": "all-required-thresholds",
+        "maximumFailedMeasurements": 0,
+        "missingMeasurement": "fail",
+        "nonFiniteMeasurement": "fail"
+      }
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+DROP INDEX compute.asr_shard_attempts_history_idx;
+ALTER TABLE compute.asr_shards DROP CONSTRAINT asr_shards_current_attempt_fk;
+DROP TABLE compute.asr_shard_attempts;
+DROP TRIGGER asr_shards_touch_updated_at ON compute.asr_shards;
+DROP INDEX compute.asr_shards_dispatch_idx;
+DROP TABLE compute.asr_shards;
+DROP TRIGGER asr_shard_plans_touch_updated_at ON compute.asr_shard_plans;
+DROP INDEX compute.asr_shard_plans_active_idx;
+DROP INDEX compute.asr_shard_plans_digest_idx;
+DROP TABLE compute.asr_shard_plans;

@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "domainPrefix": "teamaibox",
+  "singleNodeReplicas": 1,
+  "streams": [
+    {
+      "name": "TAIB_EVENTS_V1",
+      "subjects": ["teamaibox.events.v1.>"],
+      "storage": "file",
+      "retention": "limits",
+      "maxAgeSeconds": 2592000,
+      "maxBytes": 8589934592,
+      "duplicateWindowSeconds": 120,
+      "discard": "old"
+    },
+    {
+      "name": "TAIB_COMMANDS_V1",
+      "subjects": ["teamaibox.commands.v1.>"],
+      "storage": "file",
+      "retention": "workqueue",
+      "maxAgeSeconds": 604800,
+      "maxBytes": 4294967296,
+      "duplicateWindowSeconds": 120,
+      "discard": "old"
+    }
+  ],
+  "consumerDefaults": {
+    "ackPolicy": "explicit",
+    "ackWaitSeconds": 30,
+    "maxDeliver": 10,
+    "replayPolicy": "instant",
+    "deliverPolicy": "all"
+  },
+  "publishHeaders": {
+    "Nats-Msg-Id": "eventId",
+    "Taib-Schema-Version": "schemaVersion",
+    "Taib-Correlation-Id": "correlationId"
+  }
+}
+

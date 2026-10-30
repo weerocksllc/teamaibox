@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "policyId": "official-agent-egress.v1",
+  "revision": 1,
+  "packageRepositories": {
+    "enabled": true,
+    "mode": "internal-only",
+    "gatewayHost": "source-gateway",
+    "exposeUpstreamCredentials": false
+  },
+  "generalInternet": {
+    "enabled": false,
+    "proxyHost": "agent-egress-gateway",
+    "proxyUrl": "http://agent-egress-gateway:8080",
+    "allowedHosts": []
+  }
+}

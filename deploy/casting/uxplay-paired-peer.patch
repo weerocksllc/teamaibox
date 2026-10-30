@@ -1,0 +1,194 @@
+--- a/lib/pairing.c
++++ b/lib/pairing.c
+@@ -27,6 +27,7 @@
+ #include "srp.h"
+ #ifdef TEAMAIBOX_PIN_STDIN
+ #include "teamaibox_pairing_budget.h"
++#include "teamaibox_paired_peer.h"
+ static teamaibox_pairing_budget_t teamaibox_pairing_budget =
+     TEAMAIBOX_PAIRING_BUDGET_INITIALIZER;
+ #endif
+@@ -43,6 +44,9 @@
+ 
+ struct pairing_s {
+     ed25519_key_t *ed;
++#ifdef TEAMAIBOX_PIN_STDIN
++    teamaibox_paired_peer_t approved_peer;
++#endif
+ };
+ 
+ typedef enum {
+@@ -54,6 +58,9 @@
+ 
+ struct pairing_session_s {
+     status_t status;
++#ifdef TEAMAIBOX_PIN_STDIN
++    pairing_t *owner;
++#endif
+ 
+     ed25519_key_t *ed_ours;
+     ed25519_key_t *ed_theirs;
+@@ -101,6 +108,9 @@
+         return NULL;
+     }
+ 
++#ifdef TEAMAIBOX_PIN_STDIN
++    if (!teamaibox_paired_peer_init(&pairing->approved_peer)) { free(pairing); return NULL; }
++#endif
+     pairing->ed = ed25519_key_generate(device_id, keyfile, result);
+ 
+     return pairing;
+@@ -117,6 +127,12 @@
+ pairing_get_ecdh_secret_key(pairing_session_t *session, unsigned char ecdh_secret[X25519_KEY_SIZE])
+ {
+     assert(session);
++#ifdef TEAMAIBOX_PIN_STDIN
++    if (!pairing_session_media_authorized(session)) {
++        memset(ecdh_secret, 0, X25519_KEY_SIZE);
++        return 0;
++    }
++#endif
+     switch (session->status) {
+     case STATUS_INITIAL:
+         return 0;
+@@ -138,6 +154,9 @@
+         return NULL;
+     }
+ 
++#ifdef TEAMAIBOX_PIN_STDIN
++    session->owner = pairing;
++#endif
+     session->ed_ours = ed25519_key_copy(pairing->ed);
+ 
+     session->status = STATUS_INITIAL;
+@@ -172,6 +191,11 @@
+ {
+     assert(session);
+ 
++#ifdef TEAMAIBOX_PIN_STDIN
++    if (!session->owner || !ecdh_key || !ed_key
++        || (session->status != STATUS_INITIAL && session->status != STATUS_SETUP)
++        || !teamaibox_paired_peer_allows(&session->owner->approved_peer, ed_key)) return -1;
++#endif
+     if (session->status == STATUS_FINISHED) {
+         return -1;
+     }
+@@ -463,6 +487,15 @@
+     return 0;
+ }
+ 
++#ifdef TEAMAIBOX_PIN_STDIN
++int pairing_session_media_authorized(pairing_session_t *session) {
++    if (!session || !session->owner || session->status != STATUS_FINISHED || !session->ed_theirs) return 0;
++    unsigned char key[ED25519_KEY_SIZE];
++    ed25519_key_get_raw(key, session->ed_theirs);
++    return teamaibox_paired_peer_allows(&session->owner->approved_peer, key) ? 1 : 0;
++}
++#endif
++
+ void
+ pairing_session_destroy(pairing_session_t *session)
+ {
+@@ -484,6 +517,9 @@
+ pairing_destroy(pairing_t *pairing)
+ {
+     if (pairing) {
++#ifdef TEAMAIBOX_PIN_STDIN
++        teamaibox_paired_peer_destroy(&pairing->approved_peer);
++#endif
+         ed25519_key_destroy(pairing->ed);
+         free(pairing);
+     }
+@@ -657,7 +693,9 @@
+ 
+     /* success, from server viewpoint */
+     memcpy(session->client_pk, pk, ED25519_KEY_SIZE);
++#ifndef TEAMAIBOX_PIN_STDIN
+     session->pair_setup = true;
++#endif
+ 
+     /* encrypt server epk so client can also authenticate server using auth_tag */
+     pairing_get_public_key(pairing, pk);
+@@ -665,6 +703,11 @@
+     /* encryption  needs this previously undocumented additional "nonce" */
+     aesIV[15]++;
+     int epk_len = gcm_encrypt(pk, ED25519_KEY_SIZE, epk, aesKey, aesIV, auth_tag);
++#ifdef TEAMAIBOX_PIN_STDIN
++    if (epk_len != ED25519_KEY_SIZE
++        || !teamaibox_paired_peer_approve(&pairing->approved_peer, session->client_pk)) return -1;
++    session->pair_setup = true;
++#endif
+     return epk_len;    
+ }
+ 
+--- a/lib/pairing.h
++++ b/lib/pairing.h
+@@ -45,6 +45,9 @@
+ int pairing_session_handshake(pairing_session_t *session, const unsigned char ecdh_key[X25519_KEY_SIZE],
+                               const unsigned char ed_key[ED25519_KEY_SIZE]);
+ int pairing_session_get_public_key(pairing_session_t *session, unsigned char ecdh_key[X25519_KEY_SIZE]);
++#ifdef TEAMAIBOX_PIN_STDIN
++int pairing_session_media_authorized(pairing_session_t *session);
++#endif
+ int random_pin();
+ int pairing_session_get_signature(pairing_session_t *session, unsigned char signature[PAIRING_SIG_SIZE]);
+ int pairing_session_finish(pairing_session_t *session, const unsigned char signature[PAIRING_SIG_SIZE]);
+--- a/lib/raop_handlers.h
++++ b/lib/raop_handlers.h
+@@ -460,6 +460,12 @@
+                        char **response_data, int *response_datalen)
+ {
+     raop_t *raop = conn->raop;
++#ifdef TEAMAIBOX_PIN_STDIN
++    /* Non-PIN setup must not enable a downgraded pairing handshake. */
++    http_response_init(response, "RTSP/1.0", 470, "Client Authentication Failure");
++    http_response_set_disconnect(response, 1);
++    return;
++#endif
+     unsigned char public_key[ED25519_KEY_SIZE];
+     //const char *data;
+     int datalen = 0;
+@@ -516,6 +522,11 @@
+         /* We can fall through these errors, the result will just be garbage... */
+         if (pairing_session_handshake(conn->session, data + 4, data + 4 + X25519_KEY_SIZE)) {
+             logger_log(raop->logger, LOGGER_ERR, "Error initializing pair-verify handshake");
++#ifdef TEAMAIBOX_PIN_STDIN
++            http_response_init(response, "RTSP/1.0", 470, "Client Authentication Failure");
++            http_response_set_disconnect(response, 1);
++            return;
++#endif
+         }
+         if (pairing_session_get_public_key(conn->session, public_key)) {
+             logger_log(raop->logger, LOGGER_ERR, "Error getting ECDH public key");
+@@ -617,6 +628,15 @@
+                    char **response_data, int *response_datalen)
+ {
+     raop_t *raop = conn->raop;
++#ifdef TEAMAIBOX_PIN_STDIN
++    /* Every SETUP (keys and streams) requires the current session's fully
++     * verified paired peer. Neither a PIN-less handshake nor MD5 is enough. */
++    if (!pairing_session_media_authorized(conn->session)) {
++        http_response_init(response, "RTSP/1.0", 470, "Client Authentication Failure");
++        http_response_set_disconnect(response, 1);
++        return;
++    }
++#endif
+     const char *dacp_id = NULL;
+     const char *active_remote_header = NULL;
+     bool logger_debug = (logger_get_level(raop->logger) >= LOGGER_DEBUG);
+@@ -837,6 +857,15 @@
+         if (strstr(OLD_PROTOCOL_CLIENT_USER_AGENT_LIST, user_agent)) old_protocol = true;
+         if (strstr(user_agent, "AirMyPC")) old_protocol = true;   //AirMyPC/7200 still uses old protocol: unlikely to change (?)
+ #endif
++#ifdef TEAMAIBOX_PIN_STDIN
++        if (old_protocol) {
++            plist_free(res_root_node);
++            plist_free(req_root_node);
++            http_response_init(response, "RTSP/1.0", 470, "Client Authentication Failure");
++            http_response_set_disconnect(response, 1);
++            return;
++        }
++#endif
+         if  (old_protocol) {    /* some windows AirPlay-client emulators use old AirPlay 1 protocol with unhashed AES key */
+             logger_log(raop->logger, LOGGER_INFO, "Client identifed as using old protocol (unhashed) AES audio key)");
+         } else {

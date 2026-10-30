@@ -1,0 +1,101 @@
+name: teamaibox-node-agent
+
+services:
+  node-agent-state-init:
+    image: ${TEAMAIBOX_NODE_AGENT_IMAGE:?set the ARM64 Node Agent image digest}
+    platform: linux/arm64/v8
+    entrypoint: [/usr/local/bin/teamaibox-node-agent]
+    command: [init-state]
+    restart: "no"
+    read_only: true
+    user: "0:0"
+    cap_drop: [ALL]
+    cap_add: [CHOWN]
+    security_opt: [no-new-privileges:true]
+    pids_limit: 16
+    mem_limit: 32m
+    cpus: 0.1
+    network_mode: none
+    volumes:
+      - node_agent_state:/var/lib/teamaibox/node-agent
+    environment:
+      TEAMAIBOX_NODE_STATE_DIR: /var/lib/teamaibox/node-agent
+
+  node-agent:
+    image: ${TEAMAIBOX_NODE_AGENT_IMAGE:?set the ARM64 Node Agent image digest}
+    platform: linux/arm64/v8
+    restart: unless-stopped
+    read_only: true
+    user: "10001:10001"
+    group_add:
+      - ${TEAMAIBOX_DOCKER_SOCKET_GID:?set the observed Docker socket group ID}
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    pids_limit: 128
+    mem_limit: 512m
+    mem_reservation: 256m
+    cpus: 0.5
+    # Standalone local maintenance mode. The appliance overlay shares the
+    # Platform API network namespace instead, retaining these loopback binds.
+    network_mode: host
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,nodev,size=16m
+    volumes:
+      - type: bind
+        source: /var/run/docker.sock
+        target: /var/run/docker.sock
+        read_only: true
+      - node_agent_state:/var/lib/teamaibox/node-agent
+      - type: bind
+        source: ${TEAMAIBOX_APPLIANCE_AGENT_IDENTITY_DIR:?set the local Agent identity directory}
+        target: /var/lib/teamaibox/node-identity
+        read_only: true
+        bind: {create_host_path: false}
+      - type: bind
+        source: ${TEAMAIBOX_NODE_INVENTORY_FILE:?set the local inventory JSON path}
+        target: /run/teamaibox/node-inventory.json
+        read_only: true
+        bind: {create_host_path: false}
+    secrets:
+      - node_agent_command_key
+    environment:
+      TEAMAIBOX_NODE_IDENTITY_FILE: /var/lib/teamaibox/node-identity/node.json
+      TEAMAIBOX_NODE_GENERATION_FILE: /var/lib/teamaibox/node-agent/node-generation
+      TEAMAIBOX_COMMAND_KEY_ID: ${TEAMAIBOX_COMMAND_KEY_ID:-scheduler-persistent-v1}
+      TEAMAIBOX_COMMAND_KEY_FILE: /run/secrets/node_agent_command_key
+      TEAMAIBOX_TLS_CERT_FILE: /var/lib/teamaibox/node-identity/node.crt
+      TEAMAIBOX_TLS_KEY_FILE: /var/lib/teamaibox/node-identity/node.key
+      TEAMAIBOX_CLIENT_CA_FILE: /var/lib/teamaibox/node-identity/ca.crt
+      TEAMAIBOX_TLS_SERVER_NAME: ${PLATFORM_APPLIANCE_NODE_KEY:-localhost}
+      TEAMAIBOX_HEALTH_CLIENT_CERT_FILE: /var/lib/teamaibox/node-identity/node.crt
+      TEAMAIBOX_HEALTH_CLIENT_KEY_FILE: /var/lib/teamaibox/node-identity/node.key
+      TEAMAIBOX_APPLIANCE_ORIGIN: https://127.0.0.1:9444
+      TEAMAIBOX_APPLIANCE_CA_FILE: /var/lib/teamaibox/node-identity/ca.crt
+      TEAMAIBOX_APPLIANCE_SERVER_NAME: ${PLATFORM_APPLIANCE_NODE_KEY:-localhost}
+      TEAMAIBOX_APPLIANCE_IMAGE_DIGEST: ${TEAMAIBOX_APPLIANCE_IMAGE_DIGEST:?set this Agent image digest}
+      TEAMAIBOX_APPLIANCE_CONFIGURATION_DIGEST: ${TEAMAIBOX_APPLIANCE_CONFIGURATION_DIGEST:?set this installation configuration digest}
+      TEAMAIBOX_NODE_INVENTORY_FILE: /run/teamaibox/node-inventory.json
+      TEAMAIBOX_LISTEN_ADDRESS: 127.0.0.1:9443
+      TEAMAIBOX_ALLOWED_WORKER_PORTS: ${TEAMAIBOX_ALLOWED_WORKER_PORTS:-}
+      TEAMAIBOX_LEGACY_TRANSLATION_MODEL_ROOT: ${TEAMAIBOX_LEGACY_TRANSLATION_MODEL_ROOT:-/srv/teamaibox/legacy/translation-models}
+    healthcheck:
+      test: [CMD, /usr/local/bin/teamaibox-node-agent, healthcheck]
+      interval: 10s
+      timeout: 4s
+      retries: 6
+      start_period: 5s
+    stop_grace_period: 20s
+    labels:
+      com.teamaibox.managed: "true"
+      com.teamaibox.resource-class: core-critical
+      com.teamaibox.privileged-boundary: node-agent-only
+    depends_on:
+      node-agent-state-init:
+        condition: service_completed_successfully
+
+volumes:
+  node_agent_state:
+
+secrets:
+  node_agent_command_key:
+    file: ${TEAMAIBOX_NODE_AGENT_COMMAND_KEY_FILE:?set the local scheduler command key path}

@@ -1,0 +1,951 @@
+{
+  "schemaVersion": 1,
+  "database": "postgresql",
+  "minimumMajorVersion": 18,
+  "migrations": [
+    {
+      "version": 1,
+      "name": "foundation",
+      "up": "000001_foundation.up.sql",
+      "upSha256": "260c3220a376466e415bd14dc078de642eeccf818f136f1e98bfad9e6c7aa0d1",
+      "down": "000001_foundation.down.sql",
+      "downSha256": "ac4f4202b6e22b26392fe48b666056b3c86fdb5c90dcadd006a30153a20faff4"
+    },
+    {
+      "version": 2,
+      "name": "outbox_inbox",
+      "up": "000002_outbox_inbox.up.sql",
+      "upSha256": "d6c4241463414dd0a6b765faaf88d280c3ecb8b8b7c85975395034f013d6cbff",
+      "down": "000002_outbox_inbox.down.sql",
+      "downSha256": "2a709f299116cda90d920707d9ee6ef88228c47027e80299712d6e0a9efa879a"
+    },
+    {
+      "version": 3,
+      "name": "local_identity",
+      "up": "000003_local_identity.up.sql",
+      "upSha256": "1c7a05dd3f9363ed211f66295431b7c60f1447d68c7d4ceba005f0e1e5e99265",
+      "down": "000003_local_identity.down.sql",
+      "downSha256": "9a0f07e50c7065eb5a259bd36e691a5a3a89c3a45622ed80acc5f7a1ae09ae22"
+    },
+    {
+      "version": 4,
+      "name": "authorization",
+      "up": "000004_authorization.up.sql",
+      "upSha256": "9a4fd37b3b237120302e4681927075c137069b4573290418c8c8d4313029adeb",
+      "down": "000004_authorization.down.sql",
+      "downSha256": "ad2edc165c68a6d683fa23d576c49eb5a59d2995d48a6f821440d95d43b2bf7c"
+    },
+    {
+      "version": 5,
+      "name": "task_center",
+      "up": "000005_task_center.up.sql",
+      "upSha256": "700db000496bcf74054a08f7409881437875b4d77665b6b77a51b0726af915d1",
+      "down": "000005_task_center.down.sql",
+      "downSha256": "cbf23f75aee513299b0777340fb6d1b6b435a0b63325ec787cb491d852db99bb"
+    },
+    {
+      "version": 6,
+      "name": "api_credentials",
+      "up": "000006_api_credentials.up.sql",
+      "upSha256": "47a9fe65fd5fc916214387f0b0b5a41975b7daf7c5d2931217799a03052f6300",
+      "down": "000006_api_credentials.down.sql",
+      "downSha256": "543627d3f7cdffa57148c8e5b05c12a497319c2c1ef79006b9cec222598ebad9"
+    },
+    {
+      "version": 7,
+      "name": "object_envelope_encryption",
+      "up": "000007_object_envelope_encryption.up.sql",
+      "upSha256": "4964375c1c5df704e37f0bc91940715a917a3701ab3b7b1a8f8a658a769fe861",
+      "down": "000007_object_envelope_encryption.down.sql",
+      "downSha256": "4b9f2bd8bf12d2795ad516c1045a92ef1ece909fbab568d5e59b51751bb44d2a"
+    },
+    {
+      "version": 8,
+      "name": "object_metadata_transactions",
+      "up": "000008_object_metadata_transactions.up.sql",
+      "upSha256": "1265613f712f5623ba8c73d77534410a676b5d08b2d3f4f0c0e1a6edd6bd0a9a",
+      "down": "000008_object_metadata_transactions.down.sql",
+      "downSha256": "cc787cac1866ee598a67a2ba2910f45f4e49535af40108c44e0a4c471c3ba74e"
+    },
+    {
+      "version": 9,
+      "name": "object_access_grants",
+      "up": "000009_object_access_grants.up.sql",
+      "upSha256": "38770e1b11ff493378bcd6ed4893c2cce8929b569535ae15c04b1aa2cf5a3e4e",
+      "down": "000009_object_access_grants.down.sql",
+      "downSha256": "421eeada0a39ff858d6265ee9a6b2c4e6fb4d6a5c989a1eb6deaae4da730ba0e"
+    },
+    {
+      "version": 10,
+      "name": "storage_pools",
+      "up": "000010_storage_pools.up.sql",
+      "upSha256": "9666aaf0484cf7c053575a8353260f8c8bbc4406ade62282e4edf7246bccf50a",
+      "down": "000010_storage_pools.down.sql",
+      "downSha256": "ae7c32773f9d6260ee810aef6a89d4979f9f135a531ee37094a00b2b62568fff"
+    },
+    {
+      "version": 11,
+      "name": "durable_compute_queue",
+      "up": "000011_durable_compute_queue.up.sql",
+      "upSha256": "bd520921cda38dd1966a2e0182e234f6b6a0fd98f44134b820d988789af1a9ec",
+      "down": "000011_durable_compute_queue.down.sql",
+      "downSha256": "3b9e7504641fa948fcb2147848a3c4c8acb809a18ed1edbf9b89f7d99ddc8a0e"
+    },
+    {
+      "version": 12,
+      "name": "scheduler_leases",
+      "up": "000012_scheduler_leases.up.sql",
+      "upSha256": "b5d95dfc08c77e3c2dba456db85a911bdc5bb030cf4dd7569a11a523e396fce7",
+      "down": "000012_scheduler_leases.down.sql",
+      "downSha256": "19d366edd1511dcad4f2760dfd08a1394fb4245e46dfd1f725df4a29c9026c04"
+    },
+    {
+      "version": 13,
+      "name": "compute_worker_lifecycle",
+      "up": "000013_compute_worker_lifecycle.up.sql",
+      "upSha256": "2a8496481d1a0152fd5e68aba44c72c900fbf3396d1e0112fa5f59ae1ea2c11a",
+      "down": "000013_compute_worker_lifecycle.down.sql",
+      "downSha256": "5decaca1de29f4ec7eca3941381730f119232c154860e407e94471476e237712"
+    },
+    {
+      "version": 14,
+      "name": "node_exclusive_leases",
+      "up": "000014_node_exclusive_leases.up.sql",
+      "upSha256": "9d35c603321a4cda33bdcbb84d942fb1d7ccfe7cb6b2a382244c7d7e1dc34070",
+      "down": "000014_node_exclusive_leases.down.sql",
+      "downSha256": "624890c7464fc953485f800416d404a746d24f4de6be721db5bea04f46d42a01"
+    },
+    {
+      "version": 15,
+      "name": "realtime_capacity_reservations",
+      "up": "000015_realtime_capacity_reservations.up.sql",
+      "upSha256": "223e3b7c1aba802042e4ddade19db0b44d3e15f7683c92bcaa64740a31826bca",
+      "down": "000015_realtime_capacity_reservations.down.sql",
+      "downSha256": "44c8c863327f4623b5ed423dea4e0046be9133dfa4c857dee32a679b3bf1c0ea"
+    },
+    {
+      "version": 16,
+      "name": "plugin_verified_imports",
+      "up": "000016_plugin_verified_imports.up.sql",
+      "upSha256": "9169d02b49da0f0c68c985b9a03a3119b5ff3e661aad4f3368f6895255bca66a",
+      "down": "000016_plugin_verified_imports.down.sql",
+      "downSha256": "c4f593b941531d052792d623a15a1589be7716a647243410d2dd24ef3063e9ce"
+    },
+    {
+      "version": 17,
+      "name": "plugin_lifecycle",
+      "up": "000017_plugin_lifecycle.up.sql",
+      "upSha256": "a056f2302adc0e15eb1f573dc3f1a371d8073cf40e910711370f58adf0ffb274",
+      "down": "000017_plugin_lifecycle.down.sql",
+      "downSha256": "5f64ca7f6970de0a2bee40c3f96f43301fc5a029bc7472e73d1d5dec9534861b"
+    },
+    {
+      "version": 18,
+      "name": "plugin_access_channels",
+      "up": "000018_plugin_access_channels.up.sql",
+      "upSha256": "5c11e4888cb4bb2c1652a66dede56564bcf8f5084079a42029ae68a357b72147",
+      "down": "000018_plugin_access_channels.down.sql",
+      "downSha256": "19b8747a8f6c93abe3b07c5fa034aeaf9ad168f108cc8c2b96d60f898b4fbfe3"
+    },
+    {
+      "version": 19,
+      "name": "immutable_model_profile_registrations",
+      "up": "000019_immutable_model_profile_registrations.up.sql",
+      "upSha256": "5dc2500b8455e8e2918fd88d606f72456cec1ffb175c7df863f8aa3b453f831f",
+      "down": "000019_immutable_model_profile_registrations.down.sql",
+      "downSha256": "26d3771d222d28bdfe5c785d401864d16b926430f039312308250cf6b91dc8c2"
+    },
+    {
+      "version": 20,
+      "name": "protected_model_artifact_cache",
+      "up": "000020_protected_model_artifact_cache.up.sql",
+      "upSha256": "2aa6250a46d31b6532dfc383807240894a30ea5837a5223858db205cbf669b01",
+      "down": "000020_protected_model_artifact_cache.down.sql",
+      "downSha256": "e7463d0b1c08b78b01ff1773811a91acf3afaacf10e58d839cdb88dced4b100b"
+    },
+    {
+      "version": 21,
+      "name": "reproducible_model_engine_jobs",
+      "up": "000021_reproducible_model_engine_jobs.up.sql",
+      "upSha256": "f15ece9495587725350e2ae6e1cd787d714433eba6024c96b2eb74ac870a0847",
+      "down": "000021_reproducible_model_engine_jobs.down.sql",
+      "downSha256": "02fa85cfafa9dbdebca37e7eb309f5078ccd16976772426d32b5329fcd33bc5b"
+    },
+    {
+      "version": 22,
+      "name": "immutable_model_validation_evidence",
+      "up": "000022_immutable_model_validation_evidence.up.sql",
+      "upSha256": "4e626fac853cfe1a76f4edf676dc0ee5003f32013a2bee0f0f80bf97cbcfc6e0",
+      "down": "000022_immutable_model_validation_evidence.down.sql",
+      "downSha256": "5fdff6e81b848877fa7fe379d25949352babe1e5d3e1e3b69abf7fc8341ca26f"
+    },
+    {
+      "version": 23,
+      "name": "assistant_conversations",
+      "up": "000023_assistant_conversations.up.sql",
+      "upSha256": "8648d30ea2a9ce951df6b2cf98f907dc059292c6957fba4e4387c417fa96e40a",
+      "down": "000023_assistant_conversations.down.sql",
+      "downSha256": "2e24419cdc488cf55ce077763bc2ee0a8afaace2ebe541097c49c353120e70ca"
+    },
+    {
+      "version": 24,
+      "name": "model_profile_lifecycle",
+      "up": "000024_model_profile_lifecycle.up.sql",
+      "upSha256": "fe6524bd9d3d49709e9b699cd0ac66ed7d9bc450ad3b812a94956cc9cc799300",
+      "down": "000024_model_profile_lifecycle.down.sql",
+      "downSha256": "fc2c666b53c482e11bf2ebd85499a983b20b2ac4ace869d0fdffb20acd0e0b63"
+    },
+    {
+      "version": 25,
+      "name": "model_revalidation_triggers",
+      "up": "000025_model_revalidation_triggers.up.sql",
+      "upSha256": "0c4cd25bc8eaa1ce452fa437d67750126cda4aee0bcc9ca1fa09909dbadc9087",
+      "down": "000025_model_revalidation_triggers.down.sql",
+      "downSha256": "3f3b8f5207e976707825d30e7b701388ad769a726313ee95a262bffa42c45bfb"
+    },
+    {
+      "version": 26,
+      "name": "model_studio_fine_tuning",
+      "up": "000026_model_studio_fine_tuning.up.sql",
+      "upSha256": "23e007e71246696f96192977bf18abfe26fb80941d5c8da7531c8260f2a3fc44",
+      "down": "000026_model_studio_fine_tuning.down.sql",
+      "downSha256": "635dccddc4b2843c80e0c16d34ab68300b70785f11a9547b78e51f7559c31f0a"
+    },
+    {
+      "version": 27,
+      "name": "agent_bridge_sessions",
+      "up": "000027_agent_bridge_sessions.up.sql",
+      "upSha256": "a5c89bcaa622ebd66b6c65abe6f9ab70e214ff099f693e2bcdb3809fcfb50fab",
+      "down": "000027_agent_bridge_sessions.down.sql",
+      "downSha256": "54c4859c00ccee0ab4309c0890fa3e9fb152dbf04344c7ae09b8c4b6f1bdf27f"
+    },
+    {
+      "version": 28,
+      "name": "agent_sandboxes",
+      "up": "000028_agent_sandboxes.up.sql",
+      "upSha256": "e419fa439cf55b974666ea7619cb20982ed873722ecb1169a6b9cf48d4e6bc6e",
+      "down": "000028_agent_sandboxes.down.sql",
+      "downSha256": "b54c1d22074241cc4c06a80e385b3094333fe1e95fcd2916eea0b6d563214b42"
+    },
+    {
+      "version": 29,
+      "name": "agent_operation_confirmation_lifecycle",
+      "up": "000029_agent_operation_confirmation_lifecycle.up.sql",
+      "upSha256": "396ea455f3a935fa735a104f4c0bc2011d8bab00a5f5565819a3fc03f07f43dd",
+      "down": "000029_agent_operation_confirmation_lifecycle.down.sql",
+      "downSha256": "41ec1c3220f1c1896a3ea39bc134d91516dd28cd2916c9f7c1c0722f838fb1f5"
+    },
+    {
+      "version": 30,
+      "name": "messaging",
+      "up": "000030_messaging.up.sql",
+      "upSha256": "5569098fd60cd2570dc2b2b7b23ac07affc6bc8439e1b221052e9abb742d7020",
+      "down": "000030_messaging.down.sql",
+      "downSha256": "23c1e7543fb358ee9b4b6c6d353f6a3f876ab6607ef461256df3f892535068dc"
+    },
+    {
+      "version": 31,
+      "name": "team_drive_metadata",
+      "up": "000031_team_drive_metadata.up.sql",
+      "upSha256": "d31080d89d9fe8df3d6cd869795a9d8abe35c5e969234628b38f296b6db2fff4",
+      "down": "000031_team_drive_metadata.down.sql",
+      "downSha256": "ffe6e0a8a47b2e7c7ee9c9070472c214a04acaf7ab86e9b16c4c9da8e7297444"
+    },
+    {
+      "version": 32,
+      "name": "file_sharing_permission",
+      "up": "000032_file_sharing_permission.up.sql",
+      "upSha256": "de8ddb5c268510284175b28fb8e9397b93baa0b290730ce1e4379e29ff22cac7",
+      "down": "000032_file_sharing_permission.down.sql",
+      "downSha256": "34c20ac070d7a55b5a35436aef3c7c038c36eb4094b9e3749ce12aa175349576"
+    },
+    {
+      "version": 33,
+      "name": "artifact_provenance_handoffs",
+      "up": "000033_artifact_provenance_handoffs.up.sql",
+      "upSha256": "fea2e482659063e946a5c3a0d211de6561a39b461684ffdc7244f72078de961d",
+      "down": "000033_artifact_provenance_handoffs.down.sql",
+      "downSha256": "68211692fb33d59ef2473e013cac48a3f8712fda34353021a81cbaf039c4719c"
+    },
+    {
+      "version": 34,
+      "name": "source_center",
+      "up": "000034_source_center.up.sql",
+      "upSha256": "6c4f5f10ffbdeec70dbfeb11b5839fe47327d4db254f818102e9b154f2d1608b",
+      "down": "000034_source_center.down.sql",
+      "downSha256": "bb54a3434662c057381eab38771173b7e12e1f405f7fe97e844c765e170dd508"
+    },
+    {
+      "version": 35,
+      "name": "pip_gateway_catalog",
+      "up": "000035_pip_gateway_catalog.up.sql",
+      "upSha256": "8d8bd8ca8c1f435e5334502dc0ece3f4dd27e1a573ebdb08b300392878e3204c",
+      "down": "000035_pip_gateway_catalog.down.sql",
+      "downSha256": "9123df887bf516f4cbb6b5b0098b04b8b5cdf2945383d3e1ef320f3efcd971c2"
+    },
+    {
+      "version": 36,
+      "name": "npm_gateway_catalog",
+      "up": "000036_npm_gateway_catalog.up.sql",
+      "upSha256": "ac469fc5cbc9301e34638d3c133a7a3919ad939818cd199064cd5f66b96c5646",
+      "down": "000036_npm_gateway_catalog.down.sql",
+      "downSha256": "e981985ad4c0c66fbcd64728f51a561893e1fbd42823705ba02c394356ab11bc"
+    },
+    {
+      "version": 37,
+      "name": "apt_gateway_catalog",
+      "up": "000037_apt_gateway_catalog.up.sql",
+      "upSha256": "8778c176e461996c9a2141175ea7f5c35327defd405a6f51bf74f9663b5ad8c0",
+      "down": "000037_apt_gateway_catalog.down.sql",
+      "downSha256": "d51d908e8478a9ca38cc239577854839aa1dd0ee547f3623e5f1f4ab58a56067"
+    },
+    {
+      "version": 38,
+      "name": "offline_source_media",
+      "up": "000038_offline_source_media.up.sql",
+      "upSha256": "d639a0748d5f87fd8de2db129215d57fce069f996cff760d0325104f9f3d592d",
+      "down": "000038_offline_source_media.down.sql",
+      "downSha256": "943c3906a1628057166ac50a6fda8f87968febe6af565a8d86b5e5320439e10e"
+    },
+    {
+      "version": 39,
+      "name": "managed_node_enrollment",
+      "up": "000039_managed_node_enrollment.up.sql",
+      "upSha256": "522da1b4f0cda1afc38f4617b374d2c991985716f868c3486af81772abd040fe",
+      "down": "000039_managed_node_enrollment.down.sql",
+      "downSha256": "95e22a8c5fff59515491641a117a1f1659c501014b51647ed748c8f451955075"
+    },
+    {
+      "version": 40,
+      "name": "worker_node_generation",
+      "up": "000040_worker_node_generation.up.sql",
+      "upSha256": "07f8133c2bee1b09fb2a96981d103b9b54024813dc1749ff26dc0ad3ef103378",
+      "down": "000040_worker_node_generation.down.sql",
+      "downSha256": "bd94e0f80bb200ea5e2ada216529a3cef7f4b96b77434487f60c123cd5c8ea2c"
+    },
+    {
+      "version": 41,
+      "name": "asr_shard_plans",
+      "up": "000041_asr_shard_plans.up.sql",
+      "upSha256": "f42e239251f25b32c9efa1ead4aa8e42fc24c813205e65df03ca0b726c350e29",
+      "down": "000041_asr_shard_plans.down.sql",
+      "downSha256": "e11678a856b7509951a0bc203378146b03579dcaf5e2d8e690007a9c6894a1fe"
+    },
+    {
+      "version": 42,
+      "name": "gang_leases",
+      "up": "000042_gang_leases.up.sql",
+      "upSha256": "a1fc894b10e48008eea6345e406382d68c13c1ade8ec104f4e40edc7f5ef8e62",
+      "down": "000042_gang_leases.down.sql",
+      "downSha256": "6e4c7054c3a909ea755ed3320992870e0fa15b65edf4eaf4a922703bcecc4459"
+    },
+    {
+      "version": 43,
+      "name": "external_provider_registry",
+      "up": "000043_external_provider_registry.up.sql",
+      "upSha256": "47a4186e29955f30f4f4f8949230823873d17eeed8c8b22ac2cc33d2f948fd76",
+      "down": "000043_external_provider_registry.down.sql",
+      "downSha256": "532762881b0c17a9d9759c136f4cd0145018c9a47ea15d664dfc624b35f1bc60"
+    },
+    {
+      "version": 44,
+      "name": "routing_policies",
+      "up": "000044_routing_policies.up.sql",
+      "upSha256": "44d381d9f997344a7e0793a17980c3b83f13415bf78aa88699666d92650ea8f0",
+      "down": "000044_routing_policies.down.sql",
+      "downSha256": "58f521618a88200f2b37cb6771216c6b9dc221d2fc7a1d63ae6ae5250ba2820c"
+    },
+    {
+      "version": 45,
+      "name": "external_object_grants",
+      "up": "000045_external_object_grants.up.sql",
+      "upSha256": "925a389f35839850041dd844c586573a9b733bbb6dc026c1d86bbed744737ad5",
+      "down": "000045_external_object_grants.down.sql",
+      "downSha256": "0e24ae5c801e4cd53c3403d57b3accbf07223a9e810516aed5b402ad14162900"
+    },
+    {
+      "version": 46,
+      "name": "external_attempt_lifecycle",
+      "up": "000046_external_attempt_lifecycle.up.sql",
+      "upSha256": "7f4347543c89415e251cd995c210750480d1ff7735bbc1fe264e773dc9bba8a9",
+      "down": "000046_external_attempt_lifecycle.down.sql",
+      "downSha256": "2b11a23a5af60def88a01655a0b39432e044700ffa6560d983e5b43346e0c4f0"
+    },
+    {
+      "version": 47,
+      "name": "external_usage_accounting",
+      "up": "000047_external_usage_accounting.up.sql",
+      "upSha256": "54608147892efed9cbf2237c68a8c54384e8a6400978f893e66a3fe309d10734",
+      "down": "000047_external_usage_accounting.down.sql",
+      "downSha256": "df71543fc5c51544b25eb226ec28dd8ac2d48e5c05a0cb86262650fdba0e9470"
+    },
+    {
+      "version": 48,
+      "name": "unlock_protection_transitions",
+      "up": "000048_unlock_protection_transitions.up.sql",
+      "upSha256": "6f2b0c70619b9781a54f9d92c238d3690722b9f7dbedd231e212139a21e310d0",
+      "down": "000048_unlock_protection_transitions.down.sql",
+      "downSha256": "2053b627acdaced27279a3912ef0c50c6fad51b7593a2a4272816b731179bc75"
+    },
+    {
+      "version": 49,
+      "name": "node_metric_snapshots",
+      "up": "000049_node_metric_snapshots.up.sql",
+      "upSha256": "44f906531eabc7a89771a807712099c12616f0a503f6f53d61ede117e84ed2bf",
+      "down": "000049_node_metric_snapshots.down.sql",
+      "downSha256": "de0b42c10ae4d2900a94e0ec4d041d3f263648899911629aa88036711d217723"
+    },
+    {
+      "version": 50,
+      "name": "observability_diagnostics",
+      "up": "000050_observability_diagnostics.up.sql",
+      "upSha256": "ddfcd68e37156b6268d36656e881061f2f703ec917d946ffe93a7561fcc5cbd0",
+      "down": "000050_observability_diagnostics.down.sql",
+      "downSha256": "2bbcf9e0d564d0ad0a95f60723cf4e335af3b5ee4d90d28348e4c1e635c77656"
+    },
+    {
+      "version": 51,
+      "name": "tamper_evident_audit",
+      "up": "000051_tamper_evident_audit.up.sql",
+      "upSha256": "dc94f18350428d6c6646107d42bd6bc278171eee81f6a40d77f77d41994f0acf",
+      "down": "000051_tamper_evident_audit.down.sql",
+      "downSha256": "9c4e7d9de9e9e99d7d693e460339d14d5cc81bb1a0b9b7779c50480601d5bc15"
+    },
+    {
+      "version": 52,
+      "name": "consistent_backup_sets",
+      "up": "000052_consistent_backup_sets.up.sql",
+      "upSha256": "b7befab3e535a4afbdb09999796d9e9ca4aba66cbbbeee0209d610bc0a01aab7",
+      "down": "000052_consistent_backup_sets.down.sql",
+      "downSha256": "b5860ba4c7566be814d3bc62313a8a89df955b6f56ea1813670405d9c5406dc1"
+    },
+    {
+      "version": 53,
+      "name": "backup_recovery_rehearsals",
+      "up": "000053_backup_recovery_rehearsals.up.sql",
+      "upSha256": "1130d96d45756151e1e219249c46ec23d25984db2265b679049e5a7fd59964fd",
+      "down": "000053_backup_recovery_rehearsals.down.sql",
+      "downSha256": "db296b2a6605b0f72cfd3d3fb4dcb3d9ae3e899815ab7f30abdad5f32465880e"
+    },
+    {
+      "version": 54,
+      "name": "maintenance_workflows",
+      "up": "000054_maintenance_workflows.up.sql",
+      "upSha256": "074e70d06b0078fe6221867a59b0b91c77689a8d3c0ef0802dbe235093d79953",
+      "down": "000054_maintenance_workflows.down.sql",
+      "downSha256": "5ebbab36856603c27d72dfdc832ffdf61fcfa2001b3f388dc6d967b0bed4a20e"
+    },
+    {
+      "version": 55,
+      "name": "model_capability_bindings",
+      "up": "000055_model_capability_bindings.up.sql",
+      "upSha256": "7fb72aa955b2b387bcc2eba157b7f55f455004d1290571c3f26ff359ad4cf0ea",
+      "down": "000055_model_capability_bindings.down.sql",
+      "downSha256": "96c93f4da060f4e4d63f0fa00b9bf4f6ee25d77744b3fea0259816349de716ed"
+    },
+    {
+      "version": 56,
+      "name": "team_memberships",
+      "up": "000056_team_memberships.up.sql",
+      "upSha256": "5adb626a8df23e7e5d070b6c91d2daf3117019f58e4ab5931e7d88dcfb12ff26",
+      "down": "000056_team_memberships.down.sql",
+      "downSha256": "43621e2f78beca903043c0f5dccea69c4c8161ed663c8866ae9da4f5681edb0e"
+    },
+    {
+      "version": 57,
+      "name": "worker_attempt_identity",
+      "up": "000057_worker_attempt_identity.up.sql",
+      "upSha256": "18c9f2f74e9ecf866b8b43ee1b78ed4f33bf13bd8bb99244864b41b475233445",
+      "down": "000057_worker_attempt_identity.down.sql",
+      "downSha256": "417c0f622134a195d88105bdf04e4dc66607087d544000bdd10739e9414bad9d"
+    },
+    {
+      "version": 58,
+      "name": "managed_node_key_reuse",
+      "up": "000058_managed_node_key_reuse.up.sql",
+      "upSha256": "e533ef294ada1e7f2dc40af27e88a8b56b11bd648d3ddf75a0fc71c42c044c20",
+      "down": "000058_managed_node_key_reuse.down.sql",
+      "downSha256": "ac31dc5e7a037214e4bbbcddfc0a79313ba6dca1d3cffc84b47b93da22b68a06"
+    },
+    {
+      "version": 59,
+      "name": "managed_node_enrollment_expiration",
+      "up": "000059_managed_node_enrollment_expiration.up.sql",
+      "upSha256": "8899eff0472222b019b6f138e6b00d4fed1d9cf050b213460ca6c6cd8bf19fd2",
+      "down": "000059_managed_node_enrollment_expiration.down.sql",
+      "downSha256": "c8ae32d98bc7cca287a3bd434a6b20d43f23356cf19ed1c09f67fcd71c07cd51"
+    },
+    {
+      "version": 60,
+      "name": "worker_attempt_authority_bindings",
+      "up": "000060_worker_attempt_authority_bindings.up.sql",
+      "upSha256": "4336939cf11161fab0f776a324b80602964f23b300988d7f1273464ea97dd441",
+      "down": "000060_worker_attempt_authority_bindings.down.sql",
+      "downSha256": "d68807df7734416981a056c4894c061b5d7f9d33da8ff48743a340a85a2817f1"
+    },
+    {
+      "version": 61,
+      "name": "compute_job_waiting_events",
+      "up": "000061_compute_job_waiting_events.up.sql",
+      "upSha256": "4d16e4a8feecbf0c9419e3a7877fdb964d44106337c879e63c94c44a5cae4de4",
+      "down": "000061_compute_job_waiting_events.down.sql",
+      "downSha256": "6ccadfcec2ee9375c8b906fbdef84f723327f70b269bca0fb4c961873f08b6fc"
+    },
+    {
+      "version": 62,
+      "name": "external_provider_removal",
+      "up": "000062_external_provider_removal.up.sql",
+      "upSha256": "e2b83d0d8ffb650be54ae960815673d302a78d89d8d13470b81b0ae03e8d52be",
+      "down": "000062_external_provider_removal.down.sql",
+      "downSha256": "76803a1225e18415b698cd841f456132a810efbbc37f009a89d33af87ee5fbe2"
+    },
+    {
+      "version": 63,
+      "name": "external_provider_boundary_trigger_fix",
+      "up": "000063_external_provider_boundary_trigger_fix.up.sql",
+      "upSha256": "36076c2c83678358666c890dce540c5549a519b7c46d007000cdbc92d90689dd",
+      "down": "000063_external_provider_boundary_trigger_fix.down.sql",
+      "downSha256": "5ff31dd3ea36d580f57d6bc726614d282c6704b2bbfe7e9dada9ea6a76b644ca"
+    },
+    {
+      "version": 64,
+      "name": "object_backup_sequence",
+      "up": "000064_object_backup_sequence.up.sql",
+      "upSha256": "199d1e83dc96b41c2faf4648906591719e186685561503aba6790c2b84e57d6c",
+      "down": "000064_object_backup_sequence.down.sql",
+      "downSha256": "fcfaa3d2e8ca946613a9c8066240bb2c9ca0b70552b28c85dce6649762eff7c8"
+    },
+    {
+      "version": 65,
+      "name": "queue_admission_policy",
+      "up": "000065_queue_admission_policy.up.sql",
+      "upSha256": "ea21aaee70a627bc974e521cca3598daba27d9748c331dc7943a45917499a791",
+      "down": "000065_queue_admission_policy.down.sql",
+      "downSha256": "51f3d860896eac4742d9afc793d0d72ea65ee4e0de31f2dc345024704be0aa00"
+    },
+    {
+      "version": 66,
+      "name": "service_compute_object_references",
+      "up": "000066_service_compute_object_references.up.sql",
+      "upSha256": "a4c4a915202b648f5b3aa8a60dc63cccb6b80be0b7b4c69cf1351abf594225fc",
+      "down": "000066_service_compute_object_references.down.sql",
+      "downSha256": "a674c20cb8654c1e46158ad0e3a697cd9e22665eecea7529a070f45e21a23ef0"
+    },
+    {
+      "version": 67,
+      "name": "asr_global_diarization",
+      "up": "000067_asr_global_diarization.up.sql",
+      "upSha256": "3ce2f63c4346888d43999170a2c34423c7b9d39bb4e6adb37cf4bed1cc686690",
+      "down": "000067_asr_global_diarization.down.sql",
+      "downSha256": "212142463334562271602a2e90ec5513b8b10ccb2c51229411fc75b62f6ecad3"
+    },
+    {
+      "version": 68,
+      "name": "appliance_core_fleet_placement",
+      "up": "000068_appliance_core_fleet_placement.up.sql",
+      "upSha256": "7d0dbc0f2297177dccefd3cdd17fa52673d15dbdbbd6b5effcc84797b3f3b5ae",
+      "down": "000068_appliance_core_fleet_placement.down.sql",
+      "downSha256": "ee3b1419de3f1253334bf802834644433148fdd4ef1a2885f7a703267c55aac2"
+    },
+    {
+      "version": 69,
+      "name": "wireless_casting_control_plane",
+      "up": "000069_wireless_casting_control_plane.up.sql",
+      "upSha256": "5a9bfc2207b18a04918410d8844ceafbdfbdd31ea53462d30579e68059c3a153",
+      "down": "000069_wireless_casting_control_plane.down.sql",
+      "downSha256": "71dd20cc310d70d5486e12a0fed9728576f342d70d75048af369ed4663efb481"
+    },
+    {
+      "version": 70,
+      "name": "protected_office_set_transactions",
+      "up": "000070_protected_office_set_transactions.up.sql",
+      "upSha256": "1694733c327678441cfc3a4ea70b76907d53944734a833946f9da9eac54a7e4e",
+      "down": "000070_protected_office_set_transactions.down.sql",
+      "downSha256": "4c649b101f9ac6a13e0744677a95ccb2a5d913bb6bc94a8696fda1030937f72b"
+    },
+    {
+      "version": 71,
+      "name": "managed_node_onboarding",
+      "up": "000071_managed_node_onboarding.up.sql",
+      "upSha256": "65ab23aa4ec5251531915836f09736ea2674e7df7c9ed01c68e05783993f0968",
+      "down": "000071_managed_node_onboarding.down.sql",
+      "downSha256": "eb09d603243acf56e0ec985115df8e5df151a0fbcc8f054083a4dd586c20c454"
+    },
+    {
+      "version": 72,
+      "name": "fleet_operation_journals",
+      "up": "000072_fleet_operation_journals.up.sql",
+      "upSha256": "b70f4417b9bea04cdca8833cdc0b9a7f603c3c575ec90cd53252935d0f1c1fc3",
+      "down": "000072_fleet_operation_journals.down.sql",
+      "downSha256": "988adebe34e96d73f6f1bfebcf3184d63060ab9573657378eca7984b68b2cb03"
+    },
+    {
+      "version": 73,
+      "name": "fleet_orphan_target_idempotency",
+      "up": "000073_fleet_orphan_target_idempotency.up.sql",
+      "upSha256": "a8d705e3670122d085999838da30583c10122536c30e973466c3193c4d4eb121",
+      "down": "000073_fleet_orphan_target_idempotency.down.sql",
+      "downSha256": "544f997bd544c030d2085055880115f97b899f2f869bf549772d9f5a67b9e31b"
+    },
+    {
+      "version": 74,
+      "name": "fleet_orphan_reconciliation_identity",
+      "up": "000074_fleet_orphan_reconciliation_identity.up.sql",
+      "upSha256": "c297c361a6139bfaffb863c02b191cda033a07ed59c51bf21e7240043a49fad5",
+      "down": "000074_fleet_orphan_reconciliation_identity.down.sql",
+      "downSha256": "f3909ee6dd17d53789ea55f9ef28b624e09a9d793a4188f1a53c14662bbe3c89"
+    },
+    {
+      "version": 75,
+      "name": "protected_office_deployment_action_journal",
+      "up": "000075_protected_office_deployment_action_journal.up.sql",
+      "upSha256": "1863e1dc990acfbf33cd652e8ef6fa843659ffab4da52e3edc122088b3764f09",
+      "down": "000075_protected_office_deployment_action_journal.down.sql",
+      "downSha256": "15aeff9485121155d200142fb3138aad05e49779e4600ae8775ac16b77282138"
+    },
+    {
+      "version": 76,
+      "name": "managed_node_bootstrap_coordination",
+      "up": "000076_managed_node_bootstrap_coordination.up.sql",
+      "upSha256": "b9c4361985610d58896679749c142b4a0de1a7b44b663cc931049f9d277aeb51",
+      "down": "000076_managed_node_bootstrap_coordination.down.sql",
+      "downSha256": "8bfad515a107dfe0c0916a32e1701e79ec3991d2fe9ef7f5576d1d34ce75698b"
+    },
+    {
+      "version": 77,
+      "name": "protected_office_deployment_v5_identity",
+      "up": "000077_protected_office_deployment_v5_identity.up.sql",
+      "upSha256": "1ed52c29cf4d82077d2cac3410fc1b8a0b977f9f8c61faac7625ffe784a3782e",
+      "down": "000077_protected_office_deployment_v5_identity.down.sql",
+      "downSha256": "b95c5ee52c45fb4876d43de75ca19b5dad19efc4b09b993c3926c5590d7939eb"
+    },
+    {
+      "version": 78,
+      "name": "cast_resource_reservations",
+      "up": "000078_cast_resource_reservations.up.sql",
+      "upSha256": "6cf5c801c34a6c25ded86713e2acde924528f18560564f1b4bdb06e3453183d0",
+      "down": "000078_cast_resource_reservations.down.sql",
+      "downSha256": "874c9bc9c3c5992294e204bbe936b42ee0de927842fa0486323e8c61256712c8"
+    },
+    {
+      "version": 79,
+      "name": "virtual_phones",
+      "up": "000079_virtual_phones.up.sql",
+      "upSha256": "7e7573043a6d2d86ab960fea355a83f0a461723ef925c1837b633f894235cfba",
+      "down": "000079_virtual_phones.down.sql",
+      "downSha256": "0d212a9a5da49c519e448f672083462a700a88d59a41c988cc0c706bf68e97d9"
+    },
+    {
+      "version": 80,
+      "name": "virtual_phone_administration",
+      "up": "000080_virtual_phone_administration.up.sql",
+      "upSha256": "bbd82b2166befb76512bcf5b137fe3e77b290a20a8bbcde338688375284a5bb4",
+      "down": "000080_virtual_phone_administration.down.sql",
+      "downSha256": "f30fcf39ab9ef4b5b065db810d959638967853d1aa9828c0bff4edd6d3119ede"
+    },
+    {
+      "version": 81,
+      "name": "phone_storage_class",
+      "up": "000081_phone_storage_class.up.sql",
+      "upSha256": "be77227616affea99b8a4ef661114b3a6a5f56a19ee2739819e187ad40852103",
+      "down": "000081_phone_storage_class.down.sql",
+      "downSha256": "78d2879de6bba97a2d7815f5b693a2ccface05a4c35d4c6dadfff90034330589"
+    },
+    {
+      "version": 82,
+      "name": "phone_rom_catalog",
+      "up": "000082_phone_rom_catalog.up.sql",
+      "upSha256": "32476ae6d854b16aec90ad8de528ed3b97608f696dcf96837dbb47ddb5c673b2",
+      "down": "000082_phone_rom_catalog.down.sql",
+      "downSha256": "8e5d3214c35b3e275e9f41bfaeaed271b5df16bf018d5ed74bf919475ae746c3"
+    },
+    {
+      "version": 83,
+      "name": "phone_camera_inputs",
+      "up": "000083_phone_camera_inputs.up.sql",
+      "upSha256": "8402467c122a18df27e6320abe58be22bfe1188952154de784dbbac3f87105d6",
+      "down": "000083_phone_camera_inputs.down.sql",
+      "downSha256": "abc103de70e018de3f1f95e71b7937491dfd566fc954fa6d51100ac057663ec8"
+    },
+    {
+      "version": 84,
+      "name": "phone_usb_camera_policy",
+      "up": "000084_phone_usb_camera_policy.up.sql",
+      "upSha256": "120282c3b39fdb73b31efae57aa78f1b4984f4711c0ee444c2e4a95e810795a4",
+      "down": "000084_phone_usb_camera_policy.down.sql",
+      "downSha256": "39c3344805644a4069bdd52df84dc35040c258d189ab81b31ba77b213d128269"
+    },
+    {
+      "version": 85,
+      "name": "phone_administrator_quotas",
+      "up": "000085_phone_administrator_quotas.up.sql",
+      "upSha256": "8ad08d05849ea9c7d87a12ce1c023ff005f4dd5f3ca75fd31c19cbeaa3d3e01d",
+      "down": "000085_phone_administrator_quotas.down.sql",
+      "downSha256": "7f8b28abcfbc1d36567a0b416c6b8e68a37251ba3ee166df95752e89c3f8da4a"
+    },
+    {
+      "version": 86,
+      "name": "casting_viewer_count",
+      "up": "000086_casting_viewer_count.up.sql",
+      "upSha256": "ba9e3dd858f75e3be51c0d6a00dd0b938da713198f7ed195cca9f1ce0e021655",
+      "down": "000086_casting_viewer_count.down.sql",
+      "downSha256": "833fff48d070b3a8c8718cb72c63e7dc11c12ddeded61f3226a9e24c258e6e5d"
+    },
+    {
+      "version": 87,
+      "name": "phone_resource_quotas",
+      "up": "000087_phone_resource_quotas.up.sql",
+      "upSha256": "edaf5bffca634b04ab36be82bd68438894127559996dd6a6a3a18df100956710",
+      "down": "000087_phone_resource_quotas.down.sql",
+      "downSha256": "065f82ca5a6fb796d533aa758b3215bb7e64f741c0a552aa7ee67be537f7b413"
+    },
+    {
+      "version": 88,
+      "name": "fleet_administrator_capacity",
+      "up": "000088_fleet_administrator_capacity.up.sql",
+      "upSha256": "016c4ffa873b7f1f5a3bcba30a97bf9c10d25a04bf0f4c53e08fa5701648c639",
+      "down": "000088_fleet_administrator_capacity.down.sql",
+      "downSha256": "395f5323181329b9ea6fa5738d1997dfd7c8f7b6dee8926a4965d05bdafee516"
+    },
+    {
+      "version": 89,
+      "name": "artifact_source_counts",
+      "up": "000089_artifact_source_counts.up.sql",
+      "upSha256": "f83d53b0228d0fdcb541bc1ea8a2f0b3cfe4f1d843969dff5892ac81362d8c39",
+      "down": "000089_artifact_source_counts.down.sql",
+      "downSha256": "4be7babf2486b931875c202f650228ad38d6f0c7f712de8f6e382203a53460c7"
+    },
+    {
+      "version": 90,
+      "name": "asr_resource_duration",
+      "up": "000090_asr_resource_duration.up.sql",
+      "upSha256": "a2ba481f7218dc3a79ae6a9f53273d4bc5880e2be717c3763245f23db4317e2f",
+      "down": "000090_asr_resource_duration.down.sql",
+      "downSha256": "fada2d109b0c1201d9034bc8160d6223d9579e74bd03fdc4da6f14f3610e384b"
+    },
+    {
+      "version": 91,
+      "name": "messaging_resource_capacity",
+      "up": "000091_messaging_resource_capacity.up.sql",
+      "upSha256": "789f488bf7bcfc2ab1bc03bf5cd8e4f06ba5b73b1724737d854437f63b03fd5b",
+      "down": "000091_messaging_resource_capacity.down.sql",
+      "downSha256": "d64d3ee6515310c2df1092ce5eb1a7ff01fa1dfc7a3f2b647adc3851657afc1d"
+    },
+    {
+      "version": 92,
+      "name": "phone_name_capacity",
+      "up": "000092_phone_name_capacity.up.sql",
+      "upSha256": "1c5a5fc86c176d720f8f47e7263c87109223322196aaec554480d7282af8a943",
+      "down": "000092_phone_name_capacity.down.sql",
+      "downSha256": "ff65b114b3ca4ad36418232a95746352e5354999ba54b14ae2c268d39211a344"
+    },
+    {
+      "version": 93,
+      "name": "external_transfer_capacity",
+      "up": "000093_external_transfer_capacity.up.sql",
+      "upSha256": "729b58dbd32aac5f0b9caedee08637d7763e034148b7cb6950266fd8420b8a2e",
+      "down": "000093_external_transfer_capacity.down.sql",
+      "downSha256": "4fca63af690c0f22a32c0d0d3d6fce3f5e9c9d5c025697813e51d1e435034cd3"
+    },
+    {
+      "version": 94,
+      "name": "multipart_capacity",
+      "up": "000094_multipart_capacity.up.sql",
+      "upSha256": "8eb833a5430eaaf842fc57c9c56e50501a84522c7c7c46f54273b28a28ffbcfe",
+      "down": "000094_multipart_capacity.down.sql",
+      "downSha256": "0ba67f16c4b47492dae37153e56c7997b38a0e0c41288f44ff52e5a84424d2d5"
+    },
+    {
+      "version": 95,
+      "name": "queue_policy_capacity",
+      "up": "000095_queue_policy_capacity.up.sql",
+      "upSha256": "64771dd47727544190456aa29f33e264450353c3a17222ea23a30cdc0ad22ab9",
+      "down": "000095_queue_policy_capacity.down.sql",
+      "downSha256": "d61c07b04d97bd2b56b18a4709148d0b846acf58fa2bc2d029b7bd102b1b284b"
+    },
+    {
+      "version": 96,
+      "name": "complete_diagnostic_links",
+      "up": "000096_complete_diagnostic_links.up.sql",
+      "upSha256": "b0374f9b629cb86bf301d0541bea730577817c0172e606bd7d2e2e5873a04467",
+      "down": "000096_complete_diagnostic_links.down.sql",
+      "downSha256": "0eea4b598396930c547414888a602fa70e8dcc8645e57e67c03a961478bdcad1"
+    },
+    {
+      "version": 97,
+      "name": "complete_diagnostic_exports",
+      "up": "000097_complete_diagnostic_exports.up.sql",
+      "upSha256": "42c24ddc394ddac7e5b3765c23569801cead2ba7e1f736bdbc2d4a85aea42764",
+      "down": "000097_complete_diagnostic_exports.down.sql",
+      "downSha256": "84750955c4b1855cd7977edc209bc17fd867e0839305795f703c20a672d109aa"
+    },
+    {
+      "version": 98,
+      "name": "fleet_operation_capacity",
+      "up": "000098_fleet_operation_capacity.up.sql",
+      "upSha256": "7307fc56a46b2f968caf99207fa8912c50e5a6d7cb6a5e31d22dfa7c869c64bf",
+      "down": "000098_fleet_operation_capacity.down.sql",
+      "downSha256": "18b2c8ac730903bb4a43070c5ed0fa424245acb0d8cd0e4a377b0264536aae46"
+    },
+    {
+      "version": 99,
+      "name": "phone_udp_camera_policy",
+      "up": "000099_phone_udp_camera_policy.up.sql",
+      "upSha256": "369acf36745f6359912d4c2352d3dc5c5d37b737ee6af89811055764e38ed3ee",
+      "down": "000099_phone_udp_camera_policy.down.sql",
+      "downSha256": "b56c3eb9d63909e8c9c89cbf323d8a7b00c2e572d9a48a914811a0de6988dab8"
+    },
+    {
+      "version": 100,
+      "name": "virtual_computers",
+      "up": "000100_virtual_computers.up.sql",
+      "upSha256": "940442ebdcd5b889c12dd432f28f32c05f75a4f4922cea40ef4d9ed8b65eeaca",
+      "down": "000100_virtual_computers.down.sql",
+      "downSha256": "1a850ce42c4b799b4cd87e215de59387e79e4fd5b2288b32aa571f3d0769dd3f"
+    },
+    {
+      "version": 101,
+      "name": "computer_runtime_maintenance",
+      "up": "000101_computer_runtime_maintenance.up.sql",
+      "upSha256": "1646c56372d9f015c3bdd4b9e626e0f6b1f1e0b149418548f739d285793a1a37",
+      "down": "000101_computer_runtime_maintenance.down.sql",
+      "downSha256": "8a85a78d395e9da25a1de9dc18dc5e49b57ae90be2be9ce589c9774b707b8109"
+    },
+    {
+      "version": 102,
+      "name": "computer_administration",
+      "up": "000102_computer_administration.up.sql",
+      "upSha256": "7876bb38a6682c17f502970498c53e53bb9d8676af8baa6e7b05dc2111eee5ca",
+      "down": "000102_computer_administration.down.sql",
+      "downSha256": "138258f1b6727cf71ba31fc271938ecc5d73cfd3101072a23287290dcbf42144"
+    },
+    {
+      "version": 103,
+      "name": "casting_viewer_session_lifetime",
+      "up": "000103_casting_viewer_session_lifetime.up.sql",
+      "upSha256": "bbd267a2b6c44af41bc63f9330fcded79f06e5de255ecfd7f6bd5db3b9f761f2",
+      "down": "000103_casting_viewer_session_lifetime.down.sql",
+      "downSha256": "ad671f746855cc8c2df7957e25953d90a7ef05d4b55a594e1531fd1d96c422d4"
+    },
+    {
+      "version": 104,
+      "name": "fleet_service_reservations",
+      "up": "000104_fleet_service_reservations.up.sql",
+      "upSha256": "c94b3d87434a12ad2c7da0217c12f324e7fd512be747bf9fd98288b827ade5d3",
+      "down": "000104_fleet_service_reservations.down.sql",
+      "downSha256": "75a2e74af7e3dfb25987b73de0a955d35f0003de7f1b34f236e8dbcbe5d23ddd"
+    },
+    {
+      "version": 105,
+      "name": "single_appliance_casting",
+      "up": "000105_single_appliance_casting.up.sql",
+      "upSha256": "2918484acca4c4548924a7250db16d4a0f450ff307d1d3eb07363e52d8f564be",
+      "down": "000105_single_appliance_casting.down.sql",
+      "downSha256": "e39cde87f565d1bbca1d575f0d5e65924a0129e5d3d4088baf33e7142a0f9753"
+    },
+    {
+      "version": 106,
+      "name": "office_application_scope",
+      "up": "000106_office_application_scope.up.sql",
+      "upSha256": "ffc0540343b9b8785946fced4885c09816819601f075c102583455a489faf268",
+      "down": "000106_office_application_scope.down.sql",
+      "downSha256": "99e12631194b28e1affcc41c3938bbb8f71b67a9c6bf40145aab4765828e18a8"
+    },
+    {
+      "version": 107,
+      "name": "messaging_personal_cleanup",
+      "up": "000107_messaging_personal_cleanup.up.sql",
+      "upSha256": "8230d48ce5bdfe05e46cfd506cb2056bba6c9aae12977acf0f85dded6be2ede8",
+      "down": "000107_messaging_personal_cleanup.down.sql",
+      "downSha256": "d90fc3290d4f75446626cbd7547791ffcb111258c0748c971c68f5cfe7328220"
+    },
+    {
+      "version": 108,
+      "name": "retired_phone_records",
+      "up": "000108_retired_phone_records.up.sql",
+      "upSha256": "8f3dc10e0519c625d9ac44e116f82791c403bb23fa27c39c9b816e05f174cf81",
+      "down": "000108_retired_phone_records.down.sql",
+      "downSha256": "b09992fbd8d6e93daaeef96ad40d2a032e4a735c8976d6b2df9d2dadb3fd8cdc"
+    },
+    {
+      "version": 109,
+      "name": "computer_monitor_grants",
+      "up": "000109_computer_monitor_grants.up.sql",
+      "upSha256": "f4beeb07211a3bdbb92932fd5865fe346c69d14903d6a272bbaf9b04ddee4c7e",
+      "down": "000109_computer_monitor_grants.down.sql",
+      "downSha256": "8bcf9ae78b7be3778c06da0cdf59dbff095019beae3369ecbd7934e478c2f841"
+    },
+    {
+      "version": 110,
+      "name": "product_languages",
+      "up": "000110_product_languages.up.sql",
+      "upSha256": "04d952870aafd04bdc455b01b72ef9ca46028fbc9cf305ed8a23374084e253ca",
+      "down": "000110_product_languages.down.sql",
+      "downSha256": "e522538cc51a07f6ef5fd329da860d0391401b1b3758f04503a6d53869ddb556"
+    },
+    {
+      "version": 111,
+      "name": "explicit_locale_preference",
+      "up": "000111_explicit_locale_preference.up.sql",
+      "upSha256": "7e0e28c5a9583c721624871337ecbfa90a5ff814cd75f74132f121f3cdc9d47d",
+      "down": "000111_explicit_locale_preference.down.sql",
+      "downSha256": "e3647a61aba9971150d1c815ad7aa4eac941cf883b29dbc79f5a1fc2b51b848d"
+    },
+    {
+      "version": 112,
+      "name": "computer_installation_media",
+      "up": "000112_computer_installation_media.up.sql",
+      "upSha256": "8fad8ddec6f95a330b6b0827dbcc060a581e24df1885019bd98da33e1c0d4209",
+      "down": "000112_computer_installation_media.down.sql",
+      "downSha256": "1b826e5e43e1cf985092391bf3fcb288bec945f2c1b086e8018a891c81715743"
+    },
+    {
+      "version": 113,
+      "name": "computer_installation_operations",
+      "up": "000113_computer_installation_operations.up.sql",
+      "upSha256": "c90239337505678fe42292c211df6815a95100b12a3f7c5eaa2b79c8331d1ba7",
+      "down": "000113_computer_installation_operations.down.sql",
+      "downSha256": "5679a5de96477a280242a0a3c4c8e3991be53631701872dfa3cb8eadbb52625a"
+    },
+    {
+      "version": 114,
+      "name": "retire_archive_prerequisite",
+      "up": "000114_retire_archive_prerequisite.up.sql",
+      "upSha256": "abc3ce4ba4702d0ea69b49d40131adf5fa89deb110d2de29dba477855cfddf06",
+      "down": "000114_retire_archive_prerequisite.down.sql",
+      "downSha256": "8896d5aee55c19546376eae5051da2ba1d1e6b81cea485602b9bd5dd97980a6e"
+    },
+    {
+      "version": 115,
+      "name": "retire_archive_role_permissions",
+      "up": "000115_retire_archive_role_permissions.up.sql",
+      "upSha256": "3b26fec1c00044f115114b25fd61b0973d33c768642ffd9bfcfa0a834cdb9d84",
+      "down": "000115_retire_archive_role_permissions.down.sql",
+      "downSha256": "a8b304e3e2f0da3e33a5803ae623c344ae73d56329c4e2df7968ae9633d25b8c"
+    },
+    {
+      "version": 116,
+      "name": "offline_image_identity",
+      "up": "000116_offline_image_identity.up.sql",
+      "upSha256": "ae314af5f5bcd0d7fbe7b2d1098df6f06ded30e33770ab67ead908154a1dba45",
+      "down": "000116_offline_image_identity.down.sql",
+      "downSha256": "822f53862155f6719c44e169a4065aeaa2bff976f8c82b9c51ded617da0abc31"
+    },
+    {
+      "version": 117,
+      "name": "retire_resource_bookings",
+      "up": "000117_retire_resource_bookings.up.sql",
+      "upSha256": "a57ee4253c175f687be5d61d36304586ebdb6258650e519afb4105831b8da0bf",
+      "down": "000117_retire_resource_bookings.down.sql",
+      "downSha256": "1e56af72db282e3bd8fc327c12f02fc0ce4b9df7bd1dfde26636acf6d93888b8"
+    },
+    {
+      "version": 118,
+      "name": "retire_model_import_bookings",
+      "up": "000118_retire_model_import_bookings.up.sql",
+      "upSha256": "b82cf30f117aebff7c8ea0fa91070c93810b2f1dfc442200a424f1dbcb7db95c",
+      "down": "000118_retire_model_import_bookings.down.sql",
+      "downSha256": "c404aa2b69d754b137ba4468b059cf176f50cefd706a5ff5ce8d026124e45d80"
+    }
+  ]
+}

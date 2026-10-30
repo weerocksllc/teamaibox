@@ -1,0 +1,15 @@
+[Unit]
+Description=Verify and restore the exact existing Team AI Box encrypted business volumes
+After=local-fs.target systemd-tmpfiles-setup.service
+Before=docker.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/python3 /usr/local/lib/teamaibox/restore_existing_business_volumes.py --configuration /etc/teamaibox/storage-volumes.json
+RemainAfterExit=yes
+TimeoutStartSec=300
+UMask=0077
+# No ExecStop: shutting down this service never unmounts an active database.
+
+[Install]
+WantedBy=multi-user.target

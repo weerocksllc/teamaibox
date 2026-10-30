@@ -1,0 +1,15 @@
+#!/bin/sh
+set -eu
+
+if [ "${1:-}" != "--ready" ]; then
+  echo "usage: media-health --ready" >&2
+  exit 64
+fi
+
+pid_file=/run/teamaibox/uxplay.pid
+[ -r "$pid_file" ] || exit 1
+pid=$(sed -n '1p' "$pid_file")
+case "$pid" in
+  ''|*[!0-9]*) exit 1 ;;
+esac
+[ -d "/proc/$pid" ]

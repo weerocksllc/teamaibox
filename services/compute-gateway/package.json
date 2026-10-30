@@ -1,0 +1,14 @@
+{
+  "name": "@teamaibox/compute-gateway",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./agent-model-credential": "./src/agent-model-credential.mjs",
+    "./agent-compute-gateway-server": "./src/agent-compute-gateway-server.mjs"
+  },
+  "scripts": {
+    "test": "node --test test/*.test.mjs"
+  },
+  "license": "MIT"
+}

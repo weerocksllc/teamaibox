@@ -1,0 +1,91 @@
+{
+  "schemaVersion": 1,
+  "configurationId": "teamaibox.wireless-casting-control-plane.disabled.v1",
+  "mode": "disabled",
+  "state": "unsupported",
+  "claims": {
+    "receiverReady": false,
+    "sessionStartAllowed": false,
+    "receiverAdvertisementAllowed": false,
+    "productAccepted": false,
+    "releaseEligible": false
+  },
+  "outputs": {
+    "hdmi": {
+      "state": "unavailable",
+      "reasonCode": "hdmi_sink_disconnected"
+    },
+    "browser": {
+      "state": "unavailable",
+      "reasonCode": "webrtc_plugin_missing"
+    }
+  },
+  "gates": [
+    {
+      "code": "airplay_supply_chain_human_decisions_pending",
+      "category": "legal"
+    },
+    {
+      "code": "trusted_media_arm64_image_unbuilt",
+      "category": "supply_chain"
+    },
+    {
+      "code": "final_sbom_signature_provenance_and_vulnerability_evidence_missing",
+      "category": "supply_chain"
+    },
+    {
+      "code": "hdmi_sink_disconnected",
+      "category": "hardware"
+    },
+    {
+      "code": "hdmi_1080p30_not_proven",
+      "category": "hardware"
+    },
+    {
+      "code": "hdmi_audio_sink_not_proven",
+      "category": "hardware"
+    },
+    {
+      "code": "h264_encoder_plugin_missing",
+      "category": "runtime"
+    },
+    {
+      "code": "webrtc_plugin_missing",
+      "category": "runtime"
+    },
+    {
+      "code": "physical_apple_sender_not_exercised",
+      "category": "hardware"
+    },
+    {
+      "code": "seccomp_and_apparmor_real_runtime_not_exercised",
+      "category": "security"
+    }
+  ],
+  "limitations": {
+    "appleCertified": false,
+    "fairPlayDrmSupported": false,
+    "syntheticAcceptanceAllowed": false
+  },
+  "sourceBindings": {
+    "trustedMediaPackage": {
+      "path": "deploy/casting/trusted-media-service.package.v1.json",
+      "sha256": "sha256:ba948981fb055e3f3900d796598657be01f07ef2e1e849c64b383053a04fc5ba"
+    },
+    "supplyChainReview": {
+      "path": "architecture/validation/airplay-compatible-supply-chain-review.v1.json",
+      "sha256": "sha256:38469c9d3938a9af5dffc45165ea38265f9fc2b9fa1dc8f0e91be54916231479"
+    },
+    "hardwareInventory": {
+      "path": "evidence/validation/hardware/airplay-main-hardware-inventory-20260904-a1.json",
+      "sha256": "sha256:2fd33d2e887e11c49d5df2f2557793b3f68ee82099fcf7450bdb99432ad971d3"
+    }
+  },
+  "successorPolicy": {
+    "activation": "atomic-platform-and-trusted-media-cutover",
+    "requiresReadyTrustedMediaRelease": true,
+    "requiresSupportedHardwareEvidence": true,
+    "requiresApprovedSupplyChainReview": true,
+    "configurationAloneMayEnableReceiver": false
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.teamaibox.local/http/messaging-message-submission.v1.schema.json",
+  "title": "Messaging message submission v1",
+  "x-teamaibox-contract": {"family": "http", "role": "request", "major": 1},
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["content", "attachment_reference_ids", "reply_to_message_id"],
+  "properties": {
+    "content": {"type": "string"},
+    "attachment_reference_ids": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {"type": "string", "format": "uuid"}
+    },
+    "reply_to_message_id": {"type": ["string", "null"], "format": "uuid"},
+    "extensions": {"type": "object", "additionalProperties": true}
+  },
+  "anyOf": [
+    {"properties": {"content": {"minLength": 1}}},
+    {"properties": {"attachment_reference_ids": {"minItems": 1}}}
+  ]
+}

@@ -1,0 +1,51 @@
+services:
+  platform-api:
+    environment:
+      PLATFORM_MAINTENANCE_RUNTIME_CONFIG_FILE: /opt/teamaibox/config/maintenance-runtime.json
+    volumes:
+      - ${TEAMAIBOX_MAINTENANCE_RUNTIME_CONFIG_FILE:?}:/opt/teamaibox/config/maintenance-runtime.json:ro
+
+  maintenance-controller:
+    image: ${TEAMAIBOX_MAINTENANCE_CONTROLLER_IMAGE:?}
+    platform: linux/arm64/v8
+    init: true
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    user: "10001:10001"
+    restart: unless-stopped
+    network_mode: service:platform-api
+    environment:
+      MAINTENANCE_CONTROLLER_CONFIG_FILE: /run/config/appliance/maintenance-controller.json
+      MAINTENANCE_CONTROLLER_NODE_IDENTITY_FILE: /run/config/appliance/node.json
+      MAINTENANCE_CONTROLLER_STATE_ROOT: /var/lib/teamaibox-maintenance
+      MAINTENANCE_CONTROLLER_CA_FILE: /run/config/appliance/ca.crt
+      MAINTENANCE_CONTROLLER_TLS_CERT_FILE: /run/config/appliance/maintenance.crt
+      MAINTENANCE_CONTROLLER_TLS_KEY_FILE: /run/secrets/maintenance_tls_key
+      MAINTENANCE_CONTROLLER_PROTECTED_OFFICE_PRIVATE_KEY_FILE: /run/secrets/protected_office_maintenance_key
+      MAINTENANCE_CONTROLLER_PROTECTED_OFFICE_KEY_ID: ${TEAMAIBOX_MAINTENANCE_SIGNING_KEY_ID:?}
+      MAINTENANCE_CONTROLLER_PORT: "9446"
+      MAINTENANCE_CONTROLLER_TLS_SERVER_NAME: ${PLATFORM_APPLIANCE_NODE_KEY:-localhost}
+    volumes:
+      - ${TEAMAIBOX_APPLIANCE_PUBLIC_CONFIG_DIR:?}:/run/config/appliance:ro
+      - maintenance_controller_state:/var/lib/teamaibox-maintenance
+    secrets: [maintenance_tls_key, protected_office_maintenance_key]
+    tmpfs: ["/tmp:rw,noexec,nosuid,nodev,size=16m"]
+    mem_limit: 128m
+    mem_reservation: 32m
+    cpus: 0.2
+    depends_on: {platform-api: {condition: service_started}}
+
+volumes:
+  maintenance_controller_state:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${TEAMAIBOX_DATA_ROOT:?}/maintenance
+
+secrets:
+  maintenance_tls_key:
+    file: ${TEAMAIBOX_MAINTENANCE_TLS_KEY_FILE:?}
+  protected_office_maintenance_key:
+    file: ${TEAMAIBOX_PROTECTED_OFFICE_MAINTENANCE_KEY_FILE:?}

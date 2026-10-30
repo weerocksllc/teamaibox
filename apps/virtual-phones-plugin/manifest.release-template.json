@@ -1,0 +1,146 @@
+{
+  "apiVersion": "teamaibox.io/plugin/v1",
+  "id": "official.virtual-phones",
+  "type": "ApplicationPlugin",
+  "version": "0.1.16",
+  "official": true,
+  "publisher": {
+    "id": "teamaibox.official",
+    "displayName": "Team AI Box"
+  },
+  "architectures": [
+    "linux/arm64/v8"
+  ],
+  "images": [
+    {
+      "name": "virtual-phones-application",
+      "role": "application",
+      "variants": [
+        {
+          "architecture": "linux/arm64/v8",
+          "reference": "__RELEASE_PIPELINE_MUST_SET_OCI_REFERENCE__",
+          "digest": "sha256:__RELEASE_PIPELINE_MUST_SET_64_HEX_DIGEST__",
+          "mediaType": "application/vnd.oci.image.manifest.v1+json"
+        }
+      ]
+    }
+  ],
+  "entryPoints": {
+    "web": {
+      "path": "/plugins/official.virtual-phones",
+      "integration": "iframe"
+    }
+  },
+  "apis": [
+    {
+      "name": "platform.virtual-phones",
+      "versionRange": ">=1.0.0 <2.0.0",
+      "access": "delegated-user"
+    }
+  ],
+  "ui": {
+    "displayNameKey": "app.virtual-phones.name",
+    "summaryKey": "app.virtual-phones.description",
+    "icon": "smartphone",
+    "category": "professional-tool",
+    "launchPath": "/apps/official.virtual-phones",
+    "order": 20
+  },
+  "localization": {
+    "supportedLocales": [
+      "zh-CN",
+      "zh-TW",
+      "en",
+      "ja",
+      "ko",
+      "fr",
+      "de",
+      "es",
+      "pt-BR",
+      "ru",
+      "ar",
+      "hi",
+      "id",
+      "it",
+      "tr",
+      "vi",
+      "th"
+    ],
+    "fallbackLocale": "zh-CN",
+    "supportedDirections": [
+      "ltr",
+      "rtl"
+    ],
+    "rtlReady": true
+  },
+  "themes": {
+    "supported": [
+      "light",
+      "dark"
+    ],
+    "usesSemanticTokens": true,
+    "livePreferenceEvents": true
+  },
+  "permissions": {
+    "platformApiScopes": [
+      "phone:use"
+    ],
+    "delegatedUserToken": true,
+    "network": {
+      "mode": "none",
+      "egressHosts": []
+    },
+    "objectNamespaces": [],
+    "devices": []
+  },
+  "resources": {
+    "cpu": {
+      "requestMillicores": 50,
+      "limitMillicores": 250
+    },
+    "unifiedMemoryBytes": 134217728,
+    "ephemeralStorageBytes": 33554432,
+    "persistentStorageBytes": 0,
+    "network": {
+      "ingressBitsPerSecond": 100000000,
+      "egressBitsPerSecond": 100000000
+    }
+  },
+  "health": {
+    "startup": {
+      "path": "/health/startup",
+      "intervalSeconds": 5,
+      "timeoutSeconds": 2,
+      "failureThreshold": 12
+    },
+    "readiness": {
+      "path": "/health/ready",
+      "intervalSeconds": 10,
+      "timeoutSeconds": 2,
+      "failureThreshold": 3
+    },
+    "liveness": {
+      "path": "/health/live",
+      "intervalSeconds": 30,
+      "timeoutSeconds": 3,
+      "failureThreshold": 3
+    }
+  },
+  "migrations": [],
+  "compatibility": {
+    "platform": ">=0.1.0 <1.0.0",
+    "pluginApi": ">=1.0.0 <2.0.0",
+    "runtime": "oci-linux-arm64-v1",
+    "requiredCapabilities": [
+      "encrypted-objects"
+    ],
+    "dependencies": []
+  },
+  "signature": {
+    "format": "teamaibox.canonical-json/v1",
+    "algorithm": "Ed25519",
+    "keyId": "__RELEASE_PIPELINE_MUST_SET_KEY_ID__",
+    "payloadDigest": "sha256:__RELEASE_PIPELINE_MUST_SET_64_HEX_DIGEST__",
+    "value": "__RELEASE_PIPELINE_MUST_SIGN_CANONICAL_MANIFEST__"
+  }
+}

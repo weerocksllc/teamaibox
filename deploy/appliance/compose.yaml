@@ -1,0 +1,267 @@
+name: teamaibox-appliance
+
+# Compose with deploy/compose/core.yaml.
+# The API owns one local control namespace. Neither execution-control port
+# is published; unrelated foundation containers retain their existing networks.
+services:
+  web:
+    environment:
+      WEB_HOST: 0.0.0.0
+      WEB_MODE: release
+      WEB_PORT: "8443"
+      WEB_PUBLIC_ORIGIN: ${TEAMAIBOX_WEB_PUBLIC_ORIGIN:?set the supported HTTPS appliance origin}
+      WEB_AUTO_LOCAL_ADDRESS: "true"
+      WEB_DEPLOYMENT_SLOT: foundation
+      WEB_RELEASE_ID: ${TEAMAIBOX_RELEASE_ID:?set the immutable release identifier}
+      WEB_TLS_CERT_FILE: /run/appliance-https/web.crt
+      WEB_TLS_KEY_FILE: /run/appliance-https/web.key
+      WEB_PLUGIN_ROUTES_FILE: /run/config/plugin-routes.json
+      PLATFORM_API_ORIGIN: http://platform-api:8080
+    volumes:
+      # Directory bind is required for atomic certificate replacement/hot reload.
+      - type: bind
+        source: ${TEAMAIBOX_WEB_TLS_DIRECTORY:?set the persistent HTTPS identity directory}
+        target: /run/appliance-https
+        read_only: true
+        bind: {create_host_path: false}
+    ports:
+      - target: 8443
+        published: ${TEAMAIBOX_WEB_HTTPS_PORT:-443}
+        host_ip: ${TEAMAIBOX_WEB_BIND_ADDRESS:-0.0.0.0}
+        protocol: tcp
+
+  platform-api:
+    entrypoint: [node, /opt/teamaibox/apps/platform-api/server/appliance-main.mjs]
+    environment:
+      PLATFORM_APPLIANCE_NODE_ID: ${PLATFORM_APPLIANCE_NODE_ID:?set the persistent local UUID}
+      PLATFORM_APPLIANCE_NODE_KEY: ${PLATFORM_APPLIANCE_NODE_KEY:-localhost}
+      PLATFORM_APPLIANCE_LAN_ADDRESS: ${PLATFORM_APPLIANCE_LAN_ADDRESS:-}
+      PLATFORM_APPLIANCE_ADDRESSES_FILE: /run/config/appliance/appliance-addresses.json
+      PLATFORM_APPLIANCE_AGENT_HOST: 127.0.0.1
+      PLATFORM_APPLIANCE_AGENT_PORT: "9443"
+      PLATFORM_APPLIANCE_CA_FILE: /run/config/appliance/ca.crt
+      PLATFORM_APPLIANCE_CERT_FILE: /run/config/appliance/scheduler.crt
+      PLATFORM_APPLIANCE_KEY_FILE: /run/secrets/appliance_scheduler_key
+      PLATFORM_APPLIANCE_AGENT_CERT_FILE: /run/config/appliance/node.crt
+      PLATFORM_APPLIANCE_GATEWAY_SIGNING_KEY_FILE: /run/secrets/appliance_gateway_signing_key
+      PLATFORM_APPLIANCE_COMMAND_KEY_FILE: /run/secrets/node_agent_command_key
+      PLATFORM_APPLIANCE_COMMAND_KEY_ID: ${TEAMAIBOX_COMMAND_KEY_ID:-scheduler-persistent-v1}
+    volumes:
+      - type: bind
+        source: ${TEAMAIBOX_APPLIANCE_PUBLIC_CONFIG_DIR:?set the local public configuration directory}
+        target: /run/config/appliance
+        read_only: true
+        bind: {create_host_path: false}
+    secrets:
+      - appliance_scheduler_key
+      - appliance_gateway_signing_key
+      - node_agent_command_key
+
+  node-agent:
+    environment:
+      TEAMAIBOX_METRIC_RETIRED_CORE_SERVICES: ${TEAMAIBOX_METRIC_RETIRED_CORE_SERVICES:-}
+      TEAMAIBOX_PHONES_CONFIG_FILE: /run/config/guests/phones.json
+      TEAMAIBOX_COMPUTERS_CONFIG_FILE: /run/config/guests/computers.json
+    volumes:
+      - type: bind
+        source: ${TEAMAIBOX_GUEST_CONFIG_DIR:?set this installation guest configuration directory}
+        target: /run/config/guests
+        read_only: true
+        bind: {create_host_path: false}
+      # Runtime declarations use host paths when creating guest containers.
+      # Preserve identical paths here; never substitute a developer pool.
+      - type: bind
+        source: ${TEAMAIBOX_GUEST_DATA_ROOT:?set the mounted guest data directory}
+        target: ${TEAMAIBOX_GUEST_DATA_ROOT:?}
+        read_only: true
+        bind: {create_host_path: false}
+      - type: bind
+        source: ${TEAMAIBOX_GUEST_CONTROL_ROOT:?set the guest control directory}
+        target: ${TEAMAIBOX_GUEST_CONTROL_ROOT:?}
+        bind: {create_host_path: false}
+      - type: bind
+        source: ${TEAMAIBOX_GUEST_MEDIA_ROOT:?set the guest installation media directory}
+        target: ${TEAMAIBOX_GUEST_MEDIA_ROOT:?}
+        bind: {create_host_path: false}
+      - type: bind
+        source: ${TEAMAIBOX_GUEST_ASSETS_ROOT:?set the installed guest firmware and policy directory}
+        target: ${TEAMAIBOX_GUEST_ASSETS_ROOT:?}
+        read_only: true
+        bind: {create_host_path: false}
+      - type: bind
+        source: ${TEAMAIBOX_GUEST_RUNTIME_DIR:?set the local guest storage helper socket directory}
+        target: ${TEAMAIBOX_GUEST_RUNTIME_DIR:?}
+        bind: {create_host_path: false}
+    network_mode: service:platform-api
+    depends_on:
+      platform-api: {condition: service_started}
+
+  appliance-gateway:
+    image: ${TEAMAIBOX_APPLIANCE_GATEWAY_IMAGE:?set the ARM64 appliance gateway image digest}
+    platform: linux/arm64/v8
+    init: true
+    restart: unless-stopped
+    read_only: true
+    user: "10006:10006"
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    pids_limit: 64
+    mem_limit: 256m
+    mem_reservation: 64m
+    cpus: 0.25
+    labels:
+      com.teamaibox.managed: "true"
+      com.teamaibox.core-service-key: appliance-gateway
+      com.teamaibox.resource-class: core-critical
+      com.teamaibox.privileged-boundary: appliance-loopback-mtls
+    network_mode: service:platform-api
+    environment:
+      PLATFORM_APPLIANCE_NODE_ID: ${PLATFORM_APPLIANCE_NODE_ID:?set the persistent local UUID}
+      APPLIANCE_GATEWAY_PORT: "9444"
+      APPLIANCE_PLATFORM_ORIGIN: http://127.0.0.1:8080
+      APPLIANCE_GATEWAY_TLS_CERT_FILE: /run/config/appliance/gateway.crt
+      APPLIANCE_GATEWAY_TLS_KEY_FILE: /run/secrets/appliance_gateway_tls_key
+      APPLIANCE_GATEWAY_CLIENT_CA_FILE: /run/config/appliance/ca.crt
+      APPLIANCE_GATEWAY_SIGNING_KEY_FILE: /run/secrets/appliance_gateway_signing_key
+    volumes:
+      - type: bind
+        source: ${TEAMAIBOX_APPLIANCE_PUBLIC_CONFIG_DIR:?set the local public configuration directory}
+        target: /run/config/appliance
+        read_only: true
+        bind: {create_host_path: false}
+    secrets:
+      - appliance_gateway_tls_key
+      - appliance_gateway_signing_key
+    depends_on:
+      platform-api: {condition: service_started}
+
+secrets:
+  appliance_scheduler_key:
+    file: ${TEAMAIBOX_APPLIANCE_SCHEDULER_KEY_FILE:?set the local scheduler TLS key}
+  appliance_gateway_tls_key:
+    file: ${TEAMAIBOX_APPLIANCE_GATEWAY_TLS_KEY_FILE:?set the local gateway TLS key}
+  appliance_gateway_signing_key:
+    file: ${TEAMAIBOX_APPLIANCE_GATEWAY_SIGNING_KEY_FILE:?set the local gateway signing key}
+
+
+volumes:
+  postgres_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${TEAMAIBOX_DATA_ROOT:?set the mounted encrypted appliance data root}/database/postgres
+  event_bus_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${TEAMAIBOX_DATA_ROOT:?set the mounted encrypted appliance data root}/database/event-bus
+  node_agent_state:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${TEAMAIBOX_DATA_ROOT:?set the mounted encrypted appliance data root}/node/state
+  node_agent_identity:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${TEAMAIBOX_DATA_ROOT:?set the mounted encrypted appliance data root}/node/identity
+  object_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${TEAMAIBOX_DATA_ROOT:?set the mounted encrypted appliance data root}/objects/blobs
+  object_staging:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${TEAMAIBOX_DATA_ROOT:?set the mounted encrypted appliance data root}/objects/staging
+  plugin_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${TEAMAIBOX_DATA_ROOT:?set the mounted encrypted appliance data root}/plugins/data
+  plugin_cache:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${TEAMAIBOX_DATA_ROOT:?set the mounted encrypted appliance data root}/plugins/cache
+  agent_bridge_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${TEAMAIBOX_DATA_ROOT:?set the mounted encrypted appliance data root}/agent/state
+  agent_workspace_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${TEAMAIBOX_DATA_ROOT:?set the mounted encrypted appliance data root}/agent/workspaces
+  agent_cache:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${TEAMAIBOX_DATA_ROOT:?set the mounted encrypted appliance data root}/agent/cache
+  source_cache:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${TEAMAIBOX_DATA_ROOT:?set the mounted encrypted appliance data root}/caches/software-sources
+  model_artifacts:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${TEAMAIBOX_DATA_ROOT:?set the mounted encrypted appliance data root}/models/artifacts
+  model_cache:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${TEAMAIBOX_DATA_ROOT:?set the mounted encrypted appliance data root}/models/runtime-cache
+  model_evidence:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${TEAMAIBOX_DATA_ROOT:?set the mounted encrypted appliance data root}/models/evidence
+  audit_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${TEAMAIBOX_DATA_ROOT:?set the mounted encrypted appliance data root}/audit/events
+  secrets_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${TEAMAIBOX_DATA_ROOT:?set the mounted encrypted appliance data root}/secrets/ciphertext
+  compute_worker_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${TEAMAIBOX_DATA_ROOT:?set the mounted encrypted appliance data root}/workers/data
+  diagnostics_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${TEAMAIBOX_DATA_ROOT:?set the mounted encrypted appliance data root}/diagnostics
+  observability_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${TEAMAIBOX_DATA_ROOT:?set the mounted encrypted appliance data root}/observability

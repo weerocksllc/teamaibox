@@ -1,0 +1,15 @@
+#editor{width:min(600px,calc(100vw - 32px));max-height:calc(100dvh - 40px);overflow-y:auto}
+#rom-picker{border:0;margin:24px 0 0;padding:0;min-width:0}
+#rom-picker legend{font-size:14px;font-weight:650;margin-bottom:12px}
+#rom-picker p{font-size:12px;margin:12px 0 0}
+#rom-choices{display:grid;gap:10px}
+.rom-choice{display:flex;gap:12px;align-items:flex-start;padding:16px;border:1px solid var(--line);border-radius:12px;margin:0;background:var(--panel);cursor:pointer}
+.rom-choice:has(input:checked){border-color:var(--accent);background:var(--accent-soft)}
+.rom-choice:has(input:focus-visible){outline:3px solid var(--accent);outline-offset:2px}
+.rom-choice input[type=radio]{width:18px;height:18px;flex:none;padding:0;margin:2px 0 0;accent-color:var(--accent)}
+.rom-choice strong,.rom-choice small{display:block;overflow-wrap:anywhere}
+.rom-choice strong{font-size:15px;font-weight:650}.rom-choice small{font-size:12px;color:var(--muted);line-height:1.6;margin-top:4px}
+.rom-choice[data-disabled=true]{opacity:.65;cursor:not-allowed;background:var(--panel2)}
+.rom-camera{display:block;margin:-8px 0 16px;color:var(--muted);font-size:12px}
+.system-details{font-size:12px;color:var(--muted);padding:10px 12px;border-top:1px solid var(--line);max-width:260px;overflow-wrap:anywhere}
+.system-details p{margin:8px 0}

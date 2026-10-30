@@ -1,0 +1,31 @@
+{
+  "name": "@teamaibox/agent-bridge",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./agent-sandbox-policy": "./src/agent-sandbox-policy.mjs",
+    "./source-client-config": "./src/source-client-config.mjs",
+    "./agent-sandbox-manager": "./src/agent-sandbox-manager.mjs",
+    "./agent-model-access-service": "./src/agent-model-access-service.mjs",
+    "./agent-operation-policy": "./src/agent-operation-policy.mjs",
+    "./agent-operation-confirmation-service": "./src/agent-operation-confirmation-service.mjs",
+    "./memory-operation-confirmation-repository": "./src/memory-operation-confirmation-repository.mjs",
+    "./postgres-operation-confirmation-repository": "./src/postgres-operation-confirmation-repository.mjs",
+    "./node-agent-sandbox-projector": "./src/node-agent-sandbox-projector.mjs",
+    "./agent-session-service": "./src/agent-session-service.mjs",
+    "./memory-session-repository": "./src/memory-session-repository.mjs",
+    "./memory-sandbox-repository": "./src/memory-sandbox-repository.mjs",
+    "./postgres-session-repository": "./src/postgres-session-repository.mjs",
+    "./postgres-sandbox-repository": "./src/postgres-sandbox-repository.mjs",
+    "./opencode-bridge-client": "./src/opencode-bridge-client.mjs",
+    "./opencode-bridge-http-server": "./src/opencode-bridge-http-server.mjs",
+    "./agent-bridge-route-proxy": "./src/agent-bridge-route-proxy.mjs",
+    "./opencode-adapter-registry": "./src/opencode-adapter-registry.mjs",
+    "./opencode-adapter-v1-18": "./src/opencode-adapter-v1-18.mjs"
+  },
+  "scripts": {
+    "test": "node --test test/*.test.mjs"
+  },
+  "license": "MIT"
+}

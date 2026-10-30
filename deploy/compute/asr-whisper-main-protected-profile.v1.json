@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "profileKey": "asr.whisper-small.ct2-int8.spark-local.realtime.v1",
+  "source": {
+    "model": "Systran/faster-whisper-small",
+    "revision": "536b0662742c02347bc0e980a01041f333bce120",
+    "license": {
+      "name": "MIT License",
+      "spdxId": "MIT",
+      "reviewStatus": "approved"
+    }
+  },
+  "engine": {
+    "name": "faster-whisper-ctranslate2",
+    "version": "1.2.1 / CTranslate2 4.8.1"
+  },
+  "precision": {
+    "weights": "INT8",
+    "kvCache": "not-applicable"
+  },
+  "runtime": {
+    "servedModel": "whisper-small-ct2-int8",
+    "hardMemoryBytes": 4294967296
+  }
+}

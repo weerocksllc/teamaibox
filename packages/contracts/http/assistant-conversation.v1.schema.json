@@ -1,0 +1,124 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.teamaibox.local/http/assistant-conversation.v1.schema.json",
+  "x-teamaibox-contract": { "family": "http", "role": "response", "major": 1 },
+  "title": "Assistant conversation v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "object", "title", "createdAt", "updatedAt", "messages", "confirmations", "eventCursor"],
+  "properties": {
+    "id": { "$ref": "#/$defs/uuid" },
+    "object": { "const": "assistant.conversation" },
+    "title": { "type": ["string", "null"], "maxLength": 160 },
+    "createdAt": { "type": "string", "format": "date-time" },
+    "updatedAt": { "type": "string", "format": "date-time" },
+    "messages": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/message" }
+    },
+    "confirmations": { "type": "array", "items": { "$ref": "#/$defs/confirmation" } },
+    "eventCursor": { "type": "integer", "minimum": 0 }
+  },
+  "$defs": {
+    "uuid": { "type": "string", "format": "uuid" },
+    "routing": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["effectiveMode", "targetKind", "providerKey", "modelKey", "profileKey", "reasonKey"],
+      "properties": {
+        "effectiveMode": { "enum": ["answer", "agent"] },
+        "targetKind": { "enum": ["internal", "external"] },
+        "providerKey": { "type": "string", "pattern": "^[a-z][a-z0-9_.-]{1,127}$" },
+        "modelKey": { "type": "string", "minLength": 1, "maxLength": 512 },
+        "profileKey": { "type": ["string", "null"], "maxLength": 128 },
+        "reasonKey": { "type": "string", "pattern": "^[a-z][a-z0-9_.-]{1,127}$" }
+      }
+    },
+    "artifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["referenceId", "label", "mimeType", "sizeBytes", "downloadPath"],
+      "properties": {
+        "referenceId": { "type": "string", "minLength": 2, "maxLength": 512 },
+        "label": { "type": "string", "minLength": 1, "maxLength": 240 },
+        "mimeType": { "type": "string", "minLength": 3, "maxLength": 255 },
+        "sizeBytes": { "type": "integer", "minimum": 0 },
+        "downloadPath": { "type": ["string", "null"], "maxLength": 2048 }
+      }
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["referenceId", "label", "url"],
+      "properties": {
+        "referenceId": { "type": "string", "minLength": 2, "maxLength": 512 },
+        "label": { "type": "string", "minLength": 1, "maxLength": 240 },
+        "url": { "type": ["string", "null"], "maxLength": 2048 }
+      }
+    },
+    "toolCall": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "name", "summary", "status", "startedAt", "completedAt"],
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "name": { "type": "string", "maxLength": 128 },
+        "summary": { "type": "string", "maxLength": 1000 },
+        "status": { "enum": ["running", "succeeded", "failed", "cancelled"] },
+        "startedAt": { "type": "string", "format": "date-time" },
+        "completedAt": { "type": ["string", "null"], "format": "date-time" }
+      }
+    },
+    "usage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["inputTokens", "outputTokens", "costMicrounits", "currency"],
+      "properties": {
+        "inputTokens": { "type": "integer", "minimum": 0 },
+        "outputTokens": { "type": "integer", "minimum": 0 },
+        "costMicrounits": { "type": "integer", "minimum": 0 },
+        "currency": { "type": "string", "minLength": 3, "maxLength": 8 }
+      }
+    },
+    "confirmation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "id", "ownerIdentityId", "agentSessionKey", "operationKind", "titleKey", "scope", "status", "expiresAt", "decidedAt"],
+      "properties": {
+        "kind": { "const": "agent_operation_confirmation" },
+        "id": { "$ref": "#/$defs/uuid" },
+        "ownerIdentityId": { "$ref": "#/$defs/uuid" },
+        "agentSessionKey": { "type": "string", "maxLength": 256 },
+        "operationKind": { "type": "string", "maxLength": 128 },
+        "titleKey": { "type": "string", "maxLength": 128 },
+        "scope": { "type": "object" },
+        "status": { "enum": ["pending", "approved", "denied", "expired", "cancelled"] },
+        "expiresAt": { "type": "string", "format": "date-time" },
+        "decidedAt": { "type": ["string", "null"], "format": "date-time" }
+      }
+    },
+    "message": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "object", "conversationId", "runId", "role", "content", "requestedMode", "effectiveMode", "status", "artifacts", "sources", "toolCalls", "routing", "usage", "createdAt", "completedAt"],
+      "properties": {
+        "id": { "$ref": "#/$defs/uuid" },
+        "object": { "const": "assistant.message" },
+        "conversationId": { "$ref": "#/$defs/uuid" },
+        "runId": { "$ref": "#/$defs/uuid" },
+        "role": { "enum": ["user", "assistant"] },
+        "content": { "type": "string", "maxLength": 512000 },
+        "requestedMode": { "enum": ["auto", "answer", "agent"] },
+        "effectiveMode": { "enum": ["answer", "agent"] },
+        "status": { "enum": ["streaming", "completed", "failed", "cancelled"] },
+        "artifacts": { "type": "array", "items": { "$ref": "#/$defs/artifact" } },
+        "sources": { "type": "array", "items": { "$ref": "#/$defs/source" } },
+        "toolCalls": { "type": "array", "items": { "$ref": "#/$defs/toolCall" } },
+        "routing": { "oneOf": [{ "$ref": "#/$defs/routing" }, { "type": "null" }] },
+        "usage": { "oneOf": [{ "$ref": "#/$defs/usage" }, { "type": "null" }] },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "completedAt": { "type": ["string", "null"], "format": "date-time" }
+      }
+    }
+  }
+}

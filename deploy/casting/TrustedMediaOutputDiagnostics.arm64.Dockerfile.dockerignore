@@ -1,0 +1,8 @@
+**
+!services/
+!services/trusted_media_service/
+!services/trusted_media_service/webrtc_media_output.py
+!services/trusted_media_service/livekit_browser_sink.py
+!services/trusted_media_service/receiver_supervisor.py
+!services/trusted_media_runtime/
+!services/trusted_media_runtime/main.py

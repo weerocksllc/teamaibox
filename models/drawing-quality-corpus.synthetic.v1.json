@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "corpusKey": "corpus.image.prompt-adherence",
+  "version": "1.0.0",
+  "license": "CC0-1.0",
+  "generationSeed": 20260831,
+  "contentPolicy": "Synthetic, non-sensitive, family-safe prompts only",
+  "sliceCounts": {
+    "composition": 60,
+    "style": 60,
+    "text-rendering": 40,
+    "people-hands": 40,
+    "zh-prompts": 40
+  },
+  "negativePrompt": "low quality, blurry, distorted, deformed hands, extra fingers, watermark, logo, explicit content, violence, gore",
+  "limitations": [
+    "The synthetic corpus measures repeatable release regression, not the full distribution of user creativity.",
+    "Text cases intentionally use the short uppercase token AI because SDXL Base is not a typography-specialized model."
+  ]
+}
