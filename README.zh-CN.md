@@ -5,7 +5,7 @@
 
 **Powered by NVIDIA DGX Spark · MIT · Weerocks LLC**
 
-[English](README.md) · [简体中文](README.zh-CN.md) · [繁體中文](README.zh-TW.md) · [日本語](README.ja.md) · [한국어](README.ko.md) · [Français](README.fr.md) · [Deutsch](README.de.md) · [Español](README.es.md) · [Português](README.pt-BR.md) · [Русский](README.ru.md) · [العربية](README.ar.md) · [हिन्दी](README.hi.md) · [Bahasa Indonesia](README.id.md) · [Italiano](README.it.md) · [Türkçe](README.tr.md) · [Tiếng Việt](README.vi.md) · [ไทย](README.th.md)
+[English](README.zh-CN.md) · [简体中文](README.zh-CN.md) · [繁體中文](README.zh-CN.md) · [日本語](README.zh-CN.md) · [한국어](README.zh-CN.md) · [Français](README.zh-CN.md) · [Deutsch](README.zh-CN.md) · [Español](README.zh-CN.md) · [Português](README.zh-CN.md) · [Русский](README.zh-CN.md) · [العربية](README.zh-CN.md) · [हिन्दी](README.zh-CN.md) · [Bahasa Indonesia](README.zh-CN.md) · [Italiano](README.zh-CN.md) · [Türkçe](README.zh-CN.md) · [Tiếng Việt](README.zh-CN.md) · [ไทย](README.zh-CN.md)
 
 **你的 DGX Spark，整个团队的 AI 工作空间。** Team AI Box 将一台 NVIDIA DGX Spark 变成集本地 AI、文件协作、即时通信和虚拟设备于一体的浏览器工作空间。团队可以拥有自己的部署，从不同电脑访问，不必为每位成员重复搭建 AI 环境。
 
@@ -76,6 +76,8 @@
 
 创建普通账户、管理访问权限、查看应用就绪状态和任务进度。各应用按自身依赖就绪后开放，首次模型启动可能需要等待。
 
+<a id="install"></a>
+
 ## 在全新 DGX Spark 上安装
 
 准备一台运行 **Ubuntu 24.04 ARM64 的全新 DGX Spark**，具备正常的 Docker Engine、Compose v2、NVIDIA 驱动及容器支持、KVM、Git 和 Python 3.10+。模型、容器构建与安装包需要数百 GB 临时空间。不要在已有业务数据上执行全新安装。
@@ -90,7 +92,7 @@ sudo bash install/from-source.sh
 
 ### 预检、下载问题与断点续跑
 
-`--check` 执行预检。中断后保留 `/var/tmp/teamaibox-source-build`，重跑**相同命令**，复用校验通过的下载与已完成阶段。不要并行启动重复构建或清空缓存。默认使用官方源；上游无法连接时，可按文档选择替代源，或从能联网的机器转移经校验的缓存/完整离线包，镜像站不保证可用。日志、`--cache-dir`、`--work-dir` 见[源码安装说明](install/SOURCE-INSTALL.md)。源码变化后使用新的工作目录，不绕过检查点。
+`--check` 执行预检。中断后保留 `/var/tmp/teamaibox-source-build`，重跑**相同命令**，复用校验通过的下载与已完成阶段。不要并行启动重复构建或清空缓存。默认使用官方源；上游无法连接时，可按文档选择替代源，或从能联网的机器转移经校验的缓存/完整离线包，镜像站不保证可用。日志、`--cache-dir`、`--work-dir` 见[源码安装说明](install/SOURCE-INSTALL.zh-CN.md)。源码变化后使用新的工作目录，不绕过检查点。
 
 ```sh
 sudo bash install/from-source.sh --check
@@ -102,7 +104,7 @@ sudo bash install/from-source.sh
 1. 使用 Spark 当前局域网地址打开 `https://<BOX_LAN_IP>/`，确认本机生成的 HTTPS 证书确实属于自己的设备。
 2. 使用 `admin` / `admin` 登录，**立即修改初始密码**，再创建普通账户；不要将初始凭据暴露到公网。
 3. 等待各 AI 应用分别就绪，在个人菜单选择语言与主题，从工作台开始。就绪记录位于 `/srv/teamaibox/installation/readiness.json`。
-4. 虚拟电脑由用户提供合法 Windows/Linux ARM64 ISO 与系统许可。离线目标需先取得完整安装包，再按[离线包说明](install/README.md)安装；源码准备本身不是离线过程。
+4. 虚拟电脑由用户提供合法 Windows/Linux ARM64 ISO 与系统许可。离线目标需先取得完整安装包，再按[离线包说明](install/README.zh-CN.md)安装；源码准备本身不是离线过程。
 
 ## 开源范围与实际边界
 
@@ -112,17 +114,17 @@ sudo bash install/from-source.sh
 
 欢迎提交问题、文档、翻译、无障碍改进、应用集成和代码。先用 Issue 说明用户问题，再 fork、创建专注的分支并提交 PR，附相关检查和截图。文档和独立组件贡献不要求拥有 Spark；硬件验证要如实标注。不要上传密钥、个人文件或已登录的设备镜像。安全漏洞按 SECURITY.md 私下报告，不发公开 Issue；不要求强制 CLA 或付费贡献许可。
 
-[Issues](https://github.com/weerocksllc/teamaibox/issues) · [Pull requests](https://github.com/weerocksllc/teamaibox/pulls) · [CONTRIBUTING](CONTRIBUTING.md) · [SECURITY](SECURITY.md)
+[Issues](https://github.com/weerocksllc/teamaibox/issues) · [Pull requests](https://github.com/weerocksllc/teamaibox/pulls) · [CONTRIBUTING](CONTRIBUTING.zh-CN.md) · [SECURITY](SECURITY.zh-CN.md)
 
 ## 进一步了解
 
-- [源码安装、依赖与恢复](install/SOURCE-INSTALL.md)
-- [离线包构建与安装](install/README.md)
-- [开发环境与源码构建](docs/open-source/BUILDING.md)
-- [贡献流程](CONTRIBUTING.md)
-- [私密安全报告](SECURITY.md)
-- [第三方许可与发行范围](THIRD_PARTY_NOTICES.md)
+- [源码安装、依赖与恢复](install/SOURCE-INSTALL.zh-CN.md)
+- [离线包构建与安装](install/README.zh-CN.md)
+- [开发环境与源码构建](docs/open-source/BUILDING.zh-CN.md)
+- [贡献流程](CONTRIBUTING.zh-CN.md)
+- [私密安全报告](SECURITY.zh-CN.md)
+- [第三方许可与发行范围](THIRD_PARTY_NOTICES.zh-CN.md)
 
 `apps/` · `services/` · `packages/` · `install/` · `deploy/` · `docs/`
 
-© 2026 Weerocks LLC. [MIT](LICENSE) · [第三方许可与发行范围](docs/open-source/RELEASING.md)
+© 2026 Weerocks LLC. [MIT](LICENSE) · [第三方许可与发行范围](docs/open-source/RELEASING.zh-CN.md)

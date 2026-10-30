@@ -5,7 +5,7 @@
 
 **Powered by NVIDIA DGX Spark · MIT · Weerocks LLC**
 
-[English](README.md) · [简体中文](README.zh-CN.md) · [繁體中文](README.zh-TW.md) · [日本語](README.ja.md) · [한국어](README.ko.md) · [Français](README.fr.md) · [Deutsch](README.de.md) · [Español](README.es.md) · [Português](README.pt-BR.md) · [Русский](README.ru.md) · [العربية](README.ar.md) · [हिन्दी](README.hi.md) · [Bahasa Indonesia](README.id.md) · [Italiano](README.it.md) · [Türkçe](README.tr.md) · [Tiếng Việt](README.vi.md) · [ไทย](README.th.md)
+[English](README.ja.md) · [简体中文](README.ja.md) · [繁體中文](README.ja.md) · [日本語](README.ja.md) · [한국어](README.ja.md) · [Français](README.ja.md) · [Deutsch](README.ja.md) · [Español](README.ja.md) · [Português](README.ja.md) · [Русский](README.ja.md) · [العربية](README.ja.md) · [हिन्दी](README.ja.md) · [Bahasa Indonesia](README.ja.md) · [Italiano](README.ja.md) · [Türkçe](README.ja.md) · [Tiếng Việt](README.ja.md) · [ไทย](README.ja.md)
 
 **あなたの DGX Spark を、チームの AI ワークスペースに。** Team AI Box は 1 台の NVIDIA DGX Spark にローカル AI、ファイル共有、メッセージ、仮想デバイスをまとめます。各 PC に AI 環境を構築せず、ブラウザーから自分たちの環境を利用できます。
 
@@ -76,6 +76,8 @@
 
 一般アカウントとアクセス権を管理し、アプリの準備状況や進捗を確認できます。各アプリは必要な依存サービスが準備でき次第利用可能になります。
 
+<a id="install"></a>
+
 ## 新しい DGX Spark にインストール
 
 **Ubuntu 24.04 ARM64 の未導入 DGX Spark**、動作する Docker Engine / Compose v2、NVIDIA ドライバーとコンテナー対応、KVM、Git、Python 3.10+ が必要です。モデル・ビルド・パッケージ用に数百 GB の一時空き容量を確保してください。既存の業務データを上書きしないでください。
@@ -90,7 +92,7 @@ sudo bash install/from-source.sh
 
 ### 事前確認と再開
 
-`--check` で事前確認できます。中断したら `/var/tmp/teamaibox-source-build` を残し、**同じコマンド**を再実行してください。確認済みのダウンロードと工程を再利用します。キャッシュ削除や並行ビルドは避けてください。既定は公式配布元です。接続できない場合は[インストール説明](install/SOURCE-INSTALL.md)の代替配布元、または検証済みキャッシュ/完全パッケージの転送を使います。ミラーの可用性は保証しません。コード変更後は新しい `--work-dir` を使い、チェックポイントを回避しないでください。
+`--check` で事前確認できます。中断したら `/var/tmp/teamaibox-source-build` を残し、**同じコマンド**を再実行してください。確認済みのダウンロードと工程を再利用します。キャッシュ削除や並行ビルドは避けてください。既定は公式配布元です。接続できない場合は[インストール説明](install/SOURCE-INSTALL.ja.md)の代替配布元、または検証済みキャッシュ/完全パッケージの転送を使います。ミラーの可用性は保証しません。コード変更後は新しい `--work-dir` を使い、チェックポイントを回避しないでください。
 
 ```sh
 sudo bash install/from-source.sh --check
@@ -102,7 +104,7 @@ sudo bash install/from-source.sh
 1. 現在の LAN IP で `https://<BOX_LAN_IP>/` を開き、ローカル生成された証明書が自分の機器のものか確認します。
 2. `admin` / `admin` でログインし、**初期パスワードを変更**して一般アカウントを作成します。初期認証情報を公開しないでください。
 3. 各 AI アプリの準備完了を待ち、プロフィールから言語とテーマを選びます。準備記録は `/srv/teamaibox/installation/readiness.json` にあります。
-4. 仮想 OS 用の正規 ARM64 ISO とライセンスは各自で用意します。オフライン機には先に完全パッケージを準備し、[パッケージ説明](install/README.md)に従います。ソース準備自体はオンラインです。
+4. 仮想 OS 用の正規 ARM64 ISO とライセンスは各自で用意します。オフライン機には先に完全パッケージを準備し、[パッケージ説明](install/README.ja.md)に従います。ソース準備自体はオンラインです。
 
 ## ライセンスと制約
 
@@ -112,17 +114,17 @@ sudo bash install/from-source.sh
 
 不具合報告、文書、翻訳、アクセシビリティ、連携、コードを歓迎します。Issue で課題を説明し、fork と作業ブランチを作って関連チェック・画面付きの PR を送ってください。文書や単体部品の改善に Spark は必須ではありません。実機未確認は明記し、秘密情報や個人ファイル、ログイン済みイメージは添付しないでください。脆弱性は SECURITY.md の非公開窓口へ。必須 CLA や有料の参加許可はありません。
 
-[Issues](https://github.com/weerocksllc/teamaibox/issues) · [Pull requests](https://github.com/weerocksllc/teamaibox/pulls) · [CONTRIBUTING](CONTRIBUTING.md) · [SECURITY](SECURITY.md)
+[Issues](https://github.com/weerocksllc/teamaibox/issues) · [Pull requests](https://github.com/weerocksllc/teamaibox/pulls) · [CONTRIBUTING](CONTRIBUTING.ja.md) · [SECURITY](SECURITY.ja.md)
 
 ## 詳しい資料
 
-- [ソース導入と復旧](install/SOURCE-INSTALL.md)
-- [オフラインパッケージ](install/README.md)
-- [開発環境とビルド](docs/open-source/BUILDING.md)
-- [貢献手順](CONTRIBUTING.md)
-- [非公開の安全報告](SECURITY.md)
-- [第三者ライセンスと配布範囲](THIRD_PARTY_NOTICES.md)
+- [ソース導入と復旧](install/SOURCE-INSTALL.ja.md)
+- [オフラインパッケージ](install/README.ja.md)
+- [開発環境とビルド](docs/open-source/BUILDING.ja.md)
+- [貢献手順](CONTRIBUTING.ja.md)
+- [非公開の安全報告](SECURITY.ja.md)
+- [第三者ライセンスと配布範囲](THIRD_PARTY_NOTICES.ja.md)
 
 `apps/` · `services/` · `packages/` · `install/` · `deploy/` · `docs/`
 
-© 2026 Weerocks LLC. [MIT](LICENSE) · [第三者ライセンスと配布範囲](docs/open-source/RELEASING.md)
+© 2026 Weerocks LLC. [MIT](LICENSE) · [第三者ライセンスと配布範囲](docs/open-source/RELEASING.ja.md)

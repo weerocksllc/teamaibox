@@ -2,6 +2,7 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { localeDefinitions } from '../packages/ui-system/src/locale-registry.mjs';
+import { localizeLinks } from './document-localization.mjs';
 
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 const check=process.argv.includes('--check');
@@ -17,7 +18,7 @@ for(const locale of languages){
   for(const theme of ['light','dark'])await fs.access(path.join(root,`docs/assets/screenshots/${locale.code}/workbench-${theme}.jpg`));
   const shot=`docs/assets/screenshots/${locale.code}/workbench`;
   const links=['install/SOURCE-INSTALL.md','install/README.md','docs/open-source/BUILDING.md','CONTRIBUTING.md','SECURITY.md','THIRD_PARTY_NOTICES.md'];
-  const output=`<!-- Generated from docs/readme-locales/${locale.code}.json by tools/render-readmes.mjs. -->
+  const output=localizeLinks(`<!-- Generated from docs/readme-locales/${locale.code}.json by tools/render-readmes.mjs. -->
 # Team AI Box
 
 <p><img src="docs/assets/brand/mascot.png" alt="Team AI Box" width="160" height="160"></p>
@@ -49,6 +50,8 @@ ${t.screensNote}
 ## ${t.featuresTitle}
 
 ${t.features.map(([name,body])=>`### ${name}\n\n${body}`).join('\n\n')}
+
+<a id="install"></a>
 
 ## ${t.installTitle}
 
@@ -92,7 +95,7 @@ ${links.map((link,i)=>`- [${t.resources[i]}](${link})`).join('\n')}
 \`apps/\` · \`services/\` · \`packages/\` · \`install/\` · \`deploy/\` · \`docs/\`
 
 © 2026 Weerocks LLC. [MIT](LICENSE) · [${t.resources[5]}](docs/open-source/RELEASING.md)
-`;
+`, 'README.md', locale.code);
   const target=path.join(root,filename(locale.code));
   if(check){if(await fs.readFile(target,'utf8')!==output)throw new Error(`${filename(locale.code)} is out of date`);}
   else await fs.writeFile(target,output);

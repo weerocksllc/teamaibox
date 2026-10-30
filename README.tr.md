@@ -5,7 +5,7 @@
 
 **Powered by NVIDIA DGX Spark · MIT · Weerocks LLC**
 
-[English](README.md) · [简体中文](README.zh-CN.md) · [繁體中文](README.zh-TW.md) · [日本語](README.ja.md) · [한국어](README.ko.md) · [Français](README.fr.md) · [Deutsch](README.de.md) · [Español](README.es.md) · [Português](README.pt-BR.md) · [Русский](README.ru.md) · [العربية](README.ar.md) · [हिन्दी](README.hi.md) · [Bahasa Indonesia](README.id.md) · [Italiano](README.it.md) · [Türkçe](README.tr.md) · [Tiếng Việt](README.vi.md) · [ไทย](README.th.md)
+[English](README.tr.md) · [简体中文](README.tr.md) · [繁體中文](README.tr.md) · [日本語](README.tr.md) · [한국어](README.tr.md) · [Français](README.tr.md) · [Deutsch](README.tr.md) · [Español](README.tr.md) · [Português](README.tr.md) · [Русский](README.tr.md) · [العربية](README.tr.md) · [हिन्दी](README.tr.md) · [Bahasa Indonesia](README.tr.md) · [Italiano](README.tr.md) · [Türkçe](README.tr.md) · [Tiếng Việt](README.tr.md) · [ไทย](README.tr.md)
 
 **Sizin DGX Spark'ınız, ekibinizin yapay zekâ çalışma alanı.** Team AI Box; yerel yapay zekâ, dosyalar, iletişim ve sanal cihazları tek NVIDIA DGX Spark üzerinde birleştirir. Her bilgisayara ayrı yapay zekâ ortamı kurmadan tarayıcıdan çalışın.
 
@@ -76,6 +76,8 @@ Uygulama yükleyin ve tarayıcıdan her telefonun kalıcı durumuna dönün. Cih
 
 Hesap ve erişimleri yönetin, uygulama hazırlığını ve görev ilerlemesini görün. Her uygulama kendi bağımlılıkları hazır olunca açılır; ilk model açılışı zaman alabilir.
 
+<a id="install"></a>
+
 ## Yeni DGX Spark üzerine kurulum
 
 **Ubuntu 24.04 ARM64 çalıştıran temiz DGX Spark**, çalışan Docker Engine/Compose v2, NVIDIA sürücüsü ve konteyner desteği, KVM, Git ve Python 3.10+ gerekir. Model, derleme ve paket için birkaç yüz GB geçici alan ayırın. Mevcut iş verileri üzerine yeni kurulum yapmayın.
@@ -90,7 +92,7 @@ Komutları **Spark üzerinde** çalıştırın. Betik modelleri ve girdileri ind
 
 ### Ön kontrol ve devam
 
-`--check` gereksinimleri denetler. Kesinti olursa `/var/tmp/teamaibox-source-build` dizinini koruyup **aynı komutu** çalıştırın; doğrulanan indirmeler ve aşamalar yeniden kullanılır. Önbelleği silmeyin, eşzamanlı rakip derlemeler başlatmayın. Varsayılan resmî kaynaklardır. Ulaşılamıyorsa [kılavuzdaki](install/SOURCE-INSTALL.md) seçenekleri veya doğrulanmış önbellek/tam paket aktarımını kullanın; aynaların erişilebilirliği garanti edilmez. Değişen kod için yeni `--work-dir` gerekir; kontrolleri atlamayın.
+`--check` gereksinimleri denetler. Kesinti olursa `/var/tmp/teamaibox-source-build` dizinini koruyup **aynı komutu** çalıştırın; doğrulanan indirmeler ve aşamalar yeniden kullanılır. Önbelleği silmeyin, eşzamanlı rakip derlemeler başlatmayın. Varsayılan resmî kaynaklardır. Ulaşılamıyorsa [kılavuzdaki](install/SOURCE-INSTALL.tr.md) seçenekleri veya doğrulanmış önbellek/tam paket aktarımını kullanın; aynaların erişilebilirliği garanti edilmez. Değişen kod için yeni `--work-dir` gerekir; kontrolleri atlamayın.
 
 ```sh
 sudo bash install/from-source.sh --check
@@ -102,7 +104,7 @@ sudo bash install/from-source.sh
 1. Güncel LAN adresiyle `https://<BOX_LAN_IP>/` açın ve yerel HTTPS sertifikasının cihazınıza ait olduğunu doğrulayın.
 2. `admin` / `admin` ile girin, **ilk parolayı değiştirin**, normal hesapları oluşturun. Varsayılan bilgileri internete açmayın.
 3. Uygulamaların hazır olmasını bekleyip profilden dil/tema seçin. Durum: `/srv/teamaibox/installation/readiness.json`.
-4. İzinli Windows/Linux ARM64 ISO ve lisanslarını kendiniz sağlayın. Çevrimdışı hedef için önce tam paketi hazırlayıp [kılavuzu](install/README.md) izleyin; kaynak hazırlığı çevrimiçidir.
+4. İzinli Windows/Linux ARM64 ISO ve lisanslarını kendiniz sağlayın. Çevrimdışı hedef için önce tam paketi hazırlayıp [kılavuzu](install/README.tr.md) izleyin; kaynak hazırlığı çevrimiçidir.
 
 ## Lisans ve sınırlar
 
@@ -112,17 +114,17 @@ sudo bash install/from-source.sh
 
 Hata raporu, belge, çeviri, erişilebilirlik, entegrasyon ve kod katkıları bekliyoruz. Issue ile kullanıcı sorununu anlatın, fork ve odaklı dal oluşturup ilgili kontrol ve görsellerle PR gönderin. Belgeler veya bağımsız bileşenler için Spark gerekmez; donanım doğrulamasını dürüstçe belirtin. Sırları, kişisel dosyaları ve giriş yapılmış imajları yüklemeyin. Açıkları SECURITY.md uyarınca özel bildirin. Zorunlu CLA veya ücretli katkı izni yoktur.
 
-[Issues](https://github.com/weerocksllc/teamaibox/issues) · [Pull requests](https://github.com/weerocksllc/teamaibox/pulls) · [CONTRIBUTING](CONTRIBUTING.md) · [SECURITY](SECURITY.md)
+[Issues](https://github.com/weerocksllc/teamaibox/issues) · [Pull requests](https://github.com/weerocksllc/teamaibox/pulls) · [CONTRIBUTING](CONTRIBUTING.tr.md) · [SECURITY](SECURITY.tr.md)
 
 ## Ayrıntılı kaynaklar
 
-- [Kaynak kurulumu ve kurtarma](install/SOURCE-INSTALL.md)
-- [Çevrimdışı paket](install/README.md)
-- [Geliştirme ve derleme](docs/open-source/BUILDING.md)
-- [Katkı süreci](CONTRIBUTING.md)
-- [Özel güvenlik bildirimi](SECURITY.md)
-- [Üçüncü taraf lisansları ve dağıtım kapsamı](THIRD_PARTY_NOTICES.md)
+- [Kaynak kurulumu ve kurtarma](install/SOURCE-INSTALL.tr.md)
+- [Çevrimdışı paket](install/README.tr.md)
+- [Geliştirme ve derleme](docs/open-source/BUILDING.tr.md)
+- [Katkı süreci](CONTRIBUTING.tr.md)
+- [Özel güvenlik bildirimi](SECURITY.tr.md)
+- [Üçüncü taraf lisansları ve dağıtım kapsamı](THIRD_PARTY_NOTICES.tr.md)
 
 `apps/` · `services/` · `packages/` · `install/` · `deploy/` · `docs/`
 
-© 2026 Weerocks LLC. [MIT](LICENSE) · [Üçüncü taraf lisansları ve dağıtım kapsamı](docs/open-source/RELEASING.md)
+© 2026 Weerocks LLC. [MIT](LICENSE) · [Üçüncü taraf lisansları ve dağıtım kapsamı](docs/open-source/RELEASING.tr.md)

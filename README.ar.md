@@ -5,7 +5,7 @@
 
 **Powered by NVIDIA DGX Spark · MIT · Weerocks LLC**
 
-[English](README.md) · [简体中文](README.zh-CN.md) · [繁體中文](README.zh-TW.md) · [日本語](README.ja.md) · [한국어](README.ko.md) · [Français](README.fr.md) · [Deutsch](README.de.md) · [Español](README.es.md) · [Português](README.pt-BR.md) · [Русский](README.ru.md) · [العربية](README.ar.md) · [हिन्दी](README.hi.md) · [Bahasa Indonesia](README.id.md) · [Italiano](README.it.md) · [Türkçe](README.tr.md) · [Tiếng Việt](README.vi.md) · [ไทย](README.th.md)
+[English](README.ar.md) · [简体中文](README.ar.md) · [繁體中文](README.ar.md) · [日本語](README.ar.md) · [한국어](README.ar.md) · [Français](README.ar.md) · [Deutsch](README.ar.md) · [Español](README.ar.md) · [Português](README.ar.md) · [Русский](README.ar.md) · [العربية](README.ar.md) · [हिन्दी](README.ar.md) · [Bahasa Indonesia](README.ar.md) · [Italiano](README.ar.md) · [Türkçe](README.ar.md) · [Tiếng Việt](README.ar.md) · [ไทย](README.ar.md)
 
 **جهاز DGX Spark الخاص بك، ومساحة ذكاء اصطناعي لفريقك.** يجمع Team AI Box الذكاء الاصطناعي المحلي والملفات والمحادثات والأجهزة الافتراضية على جهاز NVIDIA DGX Spark واحد. يعمل الفريق عبر المتصفح دون إعداد بيئة ذكاء اصطناعي منفصلة لكل حاسوب.
 
@@ -76,6 +76,8 @@
 
 أنشئ الحسابات وأدر الوصول وتابع جاهزية التطبيقات وتقدم المهام. يتاح كل تطبيق بعد جاهزية اعتماداته؛ قد يستغرق التشغيل الأول للنموذج وقتاً.
 
+<a id="install"></a>
+
 ## التثبيت على DGX Spark جديد
 
 تحتاج **DGX Spark غير مثبت عليه المنتج مع Ubuntu 24.04 ARM64** وDocker Engine وCompose v2 وتعريفات ودعم حاويات NVIDIA وKVM وGit وPython 3.10+. وفر عدة مئات من الجيجابايت مؤقتاً للنماذج والبناء والحزمة. لا تنفذ تثبيتاً جديداً فوق بيانات قائمة.
@@ -90,7 +92,7 @@ sudo bash install/from-source.sh
 
 ### الفحص والاستئناف
 
-يفحص `--check` المتطلبات. عند الانقطاع احتفظ بـ `/var/tmp/teamaibox-source-build` وأعد **الأمر نفسه** لاستخدام التنزيلات والمراحل المتحققة. لا تمسح الذاكرة المؤقتة ولا تبدأ بناءات متنافسة. المصادر الرسمية هي الافتراضية. عند تعذر الوصول راجع [الدليل](install/SOURCE-INSTALL.md) للبدائل أو انقل ذاكرة مؤقتة/حزمة كاملة متحققة؛ توافر المرايا غير مضمون. تغيير الشيفرة يتطلب `--work-dir` جديداً دون تجاوز نقاط التحقق.
+يفحص `--check` المتطلبات. عند الانقطاع احتفظ بـ `/var/tmp/teamaibox-source-build` وأعد **الأمر نفسه** لاستخدام التنزيلات والمراحل المتحققة. لا تمسح الذاكرة المؤقتة ولا تبدأ بناءات متنافسة. المصادر الرسمية هي الافتراضية. عند تعذر الوصول راجع [الدليل](install/SOURCE-INSTALL.ar.md) للبدائل أو انقل ذاكرة مؤقتة/حزمة كاملة متحققة؛ توافر المرايا غير مضمون. تغيير الشيفرة يتطلب `--work-dir` جديداً دون تجاوز نقاط التحقق.
 
 ```sh
 sudo bash install/from-source.sh --check
@@ -102,7 +104,7 @@ sudo bash install/from-source.sh
 1. افتح `https://<BOX_LAN_IP>/` بعنوان الشبكة الحالي وتحقق أن شهادة HTTPS المحلية تخص جهازك.
 2. ادخل بـ `admin` / `admin` ثم **غيّر كلمة المرور الأولية** وأنشئ حسابات عادية. لا تعرض بيانات الدخول الافتراضية للإنترنت.
 3. انتظر جاهزية التطبيقات واختر اللغة والسمة من الملف الشخصي. السجل: `/srv/teamaibox/installation/readiness.json`.
-4. وفر ISO مرخصة لـ Windows/Linux ARM64 وترخيص النظام. للتثبيت دون اتصال جهز الحزمة كاملة أولاً واتبع [دليلها](install/README.md)؛ تجهيز المصدر يحتاج اتصالاً.
+4. وفر ISO مرخصة لـ Windows/Linux ARM64 وترخيص النظام. للتثبيت دون اتصال جهز الحزمة كاملة أولاً واتبع [دليلها](install/README.ar.md)؛ تجهيز المصدر يحتاج اتصالاً.
 
 ## الترخيص والحدود
 
@@ -112,17 +114,17 @@ sudo bash install/from-source.sh
 
 نرحب بالبلاغات والوثائق والترجمات وتحسين الإتاحة والتكاملات والشيفرة. اشرح المشكلة في issue وأنشئ fork وفرعاً محدداً وأرسل PR مع الفحوص والصور ذات الصلة. لا تحتاج Spark لتحسين الوثائق أو المكونات المعزولة؛ وضح ما اختبر فعلياً. لا تنشر أسراراً أو ملفات شخصية أو صور أجهزة مسجل دخولها. أبلغ عن الثغرات سراً وفق SECURITY.md. لا يوجد CLA إلزامي أو إذن مدفوع للمساهمة.
 
-[Issues](https://github.com/weerocksllc/teamaibox/issues) · [Pull requests](https://github.com/weerocksllc/teamaibox/pulls) · [CONTRIBUTING](CONTRIBUTING.md) · [SECURITY](SECURITY.md)
+[Issues](https://github.com/weerocksllc/teamaibox/issues) · [Pull requests](https://github.com/weerocksllc/teamaibox/pulls) · [CONTRIBUTING](CONTRIBUTING.ar.md) · [SECURITY](SECURITY.ar.md)
 
 ## مراجع إضافية
 
-- [تثبيت المصدر والاستعادة](install/SOURCE-INSTALL.md)
-- [الحزمة دون اتصال](install/README.md)
-- [بيئة التطوير والبناء](docs/open-source/BUILDING.md)
-- [كيفية المساهمة](CONTRIBUTING.md)
-- [الإبلاغ الأمني الخاص](SECURITY.md)
-- [تراخيص الأطراف الأخرى ونطاق التوزيع](THIRD_PARTY_NOTICES.md)
+- [تثبيت المصدر والاستعادة](install/SOURCE-INSTALL.ar.md)
+- [الحزمة دون اتصال](install/README.ar.md)
+- [بيئة التطوير والبناء](docs/open-source/BUILDING.ar.md)
+- [كيفية المساهمة](CONTRIBUTING.ar.md)
+- [الإبلاغ الأمني الخاص](SECURITY.ar.md)
+- [تراخيص الأطراف الأخرى ونطاق التوزيع](THIRD_PARTY_NOTICES.ar.md)
 
 `apps/` · `services/` · `packages/` · `install/` · `deploy/` · `docs/`
 
-© 2026 Weerocks LLC. [MIT](LICENSE) · [تراخيص الأطراف الأخرى ونطاق التوزيع](docs/open-source/RELEASING.md)
+© 2026 Weerocks LLC. [MIT](LICENSE) · [تراخيص الأطراف الأخرى ونطاق التوزيع](docs/open-source/RELEASING.ar.md)

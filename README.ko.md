@@ -5,7 +5,7 @@
 
 **Powered by NVIDIA DGX Spark · MIT · Weerocks LLC**
 
-[English](README.md) · [简体中文](README.zh-CN.md) · [繁體中文](README.zh-TW.md) · [日本語](README.ja.md) · [한국어](README.ko.md) · [Français](README.fr.md) · [Deutsch](README.de.md) · [Español](README.es.md) · [Português](README.pt-BR.md) · [Русский](README.ru.md) · [العربية](README.ar.md) · [हिन्दी](README.hi.md) · [Bahasa Indonesia](README.id.md) · [Italiano](README.it.md) · [Türkçe](README.tr.md) · [Tiếng Việt](README.vi.md) · [ไทย](README.th.md)
+[English](README.ko.md) · [简体中文](README.ko.md) · [繁體中文](README.ko.md) · [日本語](README.ko.md) · [한국어](README.ko.md) · [Français](README.ko.md) · [Deutsch](README.ko.md) · [Español](README.ko.md) · [Português](README.ko.md) · [Русский](README.ko.md) · [العربية](README.ko.md) · [हिन्दी](README.ko.md) · [Bahasa Indonesia](README.ko.md) · [Italiano](README.ko.md) · [Türkçe](README.ko.md) · [Tiếng Việt](README.ko.md) · [ไทย](README.ko.md)
 
 **여러분의 DGX Spark를 팀의 AI 작업 공간으로.** Team AI Box는 NVIDIA DGX Spark 한 대에 로컬 AI, 파일 공유, 대화, 가상 기기를 통합합니다. 팀원이 각자 AI 환경을 설치할 필요 없이 브라우저에서 직접 운영하는 환경에 접속합니다.
 
@@ -76,6 +76,8 @@
 
 일반 계정과 접근 권한을 관리하고 앱 준비 상태와 진행률을 확인합니다. 각 앱은 자체 종속 서비스가 준비되면 사용할 수 있으며 최초 모델 시작에는 시간이 걸릴 수 있습니다.
 
+<a id="install"></a>
+
 ## 새 DGX Spark에 설치
 
 **Ubuntu 24.04 ARM64 기반의 미설치 DGX Spark**, 정상 작동하는 Docker Engine·Compose v2, NVIDIA 드라이버·컨테이너 지원, KVM, Git, Python 3.10+가 필요합니다. 모델·빌드·패키지용 임시 공간 수백 GB를 확보하세요. 기존 업무 데이터 위에 새로 설치하지 마세요.
@@ -90,7 +92,7 @@ sudo bash install/from-source.sh
 
 ### 사전 점검과 재개
 
-`--check`로 사전 점검합니다. 중단되면 `/var/tmp/teamaibox-source-build`를 유지하고 **동일한 명령**을 다시 실행하여 검증된 다운로드와 단계를 재사용하세요. 캐시 삭제나 중복 빌드는 피하세요. 기본은 공식 소스이며 연결이 안 되면 [설치 안내](install/SOURCE-INSTALL.md)의 대체 소스 또는 검증된 캐시/완전한 패키지 전송을 이용합니다. 미러의 가용성은 보장하지 않습니다. 소스 변경 시 새 `--work-dir`를 쓰고 체크포인트를 우회하지 마세요.
+`--check`로 사전 점검합니다. 중단되면 `/var/tmp/teamaibox-source-build`를 유지하고 **동일한 명령**을 다시 실행하여 검증된 다운로드와 단계를 재사용하세요. 캐시 삭제나 중복 빌드는 피하세요. 기본은 공식 소스이며 연결이 안 되면 [설치 안내](install/SOURCE-INSTALL.ko.md)의 대체 소스 또는 검증된 캐시/완전한 패키지 전송을 이용합니다. 미러의 가용성은 보장하지 않습니다. 소스 변경 시 새 `--work-dir`를 쓰고 체크포인트를 우회하지 마세요.
 
 ```sh
 sudo bash install/from-source.sh --check
@@ -102,7 +104,7 @@ sudo bash install/from-source.sh
 1. 현재 LAN 주소로 `https://<BOX_LAN_IP>/`를 열고 자체 생성 HTTPS 인증서가 본인 기기의 것인지 확인합니다.
 2. `admin` / `admin`으로 로그인해 **초기 비밀번호를 변경**하고 일반 계정을 만드세요. 기본 자격 증명을 인터넷에 노출하지 마세요.
 3. 각 AI 앱의 준비 완료를 기다리고 프로필 메뉴에서 언어와 테마를 고릅니다. 상태 기록은 `/srv/teamaibox/installation/readiness.json`입니다.
-4. 가상 OS에는 적법한 Windows/Linux ARM64 ISO와 라이선스를 직접 준비합니다. 오프라인 대상에는 완전한 패키지를 먼저 준비하고 [패키지 안내](install/README.md)를 따릅니다. 소스 준비 자체는 온라인 과정입니다.
+4. 가상 OS에는 적법한 Windows/Linux ARM64 ISO와 라이선스를 직접 준비합니다. 오프라인 대상에는 완전한 패키지를 먼저 준비하고 [패키지 안내](install/README.ko.md)를 따릅니다. 소스 준비 자체는 온라인 과정입니다.
 
 ## 라이선스와 범위
 
@@ -112,17 +114,17 @@ sudo bash install/from-source.sh
 
 버그 보고, 문서, 번역, 접근성, 통합과 코드를 환영합니다. Issue에 사용자 문제를 설명하고 fork·작업 브랜치를 만든 뒤 관련 확인 결과와 화면을 첨부해 PR을 보내세요. 문서나 독립 구성 요소 개선에는 Spark가 필수는 아닙니다. 실제 장비 검증 여부를 명시하고 비밀키·개인 파일·로그인된 이미지를 올리지 마세요. 취약점은 SECURITY.md의 비공개 경로로 알리세요. 필수 CLA나 유료 기여 허가는 없습니다.
 
-[Issues](https://github.com/weerocksllc/teamaibox/issues) · [Pull requests](https://github.com/weerocksllc/teamaibox/pulls) · [CONTRIBUTING](CONTRIBUTING.md) · [SECURITY](SECURITY.md)
+[Issues](https://github.com/weerocksllc/teamaibox/issues) · [Pull requests](https://github.com/weerocksllc/teamaibox/pulls) · [CONTRIBUTING](CONTRIBUTING.ko.md) · [SECURITY](SECURITY.ko.md)
 
 ## 자세한 자료
 
-- [소스 설치와 복구](install/SOURCE-INSTALL.md)
-- [오프라인 패키지](install/README.md)
-- [개발 환경과 빌드](docs/open-source/BUILDING.md)
-- [기여 절차](CONTRIBUTING.md)
-- [비공개 보안 신고](SECURITY.md)
-- [타사 라이선스와 배포 범위](THIRD_PARTY_NOTICES.md)
+- [소스 설치와 복구](install/SOURCE-INSTALL.ko.md)
+- [오프라인 패키지](install/README.ko.md)
+- [개발 환경과 빌드](docs/open-source/BUILDING.ko.md)
+- [기여 절차](CONTRIBUTING.ko.md)
+- [비공개 보안 신고](SECURITY.ko.md)
+- [타사 라이선스와 배포 범위](THIRD_PARTY_NOTICES.ko.md)
 
 `apps/` · `services/` · `packages/` · `install/` · `deploy/` · `docs/`
 
-© 2026 Weerocks LLC. [MIT](LICENSE) · [타사 라이선스와 배포 범위](docs/open-source/RELEASING.md)
+© 2026 Weerocks LLC. [MIT](LICENSE) · [타사 라이선스와 배포 범위](docs/open-source/RELEASING.ko.md)

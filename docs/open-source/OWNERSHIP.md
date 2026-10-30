@@ -1,3 +1,9 @@
+<!-- doc-navigation:start -->
+[English](OWNERSHIP.md) · [简体中文](OWNERSHIP.zh-CN.md) · [繁體中文](OWNERSHIP.zh-TW.md) · [日本語](OWNERSHIP.ja.md) · [한국어](OWNERSHIP.ko.md) · [Français](OWNERSHIP.fr.md) · [Deutsch](OWNERSHIP.de.md) · [Español](OWNERSHIP.es.md) · [Português](OWNERSHIP.pt-BR.md) · [Русский](OWNERSHIP.ru.md) · [العربية](OWNERSHIP.ar.md) · [हिन्दी](OWNERSHIP.hi.md) · [Bahasa Indonesia](OWNERSHIP.id.md) · [Italiano](OWNERSHIP.it.md) · [Türkçe](OWNERSHIP.tr.md) · [Tiếng Việt](OWNERSHIP.vi.md) · [ไทย](OWNERSHIP.th.md)
+
+[Team AI Box — README](../../README.md)
+<!-- doc-navigation:end -->
+
 # Copyright and provenance scope
 
 MIT is applied on the project owner's instruction to original Team AI Box
@@ -19,7 +25,7 @@ inferred from that history.
 | Google Play/GMS | Proprietary; not in public source artifact | Integration code is distinct from proprietary runtime images; existing private test use is not redistribution permission |
 | Retired ViKey SDK and vendor manual/header | Excluded; original rights reserved | Removed from current source tree; retained privately, not given a new license |
 | Private logs, account data, VM disks, certificates and old Git history | Excluded | No public redistribution grant; source export contains no private history |
-| Marketing website, article templates, website content and deployment configuration (`website/`) | Excluded from public product source distribution | Maintained separately in the private GitLab repository; distinct from the appliance UI in `apps/` |
+| Marketing website, article templates, website content and deployment configuration (`website/`) | Excluded from public product source distribution | Maintained separately in the private website repository; GitLab is a historical archive; distinct from the appliance UI in `apps/` |
 
 Do not remove upstream copyright statements, attribute external work to Weerocks,
 or assume all similarly named model variants have the same terms. A contributor

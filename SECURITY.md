@@ -1,3 +1,9 @@
+<!-- doc-navigation:start -->
+[English](SECURITY.md) · [简体中文](SECURITY.zh-CN.md) · [繁體中文](SECURITY.zh-TW.md) · [日本語](SECURITY.ja.md) · [한국어](SECURITY.ko.md) · [Français](SECURITY.fr.md) · [Deutsch](SECURITY.de.md) · [Español](SECURITY.es.md) · [Português](SECURITY.pt-BR.md) · [Русский](SECURITY.ru.md) · [العربية](SECURITY.ar.md) · [हिन्दी](SECURITY.hi.md) · [Bahasa Indonesia](SECURITY.id.md) · [Italiano](SECURITY.it.md) · [Türkçe](SECURITY.tr.md) · [Tiếng Việt](SECURITY.vi.md) · [ไทย](SECURITY.th.md)
+
+[Team AI Box — README](README.md)
+<!-- doc-navigation:end -->
+
 # Security reports
 
 Please report suspected vulnerabilities privately to **teamaibox@weerocks.llc**.
@@ -13,6 +19,9 @@ hide in a scanner allowlist. No ordinary user account is created automatically.
 Changing this onboarding behavior is outside this licensing change.
 
 ## Source/history review
+
+See [the public source privacy boundary](docs/open-source/SOURCE-PRIVACY.md) for
+excluded data, history review and credential-rotation responsibilities.
 
 Run the pinned local scanner as described in [release preparation](docs/open-source/RELEASING.md).
 Reports are private, redacted and never uploaded to an external scanning service.

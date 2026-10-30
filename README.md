@@ -5,7 +5,7 @@
 
 **Powered by NVIDIA DGX Spark · MIT · Weerocks LLC**
 
-[English](README.md) · [简体中文](README.zh-CN.md) · [繁體中文](README.zh-TW.md) · [日本語](README.ja.md) · [한국어](README.ko.md) · [Français](README.fr.md) · [Deutsch](README.de.md) · [Español](README.es.md) · [Português](README.pt-BR.md) · [Русский](README.ru.md) · [العربية](README.ar.md) · [हिन्दी](README.hi.md) · [Bahasa Indonesia](README.id.md) · [Italiano](README.it.md) · [Türkçe](README.tr.md) · [Tiếng Việt](README.vi.md) · [ไทย](README.th.md)
+[English](README.md) · [简体中文](README.md) · [繁體中文](README.md) · [日本語](README.md) · [한국어](README.md) · [Français](README.md) · [Deutsch](README.md) · [Español](README.md) · [Português](README.md) · [Русский](README.md) · [العربية](README.md) · [हिन्दी](README.md) · [Bahasa Indonesia](README.md) · [Italiano](README.md) · [Türkçe](README.md) · [Tiếng Việt](README.md) · [ไทย](README.md)
 
 **Your DGX Spark. Your team's AI workspace.** Team AI Box turns one NVIDIA DGX Spark into a browser-based workspace for local AI, shared files, communication and virtual devices. It is built for teams that want to own their deployment and use the same tools from multiple computers, without installing a separate AI stack on every desk.
 
@@ -75,6 +75,8 @@ Upload an authorized ARM64 ISO or select one from team drive, mount the virtual 
 ### Team administration and task visibility
 
 Create ordinary accounts, manage access and see application readiness and task progress. An application becomes available when its own dependencies are ready; first model startup can take time.
+
+<a id="install"></a>
 
 ## Install on a fresh DGX Spark
 

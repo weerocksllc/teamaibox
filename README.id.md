@@ -5,7 +5,7 @@
 
 **Powered by NVIDIA DGX Spark · MIT · Weerocks LLC**
 
-[English](README.md) · [简体中文](README.zh-CN.md) · [繁體中文](README.zh-TW.md) · [日本語](README.ja.md) · [한국어](README.ko.md) · [Français](README.fr.md) · [Deutsch](README.de.md) · [Español](README.es.md) · [Português](README.pt-BR.md) · [Русский](README.ru.md) · [العربية](README.ar.md) · [हिन्दी](README.hi.md) · [Bahasa Indonesia](README.id.md) · [Italiano](README.it.md) · [Türkçe](README.tr.md) · [Tiếng Việt](README.vi.md) · [ไทย](README.th.md)
+[English](README.id.md) · [简体中文](README.id.md) · [繁體中文](README.id.md) · [日本語](README.id.md) · [한국어](README.id.md) · [Français](README.id.md) · [Deutsch](README.id.md) · [Español](README.id.md) · [Português](README.id.md) · [Русский](README.id.md) · [العربية](README.id.md) · [हिन्दी](README.id.md) · [Bahasa Indonesia](README.id.md) · [Italiano](README.id.md) · [Türkçe](README.id.md) · [Tiếng Việt](README.id.md) · [ไทย](README.id.md)
 
 **DGX Spark Anda. Ruang AI untuk tim Anda.** Team AI Box menyatukan AI lokal, berkas, komunikasi, dan perangkat virtual pada satu NVIDIA DGX Spark. Tim mengaksesnya melalui browser tanpa memasang lingkungan AI di setiap komputer.
 
@@ -76,6 +76,8 @@ Unggah ISO ARM64 berizin atau pilih dari drive, pasang ke drive optik virtual, l
 
 Buat akun, atur akses, dan lihat kesiapan aplikasi serta kemajuan tugas. Tiap aplikasi terbuka ketika dependensinya siap; awal pemuatan model bisa membutuhkan waktu.
 
+<a id="install"></a>
+
 ## Instal pada DGX Spark baru
 
 Siapkan **DGX Spark kosong dengan Ubuntu 24.04 ARM64**, Docker Engine/Compose v2, driver dan dukungan kontainer NVIDIA, KVM, Git, serta Python 3.10+ yang berfungsi. Sediakan ratusan GB ruang sementara untuk model, build, dan paket. Jangan lakukan instalasi baru di atas data yang ada.
@@ -90,7 +92,7 @@ Jalankan perintah **pada Spark**. Skrip mengunduh input dan model, membangun ima
 
 ### Pemeriksaan dan melanjutkan
 
-`--check` memeriksa prasyarat. Jika terputus, simpan `/var/tmp/teamaibox-source-build` dan jalankan **perintah yang sama** untuk menggunakan ulang unduhan dan tahap terverifikasi. Jangan hapus cache atau menjalankan build bersamaan. Sumber resmi digunakan secara bawaan. Jika tidak terjangkau, lihat [panduan](install/SOURCE-INSTALL.md) untuk sumber alternatif atau transfer cache/paket terverifikasi; mirror tidak dijamin tersedia. Kode berubah memerlukan `--work-dir` baru, bukan melewati pemeriksaan.
+`--check` memeriksa prasyarat. Jika terputus, simpan `/var/tmp/teamaibox-source-build` dan jalankan **perintah yang sama** untuk menggunakan ulang unduhan dan tahap terverifikasi. Jangan hapus cache atau menjalankan build bersamaan. Sumber resmi digunakan secara bawaan. Jika tidak terjangkau, lihat [panduan](install/SOURCE-INSTALL.id.md) untuk sumber alternatif atau transfer cache/paket terverifikasi; mirror tidak dijamin tersedia. Kode berubah memerlukan `--work-dir` baru, bukan melewati pemeriksaan.
 
 ```sh
 sudo bash install/from-source.sh --check
@@ -102,7 +104,7 @@ sudo bash install/from-source.sh
 1. Buka `https://<BOX_LAN_IP>/` dengan alamat LAN terkini dan pastikan sertifikat HTTPS lokal milik perangkat Anda.
 2. Masuk dengan `admin` / `admin`, **ubah kata sandi awal**, lalu buat akun biasa. Jangan paparkan kredensial awal ke Internet.
 3. Tunggu tiap aplikasi siap dan pilih bahasa/tema melalui profil. Status: `/srv/teamaibox/installation/readiness.json`.
-4. Sediakan ISO ARM64 Windows/Linux dan lisensi yang sah. Untuk target offline, siapkan paket lengkap dahulu lalu ikuti [panduan paket](install/README.md); persiapan sumber tetap online.
+4. Sediakan ISO ARM64 Windows/Linux dan lisensi yang sah. Untuk target offline, siapkan paket lengkap dahulu lalu ikuti [panduan paket](install/README.id.md); persiapan sumber tetap online.
 
 ## Lisensi dan batasan
 
@@ -112,17 +114,17 @@ Kode asli serta dokumentasi berlisensi MIT, **bukan semua biner instalasi**. Kom
 
 Laporan bug, dokumentasi, terjemahan, aksesibilitas, integrasi, dan kode sangat diterima. Jelaskan masalah dalam issue, buat fork dan branch terfokus, lalu PR dengan pemeriksaan dan gambar terkait. Spark tidak wajib untuk dokumen atau komponen terisolasi; jelaskan bukti perangkat keras dengan jujur. Jangan unggah rahasia, berkas pribadi, atau image yang sudah login. Laporkan kerentanan secara privat sesuai SECURITY.md. Tidak ada CLA wajib atau izin berbayar.
 
-[Issues](https://github.com/weerocksllc/teamaibox/issues) · [Pull requests](https://github.com/weerocksllc/teamaibox/pulls) · [CONTRIBUTING](CONTRIBUTING.md) · [SECURITY](SECURITY.md)
+[Issues](https://github.com/weerocksllc/teamaibox/issues) · [Pull requests](https://github.com/weerocksllc/teamaibox/pulls) · [CONTRIBUTING](CONTRIBUTING.id.md) · [SECURITY](SECURITY.id.md)
 
 ## Pelajari lebih lanjut
 
-- [Instalasi sumber dan pemulihan](install/SOURCE-INSTALL.md)
-- [Paket offline](install/README.md)
-- [Pengembangan dan build](docs/open-source/BUILDING.md)
-- [Alur kontribusi](CONTRIBUTING.md)
-- [Pelaporan keamanan privat](SECURITY.md)
-- [Lisensi pihak ketiga dan cakupan rilis](THIRD_PARTY_NOTICES.md)
+- [Instalasi sumber dan pemulihan](install/SOURCE-INSTALL.id.md)
+- [Paket offline](install/README.id.md)
+- [Pengembangan dan build](docs/open-source/BUILDING.id.md)
+- [Alur kontribusi](CONTRIBUTING.id.md)
+- [Pelaporan keamanan privat](SECURITY.id.md)
+- [Lisensi pihak ketiga dan cakupan rilis](THIRD_PARTY_NOTICES.id.md)
 
 `apps/` · `services/` · `packages/` · `install/` · `deploy/` · `docs/`
 
-© 2026 Weerocks LLC. [MIT](LICENSE) · [Lisensi pihak ketiga dan cakupan rilis](docs/open-source/RELEASING.md)
+© 2026 Weerocks LLC. [MIT](LICENSE) · [Lisensi pihak ketiga dan cakupan rilis](docs/open-source/RELEASING.id.md)

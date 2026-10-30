@@ -1,3 +1,9 @@
+<!-- doc-navigation:start -->
+[English](CONTRIBUTING.md) · [简体中文](CONTRIBUTING.zh-CN.md) · [繁體中文](CONTRIBUTING.zh-TW.md) · [日本語](CONTRIBUTING.ja.md) · [한국어](CONTRIBUTING.ko.md) · [Français](CONTRIBUTING.fr.md) · [Deutsch](CONTRIBUTING.de.md) · [Español](CONTRIBUTING.es.md) · [Português](CONTRIBUTING.pt-BR.md) · [Русский](CONTRIBUTING.ru.md) · [العربية](CONTRIBUTING.ar.md) · [हिन्दी](CONTRIBUTING.hi.md) · [Bahasa Indonesia](CONTRIBUTING.id.md) · [Italiano](CONTRIBUTING.it.md) · [Türkçe](CONTRIBUTING.tr.md) · [Tiếng Việt](CONTRIBUTING.vi.md) · [ไทย](CONTRIBUTING.th.md)
+
+[Team AI Box — README](README.md)
+<!-- doc-navigation:end -->
+
 # Contributing
 
 Thanks for helping improve Team AI Box. We welcome first-time contributors:
@@ -31,6 +37,17 @@ All 17 product languages have a README. Edit `docs/readme-locales/<locale>.json`
 then run `node tools/render-readmes.mjs` and
 `node tools/render-readmes.mjs --check`. Do not hand-edit generated READMEs.
 The locale list comes from `packages/ui-system/src/locale-registry.mjs`.
+The linked installation, build, contribution, security and licensing guides use
+the same 17 languages. Their document list is in `docs/document-locales/manifest.json`.
+Edit the source-language page and paragraph translations in
+`docs/document-locales/<locale>.json`, then run `node tools/render-documents.mjs`,
+`node tools/render-readmes.mjs` and `node tools/check-document-locales.mjs`.
+Translation keys are SHA-256 hashes of source paragraphs; a source change fails
+the renderer until the corresponding translations are updated. Code examples
+are shared verbatim, and document links are generated for the selected language.
+New translations are machine-assisted drafts with protected code and links;
+linguistic and terminology review is welcome. Generation and checks run locally,
+without a translation service, API key or access to an appliance.
 See [the screenshot policy](docs/assets/screenshots/README.md) before adding
 public images. Translations, including terminology and natural phrasing, are
 welcome review contributions.

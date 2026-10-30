@@ -5,7 +5,7 @@
 
 **Powered by NVIDIA DGX Spark · MIT · Weerocks LLC**
 
-[English](README.md) · [简体中文](README.zh-CN.md) · [繁體中文](README.zh-TW.md) · [日本語](README.ja.md) · [한국어](README.ko.md) · [Français](README.fr.md) · [Deutsch](README.de.md) · [Español](README.es.md) · [Português](README.pt-BR.md) · [Русский](README.ru.md) · [العربية](README.ar.md) · [हिन्दी](README.hi.md) · [Bahasa Indonesia](README.id.md) · [Italiano](README.it.md) · [Türkçe](README.tr.md) · [Tiếng Việt](README.vi.md) · [ไทย](README.th.md)
+[English](README.ru.md) · [简体中文](README.ru.md) · [繁體中文](README.ru.md) · [日本語](README.ru.md) · [한국어](README.ru.md) · [Français](README.ru.md) · [Deutsch](README.ru.md) · [Español](README.ru.md) · [Português](README.ru.md) · [Русский](README.ru.md) · [العربية](README.ru.md) · [हिन्दी](README.ru.md) · [Bahasa Indonesia](README.ru.md) · [Italiano](README.ru.md) · [Türkçe](README.ru.md) · [Tiếng Việt](README.ru.md) · [ไทย](README.ru.md)
 
 **Ваш DGX Spark — ИИ-пространство всей команды.** Team AI Box объединяет локальный ИИ, файлы, общение и виртуальные устройства на одном NVIDIA DGX Spark. Команда работает через браузер без отдельной ИИ-среды на каждом компьютере.
 
@@ -76,6 +76,8 @@
 
 Создавайте аккаунты, назначайте доступ, следите за готовностью приложений и прогрессом. Каждое приложение открывается после готовности своих зависимостей; первый запуск моделей может занять время.
 
+<a id="install"></a>
+
 ## Установка на новый DGX Spark
 
 Нужен **чистый DGX Spark с Ubuntu 24.04 ARM64**, рабочими Docker Engine/Compose v2, драйверами и контейнерами NVIDIA, KVM, Git и Python 3.10+. Оставьте несколько сотен ГБ временного места для моделей, сборки и пакета. Не устанавливайте заново поверх рабочих данных.
@@ -90,7 +92,7 @@ sudo bash install/from-source.sh
 
 ### Проверка и продолжение
 
-`--check` проверяет условия. После прерывания сохраните `/var/tmp/teamaibox-source-build` и повторите **ту же команду**: проверенные загрузки и этапы используются повторно. Не удаляйте кэш и не запускайте конкурирующие сборки. По умолчанию источники официальные. При недоступности используйте варианты из [инструкции](install/SOURCE-INSTALL.md) либо перенесите проверенный кэш/полный пакет. Доступность зеркал не гарантируется. Для изменённого кода нужен новый `--work-dir`, а не обход проверок.
+`--check` проверяет условия. После прерывания сохраните `/var/tmp/teamaibox-source-build` и повторите **ту же команду**: проверенные загрузки и этапы используются повторно. Не удаляйте кэш и не запускайте конкурирующие сборки. По умолчанию источники официальные. При недоступности используйте варианты из [инструкции](install/SOURCE-INSTALL.ru.md) либо перенесите проверенный кэш/полный пакет. Доступность зеркал не гарантируется. Для изменённого кода нужен новый `--work-dir`, а не обход проверок.
 
 ```sh
 sudo bash install/from-source.sh --check
@@ -102,7 +104,7 @@ sudo bash install/from-source.sh
 1. Откройте `https://<BOX_LAN_IP>/` по текущему LAN-адресу и проверьте, что локальный HTTPS-сертификат принадлежит вашему устройству.
 2. Войдите как `admin` / `admin`, **смените начальный пароль**, создайте обычные аккаунты. Не выставляйте исходные данные входа в Интернет.
 3. Дождитесь готовности приложений и выберите язык/тему в профиле. Статус: `/srv/teamaibox/installation/readiness.json`.
-4. Предоставьте законные ARM64 ISO и лицензии Windows/Linux. Для автономной машины сначала подготовьте полный пакет по [инструкции](install/README.md); подготовка из исходников требует сети.
+4. Предоставьте законные ARM64 ISO и лицензии Windows/Linux. Для автономной машины сначала подготовьте полный пакет по [инструкции](install/README.ru.md); подготовка из исходников требует сети.
 
 ## Лицензия и ограничения
 
@@ -112,17 +114,17 @@ sudo bash install/from-source.sh
 
 Приветствуются ошибки, документация, переводы, доступность, интеграции и код. Опишите проблему в issue, создайте fork и отдельную ветку, отправьте PR с относящимися к изменению проверками и снимками. Для документов и изолированных компонентов Spark необязателен; честно указывайте аппаратную проверку. Не публикуйте секреты, личные файлы или авторизованные образы. Уязвимости сообщайте приватно по SECURITY.md. Обязательного CLA и платного разрешения нет.
 
-[Issues](https://github.com/weerocksllc/teamaibox/issues) · [Pull requests](https://github.com/weerocksllc/teamaibox/pulls) · [CONTRIBUTING](CONTRIBUTING.md) · [SECURITY](SECURITY.md)
+[Issues](https://github.com/weerocksllc/teamaibox/issues) · [Pull requests](https://github.com/weerocksllc/teamaibox/pulls) · [CONTRIBUTING](CONTRIBUTING.ru.md) · [SECURITY](SECURITY.ru.md)
 
 ## Документация
 
-- [Установка из исходников и восстановление](install/SOURCE-INSTALL.md)
-- [Автономный пакет](install/README.md)
-- [Среда разработки](docs/open-source/BUILDING.md)
-- [Участие в проекте](CONTRIBUTING.md)
-- [Приватное сообщение об уязвимостях](SECURITY.md)
-- [Сторонние лицензии и состав выпуска](THIRD_PARTY_NOTICES.md)
+- [Установка из исходников и восстановление](install/SOURCE-INSTALL.ru.md)
+- [Автономный пакет](install/README.ru.md)
+- [Среда разработки](docs/open-source/BUILDING.ru.md)
+- [Участие в проекте](CONTRIBUTING.ru.md)
+- [Приватное сообщение об уязвимостях](SECURITY.ru.md)
+- [Сторонние лицензии и состав выпуска](THIRD_PARTY_NOTICES.ru.md)
 
 `apps/` · `services/` · `packages/` · `install/` · `deploy/` · `docs/`
 
-© 2026 Weerocks LLC. [MIT](LICENSE) · [Сторонние лицензии и состав выпуска](docs/open-source/RELEASING.md)
+© 2026 Weerocks LLC. [MIT](LICENSE) · [Сторонние лицензии и состав выпуска](docs/open-source/RELEASING.ru.md)

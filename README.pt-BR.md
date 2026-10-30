@@ -5,7 +5,7 @@
 
 **Powered by NVIDIA DGX Spark · MIT · Weerocks LLC**
 
-[English](README.md) · [简体中文](README.zh-CN.md) · [繁體中文](README.zh-TW.md) · [日本語](README.ja.md) · [한국어](README.ko.md) · [Français](README.fr.md) · [Deutsch](README.de.md) · [Español](README.es.md) · [Português](README.pt-BR.md) · [Русский](README.ru.md) · [العربية](README.ar.md) · [हिन्दी](README.hi.md) · [Bahasa Indonesia](README.id.md) · [Italiano](README.it.md) · [Türkçe](README.tr.md) · [Tiếng Việt](README.vi.md) · [ไทย](README.th.md)
+[English](README.pt-BR.md) · [简体中文](README.pt-BR.md) · [繁體中文](README.pt-BR.md) · [日本語](README.pt-BR.md) · [한국어](README.pt-BR.md) · [Français](README.pt-BR.md) · [Deutsch](README.pt-BR.md) · [Español](README.pt-BR.md) · [Português](README.pt-BR.md) · [Русский](README.pt-BR.md) · [العربية](README.pt-BR.md) · [हिन्दी](README.pt-BR.md) · [Bahasa Indonesia](README.pt-BR.md) · [Italiano](README.pt-BR.md) · [Türkçe](README.pt-BR.md) · [Tiếng Việt](README.pt-BR.md) · [ไทย](README.pt-BR.md)
 
 **Seu DGX Spark. O espaço de IA da sua equipe.** O Team AI Box reúne IA local, arquivos, comunicação e dispositivos virtuais em um único NVIDIA DGX Spark. A equipe usa o navegador, sem instalar uma pilha de IA em cada computador.
 
@@ -76,6 +76,8 @@ Envie uma ISO ARM64 autorizada ou escolha no drive, monte a unidade óptica virt
 
 Crie contas, gerencie acessos e acompanhe a disponibilidade e o progresso. Cada aplicativo abre quando suas dependências ficam prontas; a primeira inicialização de modelos pode demorar.
 
+<a id="install"></a>
+
 ## Instalar em um DGX Spark novo
 
 Use um **DGX Spark sem instalação prévia, com Ubuntu 24.04 ARM64**, Docker Engine/Compose v2, drivers e contêineres NVIDIA funcionando, KVM, Git e Python 3.10+. Reserve centenas de GB temporários para modelos, builds e pacote. Não instale do zero sobre dados existentes.
@@ -90,7 +92,7 @@ Execute os comandos **no Spark**. O script baixa modelos e entradas, constrói i
 
 ### Pré-verificação e retomada
 
-`--check` verifica pré-requisitos. Após interrupção, preserve `/var/tmp/teamaibox-source-build` e repita **o mesmo comando** para reutilizar downloads verificados e etapas concluídas. Não apague o cache nem inicie builds concorrentes. O padrão usa fontes oficiais. Se inacessíveis, veja [o guia](install/SOURCE-INSTALL.md) para alternativas ou transferência de cache/pacote verificado; espelhos não têm disponibilidade garantida. Código alterado exige novo `--work-dir`, sem ignorar verificações.
+`--check` verifica pré-requisitos. Após interrupção, preserve `/var/tmp/teamaibox-source-build` e repita **o mesmo comando** para reutilizar downloads verificados e etapas concluídas. Não apague o cache nem inicie builds concorrentes. O padrão usa fontes oficiais. Se inacessíveis, veja [o guia](install/SOURCE-INSTALL.pt-BR.md) para alternativas ou transferência de cache/pacote verificado; espelhos não têm disponibilidade garantida. Código alterado exige novo `--work-dir`, sem ignorar verificações.
 
 ```sh
 sudo bash install/from-source.sh --check
@@ -102,7 +104,7 @@ sudo bash install/from-source.sh
 1. Abra `https://<BOX_LAN_IP>/` no IP LAN atual e confirme que o certificado HTTPS local é do seu dispositivo.
 2. Entre com `admin` / `admin`, **troque a senha inicial** e crie contas comuns. Não exponha essas credenciais na Internet.
 3. Aguarde cada aplicativo ficar pronto e escolha idioma/tema no perfil. Estado: `/srv/teamaibox/installation/readiness.json`.
-4. Forneça ISOs ARM64 e licenças autorizadas de Windows/Linux. Para instalação offline, prepare primeiro o pacote completo e siga [o guia](install/README.md). A preparação do código é online.
+4. Forneça ISOs ARM64 e licenças autorizadas de Windows/Linux. Para instalação offline, prepare primeiro o pacote completo e siga [o guia](install/README.pt-BR.md). A preparação do código é online.
 
 ## Licença e limites
 
@@ -112,17 +114,17 @@ Código próprio e documentação são MIT, **não todos os binários da instala
 
 Recebemos relatos de bugs, documentação, traduções, acessibilidade, integrações e código. Explique o problema em uma issue, faça fork e uma branch focada e envie PR com verificações e capturas relevantes. Não precisa de Spark para documentação ou componentes isolados; informe os testes reais de hardware. Não publique segredos, arquivos pessoais ou imagens com login. Vulnerabilidades devem ser relatadas em privado conforme SECURITY.md. Sem CLA obrigatório ou autorização paga.
 
-[Issues](https://github.com/weerocksllc/teamaibox/issues) · [Pull requests](https://github.com/weerocksllc/teamaibox/pulls) · [CONTRIBUTING](CONTRIBUTING.md) · [SECURITY](SECURITY.md)
+[Issues](https://github.com/weerocksllc/teamaibox/issues) · [Pull requests](https://github.com/weerocksllc/teamaibox/pulls) · [CONTRIBUTING](CONTRIBUTING.pt-BR.md) · [SECURITY](SECURITY.pt-BR.md)
 
 ## Saiba mais
 
-- [Instalação do código e recuperação](install/SOURCE-INSTALL.md)
-- [Pacote offline](install/README.md)
-- [Ambiente de desenvolvimento](docs/open-source/BUILDING.md)
-- [Como contribuir](CONTRIBUTING.md)
-- [Relato privado de segurança](SECURITY.md)
-- [Licenças de terceiros e distribuição](THIRD_PARTY_NOTICES.md)
+- [Instalação do código e recuperação](install/SOURCE-INSTALL.pt-BR.md)
+- [Pacote offline](install/README.pt-BR.md)
+- [Ambiente de desenvolvimento](docs/open-source/BUILDING.pt-BR.md)
+- [Como contribuir](CONTRIBUTING.pt-BR.md)
+- [Relato privado de segurança](SECURITY.pt-BR.md)
+- [Licenças de terceiros e distribuição](THIRD_PARTY_NOTICES.pt-BR.md)
 
 `apps/` · `services/` · `packages/` · `install/` · `deploy/` · `docs/`
 
-© 2026 Weerocks LLC. [MIT](LICENSE) · [Licenças de terceiros e distribuição](docs/open-source/RELEASING.md)
+© 2026 Weerocks LLC. [MIT](LICENSE) · [Licenças de terceiros e distribuição](docs/open-source/RELEASING.pt-BR.md)

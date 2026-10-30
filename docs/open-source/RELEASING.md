@@ -1,4 +1,10 @@
-# Release boundaries / 发行边界
+<!-- doc-navigation:start -->
+[English](RELEASING.md) · [简体中文](RELEASING.zh-CN.md) · [繁體中文](RELEASING.zh-TW.md) · [日本語](RELEASING.ja.md) · [한국어](RELEASING.ko.md) · [Français](RELEASING.fr.md) · [Deutsch](RELEASING.de.md) · [Español](RELEASING.es.md) · [Português](RELEASING.pt-BR.md) · [Русский](RELEASING.ru.md) · [العربية](RELEASING.ar.md) · [हिन्दी](RELEASING.hi.md) · [Bahasa Indonesia](RELEASING.id.md) · [Italiano](RELEASING.it.md) · [Türkçe](RELEASING.tr.md) · [Tiếng Việt](RELEASING.vi.md) · [ไทย](RELEASING.th.md)
+
+[Team AI Box — README](../../README.md)
+<!-- doc-navigation:end -->
+
+# Release boundaries
 
 ## Separate artifacts
 
@@ -86,8 +92,3 @@ No command here pushes Git, changes visibility, rewrites history, rotates live
 credentials, changes a device or grants third-party redistribution rights.
 Public release requires an explicitly chosen public destination and final
 artifact review. Preserve `delivery-2026-10-22` in the private repository.
-
-中文：本流程只生成本地源码候选及审阅报告，不自动公开仓库。历史敏感记录保留在
-私有仓库；如发现有效凭据，应由所有者安排轮换，不能把删文件当作已撤销凭据。
-官网及文章模板在独立私有 GitHub 仓库维护，GitLab 只作历史归档；官网不属于公开产品源码，盒子内部的应用界面
-仍属于开源产品。公开源码目录不能包含 `website/`，也不能继承曾包含官网的历史。

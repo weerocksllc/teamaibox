@@ -1,3 +1,9 @@
+<!-- doc-navigation:start -->
+[English](PUBLIC-BUILD.md) · [简体中文](PUBLIC-BUILD.zh-CN.md) · [繁體中文](PUBLIC-BUILD.zh-TW.md) · [日本語](PUBLIC-BUILD.ja.md) · [한국어](PUBLIC-BUILD.ko.md) · [Français](PUBLIC-BUILD.fr.md) · [Deutsch](PUBLIC-BUILD.de.md) · [Español](PUBLIC-BUILD.es.md) · [Português](PUBLIC-BUILD.pt-BR.md) · [Русский](PUBLIC-BUILD.ru.md) · [العربية](PUBLIC-BUILD.ar.md) · [हिन्दी](PUBLIC-BUILD.hi.md) · [Bahasa Indonesia](PUBLIC-BUILD.id.md) · [Italiano](PUBLIC-BUILD.it.md) · [Türkçe](PUBLIC-BUILD.tr.md) · [Tiếng Việt](PUBLIC-BUILD.vi.md) · [ไทย](PUBLIC-BUILD.th.md)
+
+[Team AI Box — README](../README.md)
+<!-- doc-navigation:end -->
+
 # Build an appliance from the public source
 
 The new orchestration entry point is documented in
@@ -64,7 +70,7 @@ KVM, VNC and PulseAudio support, preserving the original Windows runtime's
 capabilities. Debian supplies runtime libraries, but its older packaged QEMU
 must not replace this executable. The final image checks both the ARM TIS `ppi`
 property and PulseAudio backend and includes the matching RAM framebuffer ROM.
-See `deploy/windows-computer/README.md` for the bounded runtime probe and
+See [the virtual-computer runtime guide](../deploy/windows-computer/README.md) for the bounded runtime probe and
 data-preserving update requirements.
 
 Each role has a log. A failed report preserves successful role outputs; build
@@ -235,7 +241,7 @@ No placeholder or previous installation configuration is acceptable.
 Run `prepare-release.py --inputs … --output …`, then `build-package.sh` using
 that prepared release. Modified/uncommitted sources require the explicit
 `--allow-working-tree` candidate flag; they are not a released commit.
-See [PACKAGE-README.md](PACKAGE-README.md) for installation. A new blank account
+See [PACKAGE-README.md](PACKAGE-README.en.md) for installation. A new blank account
 database gets `admin/admin`; all service credentials and device identity are
 generated independently. Builds alone do not prove installation succeeded.
 

@@ -1,11 +1,17 @@
-# Build the source / 源码构建
+<!-- doc-navigation:start -->
+[English](BUILDING.md) · [简体中文](BUILDING.zh-CN.md) · [繁體中文](BUILDING.zh-TW.md) · [日本語](BUILDING.ja.md) · [한국어](BUILDING.ko.md) · [Français](BUILDING.fr.md) · [Deutsch](BUILDING.de.md) · [Español](BUILDING.es.md) · [Português](BUILDING.pt-BR.md) · [Русский](BUILDING.ru.md) · [العربية](BUILDING.ar.md) · [हिन्दी](BUILDING.hi.md) · [Bahasa Indonesia](BUILDING.id.md) · [Italiano](BUILDING.it.md) · [Türkçe](BUILDING.tr.md) · [Tiếng Việt](BUILDING.vi.md) · [ไทย](BUILDING.th.md)
+
+[Team AI Box — README](../../README.md)
+<!-- doc-navigation:end -->
+
+# Build the source
 
 The public artifact is source, not a prebuilt offline appliance image. A source
 build may download dependencies; installation using a prepared full package
 remains offline. Neither process needs a ViKey SDK or a USB key.
 
 For a complete appliance installation, start with the root
-[quick start](../../README.md#install-on-a-fresh-dgx-spark) and
+[quick start](../../README.md#install) and
 [source installer](../../install/SOURCE-INSTALL.md):
 `sudo bash install/from-source.sh` downloads, builds, packages and installs on
 a compatible fresh Spark. The development web build below is not that installer
@@ -81,6 +87,3 @@ download unless those rights are obtained. An AOSP-only public binary edition
 would be a separately scoped packaging change, not silently substituted here.
 Windows/Linux ISO files are provided by each user; no installed test guests or
 account states are public build inputs.
-
-中文：公开的是自研源码及可公开的构建材料；完整离线包里的模型、系统、Google
-服务和驱动仍分别适用原许可。不能把测试用离线包直接作为 MIT 安装包公开下载。

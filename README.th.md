@@ -5,7 +5,7 @@
 
 **Powered by NVIDIA DGX Spark · MIT · Weerocks LLC**
 
-[English](README.md) · [简体中文](README.zh-CN.md) · [繁體中文](README.zh-TW.md) · [日本語](README.ja.md) · [한국어](README.ko.md) · [Français](README.fr.md) · [Deutsch](README.de.md) · [Español](README.es.md) · [Português](README.pt-BR.md) · [Русский](README.ru.md) · [العربية](README.ar.md) · [हिन्दी](README.hi.md) · [Bahasa Indonesia](README.id.md) · [Italiano](README.it.md) · [Türkçe](README.tr.md) · [Tiếng Việt](README.vi.md) · [ไทย](README.th.md)
+[English](README.th.md) · [简体中文](README.th.md) · [繁體中文](README.th.md) · [日本語](README.th.md) · [한국어](README.th.md) · [Français](README.th.md) · [Deutsch](README.th.md) · [Español](README.th.md) · [Português](README.th.md) · [Русский](README.th.md) · [العربية](README.th.md) · [हिन्दी](README.th.md) · [Bahasa Indonesia](README.th.md) · [Italiano](README.th.md) · [Türkçe](README.th.md) · [Tiếng Việt](README.th.md) · [ไทย](README.th.md)
 
 **DGX Spark ของคุณ พื้นที่ AI ของทั้งทีม** Team AI Box รวม AI ภายในเครื่อง ไฟล์ การสื่อสาร และอุปกรณ์เสมือนไว้บน NVIDIA DGX Spark เครื่องเดียว ทีมเข้าถึงผ่านเบราว์เซอร์โดยไม่ต้องติดตั้งระบบ AI แยกทุกเครื่อง
 
@@ -76,6 +76,8 @@
 
 สร้างบัญชี จัดการสิทธิ์ และดูความพร้อมของแอปกับความคืบหน้า แต่ละแอปเปิดเมื่อบริการที่ต้องใช้พร้อม การเริ่มโมเดลครั้งแรกอาจใช้เวลา
 
+<a id="install"></a>
+
 ## ติดตั้งบน DGX Spark ใหม่
 
 ใช้ **DGX Spark ที่ยังไม่ติดตั้งผลิตภัณฑ์ พร้อม Ubuntu 24.04 ARM64** มี Docker Engine/Compose v2 ไดรเวอร์และคอนเทนเนอร์ NVIDIA KVM Git และ Python 3.10+ ที่ทำงานได้ เตรียมพื้นที่ชั่วคราวหลายร้อย GB สำหรับโมเดล การสร้าง และแพ็กเกจ ห้ามติดตั้งใหม่ทับข้อมูลเดิม
@@ -90,7 +92,7 @@ sudo bash install/from-source.sh
 
 ### ตรวจสอบก่อนและทำต่อ
 
-`--check` ตรวจข้อกำหนด หากหยุดกลางทางให้เก็บ `/var/tmp/teamaibox-source-build` แล้วรัน **คำสั่งเดิม** เพื่อใช้ไฟล์และขั้นตอนที่ตรวจแล้วต่อ อย่าลบแคชหรือสร้างซ้ำพร้อมกัน ค่าเริ่มต้นเป็นแหล่งทางการ หากเข้าถึงไม่ได้ให้อ่าน [คู่มือ](install/SOURCE-INSTALL.md) เรื่องแหล่งอื่นหรือย้ายแคช/แพ็กเกจที่ตรวจสอบแล้ว มิเรอร์ไม่รับประกันความพร้อม หากโค้ดเปลี่ยนให้ใช้ `--work-dir` ใหม่ ไม่ข้ามการตรวจสอบ
+`--check` ตรวจข้อกำหนด หากหยุดกลางทางให้เก็บ `/var/tmp/teamaibox-source-build` แล้วรัน **คำสั่งเดิม** เพื่อใช้ไฟล์และขั้นตอนที่ตรวจแล้วต่อ อย่าลบแคชหรือสร้างซ้ำพร้อมกัน ค่าเริ่มต้นเป็นแหล่งทางการ หากเข้าถึงไม่ได้ให้อ่าน [คู่มือ](install/SOURCE-INSTALL.th.md) เรื่องแหล่งอื่นหรือย้ายแคช/แพ็กเกจที่ตรวจสอบแล้ว มิเรอร์ไม่รับประกันความพร้อม หากโค้ดเปลี่ยนให้ใช้ `--work-dir` ใหม่ ไม่ข้ามการตรวจสอบ
 
 ```sh
 sudo bash install/from-source.sh --check
@@ -102,7 +104,7 @@ sudo bash install/from-source.sh
 1. เปิด `https://<BOX_LAN_IP>/` ด้วย IP ใน LAN ปัจจุบัน และยืนยันว่าใบรับรอง HTTPS ภายในเป็นของอุปกรณ์ตนเอง
 2. เข้าสู่ระบบด้วย `admin` / `admin` แล้ว **เปลี่ยนรหัสผ่านเริ่มต้น** และสร้างบัญชีทั่วไป อย่าเปิดข้อมูลเริ่มต้นนี้สู่อินเทอร์เน็ต
 3. รอแต่ละแอปพร้อม แล้วเลือกภาษา/ธีมในโปรไฟล์ สถานะอยู่ที่ `/srv/teamaibox/installation/readiness.json`
-4. จัดเตรียม ISO ARM64 Windows/Linux และสิทธิ์ใช้งานเอง สำหรับเครื่องออฟไลน์ต้องเตรียมแพ็กเกจครบก่อนและทำตาม [คู่มือ](install/README.md) การเตรียมจากซอร์สต้องออนไลน์
+4. จัดเตรียม ISO ARM64 Windows/Linux และสิทธิ์ใช้งานเอง สำหรับเครื่องออฟไลน์ต้องเตรียมแพ็กเกจครบก่อนและทำตาม [คู่มือ](install/README.th.md) การเตรียมจากซอร์สต้องออนไลน์
 
 ## สิทธิ์ใช้งานและข้อจำกัด
 
@@ -112,17 +114,17 @@ sudo bash install/from-source.sh
 
 ยินดีรับรายงานบั๊ก เอกสาร คำแปล การเข้าถึง การเชื่อมต่อ และโค้ด อธิบายปัญหาใน issue ทำ fork และสาขาที่เน้นประเด็น แล้วส่ง PR พร้อมการตรวจและภาพที่เกี่ยวข้อง งานเอกสารหรือองค์ประกอบแยกไม่ต้องมี Spark แต่ต้องบอกการตรวจฮาร์ดแวร์ตามจริง ห้ามส่งความลับ ไฟล์ส่วนตัว หรืออิมเมจที่ล็อกอินแล้ว แจ้งช่องโหว่เป็นส่วนตัวตาม SECURITY.md ไม่มี CLA บังคับหรือค่าอนุญาตร่วมพัฒนา
 
-[Issues](https://github.com/weerocksllc/teamaibox/issues) · [Pull requests](https://github.com/weerocksllc/teamaibox/pulls) · [CONTRIBUTING](CONTRIBUTING.md) · [SECURITY](SECURITY.md)
+[Issues](https://github.com/weerocksllc/teamaibox/issues) · [Pull requests](https://github.com/weerocksllc/teamaibox/pulls) · [CONTRIBUTING](CONTRIBUTING.th.md) · [SECURITY](SECURITY.th.md)
 
 ## อ่านเพิ่มเติม
 
-- [ติดตั้งจากซอร์สและกู้คืน](install/SOURCE-INSTALL.md)
-- [แพ็กเกจออฟไลน์](install/README.md)
-- [พัฒนาและสร้างซอร์ส](docs/open-source/BUILDING.md)
-- [ขั้นตอนร่วมพัฒนา](CONTRIBUTING.md)
-- [แจ้งปัญหาความปลอดภัยส่วนตัว](SECURITY.md)
-- [สิทธิ์บุคคลที่สามและขอบเขตแจกจ่าย](THIRD_PARTY_NOTICES.md)
+- [ติดตั้งจากซอร์สและกู้คืน](install/SOURCE-INSTALL.th.md)
+- [แพ็กเกจออฟไลน์](install/README.th.md)
+- [พัฒนาและสร้างซอร์ส](docs/open-source/BUILDING.th.md)
+- [ขั้นตอนร่วมพัฒนา](CONTRIBUTING.th.md)
+- [แจ้งปัญหาความปลอดภัยส่วนตัว](SECURITY.th.md)
+- [สิทธิ์บุคคลที่สามและขอบเขตแจกจ่าย](THIRD_PARTY_NOTICES.th.md)
 
 `apps/` · `services/` · `packages/` · `install/` · `deploy/` · `docs/`
 
-© 2026 Weerocks LLC. [MIT](LICENSE) · [สิทธิ์บุคคลที่สามและขอบเขตแจกจ่าย](docs/open-source/RELEASING.md)
+© 2026 Weerocks LLC. [MIT](LICENSE) · [สิทธิ์บุคคลที่สามและขอบเขตแจกจ่าย](docs/open-source/RELEASING.th.md)

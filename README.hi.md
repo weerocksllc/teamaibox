@@ -5,7 +5,7 @@
 
 **Powered by NVIDIA DGX Spark · MIT · Weerocks LLC**
 
-[English](README.md) · [简体中文](README.zh-CN.md) · [繁體中文](README.zh-TW.md) · [日本語](README.ja.md) · [한국어](README.ko.md) · [Français](README.fr.md) · [Deutsch](README.de.md) · [Español](README.es.md) · [Português](README.pt-BR.md) · [Русский](README.ru.md) · [العربية](README.ar.md) · [हिन्दी](README.hi.md) · [Bahasa Indonesia](README.id.md) · [Italiano](README.it.md) · [Türkçe](README.tr.md) · [Tiếng Việt](README.vi.md) · [ไทย](README.th.md)
+[English](README.hi.md) · [简体中文](README.hi.md) · [繁體中文](README.hi.md) · [日本語](README.hi.md) · [한국어](README.hi.md) · [Français](README.hi.md) · [Deutsch](README.hi.md) · [Español](README.hi.md) · [Português](README.hi.md) · [Русский](README.hi.md) · [العربية](README.hi.md) · [हिन्दी](README.hi.md) · [Bahasa Indonesia](README.hi.md) · [Italiano](README.hi.md) · [Türkçe](README.hi.md) · [Tiếng Việt](README.hi.md) · [ไทย](README.hi.md)
 
 **आपका DGX Spark, आपकी टीम का AI कार्यक्षेत्र।** Team AI Box एक NVIDIA DGX Spark पर स्थानीय AI, फ़ाइलें, बातचीत और वर्चुअल डिवाइस एक साथ लाता है। हर कंप्यूटर पर अलग AI व्यवस्था बनाने के बजाय टीम ब्राउज़र से काम करती है।
 
@@ -76,6 +76,8 @@
 
 खाते और पहुँच प्रबंधित करें तथा ऐप की तैयारी और कार्य प्रगति देखें। हर ऐप अपनी निर्भरताएँ तैयार होने पर खुलता है; मॉडल का पहला आरंभ समय ले सकता है।
 
+<a id="install"></a>
+
 ## नए DGX Spark पर स्थापना
 
 **Ubuntu 24.04 ARM64 वाला नया DGX Spark**, कार्यरत Docker Engine/Compose v2, NVIDIA ड्राइवर और कंटेनर समर्थन, KVM, Git तथा Python 3.10+ चाहिए। मॉडल, बिल्ड और पैकेज के लिए कई सौ GB अस्थायी स्थान रखें। मौजूदा व्यावसायिक डेटा के ऊपर नई स्थापना न करें।
@@ -90,7 +92,7 @@ sudo bash install/from-source.sh
 
 ### पूर्व-जाँच और फिर से शुरू करना
 
-`--check` आवश्यकताएँ जाँचता है। बाधा आने पर `/var/tmp/teamaibox-source-build` रखें और **वही कमांड** दोहराएँ; सत्यापित डाउनलोड और चरण पुनः उपयोग होंगे। कैश न मिटाएँ और समानांतर प्रतिस्पर्धी बिल्ड न चलाएँ। डिफ़ॉल्ट आधिकारिक स्रोत हैं। पहुँच न मिले तो [गाइड](install/SOURCE-INSTALL.md) के विकल्प या सत्यापित कैश/पूरा पैकेज स्थानांतरित करें; मिरर की उपलब्धता की गारंटी नहीं है। कोड बदलने पर नया `--work-dir` लें, जाँच को न लाँघें।
+`--check` आवश्यकताएँ जाँचता है। बाधा आने पर `/var/tmp/teamaibox-source-build` रखें और **वही कमांड** दोहराएँ; सत्यापित डाउनलोड और चरण पुनः उपयोग होंगे। कैश न मिटाएँ और समानांतर प्रतिस्पर्धी बिल्ड न चलाएँ। डिफ़ॉल्ट आधिकारिक स्रोत हैं। पहुँच न मिले तो [गाइड](install/SOURCE-INSTALL.hi.md) के विकल्प या सत्यापित कैश/पूरा पैकेज स्थानांतरित करें; मिरर की उपलब्धता की गारंटी नहीं है। कोड बदलने पर नया `--work-dir` लें, जाँच को न लाँघें।
 
 ```sh
 sudo bash install/from-source.sh --check
@@ -102,7 +104,7 @@ sudo bash install/from-source.sh
 1. वर्तमान LAN IP से `https://<BOX_LAN_IP>/` खोलें और सुनिश्चित करें कि स्थानीय HTTPS प्रमाणपत्र आपके डिवाइस का है।
 2. `admin` / `admin` से प्रवेश कर **प्रारंभिक पासवर्ड बदलें**, फिर सामान्य खाते बनाएँ। डिफ़ॉल्ट पहचान विवरण इंटरनेट पर उजागर न करें।
 3. ऐप तैयार होने दें और प्रोफ़ाइल में भाषा/थीम चुनें। स्थिति: `/srv/teamaibox/installation/readiness.json`।
-4. अपनी अधिकृत Windows/Linux ARM64 ISO और लाइसेंस दें। ऑफ़लाइन लक्ष्य के लिए पहले पूरा पैकेज तैयार करके [गाइड](install/README.md) का पालन करें; स्रोत तैयारी ऑनलाइन होती है।
+4. अपनी अधिकृत Windows/Linux ARM64 ISO और लाइसेंस दें। ऑफ़लाइन लक्ष्य के लिए पहले पूरा पैकेज तैयार करके [गाइड](install/README.hi.md) का पालन करें; स्रोत तैयारी ऑनलाइन होती है।
 
 ## लाइसेंस और सीमाएँ
 
@@ -112,17 +114,17 @@ sudo bash install/from-source.sh
 
 बग, दस्तावेज़, अनुवाद, सुलभता, एकीकरण और कोड का स्वागत है। issue में समस्या बताएँ, fork और केंद्रित शाखा बनाएँ, संबंधित जाँच व स्क्रीन के साथ PR भेजें। दस्तावेज़ या अलग घटकों के लिए Spark आवश्यक नहीं; हार्डवेयर जाँच ईमानदारी से बताएँ। रहस्य, निजी फ़ाइलें या लॉगिन वाली इमेज न डालें। सुरक्षा समस्या SECURITY.md के अनुसार निजी रूप से बताएँ। अनिवार्य CLA या सशुल्क अनुमति नहीं है।
 
-[Issues](https://github.com/weerocksllc/teamaibox/issues) · [Pull requests](https://github.com/weerocksllc/teamaibox/pulls) · [CONTRIBUTING](CONTRIBUTING.md) · [SECURITY](SECURITY.md)
+[Issues](https://github.com/weerocksllc/teamaibox/issues) · [Pull requests](https://github.com/weerocksllc/teamaibox/pulls) · [CONTRIBUTING](CONTRIBUTING.hi.md) · [SECURITY](SECURITY.hi.md)
 
 ## अधिक जानकारी
 
-- [स्रोत स्थापना और पुनर्प्राप्ति](install/SOURCE-INSTALL.md)
-- [ऑफ़लाइन पैकेज](install/README.md)
-- [डेवलपमेंट और बिल्ड](docs/open-source/BUILDING.md)
-- [योगदान प्रक्रिया](CONTRIBUTING.md)
-- [निजी सुरक्षा रिपोर्ट](SECURITY.md)
-- [तृतीय-पक्ष लाइसेंस और वितरण सीमा](THIRD_PARTY_NOTICES.md)
+- [स्रोत स्थापना और पुनर्प्राप्ति](install/SOURCE-INSTALL.hi.md)
+- [ऑफ़लाइन पैकेज](install/README.hi.md)
+- [डेवलपमेंट और बिल्ड](docs/open-source/BUILDING.hi.md)
+- [योगदान प्रक्रिया](CONTRIBUTING.hi.md)
+- [निजी सुरक्षा रिपोर्ट](SECURITY.hi.md)
+- [तृतीय-पक्ष लाइसेंस और वितरण सीमा](THIRD_PARTY_NOTICES.hi.md)
 
 `apps/` · `services/` · `packages/` · `install/` · `deploy/` · `docs/`
 
-© 2026 Weerocks LLC. [MIT](LICENSE) · [तृतीय-पक्ष लाइसेंस और वितरण सीमा](docs/open-source/RELEASING.md)
+© 2026 Weerocks LLC. [MIT](LICENSE) · [तृतीय-पक्ष लाइसेंस और वितरण सीमा](docs/open-source/RELEASING.hi.md)

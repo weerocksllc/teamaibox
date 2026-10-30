@@ -1,0 +1,18 @@
+{
+  "version": 1,
+  "documents": [
+    {"path": "install/SOURCE-INSTALL.md", "sourceLocale": "en"},
+    {"path": "install/README.md", "sourceLocale": "en"},
+    {"path": "install/PUBLIC-BUILD.md", "sourceLocale": "en"},
+    {"path": "install/PACKAGE-README.md", "sourceLocale": "zh-CN", "portable": true},
+    {"path": "docs/open-source/BUILDING.md", "sourceLocale": "en"},
+    {"path": "docs/open-source/RELEASING.md", "sourceLocale": "en"},
+    {"path": "docs/open-source/OWNERSHIP.md", "sourceLocale": "en"},
+    {"path": "docs/open-source/SOURCE-PRIVACY.md", "sourceLocale": "en"},
+    {"path": "CONTRIBUTING.md", "sourceLocale": "en"},
+    {"path": "SECURITY.md", "sourceLocale": "en"},
+    {"path": "THIRD_PARTY_NOTICES.md", "sourceLocale": "en"},
+    {"path": "docs/assets/screenshots/README.md", "sourceLocale": "en"},
+    {"path": "deploy/windows-computer/README.md", "sourceLocale": "en"}
+  ]
+}

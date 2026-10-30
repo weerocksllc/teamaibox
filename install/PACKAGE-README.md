@@ -1,3 +1,9 @@
+<!-- doc-navigation:start -->
+[English](https://github.com/weerocksllc/teamaibox/blob/main/install/PACKAGE-README.en.md) · [简体中文](https://github.com/weerocksllc/teamaibox/blob/main/install/PACKAGE-README.md) · [繁體中文](https://github.com/weerocksllc/teamaibox/blob/main/install/PACKAGE-README.zh-TW.md) · [日本語](https://github.com/weerocksllc/teamaibox/blob/main/install/PACKAGE-README.ja.md) · [한국어](https://github.com/weerocksllc/teamaibox/blob/main/install/PACKAGE-README.ko.md) · [Français](https://github.com/weerocksllc/teamaibox/blob/main/install/PACKAGE-README.fr.md) · [Deutsch](https://github.com/weerocksllc/teamaibox/blob/main/install/PACKAGE-README.de.md) · [Español](https://github.com/weerocksllc/teamaibox/blob/main/install/PACKAGE-README.es.md) · [Português](https://github.com/weerocksllc/teamaibox/blob/main/install/PACKAGE-README.pt-BR.md) · [Русский](https://github.com/weerocksllc/teamaibox/blob/main/install/PACKAGE-README.ru.md) · [العربية](https://github.com/weerocksllc/teamaibox/blob/main/install/PACKAGE-README.ar.md) · [हिन्दी](https://github.com/weerocksllc/teamaibox/blob/main/install/PACKAGE-README.hi.md) · [Bahasa Indonesia](https://github.com/weerocksllc/teamaibox/blob/main/install/PACKAGE-README.id.md) · [Italiano](https://github.com/weerocksllc/teamaibox/blob/main/install/PACKAGE-README.it.md) · [Türkçe](https://github.com/weerocksllc/teamaibox/blob/main/install/PACKAGE-README.tr.md) · [Tiếng Việt](https://github.com/weerocksllc/teamaibox/blob/main/install/PACKAGE-README.vi.md) · [ไทย](https://github.com/weerocksllc/teamaibox/blob/main/install/PACKAGE-README.th.md)
+
+[Team AI Box — README](https://github.com/weerocksllc/teamaibox/blob/main/README.zh-CN.md)
+<!-- doc-navigation:end -->
+
 # Team AI Box 离线安装包
 
 自研代码许可证见包内 `LICENSE`；第三方保持原许可，详见 `THIRD_PARTY_NOTICES.md`
@@ -12,9 +18,9 @@
 先用发行包旁的 `.sha256` 文件校验归档，再解包：
 
 ```sh
-sha256sum -c teamaibox-<发行号>-linux-arm64.tar.sha256
-tar -xf teamaibox-<发行号>-linux-arm64.tar
-cd teamaibox-<发行号>-linux-arm64
+sha256sum -c teamaibox-<releaseId>-linux-arm64.tar.sha256
+tar -xf teamaibox-<releaseId>-linux-arm64.tar
+cd teamaibox-<releaseId>-linux-arm64
 sudo ./install.sh
 ```
 
@@ -24,7 +30,7 @@ sudo ./install.sh
 
 可先运行 `sudo ./install.sh --check`，只校验环境和包，不安装。
 `./install.sh --verify-package` 仅校验包内容，也可在打包工作站运行。
-可用 `--installation-root /专用路径/installation` 指定新安装根；不能指向旧数据目录。
+可用 `--installation-root /dedicated/path/installation` 指定新安装根；不能指向旧数据目录。
 
 ## 中断与现有数据
 
