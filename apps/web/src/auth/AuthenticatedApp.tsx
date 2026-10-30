@@ -1,8 +1,9 @@
-import { ArrowRight, Check, Command, Copy, KeyRound, LoaderCircle, LockKeyhole, RefreshCw, ShieldCheck, X } from "lucide-react";
+import { ArrowRight, Check, Copy, KeyRound, LoaderCircle, LockKeyhole, RefreshCw, ShieldCheck, X } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 
 import { App } from "../App";
 import { CompanyFooter } from "../CompanyFooter";
+import { BrandLogo } from "../BrandLogo";
 import { createI18nRuntime, type Locale } from "../i18n";
 import {useAppearanceSync} from '../preferences/useAppearanceSync';
 import {
@@ -312,7 +313,7 @@ export function AuthenticatedApp() {
   return (
     <main className="auth-shell auth-shell--showcase">
       <header className="auth-masthead">
-        <div className="auth-wordmark"><span><Command size={25} strokeWidth={1.8} aria-hidden="true" /></span><div className="auth-wordmark__copy"><strong>{t("brand.name")}</strong><small>Powered By DGX Spark</small></div></div>
+        <div className="auth-wordmark"><BrandLogo size={48} /><div className="auth-wordmark__copy"><strong>{t("brand.name")}</strong><small>Powered By DGX Spark</small></div></div>
         <AppearancePreferences locale={locale} theme={themePreference} onLocaleChange={changeLocale} onThemeChange={changeTheme} t={t} />
       </header>
       <AuthShowcase t={t} />

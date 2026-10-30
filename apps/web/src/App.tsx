@@ -11,7 +11,6 @@ import {
   CircleUserRound,
   CloudCog,
   Clock3,
-  Command,
   Cast,
   FileCheck2,
   FlaskConical,
@@ -46,6 +45,7 @@ import {
 import { lazy, Suspense, useEffect, useMemo, useRef, useState } from "react";
 import { Button } from "@teamaibox/ui-system/components";
 import { CompanyFooter } from "./CompanyFooter";
+import { BrandLogo } from "./BrandLogo";
 import { containModalFocus, focusPopover } from "./modal-focus";
 import { taskLabel } from "./activity/task-label";
 
@@ -558,7 +558,7 @@ export function App() {
         role={mobileMenuOpen ? "dialog" : undefined} aria-modal={mobileMenuOpen || undefined}
         aria-label={t("nav.applications")} className={`sidebar ${mobileMenuOpen ? "sidebar--open" : ""}`}>
         <div className="brand-block">
-          <div className="brand-mark"><Command size={19} strokeWidth={2.2} aria-hidden="true" /></div>
+          <div className="brand-mark"><BrandLogo size={36} /></div>
           <div>
             <strong>{t("brand.name")}</strong>
             <span>{t("brand.tagline")}</span>

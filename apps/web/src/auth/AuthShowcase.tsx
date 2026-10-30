@@ -1,4 +1,5 @@
-import { Command, FolderClosed, MessagesSquare, Monitor, ShieldCheck, Sparkles } from "lucide-react";
+import { FolderClosed, MessagesSquare, Monitor, ShieldCheck, Sparkles } from "lucide-react";
+import { BrandLogo } from "../BrandLogo";
 
 /** A capability illustration, not a live dashboard or a hardware product render. */
 export function AuthShowcase({ t }: { t: (key: string) => string }) {
@@ -15,9 +16,7 @@ export function AuthShowcase({ t }: { t: (key: string) => string }) {
           <path d="M80 175h480M320 30v215M150 80l340 170M150 250L490 80" />
         </svg>
         <div className="auth-orbit__core">
-          <div className="auth-orbit__tile auth-orbit__tile--bottom" />
-          <div className="auth-orbit__tile auth-orbit__tile--middle" />
-          <div className="auth-orbit__tile auth-orbit__tile--top"><Command size={50} strokeWidth={1.4} /></div>
+          <BrandLogo size={160} />
         </div>
         <span className="auth-orbit__label auth-orbit__label--ai"><Sparkles size={18} />{t("auth.feature_ai")}</span>
         <span className="auth-orbit__label auth-orbit__label--files"><FolderClosed size={18} />{t("auth.orbit_files")}</span>

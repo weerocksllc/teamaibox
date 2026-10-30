@@ -20,6 +20,8 @@ for(const locale of languages){
   const output=`<!-- Generated from docs/readme-locales/${locale.code}.json by tools/render-readmes.mjs. -->
 # Team AI Box
 
+<p><img src="docs/assets/brand/mascot.png" alt="Team AI Box" width="160" height="160"></p>
+
 **Powered by NVIDIA DGX Spark · MIT · Weerocks LLC**
 
 ${languageLinks}
