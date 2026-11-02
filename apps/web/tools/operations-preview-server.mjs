@@ -34,6 +34,20 @@ const previewCatalog = { schemaVersion: 1, applications: [
     localization: { supportedLocales: supportedLocaleCodes, fallbackLocale: "zh-CN", supportedDirections: ["ltr","rtl"], rtlReady: true },
     themes: { supported: ["light", "dark"], usesSemanticTokens: true, livePreferenceEvents: true } },
 })) };
+// Contract-shaped, synthetic drawing choices for UI checks only. No model or job
+// execution is provided, and the preview never forwards requests to a box.
+const drawingPreview = previewCatalog.applications.find(app => app.pluginKey === "official.drawing");
+const drawingProfileId = "00000000-0000-4000-8000-000000000601";
+drawingPreview.models = [{ capabilityKey: "image-generation", route: "local", available: true, intentRouter: {
+  schema: "teamaibox.drawing-intents.v2", policyVersion: "protected-main-default.v1",
+  actualProfileDisclosureRequired: true, externalProcessingDisclosureRequired: false,
+  ordinaryPolicy: { fallbackAllowed: false, requiredPlacementClass: "protected-resident", requiredNodeRole: "main-box", selectedProfile: "synthetic.drawing", selectedProfileId: drawingProfileId },
+  intents: ["automatic", "fast"].map(intentKey => ({ intentKey, modelAlias: `drawing.${intentKey}`, operation: "images.generations", available: true, reasonCode: null,
+    selectedProfile: "synthetic.drawing", selectedProfileId: drawingProfileId, selectedProfileDisplayName: "Synthetic UI preview", certificationState: "certified",
+    route: "local", processingLocation: "appliance", placementClass: "protected-resident", nodeRole: "main-box", precision: "Preview only", exclusive: false,
+    defaults: { steps: 4, guidanceScale: 1, count: 1 }, constraints: { negativePrompt: false, maskInpainting: false, maximumCount: 1, maximumReferenceImages: 0 },
+  })),
+} }];
 const port = Number(process.env.TEAMAIBOX_PREVIEW_PORT ?? 4174);
 const responseDelayMilliseconds = Number(process.env.TEAMAIBOX_PREVIEW_RESPONSE_DELAY_MS ?? 0);
 const previewDataState = process.env.TEAMAIBOX_PREVIEW_DATA_STATE ?? "ready";
@@ -105,6 +119,19 @@ const activity = { generatedAt: "2026-08-11T12:22:14.000Z", availability: [
   { taskId: "018f6f18-24d7-7c21-9b62-8c0174199532", taskKind: "drawing", titleKey: "tasks.kind.drawing", state: "preparing", progress: 12, progressRevision: 1, cancellationRequested: false, wait: { reasonKey: "tasks.wait.model_loading", estimateStatus: "estimated", estimatedSeconds: 48 }, failure: null, results: [], canCancel: true, createdAt: "2026-08-11T12:19:00.000Z", updatedAt: "2026-08-11T12:21:00.000Z", terminalAt: null },
   { taskId: "018f6f18-24d7-7c21-9b62-8c0174199533", taskKind: "ocr", titleKey: "tasks.kind.ocr", state: "completed", progress: 100, progressRevision: 1, cancellationRequested: false, wait: { reasonKey: null, estimateStatus: "not_applicable", estimatedSeconds: null }, failure: null, results: [{ label: "result", artifactRef: "artifact:v1:ocr-result" }], canCancel: false, createdAt: "2026-08-11T10:00:00.000Z", updatedAt: "2026-08-11T10:03:00.000Z", terminalAt: "2026-08-11T10:03:00.000Z" },
 ], summary: { total: 3, active: 2, waiting: 1, failed: 0 } };
+
+// Explicit UI-only variants for task reading, not executable jobs. Keep the
+// normal fixture unchanged unless this loopback preview option is requested.
+if (process.env.TEAMAIBOX_PREVIEW_TASK_VARIANTS === "1") {
+  activity.tasks.push(...["failed", "cancelled", "queued"].map((state, index) => ({
+    ...activity.tasks[0], taskId: `00000000-0000-4000-8000-00000000070${index}`,
+    taskKind: "translation", titleKey: "tasks.kind.translation", state,
+    progress: state === "queued" ? 0 : 32, canCancel: state === "queued",
+    failure: state === "failed" ? { code: "synthetic_failure", guidanceKey: "tasks.failure.retry_later", retryable: true, retryAction: null } : null,
+    terminalAt: state === "queued" ? null : activity.generatedAt,
+  })));
+  activity.summary = { total: 6, active: 3, waiting: 2, failed: 1 };
+}
 
 const operationalHealth = [
   { healthId: "018f6f18-24d7-7c21-9b62-8c0174199561", correlationId: "request-health-12345678", target: { kind: "provider", key: "external.a100.lab" }, state: "healthy", reasonCode: null, observedAt: "2026-08-11T12:22:05.000Z", facts: { healthState: "healthy", latencyMilliseconds: 23 }, signalId: "018f6f18-24d7-7c21-9b62-8c0174199571" },
@@ -199,7 +226,7 @@ const server = createServer(async (request, response) => {
   if (pathname === "/runtime-config.js") { response.writeHead(200, { "content-type": "text/javascript; charset=utf-8", "cache-control": "no-store" }); response.end(runtime); return; }
   if (/^\/api\/v1\/assistant\/conversations\/[^/]+\/events$/.test(pathname)) { response.writeHead(200, { "content-type": "text/event-stream", "cache-control": "no-store" }); response.write(": synthetic UI connection\n\n"); return; }
   if (await servePluginAsset(pathname, response)) return;
-  if (pathname === "/api/v1/applications") { json(response, previewDataState === "empty" ? { schemaVersion: 1, applications: [] } : previewCatalog); return; }
+  if (pathname === "/api/v1/applications") { json(response, previewDataState === "empty" && process.env.TEAMAIBOX_PREVIEW_KEEP_CATALOG !== "1" ? { schemaVersion: 1, applications: [] } : previewCatalog); return; }
   if (previewDataState === "error" && pathname.startsWith("/api/")) { json(response, { error: { code: "preview_injected_error", message: "Visual regression error fixture" } }, 503); return; }
   // Optional local-only collaboration fixtures. Never forward cookies or writes,
   // and never use the configured product API or an appliance as a fallback.

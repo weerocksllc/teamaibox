@@ -44,6 +44,8 @@ export function precisionPreviewResponse(path, state = 'ready') {
     case '/api/v1/virtual-phones': return { object: 'list', data: empty ? [] : phones, quota: { stored: empty ? 0 : 2, running: empty ? 0 : 1, storedPerUser: null, runningPerUser: null } };
     case '/api/v1/virtual-phones/availability': return { object: 'virtual_phone.availability', enabled: true, runtimeConfigured: true, roms, defaultRomVersionId: roms[0].id };
     case '/api/v1/virtual-computers': return { object: 'list', data: empty ? [] : computers };
+    case '/api/v1/virtual-computers/shared-with-me': return { object: 'list', data: [] };
+    case '/api/v1/virtual-computers/installation-media': return { object: 'list', data: [] };
     case '/api/v1/virtual-computers/availability': return { enabled: true, systems, limits: { maximum: { vcpus: null, memoryGiB: null, diskGiB: null } } };
     case '/api/v1/admin/users': return { data: empty ? [] : users, summary: { total: empty ? 0 : 3, active: empty ? 0 : 2, owners: empty ? 0 : 1, matching: empty ? 0 : 3 }, offset: 0, limit: 50, hasMore: false };
     case '/api/v1/admin/roles': return { roles: ['owner', 'member'].map(roleKey => ({ roleKey, displayNameKey: `role.${roleKey}`, descriptionKey: `role.${roleKey}.description`, systemRole: true, allowedScopes: ['global'], permissions: roleKey === 'owner' ? ['identity:manage', 'file:read', 'file:write'] : ['file:read'], bindingCount: roleKey === 'owner' ? 1 : 2 })), identities: empty ? [] : users, identityPage };

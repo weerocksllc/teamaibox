@@ -32,7 +32,8 @@ test("Assistant workspace renders visible tool, source, artifact, usage, cancell
   assert.match(workspace, /message\.artifacts/);
   assert.match(workspace, /message\.usage/);
   assert.match(workspace, /cancelAssistantRun/);
-  assert.match(workspace, /formatScope\(confirmation\.scope\)/);
+  assert.match(workspace, /Object\.entries\(confirmation\.scope\)/);
+  assert.match(workspace, /typeof value === "string" \? value : JSON\.stringify\(value, null, 2\)/);
   assert.match(workspace, /decideAssistantConfirmation/);
   assert.match(workspace, /item\.status === "pending"/);
   assert.match(workspace, /uploadAssistantInput/);

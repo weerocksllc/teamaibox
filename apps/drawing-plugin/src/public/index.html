@@ -16,6 +16,9 @@
 
     <section class="studio-grid">
       <form id="drawing-form" class="control-panel">
+        <div class="drawing-controls-scroll">
+        <div id="form-error" class="notice notice--error" role="alert" hidden></div>
+        <label class="field field--wide prompt-field"><span><span data-i18n="prompt">画面描述</span></span><textarea id="prompt" maxlength="32000" required data-i18n-placeholder="promptPlaceholder" placeholder="描述主体、场景、光线、材质与风格…"></textarea></label>
         <section class="intent-section" aria-labelledby="intent-title">
           <div class="section-heading"><div><p class="step-label">01</p><h2 id="intent-title" data-i18n="chooseIntent">选择创作意图</h2></div><span id="router-version">v2</span></div>
           <div id="intent-grid" class="intent-grid" role="radiogroup" data-i18n-aria="intentGroup" aria-label="绘图意图">
@@ -29,9 +32,6 @@
           <div class="route-main"><span data-i18n="activeProfile">当前模型</span><strong id="profile-name"></strong><code id="profile-key"></code></div>
           <div class="route-facts"><span id="profile-precision"></span><span id="profile-certification"></span><span id="profile-route"></span></div>
         </section>
-
-        <label class="field field--wide prompt-field"><span><b>02</b><span data-i18n="prompt">画面描述</span></span><textarea id="prompt" maxlength="32000" required data-i18n-placeholder="promptPlaceholder" placeholder="描述主体、场景、光线、材质与风格…"></textarea></label>
-
 
         <section class="output-settings">
           <div class="section-heading compact"><div><p class="step-label">03</p><h2 data-i18n="outputSettings">输出设置</h2></div></div>
@@ -50,9 +50,11 @@
 
         <details class="advanced"><summary data-i18n="executionFacts">参数与支持范围</summary><div class="settings-grid"><label class="field"><span data-i18n="steps">采样步数</span><input id="steps" type="number" value="4" readonly></label><label class="field"><span data-i18n="guidance">提示词引导</span><input id="guidance" type="number" value="1" readonly></label></div><p id="capability-boundary" class="boundary-note" data-i18n="fluxBoundary">当前模型固定使用 4 步、引导值 1，暂不支持负面提示词和局部重绘。</p></details>
 
-        <div id="form-error" class="notice notice--error" role="alert" hidden></div>
+        </div>
+        <div class="drawing-action-dock">
         <button id="submit" class="submit-button" type="submit" disabled><span aria-hidden="true">✦</span><span data-i18n="submit">开始生成</span></button>
         <p class="submit-hint" data-i18n="queueHint">提交后可查看生成进度。服务正在恢复时，任务会排队等待。</p>
+        </div>
       </form>
 
       <section class="result-panel" aria-live="polite">

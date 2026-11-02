@@ -8,6 +8,7 @@ import "./styles.css";
 import "./precision.css";
 import "../../../packages/ui-system/src/premium-interiors.css";
 import "./premium-workspace.css";
+import "./focus-workspace.css";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>

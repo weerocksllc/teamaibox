@@ -21,6 +21,7 @@ import {
   XCircle,
 } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { Button } from "@teamaibox/ui-system/components";
 
 import type { Locale } from "../i18n";
 import { EditorDialog } from "../EditorDialog";
@@ -122,7 +123,7 @@ function OperationConfirmation({ confirmation, locale, t, decide, error }: {
   return <article className="assistant-confirmation" role="status">
     <header><span><Clock3 size={17} /></span><div><strong>{title}</strong><small>{expiry}</small></div></header>
     <button type="button" className="secondary-button" onClick={() => setOpen(true)}>{t("assistant.workspace.review_operation")}</button>
-    {open && <EditorDialog title={t("assistant.workspace.confirm_title")} description={t("assistant.workspace.confirm_subtitle")} busy={busy} onCancel={() => setOpen(false)} feedback={error}>
+    {open && <EditorDialog closeLabel={t("common.close")} title={t("assistant.workspace.confirm_title")} description={t("assistant.workspace.confirm_subtitle")} busy={busy} onCancel={() => setOpen(false)} feedback={error}>
       <dl className="assistant-confirmation-fields"><div><dt>{t("assistant.workspace.operation")}</dt><dd>{title}</dd></div>
         {Object.entries(confirmation.scope).map(([key, value]) => <div key={key}><dt>{t(`assistant.scope.${key}`) === `assistant.scope.${key}` ? key : t(`assistant.scope.${key}`)}</dt><dd>{typeof value === "string" ? value : JSON.stringify(value, null, 2)}</dd></div>)}
       </dl>
@@ -201,9 +202,6 @@ export function AssistantWorkspace({ locale, initialPrompt = "", onClose, t }: {
     [conversation?.messages],
   );
   const pendingConfirmations = (conversation?.confirmations ?? []).filter((item) => item.status === "pending");
-  // Presentation derived from the existing conversation; no extra artifact requests.
-  const resultMessage = [...(conversation?.messages ?? [])].reverse().find(message =>
-    message.role === "assistant" && (message.sources.length > 0 || message.artifacts.length > 0));
 
   const newConversation = async () => {
     setError(null);
@@ -274,16 +272,16 @@ export function AssistantWorkspace({ locale, initialPrompt = "", onClose, t }: {
     <section className="assistant-workspace" role="region" aria-labelledby="assistant-workspace-title">
       <header className="assistant-workspace__header">
         <span className="assistant-workspace__brand"><Bot size={19} aria-hidden="true" /></span>
-        <div><p>{t("assistant.workspace.eyebrow")}</p><h2 id="assistant-workspace-title">{t("assistant.workspace.title")}</h2></div>
+        <div><p>{t("assistant.workspace.eyebrow")}</p><h2 id="assistant-workspace-title">{conversation?.title || t("assistant.workspace.title")}</h2></div>
         <span className={`assistant-connection assistant-connection--${streamState}`}><i />{t(`assistant.workspace.${streamState}`)}</span>
         <button type="button" className="icon-button" onClick={onClose} aria-label={t("app.close")}><X size={20} aria-hidden="true" /></button>
       </header>
 
       <div className="assistant-workspace__body">
         <aside className="assistant-conversation-pane" aria-label={t("assistant.workspace.history")}>
-          <button type="button" className="assistant-new-conversation" onClick={() => void newConversation()}>
+          <Button variant="primary" className="assistant-new-conversation" onClick={() => void newConversation()}>
             <Plus size={16} aria-hidden="true" />{t("assistant.workspace.new_conversation")}
-          </button>
+          </Button>
           <div className="assistant-conversation-list">
             {conversations.map((item) => (
               <button key={item.id} type="button" className={item.id === activeId ? "is-active" : ""} aria-current={item.id === activeId ? "page" : undefined} onClick={() => setActiveId(item.id)}>
@@ -300,6 +298,8 @@ export function AssistantWorkspace({ locale, initialPrompt = "", onClose, t }: {
           <div className="assistant-transcript" ref={transcriptRef} aria-live="polite">
             {phase === "loading" ? (
               <div className="assistant-empty" role="status" aria-live="polite" aria-busy="true"><LoaderCircle className="auth-spinner" size={29} aria-hidden="true" /><h3>{t("assistant.workspace.loading")}</h3></div>
+            ) : phase === "error" ? (
+              <div className="assistant-empty assistant-empty--error"><span><AlertTriangle size={27} aria-hidden="true" /></span><h3>{t("assistant.workspace.history")}</h3><p>{t("assistant.workspace.unavailable")}</p></div>
             ) : !conversation || conversation.messages.length === 0 ? (
               <div className="assistant-empty"><span><Sparkles size={27} /></span><h3>{t("assistant.workspace.empty_title")}</h3><p>{t("assistant.workspace.empty_body")}</p></div>
             ) : conversation.messages.map((message) => <AssistantMessageView key={message.id} message={message} locale={locale} t={t} />)}
@@ -310,32 +310,29 @@ export function AssistantWorkspace({ locale, initialPrompt = "", onClose, t }: {
           </div>
 
           <form className="assistant-workspace__composer" onSubmit={send}>
-            <div className="assistant-mode-selector" role="group" aria-label={t("assistant.workspace.mode_label")}>
-              {(["auto", "answer", "agent"] as AssistantMode[]).map((item) => <button key={item} type="button" className={mode === item ? "is-selected" : ""} aria-pressed={mode === item} onClick={() => setMode(item)}>{t(`assistant.workspace.mode_${item}`)}</button>)}
-            </div>
-            <div className="assistant-compose-row">
-              <label className="assistant-attach" aria-label={t("assistant.workspace.attach")}><Paperclip size={17} /><input type="file" multiple disabled={submitting} aria-label={t("assistant.workspace.attach")} onChange={(event) => {
-                const selected = Array.from(event.target.files ?? []);
-                setAttachments((current) => [...current, ...selected]); event.target.value = "";
-              }} /></label>
-              <textarea aria-label={t("assistant.workspace.composer_label")} value={prompt} onChange={(event) => setPrompt(event.target.value)} onKeyDown={(event) => {
+            <div className="assistant-compose-surface">
+              <textarea className="assistant-compose-input" aria-label={t("assistant.workspace.composer_label")} value={prompt} onChange={(event) => setPrompt(event.target.value)} onKeyDown={(event) => {
                 if (event.key === "Enter" && !event.shiftKey) {
                   event.preventDefault();
                   event.currentTarget.form?.requestSubmit();
                 }
               }} placeholder={t("assistant.workspace.composer_placeholder")} rows={2} disabled={submitting} />
+            <div className="assistant-compose-row">
+              <label className="assistant-attach" aria-label={t("assistant.workspace.attach")}><Paperclip size={17} /><input type="file" multiple disabled={submitting} aria-label={t("assistant.workspace.attach")} onChange={(event) => {
+                const selected = Array.from(event.target.files ?? []);
+                setAttachments((current) => [...current, ...selected]); event.target.value = "";
+              }} /></label>
+              <div className="assistant-mode-selector" role="group" aria-label={t("assistant.workspace.mode_label")}>
+                {(["auto", "answer", "agent"] as AssistantMode[]).map((item) => <button key={item} type="button" className={mode === item ? "is-selected" : ""} aria-pressed={mode === item} onClick={() => setMode(item)}>{t(`assistant.workspace.mode_${item}`)}</button>)}
+              </div>
               {activeRun ? <button type="button" className="assistant-stop" onClick={() => void stop()} aria-label={t("assistant.workspace.stop")}><CircleStop size={18} /></button>
-                : <button type="submit" className="assistant-submit" disabled={!prompt.trim() || submitting} aria-label={t("assistant.send")}>{submitting ? <LoaderCircle className="auth-spinner" size={18} /> : <SendHorizontal size={18} />}</button>}
+                : <Button type="submit" variant="primary" className="assistant-submit" disabled={!prompt.trim() || submitting} aria-label={t("assistant.send")}>{submitting ? <LoaderCircle className="auth-spinner" size={18} /> : <SendHorizontal size={18} />}<span>{t("assistant.send")}</span></Button>}
             </div>
             {attachments.map((attachment, index) => <div className="assistant-attachment" key={`${attachment.name}-${attachment.lastModified}-${index}`}><Paperclip size={12} /><span>{attachment.name}</span><button type="button" disabled={submitting} onClick={() => setAttachments((current) => current.filter((_, position) => position !== index))} aria-label={t("assistant.workspace.remove_attachment")}><X size={12} /></button></div>)}
+            </div>
             <small>{t("assistant.workspace.composer_hint")}</small>
           </form>
         </main>
-        {resultMessage && <aside className="assistant-result-pane" aria-label={t("assistant.workspace.artifacts")}>
-          <h2>{t("assistant.workspace.result_panel")}</h2>
-          {resultMessage.artifacts.length > 0 && <section className="assistant-message-links"><h4><FileOutput size={16} />{t("assistant.workspace.artifacts")}</h4>{resultMessage.artifacts.map(artifact => artifact.downloadPath ? <a key={artifact.referenceId} href={artifact.downloadPath}>{artifact.label}<ArrowDownToLine size={16} /></a> : <span key={artifact.referenceId}>{artifact.label}</span>)}</section>}
-          {resultMessage.sources.length > 0 && <section className="assistant-message-links"><h4><Link2 size={16} />{t("assistant.workspace.sources")}</h4>{resultMessage.sources.map(source => source.url ? <a key={source.referenceId} href={source.url} target={source.url.startsWith("https://") ? "_blank" : undefined} rel="noreferrer">{source.label}<ChevronRight size={16} /></a> : <span key={source.referenceId}>{source.label}</span>)}</section>}
-        </aside>}
       </div>
     </section>
   );

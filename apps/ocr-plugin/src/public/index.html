@@ -6,7 +6,7 @@
   <link rel="stylesheet" href="/plugins/official.ocr/app.css"><link rel="stylesheet" href="/plugins/official.ocr/platform-preferences.css">
 <link rel="stylesheet" href="/plugins/official.ocr/ui-system.css"></head>
 <body data-ui-app="ocr">
-<main class="ocr-shell">
+<main class="ocr-shell focus-tool-shell">
   <header class="app-header">
     <div><p class="eyebrow" data-i18n="eyebrow">文档智能</p><h1 data-i18n="title">文字识别</h1><p data-i18n="subtitle">从图片与 PDF 提取文字和 Markdown 结构，并安全交给其他应用。</p></div>
     <div class="header-chips">
@@ -14,8 +14,8 @@
       <span class="secure-chip"><i></i><span data-i18n="secure">加密输入与结果</span></span>
     </div>
   </header>
-  <section class="workspace">
-    <aside class="source-panel">
+  <section class="workspace focus-tool-layout">
+    <aside class="source-panel focus-tool-controls"><div class="focus-controls-scroll">
       <div class="source-tabs" role="group" data-i18n-aria="inputSource" aria-label="输入来源"><button type="button" class="is-active" data-source="upload" data-i18n="upload" aria-pressed="true">本地上传</button><button type="button" data-source="drive" data-i18n="drive" aria-pressed="false">网盘选择</button></div>
       <section id="upload-source" class="source-view">
         <label class="drop-zone" id="drop-zone" role="button" tabindex="0" data-keyboard-file-trigger>
@@ -35,8 +35,10 @@
         <label><span data-i18n="languages">语言提示</span><input id="languages" placeholder="zh-CN, en"></label>
       </div>
       <div id="form-error" class="error" role="alert" hidden></div>
+      </div><div class="focus-action-dock">
       <button id="submit" class="primary" type="button"><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8V4h4m8 0h4v4m0 8v4h-4m-8 0H4v-4M8 9h8m-8 4h8m-8 4h5"/></svg><span data-i18n="recognize">开始识别</span></button>
       <p class="queue-note" data-i18n="queueNote">提交后可查看进度；首次使用时可能需要等待模型准备。</p>
+      </div>
     </aside>
 
     <section class="result-panel" aria-live="polite">

@@ -36,7 +36,9 @@ test('plugin and web image recipes carry the newly required shared presentation 
       assert.match(await source(file), /COPY[^\n]+packages\/ui-system\//, file);
     }
   }
-  for (const file of ['deploy/images/web.Dockerfile', 'deploy/application-catalog-e2e/Web.Dockerfile']) {
+  // The public installer builds this recipe; the historical private e2e
+  // deployment harness is not part of the public source distribution.
+  for (const file of ['deploy/images/web.Dockerfile']) {
     const dockerfile = await source(file);
     assert.ok(dockerfile.indexOf('packages/ui-system/package.json') < dockerfile.indexOf('install --frozen-lockfile'), file);
     assert.match(dockerfile, /COPY packages\/ui-system (?:\.\/)?packages\/ui-system/);

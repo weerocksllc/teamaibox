@@ -558,7 +558,7 @@ export function App() {
         role={mobileMenuOpen ? "dialog" : undefined} aria-modal={mobileMenuOpen || undefined}
         aria-label={t("nav.applications")} className={`sidebar ${mobileMenuOpen ? "sidebar--open" : ""}`}>
         <div className="brand-block">
-          <div className="brand-mark"><BrandLogo size={36} /></div>
+          <div className="brand-mark"><BrandLogo size={38} /></div>
           <div>
             <strong>{t("brand.name")}</strong>
             <span>{t("brand.tagline")}</span>
@@ -655,6 +655,7 @@ export function App() {
             <kbd>{t("header.search_hint")}</kbd>
           </button>
           <div className="topbar-actions">
+            <AppearancePreferences locale={locale} theme={themePreference} onLocaleChange={changeLocale} onThemeChange={changeTheme} t={t} />
             <button type="button" className="icon-button task-button" onClick={() => setTaskOpen(true)} aria-label={t("header.tasks")}>
               <ListTodo size={20} aria-hidden="true" />
               {Boolean(activity?.summary.active) && <span className="action-badge">{activity!.summary.active}</span>}
@@ -735,7 +736,7 @@ export function App() {
               <label className="sr-only" htmlFor="assistant-prompt">{t("assistant.placeholder")}</label>
               <input id="assistant-prompt" name="prompt" disabled={!assistantCatalogApp?.runtime.launchable} placeholder={assistantCatalogApp?.runtime.launchable ? t("assistant.placeholder") : t(`applications.startup_${assistantCatalogApp?.runtime.startupState ?? "unavailable"}_detail`)} />
               <span className="composer-mode"><Sparkles size={14} aria-hidden="true" />{t("assistant.mode")}</span>
-              <button type="submit" disabled={!assistantCatalogApp?.runtime.launchable} aria-label={t("assistant.send")}><SendHorizontal size={18} aria-hidden="true" /></button>
+              <button type="submit" disabled={!assistantCatalogApp?.runtime.launchable} aria-label={t("assistant.send")}><SendHorizontal size={18} aria-hidden="true" /><span>{t("assistant.send")}</span></button>
             </form>
             <div className="prompt-suggestions">
               {["assistant.suggestion.minutes", "assistant.suggestion.report", "assistant.suggestion.code"].map((key) => (
@@ -925,12 +926,12 @@ function TaskRow({ task, t, compact = false, cancelling = false, onCancel }: { t
   const Icon = taskIcons[task.taskKind] ?? ListTodo;
   const stateClass = task.state === "completed" ? "done" : task.state === "queued" || task.state === "preparing" ? "queued" : task.state === "failed" ? "failed" : "running";
   return (
-    <article className={`task-row ${compact ? "task-row--compact" : ""}`}>
+    <article className={`task-row ${compact ? "task-row--compact" : ""}`} data-task-state={task.state}>
       <span className="task-icon"><Icon size={18} aria-hidden="true" /></span>
       <span className="task-copy">
         <strong>{taskLabel(task.titleKey, t)}</strong>
-        <small><span className={`task-state task-state--${stateClass}`} />{t(`task.${task.state}`)} · {taskDetail(task, t)}</small>
-        {!compact && <span className="progress-track"><i style={{ width: `${task.progress}%` }} /></span>}
+        <small className="task-summary"><span className="task-status-label"><span className={`task-state task-state--${stateClass}`} />{t(`task.${task.state}`)}</span><span className="task-detail">{taskDetail(task, t)}</span></small>
+        {!compact && <span className="progress-track" role="progressbar" aria-label={taskLabel(task.titleKey, t)} aria-valuenow={task.progress} aria-valuemin={0} aria-valuemax={100}><i style={{ width: `${task.progress}%` }} /></span>}
         {!compact && task.results.length > 0 && <span className="task-result-links">{task.results.map((result) => <a key={result.artifactRef} href={`/api/v1/user/tasks/${encodeURIComponent(result.artifactRef)}/result`}>{t("tasks.result.download")}<ArrowDownToLine size={13} aria-hidden="true" /></a>)}</span>}
         {!compact && task.canCancel && onCancel && <button type="button" className="task-inline-action" disabled={cancelling} onClick={() => onCancel(task.taskId)}>{t(cancelling ? "tasks.cancelling" : "task.cancel")}<ArrowRight size={13} aria-hidden="true" /></button>}
       </span>
@@ -1013,7 +1014,7 @@ function TaskDrawer({ tasks, state, cancellingTaskId, onCancel, t, onClose }: { 
           <div><p className="eyebrow">{t("section.activity")}</p><h2 id="task-drawer-title">{t("drawer.tasks_title")}</h2><span>{t("drawer.tasks_subtitle")}</span></div>
           <button className="icon-button" type="button" onClick={onClose} aria-label={t("common.close")}><X size={19} aria-hidden="true" /></button>
         </div>
-        <div className="task-list">{state === "loading" ? <ActivityState icon={Clock3} text={t("tasks.loading")} state="loading" />
+        <div className="drawer-content"><div className="task-list">{state === "loading" ? <ActivityState icon={Clock3} text={t("tasks.loading")} state="loading" />
           : state === "error" ? <ActivityState icon={AlertTriangle} text={t("tasks.unavailable")} state="error" />
             : tasks.length === 0 ? <ActivityState icon={FileCheck2} text={t("tasks.empty")} state="empty" />
               : tasks.map((task) => <TaskRow key={task.taskId} task={task} t={t} cancelling={cancellingTaskId === task.taskId} onCancel={onCancel} />)}</div>
@@ -1023,7 +1024,7 @@ function TaskDrawer({ tasks, state, cancellingTaskId, onCancel, t, onClose }: { 
             <div><h3 id="agent-confirmation-title">{t("confirmation.heading")}</h3><p>{t("confirmation.subtitle")}</p></div>
           </div>
           <p className="confirmation-empty">{t("confirmation.open_assistant")}</p>
-        </section>
+        </section></div>
       </aside>
     </div>
   );

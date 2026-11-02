@@ -113,10 +113,10 @@ export function UserAdministrationPanel({ locale, canManage, actorIdentityId, t 
         {(search || appliedSearch) && <button type="button" className="secondary-button" disabled={busy} onClick={() => { setSearch(""); void load(0, ""); }}>{t("admin.users.clear_search")}</button>}
       </form>
 
-      {composerOpen && <EditorDialog title={t("admin.users.create_title")} description={t("admin.users.create_hint")} busy={busy} onCancel={() => setComposerOpen(false)} feedback={failure}><CreateMemberForm busy={busy} t={t} onCancel={() => { setComposerOpen(false); createButton.current?.focus(); }} onSubmit={(input) => void act(() => createLocalMember(input), "admin.users.created")} /></EditorDialog>}
+      {composerOpen && <EditorDialog closeLabel={t("common.close")} title={t("admin.users.create_title")} description={t("admin.users.create_hint")} busy={busy} onCancel={() => setComposerOpen(false)} feedback={failure}><CreateMemberForm busy={busy} t={t} onCancel={() => { setComposerOpen(false); createButton.current?.focus(); }} onSubmit={(input) => void act(() => createLocalMember(input), "admin.users.created")} /></EditorDialog>}
 
       {pending && (
-        <EditorDialog title={t(`admin.users.confirm.${pending.kind}`, { name: pending.identity.displayName })} description={t(`admin.users.confirm.${pending.kind}_hint`)} busy={busy} onCancel={() => setPending(null)} feedback={failure}><ActionConfirmation
+        <EditorDialog closeLabel={t("common.close")} title={t(`admin.users.confirm.${pending.kind}`, { name: pending.identity.displayName })} description={t(`admin.users.confirm.${pending.kind}_hint`)} busy={busy} onCancel={() => setPending(null)} feedback={failure}><ActionConfirmation
           pending={pending}
           busy={busy}
           t={t}
@@ -184,8 +184,8 @@ function CreateMemberForm({ busy, t, onSubmit, onCancel }: {
     <label>{t("admin.users.login_name")}<input autoFocus name="loginName" required pattern="[a-z][a-z0-9._-]{2,63}" autoComplete="off" /></label>
     <label>{t("admin.users.display_name")}<input name="displayName" required maxLength={128} autoComplete="off" /></label>
     <label>{t("admin.users.initial_password")}<input name="password" type="password" required minLength={15} maxLength={256} autoComplete="new-password" /></label>
-    <button type="button" className="secondary-button" disabled={busy} onClick={onCancel}>{t("common.cancel")}</button>
-    <button type="submit" className="primary-button" disabled={busy}>{busy ? <LoaderCircle className="auth-spinner" size={14} /> : <Plus size={14} />}{t("admin.users.create_member")}</button>
+    <footer className="precision-editor__actions"><button type="button" className="secondary-button" disabled={busy} onClick={onCancel}>{t("common.cancel")}</button>
+    <button type="submit" className="primary-button" disabled={busy}>{busy ? <LoaderCircle className="auth-spinner" size={14} /> : <Plus size={14} />}{t("admin.users.create_member")}</button></footer>
   </form>;
 }
 

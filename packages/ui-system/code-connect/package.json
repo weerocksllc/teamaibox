@@ -1,0 +1,15 @@
+{
+  "name": "@teamaibox/design-code-connect",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Isolated design tooling; never imported by appliance runtime packages",
+  "scripts": {
+    "check": "tsc -p tsconfig.json && node --test test/*.test.mjs"
+  },
+  "devDependencies": {
+    "@figma/code-connect": "2.1.0",
+    "typescript": "7.0.2"
+  },
+  "license": "MIT"
+}
