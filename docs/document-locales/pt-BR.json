@@ -3,6 +3,7 @@
   "locale": "pt-BR",
   "translationMethod": "machine-assisted; protected commands and links",
   "messages": {
+    "f2b0dca5c6a63625c7468d6cfa88fff26b6471b2fd559f952afbd72d85eff9fa": "Para a lista detalhada de funcionalidades, edite `docs/readme-features/<locale>.json`; mantenha os IDs e a ordem dos grupos e itens alinhados com a versão em inglês e atualize as referências ao código-fonte em `docs/readme-features/evidence.json`.",
     "86f2168c9bb87a1f857eed65ee4c58738bff4f7c646f3c9225579b8eaa30059b": "# Instalar a partir de um clone público",
     "82c7169fd0a3d117f610e36b2c4653e3468e7663f4103d9986a4c44f59968b46": "Este ponto de entrada prepara as entradas públicas necessárias, constrói as imagens do aplicativo e produz um pacote completo antes de instalá-lo. O progresso da construção é retomável; apenas o resultado final da prontidão para instalação indica um aparelho instalado. O sucesso do download ou da simulação por si só não o faz.",
     "4018b4a4ce19901afdb64f56ac0dcbdc2d32566d608ababcddf5da0788dfcdfa": "Mantenha modelos gerados, imagens de contêiner, pacotes de instalação, registros de teste e credenciais fora do repositório. A disponibilidade de espelhos de terceiros não é garantida; caches portáteis verificados e pacotes offline são descritos abaixo.",

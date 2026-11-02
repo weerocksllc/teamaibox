@@ -20,6 +20,8 @@
 
 ## 翻譯與截圖
 
+詳細功能清單請編輯 `docs/readme-features/<locale>.json`；群組與項目的 ID 及順序須與英文版一致，並維護 `docs/readme-features/evidence.json` 中的原始碼參照。
+
 所有 17 種產品語言都有自述文件。編輯 `docs/readme-locales/<locale>.json`，然後執行 `node tools/render-readmes.mjs` and `node tools/render-readmes.mjs --check`。不要手動編輯產生的自述文件。區域設定清單來自 `packages/ui-system/src/locale-registry.mjs`。連結的安裝、建置、貢獻、安全性和許可指南使用相同的 17 種語言。他們的文檔清單位於 `docs/document-locales/manifest.json`。在 `docs/document-locales/<locale>.json` 中編輯原始語言頁面和段落翻譯，然後執行 `node tools/render-documents.mjs`, `node tools/render-readmes.mjs` and `node tools/check-document-locales.mjs`。翻譯金鑰是來源段落的 SHA-256 雜湊值；來源變更會使渲染器失敗，直到更新對應的翻譯。程式碼範例逐字共享，並為所選語言產生文件連結。新翻譯是帶有受保護代碼和連結的機器輔助草稿；歡迎語言和術語審查。產生和檢查在本地運行，無需翻譯服務、API 金鑰或存取設備。在新增公開圖片之前，請參閱[螢幕截圖政策](docs/assets/screenshots/README.zh-TW.md)。歡迎評論貢獻翻譯，包括術語和自然措辭。
 
 ## 貢獻規則

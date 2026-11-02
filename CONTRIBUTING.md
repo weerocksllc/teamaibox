@@ -33,6 +33,8 @@ issue or PR; no missing private specification is required to participate.
 
 ## Translations and screenshots
 
+For the detailed feature checklist, edit `docs/readme-features/<locale>.json`; keep group/item IDs and ordering aligned with English, and maintain the source references in `docs/readme-features/evidence.json`.
+
 All 17 product languages have a README. Edit `docs/readme-locales/<locale>.json`,
 then run `node tools/render-readmes.mjs` and
 `node tools/render-readmes.mjs --check`. Do not hand-edit generated READMEs.

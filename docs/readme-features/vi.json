@@ -1,0 +1,141 @@
+{
+  "title": "Danh sách đầy đủ các tính năng",
+  "navigationTitle": "Chuyển đến mô-đun",
+  "groups": [
+    {"id":"workspace","title":"Không gian làm việc và điều hướng hằng ngày","items":[
+      {"id":"browser","text":"Dùng một không gian làm việc trên trình duyệt cho AI cục bộ, cộng tác nhóm và thiết bị ảo trên một DGX Spark duy nhất."},
+      {"id":"catalog","text":"Duyệt ứng dụng theo danh mục, tìm trong danh mục ứng dụng và mở ứng dụng từ thanh bên."},
+      {"id":"readiness","text":"Xem tiến độ tải, khả năng sử dụng và trạng thái dịch vụ của từng ứng dụng."},
+      {"id":"tasks","text":"Theo dõi công việc đang xếp hàng, đang chạy, hoàn tất, thất bại và đã hủy trong trung tâm tác vụ; mở các kết quả có sẵn."},
+      {"id":"notifications","text":"Xem lời mời trình chiếu đang chờ trong menu thông báo và mở ứng dụng trình chiếu để phản hồi."},
+      {"id":"languages","text":"Chọn trong 17 ngôn ngữ giao diện, bao gồm tiếng Ả Rập viết từ phải sang trái; tiếng Anh là mặc định cho đến khi bạn chọn ngôn ngữ khác."},
+      {"id":"appearance","text":"Dùng giao diện sáng, tối hoặc theo hệ thống; lựa chọn ngôn ngữ và giao diện thủ công được giữ nguyên khi tải lại trang, đăng nhập lại và chuyển giữa các ứng dụng."}
+    ]},
+    {"id":"assistant","title":"Trợ lý AI và quy trình Agent có kiểm soát","items":[
+      {"id":"conversations","text":"Bắt đầu cuộc trò chuyện, lưu lịch sử và mở lại các cuộc trao đổi trước đây."},
+      {"id":"modes","text":"Chọn chế độ Tự động, Trả lời hoặc Agent cho yêu cầu hiện tại."},
+      {"id":"attachments","text":"Đính kèm nhiều tệp vào một yêu cầu và bỏ tệp đính kèm trước khi gửi."},
+      {"id":"streaming","text":"Đọc câu trả lời được truyền dần, dừng lượt chạy đang hoạt động và tiếp tục luồng sự kiện sau khi kết nối lại."},
+      {"id":"trace","text":"Xem chi tiết mô hình, hoạt động công cụ, nguồn và thông tin sử dụng được trả về; tải xuống các tệp đầu ra khi lượt chạy tạo ra chúng."},
+      {"id":"approval","text":"Xem phạm vi của thao tác Agent cần xác nhận, sau đó chấp thuận hoặc từ chối thao tác đó."},
+      {"id":"isolation","text":"Chạy công việc Agent trong môi trường cách ly riêng cho từng người dùng với không gian làm việc lâu dài; công cụ và quyền truy cập mạng tuân theo chính sách của quản trị viên."}
+    ]},
+    {"id":"drawing","title":"Tạo ảnh bằng AI","items":[
+      {"id":"text-to-image","text":"Tạo ảnh từ mô tả văn bản bằng mô hình ảnh có sẵn; ứng dụng hiện tại không phải trình chỉnh sửa ảnh hoặc chỉnh sửa vùng ảnh bằng inpainting."},
+      {"id":"intent","text":"Chọn cách tạo Tự động hoặc Nhanh khi cấu hình mô hình hiện có hỗ trợ."},
+      {"id":"parameters","text":"Chọn tỷ lệ vuông, ngang hoặc dọc, kích thước đầu ra được hỗ trợ và seed ngẫu nhiên hoặc cố định."},
+      {"id":"formats","text":"Yêu cầu đầu ra PNG, WebP hoặc JPEG, xem trước kết quả và tải ảnh xuống."},
+      {"id":"jobs","text":"Theo dõi hàng đợi và tiến độ tạo ảnh, hủy công việc và khôi phục tác vụ hiện tại sau khi mở lại trang."},
+      {"id":"provenance","text":"Xem mô hình thực tế và các tham số tạo ảnh được lưu cùng kết quả."}
+    ]},
+    {"id":"ocr","title":"Nhận dạng và hiệu đính văn bản","items":[
+      {"id":"inputs","text":"Tải lên PNG, JPEG, WebP hoặc PDF, hoặc chọn tệp có sẵn từ ổ đĩa nhóm."},
+      {"id":"recognition","text":"Cung cấp gợi ý ngôn ngữ và nhận dạng văn bản, bảng Markdown hoặc công thức LaTeX trong phạm vi khả năng của mô hình được chọn."},
+      {"id":"review","text":"Xem kết quả nhận dạng theo trang và khối văn bản, sau đó sửa thủ công văn bản đã nhận dạng."},
+      {"id":"export","text":"Xuất nội dung đã hiệu đính dưới dạng văn bản, Markdown hoặc JSON."},
+      {"id":"handoff","text":"Chuyển kết quả nhận dạng đã lưu sang ứng dụng Dịch mà không phải tải lên và nhận dạng lại nguồn."},
+      {"id":"jobs","text":"Theo dõi và hủy tác vụ nhận dạng. Mô hình hiện tại không cung cấp tọa độ khung bao hoặc điểm tin cậy."}
+    ]},
+    {"id":"transcription","title":"Chuyển lời nói từ bản ghi và trực tiếp thành văn bản","items":[
+      {"id":"inputs","text":"Chọn âm thanh/video cục bộ hoặc từ ổ đĩa nhóm: WAV, FLAC, OGG, WebM, MP3, M4A, AIFF hoặc MP4."},
+      {"id":"preview","text":"Xem hoặc nghe trước nội dung nguồn và dùng tính năng tự nhận diện ngôn ngữ hoặc gợi ý một ngôn ngữ được hỗ trợ."},
+      {"id":"edit","text":"Xem các đoạn văn bản có mốc thời gian và chỉnh sửa nội dung."},
+      {"id":"export","text":"Xuất văn bản, JSON hoặc phụ đề SRT và WebVTT."},
+      {"id":"handoff","text":"Chuyển bản chép lời đã lưu sang ứng dụng Dịch và theo dõi hoặc hủy tác vụ chép lời hiện tại."},
+      {"id":"live","text":"Chép lời từ micrô trực tiếp khi có HTTPS, quyền của trình duyệt, MediaRecorder và dịch vụ thời gian thực."},
+      {"id":"optional-timing","text":"Chỉ dùng mốc thời gian từng từ hoặc phân tách người nói với hồ sơ được hỗ trợ; luồng phân tách người nói thử nghiệm yêu cầu đầu vào WAV."}
+    ]},
+    {"id":"translation","title":"Dịch văn bản, tệp và nội dung đa phương tiện","items":[
+      {"id":"languages","text":"Chọn từ danh mục 60 ngôn ngữ mà mô hình hỗ trợ, tự nhận diện ngôn ngữ nguồn, hoặc chọn và hoán đổi ngôn ngữ nguồn/đích. Điều này không cam kết chất lượng đồng đều cho mọi cặp ngôn ngữ."},
+      {"id":"text","text":"Dịch văn bản nhập hoặc dán vào và so sánh các đoạn nguồn với bản dịch."},
+      {"id":"files","text":"Tải lên ảnh hoặc PDF, hoặc chọn từ ổ đĩa nhóm; nhận dạng văn bản trước khi dịch khi OCR đã sẵn sàng."},
+      {"id":"media","text":"Dịch âm thanh/video được hỗ trợ thông qua chép lời, giữ mốc thời gian của các đoạn khi dịch vụ chép lời đã sẵn sàng."},
+      {"id":"reuse","text":"Dùng lại kết quả OCR/chép lời đã lưu và tải xuống các kết quả trung gian có sẵn."},
+      {"id":"edit-export","text":"Chỉnh sửa bản dịch và xuất thành văn bản, Markdown hoặc JSON; kết quả âm thanh/video còn hỗ trợ SRT và WebVTT."},
+      {"id":"progress","text":"Theo dõi các bước trích xuất, chép lời và dịch, hủy công việc và khôi phục tác vụ hiện tại sau khi mở lại trang."},
+      {"id":"boundaries","text":"Ngôn ngữ dịch độc lập với ngôn ngữ giao diện và phạm vi ngôn ngữ OCR/ASR. Dịch PDF xử lý văn bản, không tái tạo bố cục gốc hay cung cấp chức năng chỉnh sửa DOCX/XLSX tổng quát."}
+    ]},
+    {"id":"messaging","title":"Nhắn tin trong nhóm","items":[
+      {"id":"chats","text":"Tìm đồng đội, bắt đầu trò chuyện riêng và tạo nhóm trò chuyện có tên với các thành viên đã chọn."},
+      {"id":"search","text":"Lọc tất cả cuộc trò chuyện, chưa đọc hoặc trò chuyện nhóm và tìm trong các cuộc trò chuyện/tin nhắn bạn được phép truy cập."},
+      {"id":"messages","text":"Gửi văn bản và tệp đính kèm; tải xuống phiên bản tệp gốc của tệp đính kèm."},
+      {"id":"realtime","text":"Nhận tin nhắn trực tiếp, truy cập lại lịch sử khi kết nối lại, theo dõi vị trí đã đọc/chưa đọc và xem trạng thái hiện diện của thành viên."},
+      {"id":"compose","text":"Nhấn Enter để gửi, Shift+Enter để xuống dòng và chuyển giữa danh sách cuộc trò chuyện với nội dung chat trên màn hình hẹp."},
+      {"id":"cleanup","text":"Xóa tin nhắn khỏi phần hiển thị của riêng bạn hoặc xóa lịch sử trò chuyện của bạn; bản ghi của những người tham gia khác không bị xóa."},
+      {"id":"remove-chat","text":"Xóa cuộc trò chuyện khỏi danh sách riêng của bạn mà không rời nhóm; tin nhắn mới có thể khiến cuộc trò chuyện xuất hiện lại."}
+    ]},
+    {"id":"drive","title":"Ổ đĩa nhóm và cộng tác tệp","items":[
+      {"id":"spaces","text":"Sắp xếp không gian tệp cá nhân và nhóm bằng thư mục và điều hướng theo đường dẫn."},
+      {"id":"browse","text":"Chuyển giữa dạng danh sách/lưới, xem chi tiết tệp, tìm tệp/thư mục và xem thay đổi gần đây."},
+      {"id":"upload","text":"Tải lên nhiều tệp, theo dõi tiến độ và hủy lượt tải lên."},
+      {"id":"resume","text":"Tiếp tục tải tệp lớn theo nhiều phần bằng cách chọn lại đúng tệp đó; máy chủ xác minh những phần đã tải lên."},
+      {"id":"organize","text":"Tạo thư mục và đổi tên, di chuyển hoặc sao chép tệp và thư mục."},
+      {"id":"preview","text":"Xem trước ảnh, âm thanh, video, văn bản và PDF được hỗ trợ, đồng thời tải tệp xuống; khả năng phát nội dung đa phương tiện phụ thuộc vào trình duyệt."},
+      {"id":"versions","text":"Tải lên phiên bản mới của tệp, xem lịch sử phiên bản và tải xuống phiên bản cũ."},
+      {"id":"recycle","text":"Chuyển mục vào thùng rác và khôi phục chúng."},
+      {"id":"share","text":"Chia sẻ nội bộ với thành viên hoặc nhóm bằng quyền xem/chỉnh sửa và thời hạn tùy chọn; đây không phải chia sẻ liên kết công khai ẩn danh."},
+      {"id":"received","text":"Duyệt tệp và thư mục được chia sẻ với bạn; quyền truy cập được kiểm tra lại theo quyền hạn và tư cách thành viên hiện tại."}
+    ]},
+    {"id":"casting","title":"Trình chiếu không dây tương thích AirPlay","items":[
+      {"id":"receiver","text":"Khởi động và dừng bộ thu tạm thời cho thiết bị Apple tương thích trong cùng mạng LAN, với tên bộ thu và mã PIN riêng."},
+      {"id":"expiry","text":"Chọn thời hạn bộ thu là 15, 30, 60 hoặc 120 phút; dừng hoặc hết hạn sẽ kết thúc phát và quyền xem."},
+      {"id":"audience","text":"Giới hạn người xem là chính bạn, các thành viên được chọn hoặc một nhóm; mời người xem và cho phép họ chấp nhận hoặc từ chối."},
+      {"id":"playback","text":"Xem màn hình và nghe âm thanh trong trình duyệt; quy tắc tự phát của trình duyệt có thể yêu cầu nhấp để bật tiếng."},
+      {"id":"viewers","text":"Xem và xóa người xem đang kết nối; quản trị viên có thể dừng phiên mà không được cấp quyền xem nội dung riêng tư."},
+      {"id":"reconnect","text":"Xem trạng thái ngắt/kết nối lại; quyền xem được kiểm tra lại khi tham gia lại."},
+      {"id":"boundary","text":"Yêu cầu môi trường chạy đa phương tiện sẵn sàng, khả năng phát hiện trên LAN thông suốt và phiên bản trình duyệt/thiết bị tương thích. Xem qua trình duyệt không cung cấp đầu ra HDMI, phát DRM/FairPlay hay chứng nhận Apple."}
+    ]},
+    {"id":"phones","title":"Điện thoại Android ảo lưu dữ liệu lâu dài","items":[
+      {"id":"create","text":"Tạo điện thoại Android độc lập từ hồ sơ hệ thống đã cài, giữ ứng dụng và dữ liệu của từng điện thoại qua các phiên."},
+      {"id":"lifecycle","text":"Khởi động, tắt, khởi động lại, đổi tên và chủ động xác nhận xóa từng điện thoại."},
+      {"id":"controls","text":"Điều khiển Android bằng bàn phím/con trỏ và các nút Quay lại, Màn hình chính, Ứng dụng gần đây và âm lượng."},
+      {"id":"connection","text":"Dùng âm thanh và chế độ toàn màn hình, kết nối lại hoặc chuyển kết nối điện thoại đang hoạt động sang trang khác."},
+      {"id":"files","text":"Tải tệp lên điện thoại và tải tệp xuống từ thư mục trao đổi Team AI Box trên điện thoại."},
+      {"id":"apk","text":"Cài tệp APK của bạn sau khi xác nhận; quyền của ứng dụng Android không được cấp ngầm."},
+      {"id":"camera","text":"Cấp ảnh, video hoặc camera trình duyệt cho camera ảo khi được hỗ trợ; camera USB vật lý và nguồn mạng còn yêu cầu quản trị viên thiết lập và cấp quyền."},
+      {"id":"adb","text":"Tạm thời cho phép gỡ lỗi ADB trong phạm vi một thiết bị qua bộ chuyển tiếp ngắn hạn, dùng công cụ ADB tiêu chuẩn và ứng dụng chuyển tiếp Node.js."},
+      {"id":"diagnostics","text":"Xem tốc độ khung hình, mất gói và thống kê thời gian khứ hồi của kết nối khi cần; những số liệu này không bảo đảm độ trễ đầu cuối."},
+      {"id":"google","text":"Chỉ chọn hồ sơ hệ thống Google Play khi tài nguyên tương ứng có sẵn; khả năng sử dụng không đồng nghĩa với chứng nhận Play Protect hay bảo đảm mọi ứng dụng Android hoạt động."}
+    ]},
+    {"id":"computers","title":"Máy tính Windows và Linux ảo","items":[
+      {"id":"create","text":"Tạo máy tính Windows/Linux ARM64 độc lập với CPU, bộ nhớ và dung lượng đĩa đã chọn."},
+      {"id":"lifecycle","text":"Khởi động máy tính, tắt theo cách thông thường và xóa máy tính đã tắt sau khi xác nhận rõ ràng."},
+      {"id":"display","text":"Mở màn hình ảo trong trình duyệt để xem firmware, quá trình khởi động, cài đặt và giao diện hệ điều hành mà không phải đăng nhập vào máy tính từ xa trước."},
+      {"id":"controls","text":"Dùng bàn phím, con trỏ, âm thanh, toàn màn hình và điều khiển kết nối lại."},
+      {"id":"multi-page","text":"Mở cùng một máy tính ảo trong nhiều thẻ hoặc cửa sổ trình duyệt."},
+      {"id":"invite","text":"Mời đồng đội xem hoặc điều khiển màn hình và thu hồi quyền truy cập của họ."},
+      {"id":"handoff","text":"Chuyển quyền điều khiển cho người tham gia khác, nhả quyền hoặc thu hồi với tư cách chủ sở hữu; chọn chế độ một người điều khiển hoặc cùng điều khiển."},
+      {"id":"iso","text":"Tải ISO cài đặt lên với các nút tạm dừng/tiếp tục/hủy hoặc chọn ISO có sẵn từ ổ đĩa cá nhân/nhóm."},
+      {"id":"optical","text":"Gắn hoặc tháo phương tiện quang ảo và chọn khởi động từ đĩa một lần; thay phương tiện không tự động khởi động lại máy tính."},
+      {"id":"os","text":"Cài hệ điều hành ARM64 mà bạn có quyền sử dụng và dùng riêng tùy chọn máy tính từ xa. Bạn vẫn chịu trách nhiệm về giấy phép Windows; không kèm Windows đã kích hoạt sẵn hoặc hỗ trợ tổng quát cho hệ điều hành khách x86."}
+    ]},
+    {"id":"administration","title":"Quản trị, phân quyền và bảo mật","items":[
+      {"id":"accounts","text":"Tạo thành viên cục bộ, quản lý trạng thái tài khoản và đặt lại mật khẩu khi vai trò của bạn cho phép."},
+      {"id":"roles","text":"Gán vai trò tích hợp sẵn, xem quyền và quản lý thành viên nhóm với các biện pháp bảo vệ thao tác của chủ sở hữu."},
+      {"id":"audit","text":"Lọc sự kiện kiểm toán theo lĩnh vực hoặc mã tương quan, xem chi tiết và yêu cầu kiểm tra tính toàn vẹn của lịch sử kiểm toán."},
+      {"id":"status","text":"Xem trạng thái thiết bị, ứng dụng, bộ nhớ lưu trữ và dịch vụ thực thi trong không gian quản trị."},
+      {"id":"providers","text":"Cấu hình nhà cung cấp AI bên ngoài và ánh xạ mô hình/thao tác, luân chuyển thông tin xác thực và bật hoặc tắt nhà cung cấp."},
+      {"id":"routing","text":"Đặt chính sách định tuyến cục bộ/bên ngoài được phép, kèm chấp thuận rõ ràng cho xử lý bên ngoài; AI cục bộ không cần API key bên ngoài."},
+      {"id":"models","text":"Xem hồ sơ mô hình đã cài, phiên bản môi trường chạy, mức độ sẵn sàng và chi tiết xác minh."},
+      {"id":"plugins","text":"Nhập gói plugin đã xác minh và quản lý cài đặt, nâng cấp, bật/tắt và gỡ bỏ các plugin đủ điều kiện; plugin chính thức được bảo vệ có các giới hạn riêng."},
+      {"id":"queues","text":"Xem hàng đợi và công việc thực thi, điều chỉnh chính sách lập lịch được phép và hủy công việc đủ điều kiện."},
+      {"id":"encryption","text":"Xem cài đặt bộ nhớ lưu trữ mã hóa và bảo vệ khởi động. Mở khóa tự động dùng khóa cục bộ; bật cụm mật khẩu khởi động cần xác minh khôi phục và xác nhận."}
+    ]},
+    {"id":"installation","title":"Cài đặt từ mã nguồn và bảo trì","items":[
+      {"id":"command","text":"Cài đặt từ bản Git clone công khai bằng một lệnh cài từ nguồn đã được hướng dẫn trên DGX Spark mới, tương thích."},
+      {"id":"pipeline","text":"Chuẩn bị công cụ biên dịch, tải mô hình và thành phần môi trường chạy, dựng image ứng dụng, đóng gói và cài đặt trong khi dùng lại môi trường Docker/NVIDIA hiện có."},
+      {"id":"resume","text":"Tiếp tục quá trình chuẩn bị bị gián đoạn bằng cùng lệnh và thư mục làm việc, dùng lại các tệp tải xuống đã xác minh và các giai đoạn đã hoàn thành."},
+      {"id":"modes","text":"Chạy kiểm tra điều kiện tiên quyết, chỉ chuẩn bị phần tải xuống hoặc chỉ dựng gói cài đặt."},
+      {"id":"offline","text":"Chuẩn bị gói hoàn chỉnh có thể chuyển sang máy đích để cài đặt ngoại tuyến; bản thân bước chuẩn bị từ mã nguồn cần truy cập mạng."},
+      {"id":"integrity","text":"Xác minh các đầu vào đã cố định phiên bản và dùng nguồn thay thế được hướng dẫn hoặc bộ nhớ đệm di động đã xác minh khi cần; không bảo đảm bất kỳ máy chủ mirror bên thứ ba nào."},
+      {"id":"identity","text":"Khởi tạo thông tin xác thực mới riêng cho thiết bị và tài khoản admin/admin theo tài liệu, rồi đổi mật khẩu; không sao chép tài khoản hoặc đĩa máy khách từ hộp khác."},
+      {"id":"maintenance","text":"Xem các bản cập nhật bảo trì đề xuất, kết quả tương thích, kế hoạch thực thi rõ ràng và lịch sử kế hoạch với hướng dẫn hoàn tác/khôi phục có phạm vi xác định; không phải tự động nâng cấp tùy ý hệ điều hành hoặc trình điều khiển."}
+    ]},
+    {"id":"developers","title":"Phát triển mã nguồn mở và phần mở rộng","items":[
+      {"id":"source","text":"Đọc, sửa đổi và phân phối lại mã sản phẩm gốc cùng tài liệu theo MIT; các thành phần bên thứ ba giữ giấy phép riêng."},
+      {"id":"plugins","text":"Xây dựng phần mở rộng ApplicationPlugin hoặc ComputePlugin bằng đặc tả SDK công khai và các plugin mẫu đi kèm."},
+      {"id":"verification","text":"Dùng manifest gói có chữ ký, kiểm tra tính toàn vẹn và quyền khi nhập plugin; điều này không có nghĩa là đã có chợ plugin công khai."},
+      {"id":"contribute","text":"Đóng góp bản sửa lỗi, bản dịch, tài liệu và tích hợp qua issue và pull request; dùng kênh báo cáo bảo mật riêng cho lỗ hổng."}
+    ]}
+  ]
+}

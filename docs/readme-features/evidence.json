@@ -1,0 +1,16 @@
+{
+  "workspace": ["apps/web/src/App.tsx", "apps/web/src/catalog/workbench-catalog.mjs", "apps/web/src/preferences/locale-preference.mjs", "apps/web/src/preferences/theme-preference.mjs", "packages/ui-system/src/locale-registry.mjs"],
+  "assistant": ["apps/web/src/assistant/AssistantWorkspace.tsx", "apps/platform-api/src/assistant/assistant-http-api.mjs", "services/agent-bridge/README.md"],
+  "drawing": ["apps/drawing-plugin/src/public/index.html", "apps/drawing-plugin/src/public/app.js", "apps/drawing-plugin/src/public/intent-router-client-v2.mjs"],
+  "ocr": ["apps/ocr-plugin/src/public/index.html", "apps/ocr-plugin/src/public/app.js"],
+  "transcription": ["apps/asr-plugin/src/public/index.html", "apps/asr-plugin/src/public/app.js", "apps/asr-plugin/src/public/capabilities-v1.mjs", "services/realtime-asr-worker/server.py"],
+  "translation": ["apps/translation-plugin/src/public/translation-languages.mjs", "apps/translation-plugin/src/public/app.js", "apps/platform-api/src/compute/compute-http-api.mjs"],
+  "messaging": ["apps/messaging-plugin/src/public/app.js", "apps/messaging-plugin/src/public/message-cleanup.mjs", "services/messaging/src/messaging-service.mjs"],
+  "drive": ["apps/team-drive-plugin/src/public/app.js", "apps/team-drive-plugin/src/public/received-shares.mjs", "services/object-service/src/team-drive-service.mjs"],
+  "casting": ["apps/wireless-casting-plugin/src/public/app.js", "install/factory_services.py", "install/factory_casting.py", "tools/bootstrap_casting_service.py", "deploy/casting/Public.Dockerfile"],
+  "phones": ["apps/virtual-phones-plugin/src/public/app.js", "apps/virtual-phones-plugin/src/public/phone-files.mjs", "apps/virtual-phones-plugin/src/public/phone-camera.mjs", "apps/virtual-phones-plugin/src/public/phone-statistics.mjs", "apps/platform-api/src/virtual-phones/phone-adb-gateway.mjs"],
+  "computers": ["apps/virtual-computers-plugin/src/public/computers.mjs", "apps/virtual-computers-plugin/src/public/computer-client.mjs", "apps/virtual-computers-plugin/src/public/desktop.html", "apps/virtual-computers-plugin/src/public/monitor-sharing.mjs", "apps/virtual-computers-plugin/src/public/installation-panel.mjs", "apps/platform-api/src/virtual-computers/virtual-computer-http-api.mjs"],
+  "administration": ["apps/web/src/users/UserAdministrationPanel.tsx", "apps/web/src/roles/RoleAdministrationPanel.tsx", "apps/web/src/teams/TeamAdministrationPanel.tsx", "apps/web/src/audit/AuditPanel.tsx", "apps/web/src/device/AppliancePanel.tsx", "apps/web/src/providers/ExternalProvidersPanel.tsx", "apps/web/src/models/ModelAdministrationPanel.tsx", "apps/web/src/plugins/PluginAdministrationPanel.tsx", "apps/web/src/queues/QueueAdministrationPanel.tsx", "apps/web/src/encryption/EncryptionAdministrationPanel.tsx", "install/factory_bootstrap.py"],
+  "installation": ["install/from-source.sh", "install/source_install.py", "apps/web/src/updates/MaintenancePanel.tsx"],
+  "developers": ["services/plugin-runtime/src/manifest-validator.mjs", "services/plugin-runtime/README.md", "examples/plugins"]
+}

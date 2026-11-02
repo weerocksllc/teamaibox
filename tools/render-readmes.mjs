@@ -3,6 +3,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { localeDefinitions } from '../packages/ui-system/src/locale-registry.mjs';
 import { localizeLinks } from './document-localization.mjs';
+import { loadFeatureCopy, renderFeatureChecklist } from './readme-features.mjs';
 
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 const check=process.argv.includes('--check');
@@ -11,17 +12,18 @@ const languages=[...localeDefinitions].sort((a,b)=>a.code==='en'?-1:b.code==='en
 const languageLinks=languages.map(l=>`[${l.name}](${filename(l.code)})`).join(' · ');
 const sparkCopy=JSON.parse(await fs.readFile(path.join(root,'docs/readme-locales/dgx-spark.json'),'utf8'));
 const escape=s=>s.replaceAll('&','&amp;').replaceAll('"','&quot;').replaceAll('<','&lt;');
-const keys=['intro','whyTitle','why','featuresTitle','features','screensTitle','screensNote','light','dark','installTitle','requirements','installExplanation','resumeTitle','resume','firstTitle','first','limitsTitle','limits','contributeTitle','contribute','resourcesTitle','resources'];
+const keys=['intro','whyTitle','why','screensTitle','light','dark','installTitle','requirements','installExplanation','resumeTitle','resume','firstTitle','first','limitsTitle','limits','contributeTitle','contribute','resourcesTitle','resources'];
 for(const locale of languages){
+  const featureCopy=await loadFeatureCopy(locale.code);
   const spark=sparkCopy[locale.code];
   if(!spark)throw new Error(`${locale.code}: missing DGX Spark copy`);
   const t=JSON.parse(await fs.readFile(path.join(root,'docs/readme-locales',locale.code+'.json'),'utf8'));
   for(const key of keys)if(!t[key])throw new Error(`${locale.code}: missing ${key}`);
-  if(t.features.length!==11||t.first.length!==4||t.resources.length!==6)throw new Error(`${locale.code}: incomplete sections`);
+  if(t.first.length!==4||t.resources.length!==6)throw new Error(`${locale.code}: incomplete sections`);
   for(const theme of ['light','dark'])await fs.access(path.join(root,`docs/assets/screenshots/${locale.code}/workbench-${theme}.jpg`));
   const shot=`docs/assets/screenshots/${locale.code}/workbench`;
   const links=['install/SOURCE-INSTALL.md','install/README.md','docs/open-source/BUILDING.md','CONTRIBUTING.md','SECURITY.md','THIRD_PARTY_NOTICES.md'];
-  const output=localizeLinks(`<!-- Generated from docs/readme-locales/${locale.code}.json by tools/render-readmes.mjs. -->
+  const output=localizeLinks(`<!-- Generated from docs/readme-locales/ and docs/readme-features/${locale.code}.json by tools/render-readmes.mjs. -->
 # ${spark.readmeTitle}
 
 <p><img src="docs/assets/brand/mascot.png" alt="Team AI Box" width="160" height="160"></p>
@@ -34,13 +36,13 @@ for(const locale of languages){
 
 [teamaibox.com](https://teamaibox.com/) · [GitHub](https://github.com/weerocksllc/teamaibox) · [MIT](LICENSE) · [teamaibox@weerocks.llc](mailto:teamaibox@weerocks.llc)
 
+[${featureCopy.title}](#features) · [${t.installTitle}](#install) · [${t.contributeTitle}](#contribute)
+
 ## ${t.whyTitle}
 
 ${t.why.map(x=>`- ${x}`).join('\n')}
 
 ## ${t.screensTitle}
-
-${t.screensNote}
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="${shot}-dark.jpg">
@@ -50,9 +52,7 @@ ${t.screensNote}
 
 [${t.light}](${shot}-light.jpg) · [${t.dark}](${shot}-dark.jpg)
 
-## ${spark.featuresTitle}
-
-${t.features.map(([name,body])=>`### ${name}\n\n${body}`).join('\n\n')}
+${renderFeatureChecklist(featureCopy)}
 
 ## ${spark.hardwareTitle}
 
@@ -96,6 +96,8 @@ ${t.first.map((x,i)=>`${i+1}. ${x}`).join('\n')}
 ## ${t.limitsTitle}
 
 ${t.limits}
+
+<a id="contribute"></a>
 
 ## ${t.contributeTitle}
 

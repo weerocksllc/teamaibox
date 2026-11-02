@@ -3,6 +3,7 @@
   "locale": "it",
   "translationMethod": "machine-assisted; protected commands and links",
   "messages": {
+    "f2b0dca5c6a63625c7468d6cfa88fff26b6471b2fd559f952afbd72d85eff9fa": "Per l'elenco dettagliato delle funzionalità, modifica `docs/readme-features/<locale>.json`; mantieni gli ID e l'ordine di gruppi e voci allineati alla versione inglese e aggiorna i riferimenti al codice sorgente in `docs/readme-features/evidence.json`.",
     "86f2168c9bb87a1f857eed65ee4c58738bff4f7c646f3c9225579b8eaa30059b": "# Installa da un clone pubblico",
     "82c7169fd0a3d117f610e36b2c4653e3468e7663f4103d9986a4c44f59968b46": "Questo punto di ingresso prepara gli input pubblici richiesti, crea le immagini dell'applicazione e produce un pacchetto completo prima di installarlo. Il progresso della creazione è ripristinabile; solo il risultato finale di disponibilità dell'installazione indica un apparecchio installato. Il download o il successo del preflight da solo non bastano.",
     "4018b4a4ce19901afdb64f56ac0dcbdc2d32566d608ababcddf5da0788dfcdfa": "Mantieni i modelli generati, le immagini del contenitore, i pacchetti di installazione, i record di test e le credenziali all'esterno del repository. La disponibilità dei mirror di terze parti non è garantita; le cache portatili verificate e i pacchetti offline sono descritti di seguito.",

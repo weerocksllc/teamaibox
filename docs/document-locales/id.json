@@ -3,6 +3,7 @@
   "locale": "id",
   "translationMethod": "machine-assisted; protected commands and links",
   "messages": {
+    "f2b0dca5c6a63625c7468d6cfa88fff26b6471b2fd559f952afbd72d85eff9fa": "Untuk daftar fitur terperinci, edit `docs/readme-features/<locale>.json`; pertahankan ID dan urutan grup serta item sesuai versi bahasa Inggris, dan perbarui referensi kode sumber di `docs/readme-features/evidence.json`.",
     "86f2168c9bb87a1f857eed65ee4c58738bff4f7c646f3c9225579b8eaa30059b": "# Instal dari klon publik",
     "82c7169fd0a3d117f610e36b2c4653e3468e7663f4103d9986a4c44f59968b46": "Titik masuk ini mempersiapkan masukan publik yang diperlukan, membangun gambar aplikasi dan menghasilkan paket lengkap sebelum menginstalnya. Kemajuan pembangunan dapat dilanjutkan; hanya hasil kesiapan pemasangan akhir yang menunjukkan peralatan terpasang. Keberhasilan pengunduhan atau pra-penerbangan saja tidak cukup.",
     "4018b4a4ce19901afdb64f56ac0dcbdc2d32566d608ababcddf5da0788dfcdfa": "Simpan model yang dihasilkan, gambar kontainer, paket instalasi, catatan pengujian, dan kredensial di luar repositori. Ketersediaan mirror pihak ketiga tidak dijamin; cache portabel terverifikasi dan paket offline dijelaskan di bawah ini.",

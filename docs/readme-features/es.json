@@ -1,0 +1,141 @@
+{
+  "title": "Lista completa de funciones",
+  "navigationTitle": "Ir a un módulo",
+  "groups": [
+    {"id":"workspace","title":"Espacio de trabajo y navegación cotidiana","items":[
+      {"id":"browser","text":"Usa un único espacio de trabajo en el navegador para IA local, colaboración en equipo y dispositivos virtuales en un solo DGX Spark."},
+      {"id":"catalog","text":"Explora las aplicaciones por categoría, busca en el catálogo y abre una aplicación desde la barra lateral."},
+      {"id":"readiness","text":"Consulta el progreso de carga, la disponibilidad y el estado del servicio de cada aplicación."},
+      {"id":"tasks","text":"Sigue los trabajos en cola, en curso, completados, fallidos y cancelados en el centro de tareas y abre los resultados disponibles."},
+      {"id":"notifications","text":"Consulta las invitaciones pendientes a una proyección en el menú de notificaciones y abre la aplicación de proyección para responder."},
+      {"id":"languages","text":"Elige entre 17 idiomas de interfaz, incluido el árabe con presentación de derecha a izquierda. El inglés es el predeterminado hasta que elijas otro idioma."},
+      {"id":"appearance","text":"Usa el tema claro, oscuro o el del sistema. Las elecciones manuales de idioma y tema se mantienen al recargar, volver a iniciar sesión y cambiar de aplicación."}
+    ]},
+    {"id":"assistant","title":"Asistente de IA y flujos Agent bajo control","items":[
+      {"id":"conversations","text":"Inicia conversaciones, guarda su historial y vuelve a abrir conversaciones anteriores."},
+      {"id":"modes","text":"Elige el modo Automático, Respuesta o Agent para la solicitud actual."},
+      {"id":"attachments","text":"Adjunta varios archivos a una solicitud y elimina adjuntos antes de enviarla."},
+      {"id":"streaming","text":"Lee las respuestas mientras se generan, detén una ejecución activa y reanuda su flujo de eventos tras volver a conectar."},
+      {"id":"trace","text":"Consulta los datos devueltos sobre el modelo, las herramientas, las fuentes y el uso; descarga los archivos generados cuando la ejecución los produzca."},
+      {"id":"approval","text":"Revisa el alcance de una acción de Agent que requiera confirmación y autoriza o rechaza esa acción."},
+      {"id":"isolation","text":"Ejecuta el trabajo de Agent en un entorno aislado por usuario con un espacio de trabajo persistente. Las herramientas y el acceso a la red siguen la política del administrador."}
+    ]},
+    {"id":"drawing","title":"Generación de imágenes con IA","items":[
+      {"id":"text-to-image","text":"Genera una imagen a partir de una indicación de texto con el modelo de imagen disponible. La aplicación actual no es un editor de imágenes ni de inpainting."},
+      {"id":"intent","text":"Elige generación Automática o Rápida cuando la configuración del modelo disponible lo permita."},
+      {"id":"parameters","text":"Selecciona proporciones cuadradas, horizontales o verticales, dimensiones de salida compatibles y una semilla aleatoria o fija."},
+      {"id":"formats","text":"Solicita una salida PNG, WebP o JPEG, previsualiza el resultado y descarga la imagen."},
+      {"id":"jobs","text":"Sigue la cola y el progreso de generación, cancela el trabajo y recupera la tarea actual al volver a abrir la página."},
+      {"id":"provenance","text":"Consulta el modelo y los parámetros de generación realmente utilizados, registrados junto con el resultado."}
+    ]},
+    {"id":"ocr","title":"Reconocimiento y corrección de texto","items":[
+      {"id":"inputs","text":"Sube un PNG, JPEG, WebP o PDF, o elige un archivo existente en la unidad de equipo."},
+      {"id":"recognition","text":"Indica el idioma y reconoce texto, tablas Markdown o fórmulas LaTeX dentro de las capacidades del modelo seleccionado."},
+      {"id":"review","text":"Revisa los resultados por página y bloque de texto y corrige manualmente el texto reconocido."},
+      {"id":"export","text":"Exporta el contenido revisado como texto, Markdown o JSON."},
+      {"id":"handoff","text":"Envía un resultado de reconocimiento guardado a Traducción sin volver a subir ni reconocer el archivo original."},
+      {"id":"jobs","text":"Sigue y cancela los trabajos de reconocimiento. El modelo actual no proporciona coordenadas de regiones ni puntuaciones de confianza."}
+    ]},
+    {"id":"transcription","title":"Transcripción de grabaciones y voz en directo","items":[
+      {"id":"inputs","text":"Elige audio o vídeo local o de la unidad de equipo: WAV, FLAC, OGG, WebM, MP3, M4A, AIFF o MP4."},
+      {"id":"preview","text":"Previsualiza el contenido original y usa la detección automática del idioma o indica un idioma compatible."},
+      {"id":"edit","text":"Revisa los segmentos de transcripción con marcas de tiempo y edita su texto."},
+      {"id":"export","text":"Exporta texto, JSON o subtítulos SRT o WebVTT."},
+      {"id":"handoff","text":"Pasa una transcripción guardada a Traducción y sigue o cancela la tarea de transcripción actual."},
+      {"id":"live","text":"Transcribe el micrófono en directo cuando estén disponibles HTTPS, el permiso del navegador, MediaRecorder y el servicio en tiempo real."},
+      {"id":"optional-timing","text":"Usa marcas de tiempo por palabra o separación de hablantes solo con perfiles compatibles. El proceso experimental de separación de hablantes requiere una entrada WAV."}
+    ]},
+    {"id":"translation","title":"Traducción de texto, archivos y contenido multimedia","items":[
+      {"id":"languages","text":"Elige del catálogo de 60 idiomas respaldado por el modelo, detecta automáticamente el idioma de origen o selecciona e intercambia los idiomas de origen y destino. No se garantiza la misma calidad para todos los pares de idiomas."},
+      {"id":"text","text":"Traduce texto escrito o pegado y compara los segmentos originales con los traducidos."},
+      {"id":"files","text":"Sube una imagen o un PDF, o selecciónalo en la unidad de equipo. Cuando OCR esté listo, se reconoce el texto antes de traducirlo."},
+      {"id":"media","text":"Traduce audio o vídeo compatible mediante transcripción, conservando los tiempos de los segmentos cuando el servicio de transcripción esté listo."},
+      {"id":"reuse","text":"Reutiliza resultados guardados de OCR o transcripción y descarga los resultados intermedios disponibles."},
+      {"id":"edit-export","text":"Edita el texto traducido y expórtalo como texto, Markdown o JSON. Los resultados de audio y vídeo también admiten SRT y WebVTT."},
+      {"id":"progress","text":"Sigue las fases de extracción, transcripción y traducción, cancela el trabajo y recupera la tarea actual al volver a abrir la página."},
+      {"id":"boundaries","text":"Los idiomas de traducción son independientes de los de la interfaz y de OCR o reconocimiento de voz. La traducción de PDF se basa en texto; no recrea la maquetación original ni ofrece edición general de DOCX/XLSX."}
+    ]},
+    {"id":"messaging","title":"Mensajería de equipo","items":[
+      {"id":"chats","text":"Busca compañeros, inicia conversaciones individuales y crea grupos con nombre y los miembros que elijas."},
+      {"id":"search","text":"Filtra todos los chats, los no leídos o los grupos y busca conversaciones y mensajes a los que tengas acceso."},
+      {"id":"messages","text":"Envía texto y archivos adjuntos; descarga la versión original del archivo adjuntado."},
+      {"id":"realtime","text":"Recibe mensajes en directo, recupera el historial al reconectar, sigue las posiciones de lectura y consulta la presencia de los miembros."},
+      {"id":"compose","text":"Envía con Intro, inserta un salto de línea con Mayús+Intro y alterna entre la lista de conversaciones y el chat en pantallas estrechas."},
+      {"id":"cleanup","text":"Elimina un mensaje de tu propia vista o vacía tu historial de chat. Los registros de los demás participantes no se eliminan."},
+      {"id":"remove-chat","text":"Elimina un chat de tu lista de conversaciones sin abandonar el grupo. Un mensaje nuevo puede hacer que reaparezca."}
+    ]},
+    {"id":"drive","title":"Unidad de equipo y colaboración con archivos","items":[
+      {"id":"spaces","text":"Organiza espacios personales y de equipo con carpetas y navegación por rutas."},
+      {"id":"browse","text":"Alterna entre vistas de lista y cuadrícula, consulta los detalles de los archivos, busca archivos y carpetas y revisa los cambios recientes."},
+      {"id":"upload","text":"Sube varios archivos, sigue el progreso y cancela una carga."},
+      {"id":"resume","text":"Reanuda una carga por partes de un archivo grande seleccionando otra vez el mismo archivo. El servidor verifica las partes ya subidas."},
+      {"id":"organize","text":"Crea carpetas y cambia el nombre, mueve o copia archivos y carpetas."},
+      {"id":"preview","text":"Previsualiza imágenes, audio, vídeo, texto y PDF compatibles y descarga archivos. La reproducción multimedia depende del navegador."},
+      {"id":"versions","text":"Sube una nueva versión de un archivo, consulta su historial y descarga versiones anteriores."},
+      {"id":"recycle","text":"Mueve elementos a la papelera y restáuralos."},
+      {"id":"share","text":"Comparte internamente con miembros o equipos mediante permisos de lectura o edición y una caducidad opcional. No se trata de enlaces públicos anónimos."},
+      {"id":"received","text":"Explora los archivos y carpetas compartidos contigo; el acceso se vuelve a comprobar según los permisos y las membresías vigentes."}
+    ]},
+    {"id":"casting","title":"Proyección inalámbrica compatible con AirPlay","items":[
+      {"id":"receiver","text":"Inicia y detén un receptor temporal para dispositivos Apple compatibles en la misma LAN, con su propio nombre y PIN."},
+      {"id":"expiry","text":"Elige una duración de 15, 30, 60 o 120 minutos. Al detenerse o caducar, terminan el anuncio del receptor y el acceso a la visualización."},
+      {"id":"audience","text":"Limita la visualización a ti, a miembros seleccionados o a un equipo; las personas invitadas pueden aceptar o rechazar."},
+      {"id":"playback","text":"Ve la pantalla y reproduce el sonido en un navegador. Las reglas de reproducción automática pueden exigir un clic para activar el audio."},
+      {"id":"viewers","text":"Consulta y retira espectadores conectados. Un administrador puede detener una sesión sin obtener permiso para ver contenido privado."},
+      {"id":"reconnect","text":"Consulta los estados de desconexión y reconexión; el permiso para ver se comprueba de nuevo al volver a unirse."},
+      {"id":"boundary","text":"Requiere un entorno multimedia listo, detección accesible en la LAN y versiones compatibles de navegador y dispositivo. La visualización en el navegador no proporciona salida HDMI, reproducción DRM/FairPlay ni certificación de Apple."}
+    ]},
+    {"id":"phones","title":"Teléfonos Android virtuales persistentes","items":[
+      {"id":"create","text":"Crea teléfonos Android independientes a partir de los perfiles de sistema instalados, conservando las aplicaciones y los datos de cada teléfono entre sesiones."},
+      {"id":"lifecycle","text":"Inicia, apaga, reinicia, renombra y elimina explícitamente cada teléfono."},
+      {"id":"controls","text":"Controla Android con teclado y puntero, además de los botones Atrás, Inicio, Aplicaciones recientes y volumen."},
+      {"id":"connection","text":"Usa audio y pantalla completa, vuelve a conectar o mueve la conexión activa del teléfono a otra página."},
+      {"id":"files","text":"Sube archivos al teléfono y descarga archivos desde su carpeta de transferencias de Team AI Box."},
+      {"id":"apk","text":"Instala tus propios archivos APK tras confirmarlo. Los permisos de las aplicaciones Android no se conceden de forma silenciosa."},
+      {"id":"camera","text":"Usa una imagen, un vídeo o la cámara del navegador como entrada de la cámara virtual cuando sea compatible. Las cámaras USB físicas y las entradas de red requieren además configuración y permisos del administrador."},
+      {"id":"adb","text":"Autoriza temporalmente depuración ADB limitada al dispositivo mediante un relé de corta duración, con las herramientas ADB estándar y el cliente de relé Node.js."},
+      {"id":"diagnostics","text":"Consulta cuando lo necesites la tasa de fotogramas, las pérdidas de paquetes y los tiempos de ida y vuelta de la conexión. No son una garantía de latencia de extremo a extremo."},
+      {"id":"google","text":"Elige un perfil de sistema Google Play solo cuando sus recursos estén disponibles. Su disponibilidad no equivale a certificación Play Protect ni garantiza que todas las aplicaciones Android funcionen."}
+    ]},
+    {"id":"computers","title":"Ordenadores virtuales Windows y Linux","items":[
+      {"id":"create","text":"Crea ordenadores ARM64 Windows o Linux independientes con la CPU, memoria y capacidad de disco seleccionadas."},
+      {"id":"lifecycle","text":"Inicia un ordenador, apágalo normalmente y elimina un ordenador detenido tras una confirmación explícita."},
+      {"id":"display","text":"Abre un monitor virtual en el navegador para ver el firmware, el arranque, la instalación y el sistema operativo sin iniciar antes sesión en un escritorio remoto."},
+      {"id":"controls","text":"Usa teclado, puntero, sonido, pantalla completa y controles de reconexión."},
+      {"id":"multi-page","text":"Abre el mismo ordenador virtual en varias pestañas o ventanas del navegador."},
+      {"id":"invite","text":"Invita a compañeros a ver o controlar un monitor y revoca su acceso."},
+      {"id":"handoff","text":"Cede el control a otro participante, libéralo o recupéralo como propietario; elige control individual o compartido."},
+      {"id":"iso","text":"Sube un ISO de instalación con pausa, reanudación y cancelación, o selecciona uno existente en la unidad personal o de equipo."},
+      {"id":"optical","text":"Inserta o expulsa medios ópticos virtuales y selecciona un arranque único desde el disco. Cambiar el medio no reinicia automáticamente el ordenador."},
+      {"id":"os","text":"Instala un sistema ARM64 que estés autorizado a usar y utiliza por separado el escritorio remoto opcional. La licencia de Windows es responsabilidad tuya; no se incluye Windows preactivado ni soporte general para sistemas invitados x86."}
+    ]},
+    {"id":"administration","title":"Administración, permisos y seguridad","items":[
+      {"id":"accounts","text":"Crea miembros locales, gestiona el estado de las cuentas y restablece contraseñas cuando tu rol lo permita."},
+      {"id":"roles","text":"Asigna roles integrados, consulta permisos y gestiona miembros del equipo con medidas de protección para las operaciones relativas al propietario."},
+      {"id":"audit","text":"Filtra eventos de auditoría por dominio o ID de correlación, revisa los detalles y solicita verificar la integridad del historial de auditoría."},
+      {"id":"status","text":"Consulta el estado del equipo, las aplicaciones, el almacenamiento y los servicios de ejecución desde el espacio de administración."},
+      {"id":"providers","text":"Configura proveedores externos de IA y sus correspondencias de modelos y operaciones, renueva credenciales y activa o desactiva proveedores."},
+      {"id":"routing","text":"Define políticas permitidas de enrutamiento local o externo con aprobación explícita para el procesamiento externo. La IA local no necesita una clave API externa."},
+      {"id":"models","text":"Consulta los perfiles de modelos instalados, las versiones de los entornos de ejecución, su disponibilidad y los detalles de validación."},
+      {"id":"plugins","text":"Importa paquetes de plugins verificados y gestiona la instalación, actualización, activación, desactivación y eliminación de los plugins que lo permitan. Los plugins oficiales protegidos tienen restricciones."},
+      {"id":"queues","text":"Consulta las colas y los trabajos de ejecución, ajusta las políticas de planificación permitidas y cancela los trabajos que lo admitan."},
+      {"id":"encryption","text":"Consulta la configuración del almacenamiento cifrado y de la protección al iniciar. El desbloqueo automático utiliza una clave local; activar una frase de contraseña al iniciar requiere verificar la recuperación y confirmar la operación."}
+    ]},
+    {"id":"installation","title":"Instalación desde el código fuente y mantenimiento","items":[
+      {"id":"command","text":"Instala desde un clon Git público con un único comando documentado de instalación desde fuentes en un DGX Spark nuevo y compatible."},
+      {"id":"pipeline","text":"Prepara las herramientas de compilación, descarga modelos y componentes de ejecución, construye imágenes de aplicaciones, empaquétalas e instala reutilizando el entorno Docker/NVIDIA existente."},
+      {"id":"resume","text":"Reanuda una preparación interrumpida con el mismo comando y directorio de trabajo, reutilizando descargas verificadas y fases completadas."},
+      {"id":"modes","text":"Ejecuta comprobaciones de requisitos, preparación solo de descargas o creación de paquetes solo mediante compilación."},
+      {"id":"offline","text":"Prepara un paquete portátil completo para instalarlo en un destino sin conexión. La preparación desde fuentes sí requiere acceso a la red."},
+      {"id":"integrity","text":"Verifica los componentes fijados y usa, cuando sea necesario, fuentes alternativas documentadas o cachés portátiles verificadas. No se garantiza ningún espejo de terceros."},
+      {"id":"identity","text":"Inicializa credenciales nuevas propias del equipo y la cuenta documentada admin/admin; después cambia su contraseña. No copies cuentas ni discos de sistemas invitados de otra caja."},
+      {"id":"maintenance","text":"Revisa propuestas de mantenimiento, hallazgos de compatibilidad, planes explícitos de ejecución y su historial, con instrucciones de reversión y recuperación de alcance definido; no se trata de actualizaciones automáticas arbitrarias del sistema operativo o de los controladores."}
+    ]},
+    {"id":"developers","title":"Desarrollo de código abierto y extensiones","items":[
+      {"id":"source","text":"Lee, modifica y redistribuye el código original del producto y su documentación bajo MIT. Los componentes de terceros conservan sus propias licencias."},
+      {"id":"plugins","text":"Desarrolla extensiones ApplicationPlugin o ComputePlugin con los contratos del SDK público y los plugins de ejemplo incluidos."},
+      {"id":"verification","text":"Usa manifiestos de paquetes firmados y verificaciones de integridad y permisos al importar plugins. Esto no implica que exista un mercado público de plugins."},
+      {"id":"contribute","text":"Contribuye con correcciones, traducciones, documentación e integraciones mediante issues y pull requests. Usa el canal privado de seguridad para informar de vulnerabilidades."}
+    ]}
+  ]
+}

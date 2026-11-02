@@ -3,6 +3,7 @@
   "locale": "fr",
   "translationMethod": "machine-assisted; protected commands and links",
   "messages": {
+    "f2b0dca5c6a63625c7468d6cfa88fff26b6471b2fd559f952afbd72d85eff9fa": "Pour la liste détaillée des fonctionnalités, modifiez `docs/readme-features/<locale>.json` ; conservez les identifiants et l’ordre des groupes et des éléments de la version anglaise, et maintenez les références au code source dans `docs/readme-features/evidence.json`.",
     "86f2168c9bb87a1f857eed65ee4c58738bff4f7c646f3c9225579b8eaa30059b": "# Installer à partir d'un clone public",
     "82c7169fd0a3d117f610e36b2c4653e3468e7663f4103d9986a4c44f59968b46": "Ce point d'entrée prépare les entrées publiques requises, crée les images de l'application et produit un package complet avant de l'installer. La progression de la construction peut être reprise ; seul le résultat final de préparation à l’installation indique un appareil installé. Le succès du téléchargement ou du contrôle en amont ne suffit pas à lui seul.",
     "4018b4a4ce19901afdb64f56ac0dcbdc2d32566d608ababcddf5da0788dfcdfa": "Conservez les modèles générés, les images de conteneurs, les packages d'installation, les enregistrements de test et les informations d'identification en dehors du référentiel. La disponibilité des miroirs tiers n'est pas garantie ; les caches portables vérifiés et les packages hors ligne sont décrits ci-dessous.",

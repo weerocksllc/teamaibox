@@ -1,0 +1,141 @@
+{
+  "title": "Complete feature checklist",
+  "navigationTitle": "Jump to a module",
+  "groups": [
+    {"id":"workspace","title":"Workspace and everyday navigation","items":[
+      {"id":"browser","text":"Use one browser workspace for local AI, team collaboration and virtual devices on a single DGX Spark."},
+      {"id":"catalog","text":"Browse applications by category, search the application catalog and open an app from the sidebar."},
+      {"id":"readiness","text":"See each application's loading, availability and service status."},
+      {"id":"tasks","text":"Track queued, running, completed, failed and cancelled work in the task center; open available results."},
+      {"id":"notifications","text":"See pending casting invitations in the notification menu and open the casting app to respond."},
+      {"id":"languages","text":"Choose among 17 interface languages, including right-to-left Arabic; English is the default until you choose another language."},
+      {"id":"appearance","text":"Use light, dark or system appearance; keep manual language/theme choices across refreshes, sign-ins and application views."}
+    ]},
+    {"id":"assistant","title":"AI assistant and controlled Agent workflows","items":[
+      {"id":"conversations","text":"Start conversations, save their history and reopen earlier discussions."},
+      {"id":"modes","text":"Choose Automatic, Answer or Agent mode for the current request."},
+      {"id":"attachments","text":"Attach multiple files to a request and remove attachments before sending."},
+      {"id":"streaming","text":"Read streamed replies, stop an active run and resume its event stream after reconnecting."},
+      {"id":"trace","text":"Inspect returned model details, tool activity, sources and usage; download artifacts when a run produces them."},
+      {"id":"approval","text":"Review the scope of an Agent action that requires confirmation, then approve or deny that action."},
+      {"id":"isolation","text":"Run Agent work in a per-user sandbox with a persistent workspace; tools and network access follow administrator policy."}
+    ]},
+    {"id":"drawing","title":"AI image generation","items":[
+      {"id":"text-to-image","text":"Generate an image from a text prompt using the available image model; the current app is not an image-editing or inpainting editor."},
+      {"id":"intent","text":"Choose Automatic or Fast generation intent when supported by the available model configuration."},
+      {"id":"parameters","text":"Select square, landscape or portrait proportions, supported output dimensions and a random or fixed seed."},
+      {"id":"formats","text":"Request PNG, WebP or JPEG output, preview the result and download the image."},
+      {"id":"jobs","text":"Follow queue and generation progress, cancel work and recover the current task after reopening the page."},
+      {"id":"provenance","text":"Inspect the actual model and generation parameters recorded with the result."}
+    ]},
+    {"id":"ocr","title":"Text recognition and correction","items":[
+      {"id":"inputs","text":"Upload PNG, JPEG, WebP or PDF input, or choose an existing file from team drive."},
+      {"id":"recognition","text":"Provide a language hint and recognize text, Markdown tables or LaTeX formulas within the selected model's capabilities."},
+      {"id":"review","text":"Review recognition results by page and text block, then manually correct the recognized text."},
+      {"id":"export","text":"Export reviewed content as text, Markdown or JSON."},
+      {"id":"handoff","text":"Send a stored recognition result to Translation without uploading and recognizing the source again."},
+      {"id":"jobs","text":"Track and cancel recognition jobs. The current model does not provide bounding-box coordinates or confidence scores."}
+    ]},
+    {"id":"transcription","title":"Recorded and live speech transcription","items":[
+      {"id":"inputs","text":"Choose local or team-drive audio/video: WAV, FLAC, OGG, WebM, MP3, M4A, AIFF or MP4."},
+      {"id":"preview","text":"Preview the source media and use automatic language detection or a supported language hint."},
+      {"id":"edit","text":"Review timestamped transcript segments and edit their text."},
+      {"id":"export","text":"Export text, JSON, SRT or WebVTT subtitles."},
+      {"id":"handoff","text":"Hand a stored transcript to Translation and track or cancel the current transcription task."},
+      {"id":"live","text":"Transcribe microphone input live when HTTPS, browser permission, MediaRecorder and the realtime service are available."},
+      {"id":"optional-timing","text":"Use word timestamps or speaker separation only with supported profiles; the experimental speaker-separation path requires WAV input."}
+    ]},
+    {"id":"translation","title":"Text, file and media translation","items":[
+      {"id":"languages","text":"Select from the model-backed 60-language catalog, detect the source language automatically, or choose and swap source/target languages. This does not promise equal quality for every language pair."},
+      {"id":"text","text":"Translate typed or pasted text and compare source and translated segments."},
+      {"id":"files","text":"Upload an image or PDF, or select it from team drive; recognize its text before translation when OCR is ready."},
+      {"id":"media","text":"Translate supported audio/video through transcription, preserving segment timing when the transcription service is ready."},
+      {"id":"reuse","text":"Reuse stored OCR/transcription results and download available intermediate results."},
+      {"id":"edit-export","text":"Edit translated text and export text, Markdown or JSON; audio/video results also support SRT and WebVTT."},
+      {"id":"progress","text":"Follow extraction, transcription and translation stages, cancel work and recover the current task after reopening."},
+      {"id":"boundaries","text":"Translation languages are separate from UI and OCR/ASR language coverage. PDF translation is text-based, not original-layout recreation or general DOCX/XLSX editing."}
+    ]},
+    {"id":"messaging","title":"Team messaging","items":[
+      {"id":"chats","text":"Find teammates, start direct conversations and create named group chats with selected members."},
+      {"id":"search","text":"Filter all, unread or group chats and search conversations/messages you are allowed to access."},
+      {"id":"messages","text":"Send text and file attachments; download an attachment's original file version."},
+      {"id":"realtime","text":"Receive live messages, reconnect to chat history, track unread/read positions and see member presence."},
+      {"id":"compose","text":"Send with Enter, insert a new line with Shift+Enter and switch between the conversation list and chat on narrow screens."},
+      {"id":"cleanup","text":"Delete a message from your own view or clear your own chat history; other participants' records are not deleted."},
+      {"id":"remove-chat","text":"Delete a chat from your own conversation list without leaving the group; a new message can make it reappear."}
+    ]},
+    {"id":"drive","title":"Team drive and file collaboration","items":[
+      {"id":"spaces","text":"Organize personal and team file spaces with folders and breadcrumb navigation."},
+      {"id":"browse","text":"Switch list/grid views, inspect file details, search files/folders and view recent changes."},
+      {"id":"upload","text":"Upload multiple files, follow upload progress and cancel an upload."},
+      {"id":"resume","text":"Resume a multipart large-file upload by selecting the same file again; uploaded parts are verified by the server."},
+      {"id":"organize","text":"Create folders and rename, move or copy files and folders."},
+      {"id":"preview","text":"Preview supported images, audio, video, text and PDFs, and download files; media playback depends on the browser."},
+      {"id":"versions","text":"Upload a new file version, inspect version history and download earlier versions."},
+      {"id":"recycle","text":"Move items to the recycle bin and restore them."},
+      {"id":"share","text":"Share internally with members or teams using view/edit permissions and optional expiry; this is not anonymous public-link sharing."},
+      {"id":"received","text":"Browse files and folders shared with you, with access rechecked against current permissions and membership."}
+    ]},
+    {"id":"casting","title":"AirPlay-compatible wireless casting","items":[
+      {"id":"receiver","text":"Start and stop a temporary receiver for compatible Apple devices on the same LAN, with its own receiver name and PIN."},
+      {"id":"expiry","text":"Choose a 15-, 30-, 60- or 120-minute receiver lifetime; stopping or expiry ends its broadcast and viewing access."},
+      {"id":"audience","text":"Limit viewing to yourself, selected members or a team; invite viewers who can accept or decline."},
+      {"id":"playback","text":"Watch the screen and play audio in a browser; browser autoplay rules may require a click to enable sound."},
+      {"id":"viewers","text":"View and remove connected viewers; an administrator can stop a session without gaining permission to watch private content."},
+      {"id":"reconnect","text":"See disconnect/reconnect states and recheck viewing permission when joining again."},
+      {"id":"boundary","text":"Requires a ready media runtime, reachable LAN discovery and compatible browser/device versions. Browser viewing does not provide HDMI output, DRM/FairPlay playback or Apple certification."}
+    ]},
+    {"id":"phones","title":"Persistent virtual Android phones","items":[
+      {"id":"create","text":"Create independent Android phones from installed system profiles, keeping each phone's apps and data across sessions."},
+      {"id":"lifecycle","text":"Start, shut down, restart, rename and explicitly delete individual phones."},
+      {"id":"controls","text":"Control Android with keyboard/pointer input and Back, Home, Recent Apps and volume buttons."},
+      {"id":"connection","text":"Use audio and full-screen display, reconnect, or move the active phone connection to another page."},
+      {"id":"files","text":"Upload files to a phone and download files from its Team AI Box transfer folder."},
+      {"id":"apk","text":"Install your own APK files after confirmation; Android app permissions are not silently granted."},
+      {"id":"camera","text":"Feed an image, video or browser camera into the virtual camera when supported; physical USB cameras and network inputs additionally require administrator setup and permissions."},
+      {"id":"adb","text":"Temporarily authorize device-scoped ADB debugging through a short-lived relay, using standard ADB tools and the Node.js relay client."},
+      {"id":"diagnostics","text":"Inspect frame rate, packet loss and connection round-trip statistics on demand; these are not an end-to-end latency guarantee."},
+      {"id":"google","text":"Choose a Google Play system profile only when its resources are available; availability is not Play Protect certification or a guarantee that every Android app works."}
+    ]},
+    {"id":"computers","title":"Virtual Windows and Linux computers","items":[
+      {"id":"create","text":"Create independent ARM64 Windows/Linux computers with selected CPU, memory and disk sizes."},
+      {"id":"lifecycle","text":"Start a computer, shut it down normally and delete a stopped computer after explicit confirmation."},
+      {"id":"display","text":"Open a browser virtual monitor to see firmware, boot, installation and operating-system screens without first signing into remote desktop."},
+      {"id":"controls","text":"Use keyboard, pointer, sound, full-screen display and reconnection controls."},
+      {"id":"multi-page","text":"Open the same virtual computer in multiple browser tabs or windows."},
+      {"id":"invite","text":"Invite teammates to view or control a monitor and revoke their access."},
+      {"id":"handoff","text":"Hand control to another participant, release it or reclaim it as the owner; select single-controller or shared-control mode."},
+      {"id":"iso","text":"Upload an installation ISO with pause/resume/cancel controls or select an existing ISO from personal/team drive."},
+      {"id":"optical","text":"Mount or eject virtual optical media and select a one-time disc boot; changing media does not automatically restart the computer."},
+      {"id":"os","text":"Install your own authorized ARM64 operating system and use optional remote desktop separately. Windows licensing remains your responsibility; no preactivated Windows or general x86-guest support is included."}
+    ]},
+    {"id":"administration","title":"Administration, permissions and security","items":[
+      {"id":"accounts","text":"Create local members, manage account status and reset passwords where your role permits."},
+      {"id":"roles","text":"Assign built-in roles, inspect permissions and manage team membership with protected owner-operation safeguards."},
+      {"id":"audit","text":"Filter audit events by domain or correlation ID, inspect details and request audit-history integrity verification."},
+      {"id":"status","text":"Inspect appliance, application, storage and execution-service status from the administration workspace."},
+      {"id":"providers","text":"Configure external AI providers and model/operation mappings, rotate credentials and enable or disable providers."},
+      {"id":"routing","text":"Set permitted local/external routing policies with explicit approval for external processing; local AI does not require an external API key."},
+      {"id":"models","text":"View installed model profiles, runtime versions, readiness and validation details."},
+      {"id":"plugins","text":"Import verified plugin packages and manage eligible plugins' installation, upgrades, enable/disable and removal; protected official plugins have restrictions."},
+      {"id":"queues","text":"Inspect execution queues and jobs, adjust permitted scheduling policies and cancel eligible work."},
+      {"id":"encryption","text":"View encrypted storage and startup protection settings. Automatic unlock uses a local key; enabling a startup passphrase requires recovery verification and confirmation."}
+    ]},
+    {"id":"installation","title":"Source installation and maintenance","items":[
+      {"id":"command","text":"Install from a public Git clone with one documented source-install command on a compatible fresh DGX Spark."},
+      {"id":"pipeline","text":"Prepare build tools, download model/runtime inputs, build application images, package them and install while reusing the existing Docker/NVIDIA environment."},
+      {"id":"resume","text":"Resume interrupted preparation with the same command and work directory, reusing verified downloads and completed stages."},
+      {"id":"modes","text":"Run prerequisite checks, download-only preparation or build-only package creation."},
+      {"id":"offline","text":"Prepare a complete portable package for installation on an offline target; source preparation itself needs network access."},
+      {"id":"integrity","text":"Verify pinned inputs and use documented alternate sources or verified portable caches when needed; no third-party mirror is guaranteed."},
+      {"id":"identity","text":"Initialize fresh appliance-specific credentials and the documented admin/admin account, then change its password; do not copy another box's accounts or guest disks."},
+      {"id":"maintenance","text":"Review maintenance candidates, compatibility findings, explicit execution plans and plan history, with scoped rollback/recovery instructions—not arbitrary automatic OS or driver upgrades."}
+    ]},
+    {"id":"developers","title":"Open-source development and extensions","items":[
+      {"id":"source","text":"Read, modify and redistribute original product code and documentation under MIT; third-party components retain their own licenses."},
+      {"id":"plugins","text":"Build ApplicationPlugin or ComputePlugin extensions using public SDK contracts and the included example plugins."},
+      {"id":"verification","text":"Use signed package manifests, integrity and permission checks for plugin imports; this does not imply a public plugin marketplace is available."},
+      {"id":"contribute","text":"Contribute fixes, translations, documentation and integrations through issues and pull requests; use private security reporting for vulnerabilities."}
+    ]}
+  ]
+}

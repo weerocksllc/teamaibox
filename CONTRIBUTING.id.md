@@ -20,6 +20,8 @@ Ruang kerja OpenSpec lokal bersifat opsional dan tidak dipublikasikan dalam repo
 
 ## Terjemahan dan tangkapan layar
 
+Untuk daftar fitur terperinci, edit `docs/readme-features/<locale>.json`; pertahankan ID dan urutan grup serta item sesuai versi bahasa Inggris, dan perbarui referensi kode sumber di `docs/readme-features/evidence.json`.
+
 Semua 17 bahasa produk memiliki README. Edit `docs/readme-locales/<locale>.json`, lalu jalankan `node tools/render-readmes.mjs` and `node tools/render-readmes.mjs --check`. Jangan mengedit README yang dihasilkan secara manual. Daftar lokal berasal dari `packages/ui-system/src/locale-registry.mjs`. Panduan instalasi, pembuatan, kontribusi, keamanan, dan lisensi tertaut menggunakan 17 bahasa yang sama. Daftar dokumennya ada di `docs/document-locales/manifest.json`. Edit halaman bahasa sumber dan terjemahan paragraf di `docs/document-locales/<locale>.json`, lalu jalankan `node tools/render-documents.mjs`, `node tools/render-readmes.mjs` and `node tools/check-document-locales.mjs`. Kunci terjemahan adalah hash SHA-256 dari paragraf sumber; perubahan sumber membuat penyaji gagal hingga terjemahan terkait diperbarui. Contoh kode dibagikan kata demi kata, dan tautan dokumen dibuat untuk bahasa yang dipilih. Terjemahan baru adalah draf yang dibantu mesin dengan kode dan tautan yang dilindungi; tinjauan linguistik dan terminologi diterima. Pembuatan dan pemeriksaan dijalankan secara lokal, tanpa layanan terjemahan, kunci API, atau akses ke peralatan. Lihat [kebijakan tangkapan layar](docs/assets/screenshots/README.id.md) sebelum menambahkan gambar publik. Terjemahan, termasuk terminologi dan ungkapan alami, merupakan kontribusi ulasan yang diterima.
 
 ## Aturan kontribusi

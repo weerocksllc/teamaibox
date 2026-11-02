@@ -20,6 +20,8 @@ Team AI Box の改善にご協力いただきありがとうございます。�
 
 ## 翻訳とスクリーンショット
 
+詳細な機能チェックリストを更新する場合は `docs/readme-features/<locale>.json` を編集し、グループ・項目の ID と順序を英語版に合わせ、`docs/readme-features/evidence.json` のソース参照も保守してください。
+
 17 の製品言語すべてに README があります。 `docs/readme-locales/<locale>.json` を編集して、`node tools/render-readmes.mjs` and `node tools/render-readmes.mjs --check` を実行します。生成された README を手動で編集しないでください。ロケール リストは `packages/ui-system/src/locale-registry.mjs` から取得されます。リンクされたインストール、ビルド、コントリビューション、セキュリティ、およびライセンスのガイドでは、同じ 17 言語が使用されています。彼らの文書リストは `docs/document-locales/manifest.json` にあります。 `docs/document-locales/<locale>.json` でソース言語のページと段落の翻訳を編集し、`node tools/render-documents.mjs`, `node tools/render-readmes.mjs` and `node tools/check-document-locales.mjs` を実行します。翻訳キーはソース段落の SHA-256 ハッシュです。ソースの変更は、対応する翻訳が更新されるまでレンダラーで失敗します。コード例はそのまま共有され、選択した言語に対してドキュメントのリンクが生成されます。新しい翻訳は、保護されたコードとリンクを含む機械支援の下書きです。言語や用語のレビューは歓迎です。生成とチェックは、翻訳サービス、API キー、またはアプライアンスへのアクセスを必要とせずに、ローカルで実行されます。公開画像を追加する前に、[スクリーンショット ポリシー](docs/assets/screenshots/README.ja.md) を参照してください。用語や自然な表現を含む翻訳は、レビューへの貢献を歓迎します。
 
 ## 投稿ルール

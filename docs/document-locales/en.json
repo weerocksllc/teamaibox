@@ -3,6 +3,7 @@
   "locale": "en",
   "translationMethod": "English translation reviewed against the Chinese package template",
   "messages": {
+    "f2b0dca5c6a63625c7468d6cfa88fff26b6471b2fd559f952afbd72d85eff9fa": "For the detailed feature checklist, edit `docs/readme-features/<locale>.json`; keep group/item IDs and ordering aligned with English, and maintain the source references in `docs/readme-features/evidence.json`.",
     "4a6571f624f2225366e6287d8d5f3302a1b0ab2a035c4d540892c05b960a728f": "# Team AI Box offline installation package",
     "2f6d9f6d2ca628a0c230590f8e9fa896651ce79844f6afab05d2de38471842ed": "The license for original code is in the bundled `LICENSE`. Third-party components retain their original licenses; see `THIRD_PARTY_NOTICES.md` and `docs/open-source/components.json`. MIT grants no additional redistribution rights for Google services, Windows, model weights or third-party brands. Passing package integrity checks does not establish redistribution permission for every component.",
     "8498677a8670e047fb6d59cf57e6e452830e4a09f4273fb587629490e1eb2914": "This package is for a fresh DGX Spark retaining a compatible factory Linux system. It uses the existing Docker, Compose and NVIDIA GPU environment without replacing them or formatting the system disk.",

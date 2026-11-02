@@ -3,6 +3,7 @@
   "locale": "zh-TW",
   "translationMethod": "machine-assisted; protected commands and links",
   "messages": {
+    "f2b0dca5c6a63625c7468d6cfa88fff26b6471b2fd559f952afbd72d85eff9fa": "詳細功能清單請編輯 `docs/readme-features/<locale>.json`；群組與項目的 ID 及順序須與英文版一致，並維護 `docs/readme-features/evidence.json` 中的原始碼參照。",
     "86f2168c9bb87a1f857eed65ee4c58738bff4f7c646f3c9225579b8eaa30059b": "# 從公共克隆安裝",
     "82c7169fd0a3d117f610e36b2c4653e3468e7663f4103d9986a4c44f59968b46": "此入口點準備所需的公共輸入，建立應用程式映像並在安裝之前產生完整的套件。建置進度可恢復；只有最終的安裝就緒結果顯示設備已安裝。僅下載或預檢成功並不重要。",
     "4018b4a4ce19901afdb64f56ac0dcbdc2d32566d608ababcddf5da0788dfcdfa": "將產生的模型、容器鏡像、安裝套件、測試記錄和憑證保留在儲存庫之外。不保證第三方鏡像的可用性；已驗證的便攜式快取和離線包如下所述。",

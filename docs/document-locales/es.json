@@ -3,6 +3,7 @@
   "locale": "es",
   "translationMethod": "machine-assisted; protected commands and links",
   "messages": {
+    "f2b0dca5c6a63625c7468d6cfa88fff26b6471b2fd559f952afbd72d85eff9fa": "Para la lista detallada de funciones, edita `docs/readme-features/<locale>.json`; mantén los identificadores y el orden de los grupos y elementos alineados con la versión inglesa y actualiza las referencias al código fuente en `docs/readme-features/evidence.json`.",
     "86f2168c9bb87a1f857eed65ee4c58738bff4f7c646f3c9225579b8eaa30059b": "# Instalar desde un clon público",
     "82c7169fd0a3d117f610e36b2c4653e3468e7663f4103d9986a4c44f59968b46": "Este punto de entrada prepara las entradas públicas requeridas, crea las imágenes de la aplicación y produce un paquete completo antes de instalarlo. El progreso de la construcción se puede reanudar; sólo el resultado final de la preparación de la instalación indica un electrodoméstico instalado. El éxito de la descarga o de la verificación previa por sí solo no lo es.",
     "4018b4a4ce19901afdb64f56ac0dcbdc2d32566d608ababcddf5da0788dfcdfa": "Mantenga los modelos generados, imágenes de contenedores, paquetes de instalación, registros de prueba y credenciales fuera del repositorio. No se garantiza la disponibilidad de réplicas de terceros; Los cachés portátiles verificados y los paquetes fuera de línea se describen a continuación.",

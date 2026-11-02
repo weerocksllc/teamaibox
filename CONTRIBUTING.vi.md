@@ -20,6 +20,8 @@ Không gian làm việc OpenSpec cục bộ là tùy chọn và không được 
 
 ## Bản dịch và ảnh chụp màn hình
 
+Để cập nhật danh sách tính năng chi tiết, hãy sửa `docs/readme-features/<locale>.json`; giữ ID và thứ tự của các nhóm/mục khớp với bản tiếng Anh, đồng thời cập nhật tham chiếu đến mã nguồn trong `docs/readme-features/evidence.json`.
+
 Tất cả 17 ngôn ngữ sản phẩm đều có README. Chỉnh sửa `docs/readme-locales/<locale>.json`, sau đó chạy `node tools/render-readmes.mjs` and `node tools/render-readmes.mjs --check`. Không chỉnh sửa thủ công các README được tạo. Danh sách ngôn ngữ đến từ `packages/ui-system/src/locale-registry.mjs`. Hướng dẫn cài đặt, xây dựng, đóng góp, bảo mật và cấp phép được liên kết sử dụng cùng 17 ngôn ngữ. Danh sách tài liệu của họ ở dạng `docs/document-locales/manifest.json`. Chỉnh sửa bản dịch trang và đoạn văn ở ngôn ngữ nguồn trong `docs/document-locales/<locale>.json`, sau đó chạy `node tools/render-documents.mjs`, `node tools/render-readmes.mjs` and `node tools/check-document-locales.mjs`. Khóa dịch là hàm băm SHA-256 của các đoạn nguồn; một thay đổi nguồn không thực hiện được trình kết xuất cho đến khi các bản dịch tương ứng được cập nhật. Các ví dụ về mã được chia sẻ nguyên văn và các liên kết tài liệu được tạo cho ngôn ngữ đã chọn. Các bản dịch mới là bản nháp được máy hỗ trợ với mã và liên kết được bảo vệ; việc xem xét ngôn ngữ và thuật ngữ đều được chào đón. Việc tạo và kiểm tra chạy cục bộ mà không cần dịch vụ dịch thuật, khóa API hoặc quyền truy cập vào công cụ. Xem [chính sách ảnh chụp màn hình](docs/assets/screenshots/README.vi.md) trước khi thêm hình ảnh công khai. Các bản dịch, bao gồm cả thuật ngữ và cách diễn đạt tự nhiên, đều được hoan nghênh đóng góp đánh giá.
 
 ## Quy tắc đóng góp

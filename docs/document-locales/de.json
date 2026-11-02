@@ -3,6 +3,7 @@
   "locale": "de",
   "translationMethod": "machine-assisted; protected commands and links",
   "messages": {
+    "f2b0dca5c6a63625c7468d6cfa88fff26b6471b2fd559f952afbd72d85eff9fa": "Bearbeiten Sie für die ausführliche Funktionsliste `docs/readme-features/<locale>.json`; halten Sie Gruppen- und Eintrags-IDs sowie deren Reihenfolge mit der englischen Fassung synchron und pflegen Sie die Quellcodeverweise in `docs/readme-features/evidence.json`.",
     "86f2168c9bb87a1f857eed65ee4c58738bff4f7c646f3c9225579b8eaa30059b": "# Von einem öffentlichen Klon installieren",
     "82c7169fd0a3d117f610e36b2c4653e3468e7663f4103d9986a4c44f59968b46": "Dieser Einstiegspunkt bereitet die erforderlichen öffentlichen Eingaben vor, erstellt die Anwendungsimages und erstellt vor der Installation ein vollständiges Paket. Der Baufortschritt ist fortsetzbar; Nur das endgültige Ergebnis der Installationsbereitschaft weist auf eine installierte Appliance hin. Download- oder Preflight-Erfolg alleine reicht nicht aus.",
     "4018b4a4ce19901afdb64f56ac0dcbdc2d32566d608ababcddf5da0788dfcdfa": "Bewahren Sie generierte Modelle, Container-Images, Installationspakete, Testaufzeichnungen und Anmeldeinformationen außerhalb des Repositorys auf. Die Verfügbarkeit von Spiegeln von Drittanbietern kann nicht garantiert werden; Verifizierte tragbare Caches und Offline-Pakete werden unten beschrieben.",

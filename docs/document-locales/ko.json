@@ -3,6 +3,7 @@
   "locale": "ko",
   "translationMethod": "machine-assisted; protected commands and links",
   "messages": {
+    "f2b0dca5c6a63625c7468d6cfa88fff26b6471b2fd559f952afbd72d85eff9fa": "상세 기능 목록을 수정하려면 `docs/readme-features/<locale>.json`을 편집하고, 그룹·항목 ID와 순서를 영어판과 일치시키며, `docs/readme-features/evidence.json`의 소스 참조도 관리하세요.",
     "86f2168c9bb87a1f857eed65ee4c58738bff4f7c646f3c9225579b8eaa30059b": "# 공개 클론에서 설치",
     "82c7169fd0a3d117f610e36b2c4653e3468e7663f4103d9986a4c44f59968b46": "이 진입점은 필요한 공개 입력을 준비하고, 애플리케이션 이미지를 빌드하고, 설치하기 전에 완전한 패키지를 생성합니다. 빌드 진행이 재개 가능합니다. 최종 설치 준비 결과만 설치된 기기를 나타냅니다. 다운로드나 프리플라이트 성공만으로는 성공할 수 없습니다.",
     "4018b4a4ce19901afdb64f56ac0dcbdc2d32566d608ababcddf5da0788dfcdfa": "생성된 모델, 컨테이너 이미지, 설치 패키지, 테스트 기록 및 자격 증명을 리포지토리 외부에 보관하세요. 타사 미러 가용성은 보장되지 않습니다. 검증된 휴대용 캐시 및 오프라인 패키지는 아래에 설명되어 있습니다.",

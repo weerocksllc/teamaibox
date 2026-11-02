@@ -20,6 +20,8 @@ Team AI Box 개선에 도움을 주셔서 감사합니다. 버그 보고서, 번
 
 ## 번역 및 스크린샷
 
+상세 기능 목록을 수정하려면 `docs/readme-features/<locale>.json`을 편집하고, 그룹·항목 ID와 순서를 영어판과 일치시키며, `docs/readme-features/evidence.json`의 소스 참조도 관리하세요.
+
 17개 제품 언어 모두 README가 있습니다. `docs/readme-locales/<locale>.json`를 편집한 후 `node tools/render-readmes.mjs` and `node tools/render-readmes.mjs --check`를 실행하세요. 생성된 README를 직접 편집하지 마십시오. 로케일 목록은 `packages/ui-system/src/locale-registry.mjs`에서 제공됩니다. 링크된 설치, 빌드, 기여, 보안 및 라이선스 가이드는 동일한 17개 언어를 사용합니다. 해당 문서 목록은 `docs/document-locales/manifest.json`에 있습니다. `docs/document-locales/<locale>.json`에서 원어 페이지와 단락 번역을 편집한 후 `node tools/render-documents.mjs`, `node tools/render-readmes.mjs` and `node tools/check-document-locales.mjs`를 실행합니다. 번역 키는 소스 단락의 SHA-256 해시입니다. 해당 번역이 업데이트될 때까지 소스 변경으로 인해 렌더러가 실패합니다. 코드 예제는 그대로 공유되며 선택한 언어에 대한 문서 링크가 생성됩니다. 새로운 번역은 보호된 코드와 링크가 포함된 기계 지원 초안입니다. 언어 및 용어 검토를 환영합니다. 생성 및 검사는 번역 서비스, API 키 또는 어플라이언스에 대한 액세스 없이 로컬에서 실행됩니다. 공개 이미지를 추가하기 전에 [스크린샷 정책](docs/assets/screenshots/README.ko.md)을 참조하세요. 용어 및 자연스러운 표현을 포함한 번역은 리뷰 기여를 환영합니다.
 
 ## 기여 규칙

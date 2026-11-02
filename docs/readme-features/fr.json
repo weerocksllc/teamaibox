@@ -1,0 +1,141 @@
+{
+  "title": "Liste complète des fonctionnalités",
+  "navigationTitle": "Accéder à un module",
+  "groups": [
+    {"id":"workspace","title":"Espace de travail et navigation quotidienne","items":[
+      {"id":"browser","text":"Utilisez un espace de travail unique dans le navigateur pour l’IA locale, la collaboration et les appareils virtuels sur un seul DGX Spark."},
+      {"id":"catalog","text":"Parcourez les applications par catégorie, recherchez dans le catalogue et ouvrez une application depuis la barre latérale."},
+      {"id":"readiness","text":"Consultez le chargement, la disponibilité et l’état des services de chaque application."},
+      {"id":"tasks","text":"Suivez les tâches en attente, en cours, terminées, échouées ou annulées dans le centre de tâches et ouvrez les résultats disponibles."},
+      {"id":"notifications","text":"Consultez les invitations à une diffusion en attente dans le menu des notifications et ouvrez l’application de diffusion pour y répondre."},
+      {"id":"languages","text":"Choisissez parmi 17 langues d’interface, dont l’arabe avec affichage de droite à gauche. L’anglais reste la langue par défaut tant que vous n’en choisissez pas une autre."},
+      {"id":"appearance","text":"Choisissez une apparence claire, sombre ou conforme au système. Vos choix manuels de langue et de thème sont conservés après actualisation, reconnexion et changement d’application."}
+    ]},
+    {"id":"assistant","title":"Assistant IA et actions Agent sous contrôle","items":[
+      {"id":"conversations","text":"Démarrez des conversations, conservez leur historique et rouvrez les échanges précédents."},
+      {"id":"modes","text":"Choisissez le mode Automatique, Réponse ou Agent pour la demande en cours."},
+      {"id":"attachments","text":"Joignez plusieurs fichiers à une demande et retirez des pièces jointes avant l’envoi."},
+      {"id":"streaming","text":"Lisez les réponses au fil de leur génération, arrêtez une exécution et reprenez son flux d’événements après reconnexion."},
+      {"id":"trace","text":"Consultez les informations retournées sur le modèle, les outils, les sources et l’utilisation ; téléchargez les fichiers produits par l’exécution lorsqu’il y en a."},
+      {"id":"approval","text":"Examinez la portée d’une action Agent nécessitant une confirmation, puis autorisez ou refusez cette action."},
+      {"id":"isolation","text":"Exécutez les travaux Agent dans un environnement isolé par utilisateur, avec un espace de travail persistant. Les outils et l’accès réseau suivent la politique de l’administrateur."}
+    ]},
+    {"id":"drawing","title":"Génération d’images par IA","items":[
+      {"id":"text-to-image","text":"Générez une image à partir d’une consigne textuelle avec le modèle d’image disponible. L’application actuelle n’est pas un éditeur de retouche ou d’inpainting."},
+      {"id":"intent","text":"Choisissez une génération Automatique ou Rapide lorsque la configuration du modèle disponible le permet."},
+      {"id":"parameters","text":"Choisissez un format carré, paysage ou portrait, des dimensions prises en charge et une graine aléatoire ou fixe."},
+      {"id":"formats","text":"Demandez une sortie PNG, WebP ou JPEG, prévisualisez le résultat et téléchargez l’image."},
+      {"id":"jobs","text":"Suivez la file d’attente et la génération, annulez le travail et retrouvez la tâche en cours en rouvrant la page."},
+      {"id":"provenance","text":"Consultez le modèle et les paramètres de génération réellement utilisés, enregistrés avec le résultat."}
+    ]},
+    {"id":"ocr","title":"Reconnaissance et correction de texte","items":[
+      {"id":"inputs","text":"Importez un PNG, JPEG, WebP ou PDF, ou choisissez un fichier existant dans le disque d’équipe."},
+      {"id":"recognition","text":"Indiquez la langue et reconnaissez du texte, des tableaux Markdown ou des formules LaTeX selon les capacités du modèle choisi."},
+      {"id":"review","text":"Examinez les résultats par page et par bloc de texte, puis corrigez manuellement le texte reconnu."},
+      {"id":"export","text":"Exportez le contenu relu au format texte, Markdown ou JSON."},
+      {"id":"handoff","text":"Transmettez un résultat de reconnaissance enregistré à Traduction sans réimporter ni reconnaître de nouveau la source."},
+      {"id":"jobs","text":"Suivez et annulez les tâches de reconnaissance. Le modèle actuel ne fournit ni coordonnées de zones ni scores de confiance."}
+    ]},
+    {"id":"transcription","title":"Transcription audio enregistrée et en direct","items":[
+      {"id":"inputs","text":"Choisissez un fichier audio ou vidéo local ou sur le disque d’équipe : WAV, FLAC, OGG, WebM, MP3, M4A, AIFF ou MP4."},
+      {"id":"preview","text":"Prévisualisez le média source et utilisez la détection automatique de langue ou indiquez une langue prise en charge."},
+      {"id":"edit","text":"Relisez les segments horodatés de la transcription et modifiez leur texte."},
+      {"id":"export","text":"Exportez du texte, du JSON ou des sous-titres SRT ou WebVTT."},
+      {"id":"handoff","text":"Transmettez une transcription enregistrée à Traduction et suivez ou annulez la tâche de transcription en cours."},
+      {"id":"live","text":"Transcrivez le microphone en direct lorsque HTTPS, l’autorisation du navigateur, MediaRecorder et le service temps réel sont disponibles."},
+      {"id":"optional-timing","text":"Utilisez l’horodatage par mot ou la séparation des locuteurs uniquement avec les profils compatibles. Le traitement expérimental de séparation des locuteurs nécessite une entrée WAV."}
+    ]},
+    {"id":"translation","title":"Traduction de textes, fichiers et médias","items":[
+      {"id":"languages","text":"Choisissez dans le catalogue de 60 langues du modèle, détectez automatiquement la langue source ou choisissez et inversez les langues source et cible. Une qualité identique pour toutes les paires de langues n’est pas garantie."},
+      {"id":"text","text":"Traduisez du texte saisi ou collé et comparez les segments source et traduits."},
+      {"id":"files","text":"Importez une image ou un PDF, ou choisissez-le dans le disque d’équipe. Lorsque l’OCR est prêt, le texte est reconnu avant traduction."},
+      {"id":"media","text":"Traduisez les fichiers audio ou vidéo compatibles par transcription, en conservant les repères temporels des segments lorsque le service de transcription est prêt."},
+      {"id":"reuse","text":"Réutilisez les résultats OCR ou de transcription enregistrés et téléchargez les résultats intermédiaires disponibles."},
+      {"id":"edit-export","text":"Modifiez le texte traduit et exportez-le en texte, Markdown ou JSON. Les résultats audio et vidéo prennent aussi en charge SRT et WebVTT."},
+      {"id":"progress","text":"Suivez les étapes d’extraction, de transcription et de traduction, annulez le travail et retrouvez la tâche en cours après réouverture."},
+      {"id":"boundaries","text":"Les langues de traduction sont distinctes de celles de l’interface, de l’OCR et de la reconnaissance vocale. La traduction de PDF porte sur le texte ; ce n’est ni une reproduction de la mise en page d’origine ni un éditeur généraliste DOCX/XLSX."}
+    ]},
+    {"id":"messaging","title":"Messagerie d’équipe","items":[
+      {"id":"chats","text":"Trouvez vos collègues, démarrez des conversations individuelles et créez des groupes nommés avec les membres sélectionnés."},
+      {"id":"search","text":"Filtrez les conversations par ensemble, non lues ou groupes et recherchez les conversations et messages auxquels vous avez accès."},
+      {"id":"messages","text":"Envoyez du texte et des pièces jointes ; téléchargez la version d’origine du fichier joint."},
+      {"id":"realtime","text":"Recevez les messages en direct, retrouvez l’historique après reconnexion, suivez les positions de lecture et voyez la présence des membres."},
+      {"id":"compose","text":"Envoyez avec Entrée, insérez un saut de ligne avec Maj+Entrée et passez de la liste des conversations à la discussion sur les écrans étroits."},
+      {"id":"cleanup","text":"Supprimez un message de votre propre vue ou effacez votre historique de discussion. Les enregistrements des autres participants ne sont pas supprimés."},
+      {"id":"remove-chat","text":"Supprimez une discussion de votre liste sans quitter le groupe. Un nouveau message peut la faire réapparaître."}
+    ]},
+    {"id":"drive","title":"Disque d’équipe et collaboration sur les fichiers","items":[
+      {"id":"spaces","text":"Organisez les espaces de fichiers personnels et d’équipe avec des dossiers et une navigation par fil d’Ariane."},
+      {"id":"browse","text":"Passez de la liste à la grille, consultez les détails des fichiers, recherchez des fichiers ou dossiers et voyez les modifications récentes."},
+      {"id":"upload","text":"Importez plusieurs fichiers, suivez la progression et annulez un transfert."},
+      {"id":"resume","text":"Reprenez l’envoi multipartie d’un gros fichier en sélectionnant de nouveau le même fichier. Le serveur vérifie les parties déjà transférées."},
+      {"id":"organize","text":"Créez des dossiers et renommez, déplacez ou copiez des fichiers et des dossiers."},
+      {"id":"preview","text":"Prévisualisez les images, sons, vidéos, textes et PDF compatibles et téléchargez les fichiers. La lecture des médias dépend du navigateur."},
+      {"id":"versions","text":"Importez une nouvelle version d’un fichier, consultez l’historique et téléchargez des versions antérieures."},
+      {"id":"recycle","text":"Placez des éléments dans la corbeille et restaurez-les."},
+      {"id":"share","text":"Partagez en interne avec des membres ou des équipes, avec des droits de lecture ou de modification et une expiration facultative. Il ne s’agit pas de liens publics anonymes."},
+      {"id":"received","text":"Parcourez les fichiers et dossiers partagés avec vous ; l’accès est revérifié selon les permissions et appartenances actuelles."}
+    ]},
+    {"id":"casting","title":"Diffusion sans fil compatible AirPlay","items":[
+      {"id":"receiver","text":"Démarrez ou arrêtez un récepteur temporaire pour les appareils Apple compatibles sur le même réseau local, avec son propre nom et son code PIN."},
+      {"id":"expiry","text":"Choisissez une durée de validité de 15, 30, 60 ou 120 minutes. L’arrêt ou l’expiration met fin à l’annonce du récepteur et à l’accès au visionnage."},
+      {"id":"audience","text":"Réservez le visionnage à vous-même, à certains membres ou à une équipe ; les personnes invitées peuvent accepter ou refuser."},
+      {"id":"playback","text":"Regardez l’écran et écoutez le son dans un navigateur. Les règles de lecture automatique peuvent nécessiter un clic pour activer le son."},
+      {"id":"viewers","text":"Consultez et retirez les spectateurs connectés. Un administrateur peut arrêter une session sans obtenir le droit de voir son contenu privé."},
+      {"id":"reconnect","text":"Voyez les états de déconnexion et reconnexion ; les droits de visionnage sont revérifiés lors d’une nouvelle connexion."},
+      {"id":"boundary","text":"Nécessite un environnement multimédia prêt, une découverte réseau local accessible et des versions de navigateur et d’appareil compatibles. Le visionnage dans le navigateur ne fournit ni sortie HDMI, ni lecture DRM/FairPlay, ni certification Apple."}
+    ]},
+    {"id":"phones","title":"Téléphones Android virtuels persistants","items":[
+      {"id":"create","text":"Créez des téléphones Android indépendants à partir des profils système installés, en conservant les applications et données de chaque téléphone entre les sessions."},
+      {"id":"lifecycle","text":"Démarrez, éteignez, redémarrez, renommez et supprimez explicitement chaque téléphone."},
+      {"id":"controls","text":"Contrôlez Android au clavier et au pointeur, ainsi qu’avec les boutons Retour, Accueil, Applications récentes et volume."},
+      {"id":"connection","text":"Utilisez le son et le plein écran, reconnectez-vous ou déplacez la connexion active du téléphone vers une autre page."},
+      {"id":"files","text":"Envoyez des fichiers au téléphone et téléchargez ceux de son dossier de transfert Team AI Box."},
+      {"id":"apk","text":"Installez vos propres fichiers APK après confirmation. Les permissions Android des applications ne sont pas accordées silencieusement."},
+      {"id":"camera","text":"Alimentez la caméra virtuelle avec une image, une vidéo ou la caméra du navigateur lorsque cette fonction est prise en charge. Les caméras USB physiques et les entrées réseau nécessitent aussi une configuration et des autorisations administrateur."},
+      {"id":"adb","text":"Autorisez temporairement le débogage ADB limité à un appareil via un relais de courte durée, avec les outils ADB standard et le client relais Node.js."},
+      {"id":"diagnostics","text":"Consultez à la demande la fréquence d’image, les pertes de paquets et le temps aller-retour de la connexion. Ces statistiques ne garantissent pas une latence de bout en bout."},
+      {"id":"google","text":"Choisissez un profil système Google Play uniquement si ses ressources sont disponibles. Cette disponibilité ne vaut ni certification Play Protect ni garantie de compatibilité avec toutes les applications Android."}
+    ]},
+    {"id":"computers","title":"Ordinateurs virtuels Windows et Linux","items":[
+      {"id":"create","text":"Créez des ordinateurs ARM64 Windows ou Linux indépendants avec les capacités CPU, mémoire et disque choisies."},
+      {"id":"lifecycle","text":"Démarrez un ordinateur, arrêtez-le normalement et supprimez un ordinateur éteint après confirmation explicite."},
+      {"id":"display","text":"Ouvrez un moniteur virtuel dans le navigateur pour voir le micrologiciel, le démarrage, l’installation et le système d’exploitation sans vous connecter d’abord au bureau à distance."},
+      {"id":"controls","text":"Utilisez le clavier, le pointeur, le son, le plein écran et les commandes de reconnexion."},
+      {"id":"multi-page","text":"Ouvrez le même ordinateur virtuel dans plusieurs onglets ou fenêtres du navigateur."},
+      {"id":"invite","text":"Invitez des collègues à regarder ou contrôler un moniteur et révoquez leur accès."},
+      {"id":"handoff","text":"Passez le contrôle à un participant, libérez-le ou reprenez-le en tant que propriétaire ; choisissez le contrôle unique ou partagé."},
+      {"id":"iso","text":"Importez un ISO d’installation avec pause, reprise et annulation, ou sélectionnez un ISO existant dans le disque personnel ou d’équipe."},
+      {"id":"optical","text":"Insérez ou éjectez un support optique virtuel et choisissez un démarrage unique sur disque. Changer de support ne redémarre pas automatiquement l’ordinateur."},
+      {"id":"os","text":"Installez un système ARM64 que vous êtes autorisé à utiliser et utilisez séparément le bureau à distance facultatif. La licence Windows reste à votre charge ; aucun Windows préactivé ni support général des systèmes invités x86 n’est inclus."}
+    ]},
+    {"id":"administration","title":"Administration, permissions et sécurité","items":[
+      {"id":"accounts","text":"Créez des membres locaux, gérez l’état des comptes et réinitialisez les mots de passe lorsque votre rôle le permet."},
+      {"id":"roles","text":"Attribuez les rôles intégrés, consultez les permissions et gérez les membres des équipes, avec des garde-fous pour les opérations concernant le propriétaire."},
+      {"id":"audit","text":"Filtrez les événements d’audit par domaine ou identifiant de corrélation, consultez leurs détails et demandez une vérification d’intégrité de l’historique d’audit."},
+      {"id":"status","text":"Consultez l’état de l’appareil, des applications, du stockage et des services d’exécution depuis l’espace d’administration."},
+      {"id":"providers","text":"Configurez les fournisseurs d’IA externes et leurs correspondances de modèles et d’opérations, renouvelez leurs identifiants et activez ou désactivez les fournisseurs."},
+      {"id":"routing","text":"Définissez les politiques autorisées de routage local ou externe, avec accord explicite pour le traitement externe. L’IA locale ne nécessite pas de clé API externe."},
+      {"id":"models","text":"Consultez les profils de modèles installés, les versions des environnements d’exécution, leur disponibilité et les détails de validation."},
+      {"id":"plugins","text":"Importez des paquets de plugins vérifiés et gérez l’installation, la mise à niveau, l’activation, la désactivation et la suppression des plugins concernés. Des restrictions s’appliquent aux plugins officiels protégés."},
+      {"id":"queues","text":"Consultez les files d’exécution et les tâches, ajustez les politiques de planification autorisées et annulez les travaux qui le permettent."},
+      {"id":"encryption","text":"Consultez les paramètres du stockage chiffré et de la protection au démarrage. Le déverrouillage automatique utilise une clé locale ; l’activation d’une phrase secrète au démarrage nécessite une vérification de récupération et une confirmation."}
+    ]},
+    {"id":"installation","title":"Installation depuis les sources et maintenance","items":[
+      {"id":"command","text":"Installez à partir d’un clone Git public avec une seule commande documentée d’installation depuis les sources sur un DGX Spark neuf et compatible."},
+      {"id":"pipeline","text":"Préparez les outils de compilation, téléchargez les modèles et les éléments d’exécution, construisez les images applicatives, créez le paquet et installez-le en réutilisant l’environnement Docker/NVIDIA existant."},
+      {"id":"resume","text":"Reprenez une préparation interrompue avec la même commande et le même répertoire de travail, en réutilisant les téléchargements vérifiés et les étapes terminées."},
+      {"id":"modes","text":"Exécutez la vérification des prérequis, la préparation limitée aux téléchargements ou la création d’un paquet par compilation uniquement."},
+      {"id":"offline","text":"Préparez un paquet portable complet à installer sur une cible hors ligne. La préparation depuis les sources nécessite elle-même un accès réseau."},
+      {"id":"integrity","text":"Vérifiez les éléments dont la version est fixée et utilisez, si nécessaire, les sources alternatives documentées ou des caches portables vérifiés. Aucun miroir tiers n’est garanti."},
+      {"id":"identity","text":"Initialisez de nouveaux identifiants propres à l’appareil et le compte documenté admin/admin, puis changez son mot de passe. Ne copiez pas les comptes ou disques invités d’un autre boîtier."},
+      {"id":"maintenance","text":"Examinez les opérations de maintenance proposées, les résultats de compatibilité, les plans d’exécution explicites et leur historique, avec des instructions de retour arrière ou de récupération ciblées ; il ne s’agit pas de mises à niveau automatiques arbitraires de l’OS ou des pilotes."}
+    ]},
+    {"id":"developers","title":"Développement open source et extensions","items":[
+      {"id":"source","text":"Consultez, modifiez et redistribuez le code original du produit et sa documentation sous licence MIT. Les composants tiers conservent leurs propres licences."},
+      {"id":"plugins","text":"Développez des extensions ApplicationPlugin ou ComputePlugin à l’aide des contrats du SDK public et des plugins d’exemple inclus."},
+      {"id":"verification","text":"Utilisez des manifestes de paquets signés ainsi que les contrôles d’intégrité et de permissions lors de l’import de plugins. Cela ne signifie pas qu’une place de marché publique de plugins est disponible."},
+      {"id":"contribute","text":"Contribuez aux corrections, traductions, documents et intégrations via les issues et les pull requests. Signalez les vulnérabilités par le canal privé de sécurité."}
+    ]}
+  ]
+}

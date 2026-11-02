@@ -1,0 +1,141 @@
+{
+  "title": "Tüm özelliklerin kontrol listesi",
+  "navigationTitle": "Bir modüle git",
+  "groups": [
+    {"id":"workspace","title":"Çalışma alanı ve günlük gezinme","items":[
+      {"id":"browser","text":"Tek bir DGX Spark üzerinde yerel yapay zekâ, ekip iş birliği ve sanal cihazlar için tek bir tarayıcı çalışma alanı kullanın."},
+      {"id":"catalog","text":"Uygulamalara kategorilerine göre göz atın, uygulama kataloğunda arama yapın ve yan çubuktan uygulama açın."},
+      {"id":"readiness","text":"Her uygulamanın yükleme ilerlemesini, kullanılabilirliğini ve hizmet durumunu görün."},
+      {"id":"tasks","text":"Görev merkezinde sıradaki, çalışan, tamamlanan, başarısız ve iptal edilen işleri takip edin; mevcut sonuçları açın."},
+      {"id":"notifications","text":"Bildirim menüsünde bekleyen ekran yansıtma davetlerini görün ve yanıtlamak için ekran yansıtma uygulamasını açın."},
+      {"id":"languages","text":"Sağdan sola yazılan Arapça dâhil 17 arayüz dili arasından seçim yapın; başka bir dil seçene kadar varsayılan dil İngilizcedir."},
+      {"id":"appearance","text":"Açık, koyu veya sistem görünümünü kullanın; elle seçtiğiniz dil ve tema sayfa yenilemelerinde, yeniden girişlerde ve uygulama görünümlerinde korunur."}
+    ]},
+    {"id":"assistant","title":"Yapay zekâ asistanı ve kontrollü Agent iş akışları","items":[
+      {"id":"conversations","text":"Sohbet başlatın, geçmişini kaydedin ve önceki görüşmeleri yeniden açın."},
+      {"id":"modes","text":"Geçerli istek için Otomatik, Yanıt veya Agent modunu seçin."},
+      {"id":"attachments","text":"Bir isteğe birden fazla dosya ekleyin ve göndermeden önce ekleri kaldırın."},
+      {"id":"streaming","text":"Yanıtları oluştukça okuyun, etkin bir çalışmayı durdurun ve yeniden bağlandıktan sonra olay akışını sürdürün."},
+      {"id":"trace","text":"Döndürülen model ayrıntılarını, araç etkinliğini, kaynakları ve kullanım bilgilerini inceleyin; çalışma dosya ürettiğinde bunları indirin."},
+      {"id":"approval","text":"Onay gerektiren bir Agent eyleminin kapsamını inceleyin, ardından bu eylemi onaylayın veya reddedin."},
+      {"id":"isolation","text":"Agent işlerini, kalıcı çalışma alanına sahip kullanıcıya özel bir sanal alanda yürütün; araçlar ve ağ erişimi yönetici politikasına uyar."}
+    ]},
+    {"id":"drawing","title":"Yapay zekâ ile görsel üretimi","items":[
+      {"id":"text-to-image","text":"Mevcut görsel modelini kullanarak bir metin isteminden görsel üretin; mevcut uygulama bir görsel düzenleme veya bölgesel doldurma (inpainting) editörü değildir."},
+      {"id":"intent","text":"Mevcut model yapılandırması destekliyorsa Otomatik veya Hızlı üretim seçeneğini kullanın."},
+      {"id":"parameters","text":"Kare, yatay veya dikey oranları, desteklenen çıktı boyutlarını ve rastgele ya da sabit bir seed değerini seçin."},
+      {"id":"formats","text":"PNG, WebP veya JPEG çıktısı isteyin, sonucu önizleyin ve görseli indirin."},
+      {"id":"jobs","text":"Kuyruk ve üretim ilerlemesini takip edin, işi iptal edin ve sayfayı yeniden açtığınızda geçerli görevi geri yükleyin."},
+      {"id":"provenance","text":"Sonuçla birlikte kaydedilen gerçek modeli ve üretim parametrelerini inceleyin."}
+    ]},
+    {"id":"ocr","title":"Metin tanıma ve düzeltme","items":[
+      {"id":"inputs","text":"PNG, JPEG, WebP veya PDF yükleyin ya da ekip sürücüsünden mevcut bir dosya seçin."},
+      {"id":"recognition","text":"Dil ipucu verin ve seçilen modelin yetenekleri kapsamında metin, Markdown tabloları veya LaTeX formüllerini tanıyın."},
+      {"id":"review","text":"Tanıma sonuçlarını sayfa ve metin bloğu bazında inceleyin, ardından tanınan metni elle düzeltin."},
+      {"id":"export","text":"Gözden geçirilen içeriği metin, Markdown veya JSON olarak dışa aktarın."},
+      {"id":"handoff","text":"Kaynağı yeniden yükleyip tanımadan, kayıtlı bir tanıma sonucunu Çeviri uygulamasına gönderin."},
+      {"id":"jobs","text":"Tanıma işlerini takip edin ve iptal edin. Mevcut model, sınırlayıcı kutu koordinatları veya güven puanları sağlamaz."}
+    ]},
+    {"id":"transcription","title":"Kayıttan ve canlı konuşma dökümü","items":[
+      {"id":"inputs","text":"Yerel veya ekip sürücüsündeki ses/video dosyalarını seçin: WAV, FLAC, OGG, WebM, MP3, M4A, AIFF veya MP4."},
+      {"id":"preview","text":"Kaynak medyayı önizleyin ve otomatik dil algılamayı ya da desteklenen bir dil ipucunu kullanın."},
+      {"id":"edit","text":"Zaman damgalı döküm bölümlerini inceleyin ve metinlerini düzenleyin."},
+      {"id":"export","text":"Metin, JSON, SRT veya WebVTT altyazıları dışa aktarın."},
+      {"id":"handoff","text":"Kayıtlı bir dökümü Çeviri uygulamasına aktarın ve geçerli döküm görevini takip edin veya iptal edin."},
+      {"id":"live","text":"HTTPS, tarayıcı izni, MediaRecorder ve gerçek zamanlı hizmet kullanılabilir olduğunda mikrofon girişini canlı olarak metne dönüştürün."},
+      {"id":"optional-timing","text":"Sözcük zaman damgalarını veya konuşmacı ayrımını yalnızca desteklenen profillerle kullanın; deneysel konuşmacı ayrımı akışı WAV girdisi gerektirir."}
+    ]},
+    {"id":"translation","title":"Metin, dosya ve medya çevirisi","items":[
+      {"id":"languages","text":"Modelin desteklediği 60 dilli katalogdan seçim yapın, kaynak dili otomatik algılayın ya da kaynak/hedef dilleri seçip yer değiştirin. Bu, her dil çifti için eşit kalite vaat etmez."},
+      {"id":"text","text":"Yazılan veya yapıştırılan metni çevirin ve kaynak bölümlerle çevrilen bölümleri karşılaştırın."},
+      {"id":"files","text":"Bir görsel veya PDF yükleyin ya da ekip sürücüsünden seçin; OCR hazır olduğunda çeviriden önce metnini tanıyın."},
+      {"id":"media","text":"Döküm hizmeti hazır olduğunda desteklenen ses/videoyu metne dönüştürerek çevirin ve bölüm zamanlarını koruyun."},
+      {"id":"reuse","text":"Kayıtlı OCR/döküm sonuçlarını yeniden kullanın ve mevcut ara sonuçları indirin."},
+      {"id":"edit-export","text":"Çevrilen metni düzenleyin ve metin, Markdown veya JSON olarak dışa aktarın; ses/video sonuçları SRT ve WebVTT'yi de destekler."},
+      {"id":"progress","text":"Çıkarma, döküm ve çeviri aşamalarını takip edin, işi iptal edin ve yeniden açtığınızda geçerli görevi geri yükleyin."},
+      {"id":"boundaries","text":"Çeviri dilleri, arayüz dillerinden ve OCR/ASR dil kapsamından ayrıdır. PDF çevirisi metin tabanlıdır; özgün sayfa düzenini yeniden oluşturmaz ve genel DOCX/XLSX düzenleme sunmaz."}
+    ]},
+    {"id":"messaging","title":"Ekip mesajlaşması","items":[
+      {"id":"chats","text":"Ekip arkadaşlarınızı bulun, doğrudan sohbetler başlatın ve seçtiğiniz üyelerle adlandırılmış grup sohbetleri oluşturun."},
+      {"id":"search","text":"Tüm, okunmamış veya grup sohbetlerini filtreleyin ve erişim izniniz olan sohbetlerde/mesajlarda arama yapın."},
+      {"id":"messages","text":"Metin ve dosya ekleri gönderin; ekin özgün dosya sürümünü indirin."},
+      {"id":"realtime","text":"Mesajları anlık alın, yeniden bağlanınca sohbet geçmişine erişin, okunmuş/okunmamış konumlarını takip edin ve üyelerin çevrimiçi durumunu görün."},
+      {"id":"compose","text":"Enter ile gönderin, Shift+Enter ile yeni satır ekleyin ve dar ekranlarda sohbet listesi ile sohbet arasında geçiş yapın."},
+      {"id":"cleanup","text":"Bir mesajı yalnızca kendi görünümünüzden silin veya kendi sohbet geçmişinizi temizleyin; diğer katılımcıların kayıtları silinmez."},
+      {"id":"remove-chat","text":"Gruptan ayrılmadan bir sohbeti kendi sohbet listenizden silin; yeni bir mesaj geldiğinde sohbet yeniden görünebilir."}
+    ]},
+    {"id":"drive","title":"Ekip sürücüsü ve dosyalarda iş birliği","items":[
+      {"id":"spaces","text":"Kişisel ve ekip dosya alanlarını klasörler ve yol gezintisiyle düzenleyin."},
+      {"id":"browse","text":"Liste/ızgara görünümleri arasında geçiş yapın, dosya ayrıntılarını inceleyin, dosya/klasör arayın ve son değişiklikleri görün."},
+      {"id":"upload","text":"Birden fazla dosya yükleyin, ilerlemeyi takip edin ve bir yüklemeyi iptal edin."},
+      {"id":"resume","text":"Aynı dosyayı yeniden seçerek çok parçalı büyük dosya yüklemesine devam edin; yüklenmiş parçalar sunucu tarafından doğrulanır."},
+      {"id":"organize","text":"Klasör oluşturun; dosya ve klasörleri yeniden adlandırın, taşıyın veya kopyalayın."},
+      {"id":"preview","text":"Desteklenen görselleri, sesleri, videoları, metinleri ve PDF'leri önizleyin ve dosyaları indirin; medya oynatımı tarayıcıya bağlıdır."},
+      {"id":"versions","text":"Bir dosyanın yeni sürümünü yükleyin, sürüm geçmişini inceleyin ve önceki sürümleri indirin."},
+      {"id":"recycle","text":"Öğeleri geri dönüşüm kutusuna taşıyın ve geri yükleyin."},
+      {"id":"share","text":"Üyeler veya ekiplerle görüntüleme/düzenleme izinleri ve isteğe bağlı süre sonu belirleyerek kurum içinde paylaşın; bu, anonim herkese açık bağlantı paylaşımı değildir."},
+      {"id":"received","text":"Sizinle paylaşılan dosya ve klasörlere göz atın; erişim güncel izinlere ve üyeliğe göre yeniden denetlenir."}
+    ]},
+    {"id":"casting","title":"AirPlay uyumlu kablosuz ekran yansıtma","items":[
+      {"id":"receiver","text":"Aynı LAN üzerindeki uyumlu Apple cihazları için kendine ait alıcı adı ve PIN'i olan geçici bir alıcıyı başlatın ve durdurun."},
+      {"id":"expiry","text":"Alıcı için 15, 30, 60 veya 120 dakikalık süre seçin; durdurma veya süre dolumu yayını ve izleme erişimini sona erdirir."},
+      {"id":"audience","text":"İzlemeyi yalnızca kendinizle, seçili üyelerle veya bir ekiple sınırlandırın; daveti kabul ya da reddedebilen izleyiciler davet edin."},
+      {"id":"playback","text":"Ekranı izleyin ve sesi tarayıcıda dinleyin; tarayıcının otomatik oynatma kuralları sesi etkinleştirmek için tıklama gerektirebilir."},
+      {"id":"viewers","text":"Bağlı izleyicileri görün ve çıkarın; bir yönetici, özel içeriği izleme izni kazanmadan oturumu durdurabilir."},
+      {"id":"reconnect","text":"Bağlantı kesilmesi/yeniden bağlanma durumlarını görün; yeniden katılırken izleme izni tekrar kontrol edilir."},
+      {"id":"boundary","text":"Hazır bir medya çalışma ortamı, erişilebilir LAN keşfi ve uyumlu tarayıcı/cihaz sürümleri gerektirir. Tarayıcıdan izleme; HDMI çıkışı, DRM/FairPlay oynatımı veya Apple sertifikasyonu sağlamaz."}
+    ]},
+    {"id":"phones","title":"Kalıcı sanal Android telefonlar","items":[
+      {"id":"create","text":"Yüklü sistem profillerinden bağımsız Android telefonlar oluşturun; her telefonun uygulamaları ve verileri oturumlar arasında korunur."},
+      {"id":"lifecycle","text":"Telefonları ayrı ayrı başlatın, kapatın, yeniden başlatın, yeniden adlandırın ve açık onayla silin."},
+      {"id":"controls","text":"Android'i klavye/işaretçi girişi ve Geri, Ana Ekran, Son Uygulamalar ile ses düğmeleriyle kontrol edin."},
+      {"id":"connection","text":"Ses ve tam ekranı kullanın, yeniden bağlanın veya etkin telefon bağlantısını başka bir sayfaya taşıyın."},
+      {"id":"files","text":"Telefona dosya yükleyin ve telefonun Team AI Box aktarım klasöründen dosya indirin."},
+      {"id":"apk","text":"Onay verdikten sonra kendi APK dosyalarınızı kurun; Android uygulama izinleri sessizce verilmez."},
+      {"id":"camera","text":"Desteklendiğinde sanal kameraya görsel, video veya tarayıcı kamerası aktarın; fiziksel USB kameralar ve ağ girdileri ayrıca yönetici kurulumu ve izinleri gerektirir."},
+      {"id":"adb","text":"Standart ADB araçlarını ve Node.js relay istemcisini kullanarak kısa ömürlü bir aktarım üzerinden cihaza özel ADB hata ayıklamasına geçici izin verin."},
+      {"id":"diagnostics","text":"İstediğinizde kare hızını, paket kaybını ve bağlantının gidiş-dönüş istatistiklerini inceleyin; bunlar uçtan uca gecikme garantisi değildir."},
+      {"id":"google","text":"Google Play sistem profilini yalnızca kaynakları kullanılabilir olduğunda seçin; kullanılabilirlik Play Protect sertifikasyonu veya her Android uygulamasının çalışacağı garantisi değildir."}
+    ]},
+    {"id":"computers","title":"Sanal Windows ve Linux bilgisayarlar","items":[
+      {"id":"create","text":"Seçtiğiniz CPU, bellek ve disk boyutlarıyla bağımsız ARM64 Windows/Linux bilgisayarlar oluşturun."},
+      {"id":"lifecycle","text":"Bir bilgisayarı başlatın, normal şekilde kapatın ve kapalı bilgisayarı açık onaydan sonra silin."},
+      {"id":"display","text":"Önce uzak masaüstünde oturum açmadan firmware, önyükleme, kurulum ve işletim sistemi ekranlarını görmek için tarayıcıda sanal monitör açın."},
+      {"id":"controls","text":"Klavye, işaretçi, ses, tam ekran ve yeniden bağlanma denetimlerini kullanın."},
+      {"id":"multi-page","text":"Aynı sanal bilgisayarı birden fazla tarayıcı sekmesinde veya penceresinde açın."},
+      {"id":"invite","text":"Ekip arkadaşlarınızı monitörü izlemeye veya kontrol etmeye davet edin ve erişimlerini kaldırın."},
+      {"id":"handoff","text":"Kontrolü başka bir katılımcıya devredin, bırakın veya sahip olarak geri alın; tek denetleyici ya da ortak kontrol modunu seçin."},
+      {"id":"iso","text":"Duraklat/devam et/iptal denetimleriyle kurulum ISO'su yükleyin veya kişisel/ekip sürücüsünden mevcut bir ISO seçin."},
+      {"id":"optical","text":"Sanal optik ortamı takın ya da çıkarın ve tek seferlik diskten önyüklemeyi seçin; ortamı değiştirmek bilgisayarı otomatik yeniden başlatmaz."},
+      {"id":"os","text":"Kullanma yetkiniz olan kendi ARM64 işletim sisteminizi kurun ve isteğe bağlı uzak masaüstünü ayrı kullanın. Windows lisansı sizin sorumluluğunuzdadır; önceden etkinleştirilmiş Windows veya genel x86 konuk desteği dâhil değildir."}
+    ]},
+    {"id":"administration","title":"Yönetim, izinler ve güvenlik","items":[
+      {"id":"accounts","text":"Yerel üyeler oluşturun, hesap durumunu yönetin ve rolünüzün izin verdiği hesapların parolalarını sıfırlayın."},
+      {"id":"roles","text":"Yerleşik rolleri atayın, izinleri inceleyin ve sahip işlemlerini koruyan önlemlerle ekip üyeliğini yönetin."},
+      {"id":"audit","text":"Denetim olaylarını alan veya korelasyon kimliğine göre filtreleyin, ayrıntıları inceleyin ve denetim geçmişinin bütünlük doğrulamasını isteyin."},
+      {"id":"status","text":"Yönetim çalışma alanından cihazın, uygulamaların, depolamanın ve yürütme hizmetlerinin durumunu inceleyin."},
+      {"id":"providers","text":"Haricî yapay zekâ sağlayıcılarını ve model/işlem eşlemelerini yapılandırın, kimlik bilgilerini yenileyin ve sağlayıcıları etkinleştirin veya devre dışı bırakın."},
+      {"id":"routing","text":"Haricî işleme için açık onayla izin verilen yerel/haricî yönlendirme politikalarını belirleyin; yerel yapay zekâ haricî API anahtarı gerektirmez."},
+      {"id":"models","text":"Yüklü model profillerini, çalışma ortamı sürümlerini, hazır olma durumunu ve doğrulama ayrıntılarını inceleyin."},
+      {"id":"plugins","text":"Doğrulanmış eklenti paketlerini içe aktarın ve uygun eklentilerin kurulumunu, yükseltmesini, etkinleştirilmesini/devre dışı bırakılmasını ve kaldırılmasını yönetin; korunan resmî eklentilerde kısıtlamalar vardır."},
+      {"id":"queues","text":"Yürütme kuyruklarını ve işleri inceleyin, izin verilen zamanlama politikalarını ayarlayın ve uygun işleri iptal edin."},
+      {"id":"encryption","text":"Şifreli depolama ve başlangıç koruması ayarlarını inceleyin. Otomatik kilit açma yerel anahtar kullanır; başlangıç parolasını etkinleştirmek kurtarma doğrulaması ve onay gerektirir."}
+    ]},
+    {"id":"installation","title":"Kaynak koddan kurulum ve bakım","items":[
+      {"id":"command","text":"Uyumlu, yeni bir DGX Spark üzerinde herkese açık Git klonundan belgelenmiş tek bir kaynak kurulum komutuyla yükleyin."},
+      {"id":"pipeline","text":"Mevcut Docker/NVIDIA ortamını yeniden kullanarak derleme araçlarını hazırlayın, model/çalışma ortamı girdilerini indirin, uygulama imajlarını derleyin, paketleyin ve kurun."},
+      {"id":"resume","text":"Aynı komut ve çalışma diziniyle kesilen hazırlığa devam edin; doğrulanmış indirmeleri ve tamamlanan aşamaları yeniden kullanın."},
+      {"id":"modes","text":"Ön koşul kontrollerini, yalnızca indirme hazırlığını veya yalnızca derleyerek paket oluşturmayı çalıştırın."},
+      {"id":"offline","text":"Çevrimdışı hedefe kurulum için eksiksiz taşınabilir paket hazırlayın; kaynak koddan hazırlık aşamasının kendisi ağ erişimi gerektirir."},
+      {"id":"integrity","text":"Sabitlenmiş girdileri doğrulayın ve gerektiğinde belgelenmiş alternatif kaynakları ya da doğrulanmış taşınabilir önbellekleri kullanın; hiçbir üçüncü taraf ayna garanti edilmez."},
+      {"id":"identity","text":"Cihaza özel yeni kimlik bilgilerini ve belgelenmiş admin/admin hesabını oluşturun, ardından parolasını değiştirin; başka bir kutunun hesaplarını veya konuk disklerini kopyalamayın."},
+      {"id":"maintenance","text":"Bakım adaylarını, uyumluluk bulgularını, açık yürütme planlarını ve plan geçmişini, kapsamı belirli geri alma/kurtarma talimatlarıyla inceleyin; bu, rastgele otomatik işletim sistemi veya sürücü yükseltmeleri anlamına gelmez."}
+    ]},
+    {"id":"developers","title":"Açık kaynak geliştirme ve uzantılar","items":[
+      {"id":"source","text":"Ürünün özgün kodunu ve belgelerini MIT kapsamında okuyun, değiştirin ve yeniden dağıtın; üçüncü taraf bileşenler kendi lisanslarını korur."},
+      {"id":"plugins","text":"Herkese açık SDK sözleşmelerini ve dâhil edilen örnek eklentileri kullanarak ApplicationPlugin veya ComputePlugin uzantıları geliştirin."},
+      {"id":"verification","text":"Eklenti içe aktarımlarında imzalı paket manifestlerini, bütünlük ve izin kontrollerini kullanın; bu, herkese açık bir eklenti mağazasının bulunduğu anlamına gelmez."},
+      {"id":"contribute","text":"Issue ve pull request üzerinden düzeltme, çeviri, belge ve entegrasyon katkıları yapın; güvenlik açıklarını özel güvenlik bildirim kanalıyla iletin."}
+    ]}
+  ]
+}
