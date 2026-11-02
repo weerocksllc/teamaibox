@@ -7,272 +7,272 @@
       "theme": "light",
       "page": "workbench",
       "file": "zh-CN/workbench-light.jpg",
-      "bytes": 110533,
-      "sha256": "8751e0016ac8817bb89238193866c2670fbe0b30daea901bc00fccf9521e3384"
+      "bytes": 113126,
+      "sha256": "88ef9a177588d7bd1034985806db427390208e08568fa22b749eee44e6f2c5ae"
     },
     {
       "locale": "zh-CN",
       "theme": "dark",
       "page": "workbench",
       "file": "zh-CN/workbench-dark.jpg",
-      "bytes": 113498,
-      "sha256": "3e1c3338ad879fc3ebab66dc6088d38fdece0c4f04d2366dc78d51b29042189d"
+      "bytes": 117030,
+      "sha256": "ea003abe2f684f3da006fc59272ff9a448bdc2564b425ed431546a859d27f8d6"
     },
     {
       "locale": "zh-TW",
       "theme": "light",
       "page": "workbench",
       "file": "zh-TW/workbench-light.jpg",
-      "bytes": 113127,
-      "sha256": "f3d072a9add00d4e68beab99ce601000ff058c39ddbec5089d86bc56ab2eaac7"
+      "bytes": 115409,
+      "sha256": "00eca4803eb525c723787b2d3f4e6d8254097229f0e76be01f55fbe897418833"
     },
     {
       "locale": "zh-TW",
       "theme": "dark",
       "page": "workbench",
       "file": "zh-TW/workbench-dark.jpg",
-      "bytes": 115855,
-      "sha256": "725f6b6fc21b9c3d6642b75772007b3958076e4c09abcb00b007fb750476e5f1"
+      "bytes": 119071,
+      "sha256": "6f99499186131193b2540043ffad9b7cbdca6ab2beaa7b5ac4f2344c7dc539b3"
     },
     {
       "locale": "en",
       "theme": "light",
       "page": "workbench",
       "file": "en/workbench-light.jpg",
-      "bytes": 135344,
-      "sha256": "0e73e4ef808cc10ad8aa193ae6906a298855e075ea4290a2c7e800f5674b6d5d"
+      "bytes": 137222,
+      "sha256": "61d45badb77b003b52893550fb71b1e9ee22210664936e8e51b07002808ca160"
     },
     {
       "locale": "en",
       "theme": "dark",
       "page": "workbench",
       "file": "en/workbench-dark.jpg",
-      "bytes": 138447,
-      "sha256": "65617a596f30d7126206c26bf46d9c0338755cc363e7e69152f2cea8a4acdae7"
+      "bytes": 140994,
+      "sha256": "f0336f1ef6a777244f4628e64a34cf73610660dfd2798a49cec1db1c2e4ca05e"
     },
     {
       "locale": "ja",
       "theme": "light",
       "page": "workbench",
       "file": "ja/workbench-light.jpg",
-      "bytes": 139699,
-      "sha256": "bdf124ef48f3c0bd51364c7150775e5d972f4da984945ffb5b3b56ac39ebdb59"
+      "bytes": 142828,
+      "sha256": "3e72e4119d0b3e7137960c946862d47323c033f4ab9bc25b63fafafe210b200d"
     },
     {
       "locale": "ja",
       "theme": "dark",
       "page": "workbench",
       "file": "ja/workbench-dark.jpg",
-      "bytes": 143904,
-      "sha256": "bf3a8e6ba54a22e0983731643ecd5b7579b53defa42b02550e6ad5a4ea293a3b"
+      "bytes": 147333,
+      "sha256": "ab93e2de44b7d6aa622670533dd1ff989c04bf713a4baf06445b39c2e2c1b087"
     },
     {
       "locale": "ko",
       "theme": "light",
       "page": "workbench",
       "file": "ko/workbench-light.jpg",
-      "bytes": 117354,
-      "sha256": "e65ade12a1570b93e56c527c4bf82a7c8078cdddc746314c214c4dcf41bad5bc"
+      "bytes": 119934,
+      "sha256": "675a2462279c5144e35ae238c30bf8b651accb13702a416d2379a26989d7c848"
     },
     {
       "locale": "ko",
       "theme": "dark",
       "page": "workbench",
       "file": "ko/workbench-dark.jpg",
-      "bytes": 120888,
-      "sha256": "4cf05ba122d8785c3df15bcc2e8dfeacffdd5314862b91e8eca0b34b600db61f"
+      "bytes": 124305,
+      "sha256": "2e6153089c2e2682af31d310e6920a2cfa8aa82fcae6ac9c454f561df9e2ede4"
     },
     {
       "locale": "fr",
       "theme": "light",
       "page": "workbench",
       "file": "fr/workbench-light.jpg",
-      "bytes": 159356,
-      "sha256": "c89de555c930daa67a40088dc0bc29053dcef13658c1bb296794f2db419ba99b"
+      "bytes": 160026,
+      "sha256": "1f55d7f0dc974b69ede51452c1692d3afd08720af0f860574552de30b2e263ee"
     },
     {
       "locale": "fr",
       "theme": "dark",
       "page": "workbench",
       "file": "fr/workbench-dark.jpg",
-      "bytes": 163031,
-      "sha256": "bb95d7330de77c0076fefa227e1499964a6fd3afcfdb6630a61ca11b08ddc9b8"
+      "bytes": 163933,
+      "sha256": "a5171e1c5e905ace28c0df509c63d9f32a47a4ab3a4856859232530eadfa5b83"
     },
     {
       "locale": "de",
       "theme": "light",
       "page": "workbench",
       "file": "de/workbench-light.jpg",
-      "bytes": 155088,
-      "sha256": "0cf2c54a75edce494ef18430601f21b9c166a6199eaa46dca1d627ba10769d19"
+      "bytes": 157239,
+      "sha256": "ee93b3d5c7976142f8da90586df42d7b9dc055b7590230ae366b363e303f2ed1"
     },
     {
       "locale": "de",
       "theme": "dark",
       "page": "workbench",
       "file": "de/workbench-dark.jpg",
-      "bytes": 158912,
-      "sha256": "69ce77b029f257b30d6adbef0e699d9e0f8b9e9232f74f1533e1f3f0d1449e8d"
+      "bytes": 161150,
+      "sha256": "5c3336121cb61c80c9bbdc815c016f938091d39151fb9e1e65b27cc61b2649dd"
     },
     {
       "locale": "es",
       "theme": "light",
       "page": "workbench",
       "file": "es/workbench-light.jpg",
-      "bytes": 156538,
-      "sha256": "b0dfc4daa51d7b1e70368f7e0e621c822d2fbaa0060e325dadb1022a384148de"
+      "bytes": 158885,
+      "sha256": "c4a24beeecee9078ae00d9f3fcab2818f85a461fdcaf7d5ee771844f896d9908"
     },
     {
       "locale": "es",
       "theme": "dark",
       "page": "workbench",
       "file": "es/workbench-dark.jpg",
-      "bytes": 160224,
-      "sha256": "7679340e355fe2179e7d12c0ffae6e2ff8ba4d4bbeb5690ae8e43e498d987f24"
+      "bytes": 162692,
+      "sha256": "ee76712cb4efef26399b1a3e14886e7b8af25d93b4db4e79a30bb41291fd9a0a"
     },
     {
       "locale": "pt-BR",
       "theme": "light",
       "page": "workbench",
       "file": "pt-BR/workbench-light.jpg",
-      "bytes": 157296,
-      "sha256": "af370176013fda1b6a05597cbe1e16cb2c9dcfea979ae757ddd30775bcd8fd56"
+      "bytes": 157189,
+      "sha256": "51bd7d635e5f53a4efce780fab2cd5fe93dc572c81369d482e675af6e07b642e"
     },
     {
       "locale": "pt-BR",
       "theme": "dark",
       "page": "workbench",
       "file": "pt-BR/workbench-dark.jpg",
-      "bytes": 160987,
-      "sha256": "94aaabdba1f5bf9c780653757b1ef51c7aa738792f4327cef3120d09ebf5ccf1"
+      "bytes": 160884,
+      "sha256": "caaa026b3e719c4a3e4123741cf962d2f76d6005ad524cb099d604d5d3c0ba6a"
     },
     {
       "locale": "ru",
       "theme": "light",
       "page": "workbench",
       "file": "ru/workbench-light.jpg",
-      "bytes": 166664,
-      "sha256": "e3ce4eb0d78a660f0b8dc914245f38912045db0a5de6669d66e3b750e423361b"
+      "bytes": 167013,
+      "sha256": "aed71723cd8a8badefc4e7c1b8cc7582432a9ca2d11e5c2e007833dce115dd9d"
     },
     {
       "locale": "ru",
       "theme": "dark",
       "page": "workbench",
       "file": "ru/workbench-dark.jpg",
-      "bytes": 170939,
-      "sha256": "1efb4d2903b2d6bbaa48accfe7abb9017035701b7bf1f31147bfbcb56e701ff2"
+      "bytes": 171192,
+      "sha256": "70e2e29f8519b47eecce9300e0192f107c6b078f8ef59583900d2def40513b74"
     },
     {
       "locale": "ar",
       "theme": "light",
       "page": "workbench",
       "file": "ar/workbench-light.jpg",
-      "bytes": 73530,
-      "sha256": "8e14d5be703f1bc7f34f8cdd47f6c7987882a78f7f9a958c0c2f5baf005f3d8d"
+      "bytes": 65890,
+      "sha256": "ce6a9efd365876e8d38363f409ed92ba137c1e098199ad138182aab754ae1f43"
     },
     {
       "locale": "ar",
       "theme": "dark",
       "page": "workbench",
       "file": "ar/workbench-dark.jpg",
-      "bytes": 75083,
-      "sha256": "371010a117213fdb3f2bbe3da67442a45adabb4f37e2d359ebee27c7a7adef17"
+      "bytes": 67756,
+      "sha256": "c8171ea907030d6fb2f44841eaef5d135f7af6a1c78dfda1325aaba7a4509e78"
     },
     {
       "locale": "hi",
       "theme": "light",
       "page": "workbench",
       "file": "hi/workbench-light.jpg",
-      "bytes": 125083,
-      "sha256": "e63e737d1968073b510c76aac8514e32f1d675e8e8c73a45150aa8b483c8970a"
+      "bytes": 128956,
+      "sha256": "41b706e03a97e59333393478a729e7522ada94270ac139fca1ae7dd62d957dc1"
     },
     {
       "locale": "hi",
       "theme": "dark",
       "page": "workbench",
       "file": "hi/workbench-dark.jpg",
-      "bytes": 128281,
-      "sha256": "0495ee61f4b849acb04672d3eddae13c5c7fd1d466a28d91248a22e1240c8e03"
+      "bytes": 132697,
+      "sha256": "b3265753573e29ffb2301e7f52ccd8476f85eff1000450501cd526c715b601ff"
     },
     {
       "locale": "id",
       "theme": "light",
       "page": "workbench",
       "file": "id/workbench-light.jpg",
-      "bytes": 140933,
-      "sha256": "45cd6397e62bcaa731d9954210f562f191cea0e8910b710a7806ac404cdbfd49"
+      "bytes": 142878,
+      "sha256": "ea4eca1f02ff6550315f9f78dcc296d766ee1c458a248e7fcdaec36c970275b4"
     },
     {
       "locale": "id",
       "theme": "dark",
       "page": "workbench",
       "file": "id/workbench-dark.jpg",
-      "bytes": 144551,
-      "sha256": "4063f58bee95527d995d3982f590272a7ea87785cdd8f73562db2b0b9ee1a879"
+      "bytes": 146564,
+      "sha256": "4413e1a052c9bad71e3b7b79a2379c06dcaa3dbf80c55d8fa2d596043c8049ce"
     },
     {
       "locale": "it",
       "theme": "light",
       "page": "workbench",
       "file": "it/workbench-light.jpg",
-      "bytes": 153505,
-      "sha256": "fb40ea43edecbd50f6f12a04e194f6bb696b716151a6ad329a3841a2d7bf4445"
+      "bytes": 154757,
+      "sha256": "30a5d98c2d8fbdfbe9fa1b695670de40dcbf9960923bfac586ee4878e8a0196c"
     },
     {
       "locale": "it",
       "theme": "dark",
       "page": "workbench",
       "file": "it/workbench-dark.jpg",
-      "bytes": 157363,
-      "sha256": "e40415532a9583a2fcdd79818e5a702e25122cf9bf0fa7676eb71fc222559d82"
+      "bytes": 158514,
+      "sha256": "51c1e72ff7cad3bf32a67d1ec1daa107140976ca55662e8ecd71156e401ac3ed"
     },
     {
       "locale": "tr",
       "theme": "light",
       "page": "workbench",
       "file": "tr/workbench-light.jpg",
-      "bytes": 145390,
-      "sha256": "f7a4345889164e5d384d9b90beacc1602597d244a68c8969072e54748c899e27"
+      "bytes": 147963,
+      "sha256": "e53180252a5848437d760fb70ed3a02930082088b255941e47629192b3c82314"
     },
     {
       "locale": "tr",
       "theme": "dark",
       "page": "workbench",
       "file": "tr/workbench-dark.jpg",
-      "bytes": 148869,
-      "sha256": "38941f76d2169ec892bbb8adcb69a20faa8e69393648521cd11dc919a4009095"
+      "bytes": 151766,
+      "sha256": "766abc3cf18e7d38ca92471212842bf78aca343854702b074292f2187a768606"
     },
     {
       "locale": "vi",
       "theme": "light",
       "page": "workbench",
       "file": "vi/workbench-light.jpg",
-      "bytes": 151390,
-      "sha256": "af1e7b5c182fcd992e762219a430168224b4971391104de324d0e06e8f5617ab"
+      "bytes": 153647,
+      "sha256": "726ad3f1b8fabad4de4ba440e75e8558634d91741dc484e9d2b2ac91c4dc77aa"
     },
     {
       "locale": "vi",
       "theme": "dark",
       "page": "workbench",
       "file": "vi/workbench-dark.jpg",
-      "bytes": 155291,
-      "sha256": "37964f2c7cf200ef217c305f36080c91ba31490a7679c56a7d68e3a26c522894"
+      "bytes": 157783,
+      "sha256": "25adf36c54fc494f539cc6432b3fe4aecbe302e7a0b5e8a1e695ea42c1f4458d"
     },
     {
       "locale": "th",
       "theme": "light",
       "page": "workbench",
       "file": "th/workbench-light.jpg",
-      "bytes": 132791,
-      "sha256": "b3b9bf45c6c5994089407b803c9a3a3da4add2c173ae0fb06982ecaae37e2b12"
+      "bytes": 133577,
+      "sha256": "c6f8016b77ba21ca7c2e50f94405dffca65662071245fe15f9da5b21e68b749a"
     },
     {
       "locale": "th",
       "theme": "dark",
       "page": "workbench",
       "file": "th/workbench-dark.jpg",
-      "bytes": 135648,
-      "sha256": "e7204244d59aadef3562ff7703d3d667d4bb53a12a335f5c026d629fbb77c9d5"
+      "bytes": 136963,
+      "sha256": "8d455eae62a6679f132294abadff6e59d1d0f55b4c7e92a7410d1673af8a56cf"
     }
   ]
 }
