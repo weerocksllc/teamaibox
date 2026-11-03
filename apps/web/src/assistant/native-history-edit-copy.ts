@@ -1,0 +1,23 @@
+import type {Locale} from '../i18n';
+const keys=['manage','part','edit','deletePart','deleteMessage','warning','confirm','cancel','conflict','shell','defaultShell'] as const;
+type Key=typeof keys[number];
+const copy:Record<Locale,readonly string[]>={
+  en:['Edit message','Message part','Text','Delete part','Delete message','This changes conversation history. It does not undo file changes or tool actions. Deletion cannot be undone.','Confirm','Cancel','The message changed. Reopen it before saving.','Shell','Default shell'],
+  'zh-CN':['编辑消息','消息片段','文本','删除片段','删除消息','这会修改会话历史，不会撤销文件更改或工具操作。删除后无法恢复。','确认','取消','消息已发生变化，请重新打开后再保存。','Shell','默认 Shell'],
+  'zh-TW':['編輯訊息','訊息片段','文字','刪除片段','刪除訊息','這會修改對話歷史，不會撤銷檔案變更或工具操作。刪除後無法復原。','確認','取消','訊息已變更，請重新開啟後再儲存。','Shell','預設 Shell'],
+  ja:['メッセージを編集','メッセージ部分','テキスト','部分を削除','メッセージを削除','会話履歴を変更します。ファイル変更やツール操作は元に戻りません。削除は取り消せません。','確認','キャンセル','メッセージが変更されました。再度開いてから保存してください。','シェル','既定のシェル'],
+  ko:['메시지 편집','메시지 부분','텍스트','부분 삭제','메시지 삭제','대화 기록을 변경합니다. 파일 변경이나 도구 작업은 취소되지 않습니다. 삭제는 되돌릴 수 없습니다.','확인','취소','메시지가 변경되었습니다. 다시 연 후 저장하세요.','셸','기본 셸'],
+  fr:['Modifier le message','Partie du message','Texte','Supprimer la partie','Supprimer le message','Modifie l’historique sans annuler les modifications de fichiers ni les actions des outils. La suppression est irréversible.','Confirmer','Annuler','Le message a changé. Rouvrez-le avant de sauvegarder.','Shell','Shell par défaut'],
+  de:['Nachricht bearbeiten','Nachrichtenteil','Text','Teil löschen','Nachricht löschen','Ändert den Verlauf, macht aber keine Dateiänderungen oder Werkzeugaktionen rückgängig. Löschen ist endgültig.','Bestätigen','Abbrechen','Die Nachricht wurde geändert. Vor dem Speichern erneut öffnen.','Shell','Standard-Shell'],
+  es:['Editar mensaje','Parte del mensaje','Texto','Eliminar parte','Eliminar mensaje','Modifica el historial sin deshacer cambios de archivos ni acciones de herramientas. La eliminación es irreversible.','Confirmar','Cancelar','El mensaje cambió. Vuelve a abrirlo antes de guardar.','Shell','Shell predeterminada'],
+  'pt-BR':['Editar mensagem','Parte da mensagem','Texto','Excluir parte','Excluir mensagem','Altera o histórico sem desfazer alterações em arquivos ou ações de ferramentas. A exclusão é irreversível.','Confirmar','Cancelar','A mensagem mudou. Abra-a novamente antes de salvar.','Shell','Shell padrão'],
+  ru:['Изменить сообщение','Часть сообщения','Текст','Удалить часть','Удалить сообщение','Изменяет историю, но не отменяет изменения файлов и действия инструментов. Удаление необратимо.','Подтвердить','Отмена','Сообщение изменилось. Откройте его заново перед сохранением.','Оболочка','Оболочка по умолчанию'],
+  ar:['تعديل الرسالة','جزء الرسالة','النص','حذف الجزء','حذف الرسالة','يغيّر سجل المحادثة ولا يتراجع عن تغييرات الملفات أو إجراءات الأدوات. لا يمكن التراجع عن الحذف.','تأكيد','إلغاء','تغيّرت الرسالة. افتحها مجددًا قبل الحفظ.','الصدفة','الصدفة الافتراضية'],
+  hi:['संदेश संपादित करें','संदेश का भाग','टेक्स्ट','भाग हटाएँ','संदेश हटाएँ','यह बातचीत का इतिहास बदलता है, फ़ाइल परिवर्तन या उपकरण क्रियाएँ वापस नहीं लेता। हटाना पूर्ववत नहीं किया जा सकता।','पुष्टि करें','रद्द करें','संदेश बदल गया है। सहेजने से पहले फिर खोलें।','शेल','डिफ़ॉल्ट शेल'],
+  id:['Edit pesan','Bagian pesan','Teks','Hapus bagian','Hapus pesan','Mengubah riwayat tanpa membatalkan perubahan berkas atau tindakan alat. Penghapusan tidak dapat dibatalkan.','Konfirmasi','Batal','Pesan berubah. Buka kembali sebelum menyimpan.','Shell','Shell bawaan'],
+  it:['Modifica messaggio','Parte del messaggio','Testo','Elimina parte','Elimina messaggio','Modifica la cronologia senza annullare modifiche ai file o azioni degli strumenti. L’eliminazione è irreversibile.','Conferma','Annulla','Il messaggio è cambiato. Riaprilo prima di salvare.','Shell','Shell predefinita'],
+  tr:['Mesajı düzenle','Mesaj bölümü','Metin','Bölümü sil','Mesajı sil','Geçmişi değiştirir; dosya değişikliklerini veya araç işlemlerini geri almaz. Silme geri alınamaz.','Onayla','İptal','Mesaj değişti. Kaydetmeden önce yeniden açın.','Kabuk','Varsayılan kabuk'],
+  vi:['Sửa tin nhắn','Phần tin nhắn','Văn bản','Xóa phần','Xóa tin nhắn','Thay đổi lịch sử nhưng không hoàn tác thay đổi tệp hoặc thao tác công cụ. Không thể hoàn tác việc xóa.','Xác nhận','Hủy','Tin nhắn đã thay đổi. Mở lại trước khi lưu.','Shell','Shell mặc định'],
+  th:['แก้ไขข้อความ','ส่วนของข้อความ','ข้อความ','ลบส่วน','ลบข้อความ','เปลี่ยนประวัติการสนทนา แต่ไม่ย้อนการเปลี่ยนแปลงไฟล์หรือการทำงานของเครื่องมือ การลบไม่สามารถย้อนกลับได้','ยืนยัน','ยกเลิก','ข้อความเปลี่ยนไปแล้ว โปรดเปิดใหม่ก่อนบันทึก','เชลล์','เชลล์เริ่มต้น'],
+};
+export function nativeHistoryEditText(locale:Locale,key:Key){return copy[locale][keys.indexOf(key)];}

@@ -42,3 +42,11 @@ test('account disable stops even active compute without deleting workspace',asyn
 test('a name collision must never stop or reuse another owner container',async()=>{
  const f=fixture();f.states.set(OWNER,{ownerIdentityId:OTHER,running:true});await assert.rejects(f.controller.ensure(OWNER));assert.equal(f.calls.length,0);
 });
+test('native work blocks idle stop even without legacy platform prompt rows',async()=>{
+ const f=fixture();await f.controller.ensure(OWNER);f.setTime(1200);
+ f.controller.runtime.busy=async()=>true;
+ await f.controller.reconcile();assert.equal(f.states.get(OWNER).running,true);
+ f.controller.runtime.busy=async()=>{throw Error('engine state unknown');};
+ await f.controller.reconcile();assert.equal(f.states.get(OWNER).running,true);
+ f.setActive(false);await f.controller.reconcile();assert.equal(f.states.get(OWNER).running,false);
+});

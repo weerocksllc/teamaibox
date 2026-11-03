@@ -47,6 +47,7 @@ import { PostgresAssistantRepository } from "../src/assistant/postgres-repositor
 import { fixedAssistantRoutingPolicy, OpenAiQueuedAnswerRunner } from "../src/assistant/openai-answer-runner.mjs";
 import { QueuedAssistantAnswerRunner } from "../src/assistant/queued-answer-runner.mjs";
 import { createDynamicAgentRoutes } from "../src/assistant/dynamic-agent-routes.mjs";
+import { NativeAssistantApi } from '../src/assistant/native-assistant-api.mjs';
 import {
   loadAssistantAgentBridgeRoutes,
   OpenCodeAssistantAgentRunner,
@@ -510,6 +511,7 @@ export function createPlatformApiServer({
   logger = null,
   computeApi = null,
   assistantApi = null,
+  nativeAssistantApi = null,
   modelLifecycleApi = null,
   sourceCenterApi = null,
   offlineMediaApi = null,
@@ -830,6 +832,7 @@ export function createPlatformApiServer({
           try {
             await virtualPhoneApi?.handleSignOut?.({ context });
             await computerDesktopApi?.handleSignOut({ context });
+            nativeAssistantApi?.handleSignOut({ context });
           } catch (error) {
             log.warn("platform.phone_sign_out_revoke_failed", { errorCode: error?.code ?? "phone_runtime_unavailable" });
           }
@@ -1071,6 +1074,24 @@ export function createPlatformApiServer({
           jsonResponse(response, requestId, result.status, result.body, result.headers);
           return;
         }
+        if (nativeAssistantApi?.matches(request.method, pathname)) {
+          // Browser session only: scoped API keys do not confer shell/config access.
+          const authenticate = async () => {
+            const context = await authenticatedContext(request, authentication);
+            if (!context.permissions?.includes('ai:invoke')) throw new PlatformError('access_denied', 'Assistant access is unavailable', {status:403});
+            return context;
+          };
+          if (request.method !== 'GET' || request.headers.origin) requireSameOrigin(request, allowedOrigin);
+          const context = await authenticatedContext(request, authentication, {csrf: request.method !== 'GET'});
+          // Native actions such as terminal tickets, abort and disconnect have
+          // no JSON body. Preserve that contract while parsing supplied bodies
+          // strictly; authentication, origin and CSRF checks above still apply.
+          const hasBody = request.headers['transfer-encoding'] !== undefined
+            || (request.headers['content-length'] !== undefined && request.headers['content-length'] !== '0');
+          const body = request.method === 'GET' || !hasBody ? undefined : await jsonBody(request, MAX_COMPUTE_BODY_BYTES);
+          await nativeAssistantApi.handle({request, response, context, body, authenticate});
+          return;
+        }
         if (assistantApi?.matches(request.method, pathname)) {
           const context = await computeContext(request, {
             authentication,
@@ -1259,6 +1280,17 @@ export function createPlatformApiServer({
 
   server.on("upgrade", (request, socket, head) => {
     void (async () => {
+      if (request.url?.startsWith('/api/v1/assistant/native/')) {
+        try {
+          requireSecureTransport(request);
+          requireSameOrigin(request,allowedOrigin);
+          const authenticate=()=>authenticatedContext(request,authentication);
+          const context=await authenticate();
+          if(!nativeAssistantApi)throw new Error('native_assistant_unavailable');
+          await nativeAssistantApi.attachUpgrade({request,socket,head,context,authenticate});
+        } catch { if(!socket.destroyed)rejectUpgrade(socket,403,'Forbidden'); }
+        return;
+      }
       if (request.url?.startsWith('/api/v1/virtual-computers/')) {
         try {
           const authenticate = () => administrativeContext(request, { authentication, publicOrigin: allowedOrigin, stateChanging: false });
@@ -1431,6 +1463,7 @@ export function createPlatformApiServer({
 
   server.once("close",()=>{void virtualPhoneMediaGateway?.close();});
   server.once('close', () => computerDesktopApi?.close());
+  server.once('close', () => nativeAssistantApi?.close());
   return server;
 }
 
@@ -2024,6 +2057,7 @@ export async function startPlatformApi(environment = process.env, dependencies =
       : new MemoryTaskCenterRepository(),
   });
   const assistantService = new AssistantService({
+    nativeSessions: agentSessionService,
     repository: dependencies.assistantRepository ?? (dependencies.database
       ? new PostgresAssistantRepository({ database: dependencies.database })
       : new MemoryAssistantRepository()),
@@ -2423,6 +2457,7 @@ export async function startPlatformApi(environment = process.env, dependencies =
     logger,
     computeApi,
     assistantApi: new AssistantHttpApi({ service: assistantService }),
+    nativeAssistantApi: agentBridgeRoutes ? new NativeAssistantApi({routes:agentBridgeRoutes}) : null,
     modelLifecycleApi: modelAdministration?.httpApi ?? null,
     sourceCenterApi: new SourceCenterHttpApi({ service: sourceCenterService, dataPlaneStatus: environment.PLATFORM_SOURCE_GATEWAY_ORIGIN
       ? new SourceDataPlaneStatusProvider({ gatewayOrigin: environment.PLATFORM_SOURCE_GATEWAY_ORIGIN }) : null }),

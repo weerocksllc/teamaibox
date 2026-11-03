@@ -190,6 +190,7 @@ func TestAgentSandboxUsesBuiltinSeccompOwnerLabelsAndNeverRequestsGPU(t *testing
 		"com.teamaibox.owner-identity-id=" + spec.OwnerIdentityID,
 		"com.teamaibox.sandbox-key=" + spec.SandboxKey,
 		"com.teamaibox.workspace-quota-bytes=107374182400",
+		"--tmpfs /run/opencode-native:rw,exec,nosuid,nodev,size=67108864,uid=",
 	} {
 		if !strings.Contains(create, expected) {
 			t.Errorf("Agent sandbox create is missing %q: %s", expected, create)

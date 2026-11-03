@@ -1,25 +1,25 @@
 {
   "schemaVersion": 1,
-  "adapterKey": "opencode.http.v1.18",
+  "adapterKey": "opencode.http.v1.19",
   "supportState": "pinned",
-  "inventoriedAt": "2026-08-11T03:20:00.000Z",
+  "inventoriedAt": "2026-11-03T14:00:00.000Z",
   "upstream": {
     "repository": "https://github.com/anomalyco/opencode.git",
     "license": "MIT",
     "defaultBranch": "dev",
     "providedSource": {
       "relativeWorkspace": "../opencode",
-      "commit": "d90532a5952c08c4376167294ef7c316b8817f72",
-      "tree": "60e7b8849a579c1373cb3488b1b8f16e9f36a66f",
+      "commit": "810c0eba1a7348036f8bdf61e6632d0c36c6876c",
+      "tree": "29ad640381b991aa00c464347877f1ba75584f25",
       "package": "opencode",
-      "packageVersion": "1.18.16",
+      "packageVersion": "1.19.5",
       "modifiedByPlatform": false
     },
     "release": {
-      "tag": "v1.18.16",
-      "commit": "a3647eb025c7615159d417dcc49fc39fdaeba65b",
-      "tree": "60e7b8849a579c1373cb3488b1b8f16e9f36a66f",
-      "publishedAt": "2026-08-10T06:07:08.000Z",
+      "tag": "v1.19.5",
+      "publishedAt": "2026-10-28T06:17:49Z",
+      "commit": "810c0eba1a7348036f8bdf61e6632d0c36c6876c",
+      "tree": "29ad640381b991aa00c464347877f1ba75584f25",
       "sourceTreeMatchesProvidedSource": true
     }
   },
@@ -27,9 +27,9 @@
     "kind": "upstream-binary-archive",
     "platform": "linux/arm64/v8",
     "name": "opencode-linux-arm64.tar.gz",
-    "uri": "https://github.com/anomalyco/opencode/releases/download/v1.18.16/opencode-linux-arm64.tar.gz",
-    "sizeBytes": 60189672,
-    "digest": "sha256:4fdce5f9bc877d977304d71c0c90ad6e83efa381fe0edf0a61e6142a625e1c41",
+    "uri": "https://github.com/anomalyco/opencode/releases/download/v1.19.5/opencode-linux-arm64.tar.gz",
+    "sizeBytes": 78513091,
+    "digest": "sha256:fae5be262d693b7c5e562856cc473e59e741772936db0c0600ac0d5ed5bd088b",
     "executableFormat": "ELF 64-bit LSB ARM aarch64",
     "verification": "verify-size-and-sha256-before-extracting-into-digest-pinned-sandbox-image"
   },
@@ -60,20 +60,20 @@
   "blockedOperations": [
     {"key": "global.upgrade", "method": "POST", "path": "/global/upgrade", "reason": "platform-controls-upstream-version"},
     {"key": "session.share", "method": "POST", "path": "/session/:sessionID/share", "reason": "public-sharing-disabled"},
-    {"key": "config.update", "method": "PATCH", "path": "/config", "reason": "platform-generates-restricted-config"},
     {"key": "provider.authorize", "method": "POST", "path": "/provider/:providerID/oauth/authorize", "reason": "platform-gateway-is-the-only-model-provider"}
   ],
   "runtimePolicy": {
     "requiredEnvironment": {
-      "XDG_CONFIG_HOME": "/run/teamaibox/xdg-config",
+      "TMPDIR": "/run/opencode-native",
+      "XDG_CONFIG_HOME": "/workspace/.teamaibox/config",
       "OPENCODE_CONFIG": "/run/teamaibox/xdg-config/opencode/opencode.json",
-      "OPENCODE_DISABLE_PROJECT_CONFIG": "1",
+      "OPENCODE_DISABLE_PROJECT_CONFIG": "0",
       "OPENCODE_DISABLE_AUTOUPDATE": "1",
       "OPENCODE_DISABLE_SHARE": "1",
       "OPENCODE_AUTO_SHARE": "false",
-      "OPENCODE_PURE": "1",
-      "OPENCODE_DISABLE_DEFAULT_PLUGINS": "1",
-      "OPENCODE_DISABLE_EXTERNAL_SKILLS": "1",
+      "OPENCODE_PURE": "0",
+      "OPENCODE_DISABLE_DEFAULT_PLUGINS": "0",
+      "OPENCODE_DISABLE_EXTERNAL_SKILLS": "0",
       "OPENCODE_DISABLE_MODELS_FETCH": "1",
       "OPENCODE_DISABLE_EMBEDDED_WEB_UI": "1",
       "OPENCODE_PERMISSION": "{\"*\":\"ask\"}"
@@ -86,12 +86,12 @@
     "passwordMustBeInjectedAsSecret": true,
     "passwordMustNotBePersisted": true,
     "upstreamEventReplayIsNotAssumed": true,
-    "platformPersistsOrderedEventsBeforeDelivery": true
+    "platformPersistsOrderedEventsBeforeDelivery": false
   },
   "evidence": [
-    "https://api.github.com/repos/anomalyco/opencode/releases/tags/v1.18.16",
-    "https://github.com/anomalyco/opencode/releases/tag/v1.18.16",
-    "https://github.com/anomalyco/opencode/tree/v1.18.16/packages/opencode/src/cli/cmd/serve.ts",
-    "https://github.com/anomalyco/opencode/tree/v1.18.16/packages/opencode/src/server/routes/instance/httpapi/groups"
+    "https://api.github.com/repos/anomalyco/opencode/releases/tags/v1.19.5",
+    "https://github.com/anomalyco/opencode/releases/tag/v1.19.5",
+    "https://github.com/anomalyco/opencode/tree/v1.19.5/packages/opencode/src/cli/cmd/serve.ts",
+    "https://github.com/anomalyco/opencode/tree/v1.19.5/packages/opencode/src/server/routes/instance/httpapi/groups"
   ]
 }

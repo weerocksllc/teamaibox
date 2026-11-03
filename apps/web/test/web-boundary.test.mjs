@@ -158,6 +158,17 @@ async function startBoundary(root, upstream, additionalEnvironment = {}) {
   return { boundary, origin };
 }
 
+test('a static request disconnected during file lookup does not crash the web boundary',async()=>{
+  const root=await fixtureRoot(),upstream=await startUpstream();const {boundary,origin}=await startBoundary(root,upstream);
+  try{
+    // Destroy exactly after the async handler starts its file lookup, before it
+    // can stream. This deterministically reproduces a rapid browser navigation.
+    const disconnect=(_request,response)=>response.destroy();boundary.server.once('request',disconnect);
+    await assert.rejects(fetch(origin+'/assets/app.12345678.js'));
+    const response=await fetch(origin+'/assets/app.12345678.js');assert.equal(response.status,200);assert.match(await response.text(),/fixtureLoaded/);
+  }finally{await boundary.close();await upstream.close();await rm(root,{recursive:true,force:true});}
+});
+
 test("rejects release HTTP and partially configured TLS", () => {
   assert.throws(
     () => loadWebBoundaryConfiguration({ WEB_MODE: "release" }),

@@ -1001,6 +1001,10 @@ func TestEngineAgentSandboxVerifiesOwnerVolumeAndCreatesSecretTmpfs(t *testing.T
 	if !contains(create.HostConfig.SecurityOpt, "seccomp=builtin") {
 		t.Fatalf("Agent builtin seccomp is missing: %#v", create.HostConfig.SecurityOpt)
 	}
+	if create.HostConfig.Tmpfs["/run/opencode-native"] != "rw,exec,nosuid,nodev,size=67108864,uid=65532,gid=65532,mode=0700" ||
+		!strings.Contains(create.HostConfig.Tmpfs["/tmp"], "noexec") {
+		t.Fatalf("Native PTY runtime must not make general tmp executable: %#v", create.HostConfig.Tmpfs)
+	}
 }
 
 func TestSourceClientArchiveContainsOnlyInternalGatewayConfiguration(t *testing.T) {

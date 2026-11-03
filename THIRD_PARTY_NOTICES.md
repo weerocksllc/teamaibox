@@ -34,6 +34,8 @@ assumed MIT. Regenerate it with `python3 tools/open_source_inventory.py`.
 | QEMU / Linux / EDK II / virtio drivers | Per-project and per-file licenses | Audit the actual binary build, firmware and drivers; do not blanket-label MIT. |
 | Guacamole | Apache-2.0 | Preserve the LICENSE and NOTICE copied by the computer-plugin Dockerfile. |
 | Node / React / Vite and JS dependency tree | Per-package licenses | Preserve dependency notices when distributing bundled output. |
+| xterm.js 6.0.0 / FitAddon 0.11.0 | MIT | Framework-independent terminal renderer; license text ships in the web bundle at `licenses/xterm.txt`. |
+| jsonc-parser 3.3.1 / Ajv 8.17.1 generated validator / OpenCode 1.19.5 Config schema | MIT | Configuration form validation only; notices ship at `licenses/native-config.txt`. Ajv is a build tool; its compiler is not shipped or evaluated in the browser. |
 | PostgreSQL and container OS packages | PostgreSQL / per-package | Include installed-package license records in a binary release. |
 | PyMuPDF / MuPDF used by OCR | AGPL-3.0-or-later or commercial license | The combined OCR worker distribution/service is not blanket MIT; comply with AGPL obligations or obtain commercial rights. Original code may retain its MIT grant. |
 | Qwen / LMT / Whisper / FLUX model assets | Exact model's terms | Models are separate from the MIT source grant. FLUX **4B** terms must not be substituted for another FLUX model. |
@@ -48,7 +50,23 @@ ADB transport notices remain beside the phone client. Do not remove them while
 minifying or packaging. Container isolation by itself does not cancel copyleft
 obligations. Distribution analysis depends on the actual combined artifact.
 
+The optional `examples/assistant/box-status-mcp` uses the official
+`@modelcontextprotocol/sdk` 1.29.0 (MIT). Its separate lockfile pins the example's
+dependency tree: MIT, ISC, BSD-2-Clause and BSD-3-Clause packages. Retain the
+installed packages' license files if redistributing that optional runtime. It
+is not an additional Agent engine or a bundled appliance integration.
+
 ## Brand and contributors
+
+The Agent sandbox also bundles the native OpenCode extension SDK dependency
+tree, pinned in `deploy/agent/native-extensions/package-lock.json`. OpenCode
+plugin/SDK 1.19.5, Effect, Zod and their MIT dependencies retain their upstream
+licenses in the image's `node_modules`. The tree also includes Apache-2.0
+packages (`@ai-sdk/provider`, `detect-libc`, `kubernetes-types`), ISC packages
+(`ini`, `isexe`, `which`, `yaml`) and `json-schema` under its BSD-3-Clause option
+of the offered AFL-2.1/BSD-3-Clause dual license. Package lock integrity values
+pin the resolved artifacts. These are engine-side dependencies, not the
+OpenCode Web GUI or Solid frontend.
 
 MIT grants copyright permission, not trademark rights or endorsement. Team AI
 Box and Weerocks names/logos must not imply official support for a modified

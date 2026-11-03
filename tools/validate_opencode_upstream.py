@@ -22,7 +22,7 @@ def require(value: bool, message: str) -> None:
 def load_and_validate() -> dict:
     lock = json.loads(LOCK.read_text())
     require(lock.get("schemaVersion") == 1, "OpenCode lock schema is invalid")
-    require(lock.get("adapterKey") == "opencode.http.v1.18", "OpenCode adapter key is not pinned")
+    require(lock.get("adapterKey") == "opencode.http.v1.19", "OpenCode adapter key is not pinned")
     upstream = lock.get("upstream", {})
     source = upstream.get("providedSource", {})
     release = upstream.get("release", {})
@@ -50,18 +50,19 @@ def load_and_validate() -> dict:
     require({"health", "session.create", "session.prompt", "session.interrupt", "session.diff", "event.subscribe", "question.reply", "permission.reply"}.issubset(keys), "OpenCode bridge operations are incomplete")
     require(all(operation.get("method") in {"GET", "POST"} and str(operation.get("path", "")).startswith("/") for operation in operations), "OpenCode operation declaration is invalid")
     blocked = {operation.get("key") for operation in lock.get("blockedOperations", [])}
-    require(blocked == {"global.upgrade", "session.share", "config.update", "provider.authorize"}, "OpenCode blocked surface drifted")
+    require(blocked == {"global.upgrade", "session.share", "provider.authorize"}, "OpenCode blocked surface drifted")
     policy = lock.get("runtimePolicy", {})
     require(policy.get("requiredEnvironment") == {
-        "XDG_CONFIG_HOME": "/run/teamaibox/xdg-config",
+        "TMPDIR": "/run/opencode-native",
+        "XDG_CONFIG_HOME": "/workspace/.teamaibox/config",
         "OPENCODE_CONFIG": "/run/teamaibox/xdg-config/opencode/opencode.json",
-        "OPENCODE_DISABLE_PROJECT_CONFIG": "1",
+        "OPENCODE_DISABLE_PROJECT_CONFIG": "0",
         "OPENCODE_DISABLE_AUTOUPDATE": "1",
         "OPENCODE_DISABLE_SHARE": "1",
         "OPENCODE_AUTO_SHARE": "false",
-        "OPENCODE_PURE": "1",
-        "OPENCODE_DISABLE_DEFAULT_PLUGINS": "1",
-        "OPENCODE_DISABLE_EXTERNAL_SKILLS": "1",
+        "OPENCODE_PURE": "0",
+        "OPENCODE_DISABLE_DEFAULT_PLUGINS": "0",
+        "OPENCODE_DISABLE_EXTERNAL_SKILLS": "0",
         "OPENCODE_DISABLE_MODELS_FETCH": "1",
         "OPENCODE_DISABLE_EMBEDDED_WEB_UI": "1",
         "OPENCODE_PERMISSION": '{"*":"ask"}',
@@ -72,7 +73,7 @@ def load_and_validate() -> dict:
     require(policy.get("approvedProviders") == ["teamaibox"] and policy.get("approvedPlugins") == [],
             "OpenCode provider or plugin restriction drifted")
     require(policy.get("passwordMustBeInjectedAsSecret") is True and policy.get("passwordMustNotBePersisted") is True, "OpenCode password policy is invalid")
-    require(policy.get("upstreamEventReplayIsNotAssumed") is True and policy.get("platformPersistsOrderedEventsBeforeDelivery") is True, "OpenCode replay ownership is invalid")
+    require(policy.get("upstreamEventReplayIsNotAssumed") is True and policy.get("platformPersistsOrderedEventsBeforeDelivery") is False, "Native OpenCode events must not depend on a second platform execution log")
     return lock
 
 

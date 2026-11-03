@@ -12,7 +12,7 @@ import { createOpenCodeBridgeHttpServer, readWorkspaceArtifact } from "../src/op
 const TOKEN = "b".repeat(48);
 const AUTH = { authorization: `Bearer ${TOKEN}` };
 
-function fixture() {
+function fixture(nativeTransport = null) {
   const calls = [];
   let eventCancelled = false;
   const adapter = {
@@ -40,7 +40,7 @@ function fixture() {
       }
     },
   };
-  const server = createOpenCodeBridgeHttpServer({ adapter, tokenProvider: async () => TOKEN });
+  const server = createOpenCodeBridgeHttpServer({ adapter, tokenProvider: async () => TOKEN, nativeTransport });
   return {
     calls,
     server,
@@ -66,6 +66,19 @@ async function json(origin, path, { method = "GET", body, headers = AUTH } = {})
   });
   return { response, value: await response.json() };
 }
+
+test('native routes require the internal token and preserve native bodies without legacy execution', async context => {
+  const calls=[];
+  const value=fixture({async request(method,target,options){calls.push({method,target,options});return Response.json({id:'ses_native',native:true});}});
+  const origin=await start(value,context);
+  assert.equal((await json(origin,'/native/session',{headers:{}})).response.status,401);
+  assert.equal(calls.length,0);
+  const body={parts:[{type:'text',text:'synthetic'}],agent:'build'};
+  const result=await json(origin,'/native/session/ses_native/prompt_async',{method:'POST',body});
+  assert.equal(result.response.status,200);assert.equal(result.value.native,true);
+  assert.equal(calls[0].target,'/session/ses_native/prompt_async');assert.deepEqual(JSON.parse(calls[0].options.body),body);
+  assert.equal(value.calls.length,0);
+});
 
 test("authenticated Bridge routes pin every upstream operation to the isolated workspace", async (context) => {
   const value = fixture();

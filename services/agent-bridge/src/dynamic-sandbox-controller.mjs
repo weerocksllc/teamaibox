@@ -47,7 +47,10 @@ export class DynamicSandboxController {
         this.runtime.assertOwned(identity,current);
         if (!current.running) return;
         const active=await this.identities.active(identity.ownerIdentityId);
-        const busy=active && await this.identities.busy(identity.ownerIdentityId);
+        // Legacy rows cover old conversations. Native sessions, questions and
+        // terminals must also prevent reclaiming an actively used container.
+        const busy=active && (await this.identities.busy(identity.ownerIdentityId)
+          || (this.runtime.busy ? await this.runtime.busy(identity,current).catch(()=>true) : false));
         if (!active || (!busy && this.clock()-identity.lastUsedAt>=this.idleMilliseconds)) {
           await this.runtime.stop(identity,current);return;
         }

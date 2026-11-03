@@ -3,13 +3,13 @@ import { readFile } from "node:fs/promises";
 
 import { PlatformError } from "../../../../packages/observability/src/index.mjs";
 import { OpenCodeBridgeClient } from "../../../../services/agent-bridge/src/opencode-bridge-client.mjs";
+import { createNativeTransport } from '../../../../services/agent-bridge/src/opencode-native-transport.mjs';
+import { OPEN_CODE_V119_COMPATIBILITY } from '../../../../services/agent-bridge/src/opencode-adapter-v1-19.mjs';
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 const SAFE_KEY = /^[a-z][a-z0-9_.-]{1,127}$/;
 const UPSTREAM_ID = /^[A-Za-z0-9][A-Za-z0-9_-]{2,127}$/;
-const PINNED_VERSION = "1.18.16";
-const PINNED_ARTIFACT = "sha256:4fdce5f9bc877d977304d71c0c90ad6e83efa381fe0edf0a61e6142a625e1c41";
-const PINNED_ADAPTER = "opencode.http.v1.18";
+const {version:PINNED_VERSION,artifactDigest:PINNED_ARTIFACT,adapterKey:PINNED_ADAPTER}=OPEN_CODE_V119_COMPATIBILITY;
 const ARTIFACT_DELIVERY_CONTEXT = [
   "Team AI Box platform context (not an additional user task):",
   "The user is using the AI Assistant in a browser, not a terminal on this appliance.",
@@ -73,6 +73,7 @@ export async function loadAssistantAgentBridgeRoutes(filename, { fetchImplementa
       ownerIdentityId: route.ownerIdentityId,
       sandboxKey: route.sandboxKey,
       origin,
+      native: createNativeTransport({origin, prefix: '/native', authorization: async () => `Bearer ${await tokenFromFile(tokenFile)}`, fetchImplementation}),
       client: new OpenCodeBridgeClient({
         origin,
         tokenProvider: () => tokenFromFile(tokenFile),

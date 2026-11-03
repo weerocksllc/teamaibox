@@ -3,6 +3,8 @@ import { readFile } from "node:fs/promises";
 import { createStructuredLogger } from "../packages/observability/src/index.mjs";
 import { createOpenCodeAdapter } from "../services/agent-bridge/src/opencode-adapter-registry.mjs";
 import { createOpenCodeBridgeHttpServer } from "../services/agent-bridge/src/opencode-bridge-http-server.mjs";
+import { createNativeTransport } from '../services/agent-bridge/src/opencode-native-transport.mjs';
+import { OPEN_CODE_V119_COMPATIBILITY } from '../services/agent-bridge/src/opencode-adapter-v1-19.mjs';
 
 const OPENCODE_PASSWORD_FILE = "/run/teamaibox/secrets/opencode-password";
 const BRIDGE_TOKEN_FILE = "/run/teamaibox/secrets/agent-bridge-token";
@@ -20,8 +22,7 @@ async function secret(path) {
 }
 
 const adapter = createOpenCodeAdapter({
-  version: "1.18.16",
-  artifactDigest: "sha256:4fdce5f9bc877d977304d71c0c90ad6e83efa381fe0edf0a61e6142a625e1c41",
+  ...OPEN_CODE_V119_COMPATIBILITY,
   origin: "http://127.0.0.1:4096",
   credentialProvider: async () => ({ username: "opencode", password: await secret(OPENCODE_PASSWORD_FILE) }),
   // Qwen3.8 may legitimately take longer than 30 seconds after a cold
@@ -33,6 +34,10 @@ const server = createOpenCodeBridgeHttpServer({
   adapter,
   tokenProvider: () => secret(BRIDGE_TOKEN_FILE),
   workspace: "/workspace",
+  nativeTransport: createNativeTransport({
+    origin: 'http://127.0.0.1:4096',
+    authorization: async () => `Basic ${Buffer.from(`opencode:${await secret(OPENCODE_PASSWORD_FILE)}`).toString('base64')}`,
+  }),
 });
 
 server.listen(4097, "0.0.0.0", () => logger.info("agent_bridge.listening", { host: "0.0.0.0", port: 4097 }));

@@ -1,0 +1,957 @@
+{
+  "version": "1.19.5",
+  "commit": "810c0eba1a7348036f8bdf61e6632d0c36c6876c",
+  "license": "MIT",
+  "source": "https://github.com/anomalyco/opencode",
+  "api": {
+    "source": "packages/sdk/openapi.json",
+    "sha256": "d224c1a7506ae981c8d4fc1a8d1f58ac185e27324f94d4daf1b8f84fc2552d26"
+  },
+  "artifact": {
+    "name": "opencode-linux-arm64.tar.gz",
+    "sha256": "fae5be262d693b7c5e562856cc473e59e741772936db0c0600ac0d5ed5bd088b"
+  },
+  "client": "native HTTP and SSE; no upstream GUI or SDK dependency",
+  "operations": [
+    {
+      "method": "PUT",
+      "path": "/auth/{providerID}",
+      "operation": "auth.set"
+    },
+    {
+      "method": "DELETE",
+      "path": "/auth/{providerID}",
+      "operation": "auth.remove"
+    },
+    {
+      "method": "POST",
+      "path": "/log",
+      "operation": "app.log"
+    },
+    {
+      "method": "POST",
+      "path": "/experimental/control-plane/move-session",
+      "operation": "experimental.controlPlane.moveSession"
+    },
+    {
+      "method": "GET",
+      "path": "/global/health",
+      "operation": "global.health"
+    },
+    {
+      "method": "GET",
+      "path": "/global/event",
+      "operation": "global.event"
+    },
+    {
+      "method": "GET",
+      "path": "/global/config",
+      "operation": "global.config.get"
+    },
+    {
+      "method": "PATCH",
+      "path": "/global/config",
+      "operation": "global.config.update"
+    },
+    {
+      "method": "POST",
+      "path": "/global/dispose",
+      "operation": "global.dispose"
+    },
+    {
+      "method": "POST",
+      "path": "/global/upgrade",
+      "operation": "global.upgrade"
+    },
+    {
+      "method": "GET",
+      "path": "/event",
+      "operation": "event.subscribe"
+    },
+    {
+      "method": "GET",
+      "path": "/config",
+      "operation": "config.get"
+    },
+    {
+      "method": "PATCH",
+      "path": "/config",
+      "operation": "config.update"
+    },
+    {
+      "method": "GET",
+      "path": "/config/providers",
+      "operation": "config.providers"
+    },
+    {
+      "method": "GET",
+      "path": "/experimental/capabilities",
+      "operation": "experimental.capabilities.get"
+    },
+    {
+      "method": "GET",
+      "path": "/experimental/console",
+      "operation": "experimental.console.get"
+    },
+    {
+      "method": "GET",
+      "path": "/experimental/console/orgs",
+      "operation": "experimental.console.listOrgs"
+    },
+    {
+      "method": "POST",
+      "path": "/experimental/console/switch",
+      "operation": "experimental.console.switchOrg"
+    },
+    {
+      "method": "GET",
+      "path": "/experimental/tool",
+      "operation": "tool.list"
+    },
+    {
+      "method": "GET",
+      "path": "/experimental/tool/ids",
+      "operation": "tool.ids"
+    },
+    {
+      "method": "GET",
+      "path": "/experimental/worktree",
+      "operation": "worktree.list"
+    },
+    {
+      "method": "POST",
+      "path": "/experimental/worktree",
+      "operation": "worktree.create"
+    },
+    {
+      "method": "DELETE",
+      "path": "/experimental/worktree",
+      "operation": "worktree.remove"
+    },
+    {
+      "method": "POST",
+      "path": "/experimental/worktree/reset",
+      "operation": "worktree.reset"
+    },
+    {
+      "method": "GET",
+      "path": "/experimental/session",
+      "operation": "experimental.session.list"
+    },
+    {
+      "method": "POST",
+      "path": "/experimental/session/{sessionID}/background",
+      "operation": "experimental.session.background"
+    },
+    {
+      "method": "GET",
+      "path": "/experimental/resource",
+      "operation": "experimental.resource.list"
+    },
+    {
+      "method": "GET",
+      "path": "/find",
+      "operation": "find.text"
+    },
+    {
+      "method": "GET",
+      "path": "/find/file",
+      "operation": "find.files"
+    },
+    {
+      "method": "GET",
+      "path": "/find/symbol",
+      "operation": "find.symbols"
+    },
+    {
+      "method": "GET",
+      "path": "/file",
+      "operation": "file.list"
+    },
+    {
+      "method": "GET",
+      "path": "/file/content",
+      "operation": "file.read"
+    },
+    {
+      "method": "GET",
+      "path": "/file/status",
+      "operation": "file.status"
+    },
+    {
+      "method": "POST",
+      "path": "/instance/dispose",
+      "operation": "instance.dispose"
+    },
+    {
+      "method": "GET",
+      "path": "/path",
+      "operation": "path.get"
+    },
+    {
+      "method": "GET",
+      "path": "/vcs",
+      "operation": "vcs.get"
+    },
+    {
+      "method": "GET",
+      "path": "/vcs/status",
+      "operation": "vcs.status"
+    },
+    {
+      "method": "GET",
+      "path": "/vcs/diff",
+      "operation": "vcs.diff"
+    },
+    {
+      "method": "GET",
+      "path": "/vcs/diff/raw",
+      "operation": "vcs.diff.raw"
+    },
+    {
+      "method": "POST",
+      "path": "/vcs/apply",
+      "operation": "vcs.apply"
+    },
+    {
+      "method": "GET",
+      "path": "/command",
+      "operation": "command.list"
+    },
+    {
+      "method": "GET",
+      "path": "/agent",
+      "operation": "app.agents"
+    },
+    {
+      "method": "GET",
+      "path": "/skill",
+      "operation": "app.skills"
+    },
+    {
+      "method": "GET",
+      "path": "/lsp",
+      "operation": "lsp.status"
+    },
+    {
+      "method": "GET",
+      "path": "/formatter",
+      "operation": "formatter.status"
+    },
+    {
+      "method": "GET",
+      "path": "/mcp",
+      "operation": "mcp.status"
+    },
+    {
+      "method": "POST",
+      "path": "/mcp",
+      "operation": "mcp.add"
+    },
+    {
+      "method": "POST",
+      "path": "/mcp/{name}/auth",
+      "operation": "mcp.auth.start"
+    },
+    {
+      "method": "DELETE",
+      "path": "/mcp/{name}/auth",
+      "operation": "mcp.auth.remove"
+    },
+    {
+      "method": "POST",
+      "path": "/mcp/{name}/auth/callback",
+      "operation": "mcp.auth.callback"
+    },
+    {
+      "method": "POST",
+      "path": "/mcp/{name}/auth/authenticate",
+      "operation": "mcp.auth.authenticate"
+    },
+    {
+      "method": "POST",
+      "path": "/mcp/{name}/connect",
+      "operation": "mcp.connect"
+    },
+    {
+      "method": "POST",
+      "path": "/mcp/{name}/disconnect",
+      "operation": "mcp.disconnect"
+    },
+    {
+      "method": "GET",
+      "path": "/project",
+      "operation": "project.list"
+    },
+    {
+      "method": "GET",
+      "path": "/project/current",
+      "operation": "project.current"
+    },
+    {
+      "method": "POST",
+      "path": "/project/git/init",
+      "operation": "project.initGit"
+    },
+    {
+      "method": "PATCH",
+      "path": "/project/{projectID}",
+      "operation": "project.update"
+    },
+    {
+      "method": "GET",
+      "path": "/project/{projectID}/directories",
+      "operation": "project.directories"
+    },
+    {
+      "method": "POST",
+      "path": "/experimental/project/{projectID}/copy/generate-name",
+      "operation": "experimental.projectCopy.generateName"
+    },
+    {
+      "method": "GET",
+      "path": "/pty/shells",
+      "operation": "pty.shells"
+    },
+    {
+      "method": "GET",
+      "path": "/pty",
+      "operation": "pty.list"
+    },
+    {
+      "method": "POST",
+      "path": "/pty",
+      "operation": "pty.create"
+    },
+    {
+      "method": "GET",
+      "path": "/pty/{ptyID}",
+      "operation": "pty.get"
+    },
+    {
+      "method": "PUT",
+      "path": "/pty/{ptyID}",
+      "operation": "pty.update"
+    },
+    {
+      "method": "DELETE",
+      "path": "/pty/{ptyID}",
+      "operation": "pty.remove"
+    },
+    {
+      "method": "POST",
+      "path": "/pty/{ptyID}/connect-token",
+      "operation": "pty.connectToken"
+    },
+    {
+      "method": "GET",
+      "path": "/question",
+      "operation": "question.list"
+    },
+    {
+      "method": "POST",
+      "path": "/question/{requestID}/reply",
+      "operation": "question.reply"
+    },
+    {
+      "method": "POST",
+      "path": "/question/{requestID}/reject",
+      "operation": "question.reject"
+    },
+    {
+      "method": "GET",
+      "path": "/permission",
+      "operation": "permission.list"
+    },
+    {
+      "method": "POST",
+      "path": "/permission/{requestID}/reply",
+      "operation": "permission.reply"
+    },
+    {
+      "method": "GET",
+      "path": "/provider",
+      "operation": "provider.list"
+    },
+    {
+      "method": "GET",
+      "path": "/provider/auth",
+      "operation": "provider.auth"
+    },
+    {
+      "method": "POST",
+      "path": "/provider/{providerID}/oauth/authorize",
+      "operation": "provider.oauth.authorize"
+    },
+    {
+      "method": "POST",
+      "path": "/provider/{providerID}/oauth/callback",
+      "operation": "provider.oauth.callback"
+    },
+    {
+      "method": "GET",
+      "path": "/session",
+      "operation": "session.list"
+    },
+    {
+      "method": "POST",
+      "path": "/session",
+      "operation": "session.create"
+    },
+    {
+      "method": "GET",
+      "path": "/session/status",
+      "operation": "session.status"
+    },
+    {
+      "method": "GET",
+      "path": "/session/{sessionID}",
+      "operation": "session.get"
+    },
+    {
+      "method": "DELETE",
+      "path": "/session/{sessionID}",
+      "operation": "session.delete"
+    },
+    {
+      "method": "PATCH",
+      "path": "/session/{sessionID}",
+      "operation": "session.update"
+    },
+    {
+      "method": "GET",
+      "path": "/session/{sessionID}/children",
+      "operation": "session.children"
+    },
+    {
+      "method": "GET",
+      "path": "/session/{sessionID}/todo",
+      "operation": "session.todo"
+    },
+    {
+      "method": "GET",
+      "path": "/session/{sessionID}/diff",
+      "operation": "session.diff"
+    },
+    {
+      "method": "GET",
+      "path": "/session/{sessionID}/message",
+      "operation": "session.messages"
+    },
+    {
+      "method": "POST",
+      "path": "/session/{sessionID}/message",
+      "operation": "session.prompt"
+    },
+    {
+      "method": "GET",
+      "path": "/session/{sessionID}/message/{messageID}",
+      "operation": "session.message"
+    },
+    {
+      "method": "DELETE",
+      "path": "/session/{sessionID}/message/{messageID}",
+      "operation": "session.deleteMessage"
+    },
+    {
+      "method": "POST",
+      "path": "/session/{sessionID}/fork",
+      "operation": "session.fork"
+    },
+    {
+      "method": "POST",
+      "path": "/session/{sessionID}/abort",
+      "operation": "session.abort"
+    },
+    {
+      "method": "POST",
+      "path": "/session/{sessionID}/init",
+      "operation": "session.init"
+    },
+    {
+      "method": "POST",
+      "path": "/session/{sessionID}/share",
+      "operation": "session.share"
+    },
+    {
+      "method": "DELETE",
+      "path": "/session/{sessionID}/share",
+      "operation": "session.unshare"
+    },
+    {
+      "method": "POST",
+      "path": "/session/{sessionID}/summarize",
+      "operation": "session.summarize"
+    },
+    {
+      "method": "POST",
+      "path": "/session/{sessionID}/prompt_async",
+      "operation": "session.prompt_async"
+    },
+    {
+      "method": "POST",
+      "path": "/session/{sessionID}/command",
+      "operation": "session.command"
+    },
+    {
+      "method": "POST",
+      "path": "/session/{sessionID}/shell",
+      "operation": "session.shell"
+    },
+    {
+      "method": "POST",
+      "path": "/session/{sessionID}/revert",
+      "operation": "session.revert"
+    },
+    {
+      "method": "POST",
+      "path": "/session/{sessionID}/unrevert",
+      "operation": "session.unrevert"
+    },
+    {
+      "method": "POST",
+      "path": "/session/{sessionID}/permissions/{permissionID}",
+      "operation": "permission.respond"
+    },
+    {
+      "method": "DELETE",
+      "path": "/session/{sessionID}/message/{messageID}/part/{partID}",
+      "operation": "part.delete"
+    },
+    {
+      "method": "PATCH",
+      "path": "/session/{sessionID}/message/{messageID}/part/{partID}",
+      "operation": "part.update"
+    },
+    {
+      "method": "POST",
+      "path": "/sync/start",
+      "operation": "sync.start"
+    },
+    {
+      "method": "POST",
+      "path": "/sync/replay",
+      "operation": "sync.replay"
+    },
+    {
+      "method": "POST",
+      "path": "/sync/steal",
+      "operation": "sync.steal"
+    },
+    {
+      "method": "POST",
+      "path": "/sync/history",
+      "operation": "sync.history.list"
+    },
+    {
+      "method": "POST",
+      "path": "/tui/append-prompt",
+      "operation": "tui.appendPrompt"
+    },
+    {
+      "method": "POST",
+      "path": "/tui/open-help",
+      "operation": "tui.openHelp"
+    },
+    {
+      "method": "POST",
+      "path": "/tui/open-sessions",
+      "operation": "tui.openSessions"
+    },
+    {
+      "method": "POST",
+      "path": "/tui/open-themes",
+      "operation": "tui.openThemes"
+    },
+    {
+      "method": "POST",
+      "path": "/tui/open-models",
+      "operation": "tui.openModels"
+    },
+    {
+      "method": "POST",
+      "path": "/tui/submit-prompt",
+      "operation": "tui.submitPrompt"
+    },
+    {
+      "method": "POST",
+      "path": "/tui/clear-prompt",
+      "operation": "tui.clearPrompt"
+    },
+    {
+      "method": "POST",
+      "path": "/tui/execute-command",
+      "operation": "tui.executeCommand"
+    },
+    {
+      "method": "POST",
+      "path": "/tui/show-toast",
+      "operation": "tui.showToast"
+    },
+    {
+      "method": "POST",
+      "path": "/tui/publish",
+      "operation": "tui.publish"
+    },
+    {
+      "method": "POST",
+      "path": "/tui/select-session",
+      "operation": "tui.selectSession"
+    },
+    {
+      "method": "GET",
+      "path": "/tui/control/next",
+      "operation": "tui.control.next"
+    },
+    {
+      "method": "POST",
+      "path": "/tui/control/response",
+      "operation": "tui.control.response"
+    },
+    {
+      "method": "GET",
+      "path": "/experimental/workspace/adapter",
+      "operation": "experimental.workspace.adapter.list"
+    },
+    {
+      "method": "GET",
+      "path": "/experimental/workspace",
+      "operation": "experimental.workspace.list"
+    },
+    {
+      "method": "POST",
+      "path": "/experimental/workspace",
+      "operation": "experimental.workspace.create"
+    },
+    {
+      "method": "POST",
+      "path": "/experimental/workspace/sync-list",
+      "operation": "experimental.workspace.syncList"
+    },
+    {
+      "method": "GET",
+      "path": "/experimental/workspace/status",
+      "operation": "experimental.workspace.status"
+    },
+    {
+      "method": "DELETE",
+      "path": "/experimental/workspace/{id}",
+      "operation": "experimental.workspace.remove"
+    },
+    {
+      "method": "POST",
+      "path": "/experimental/workspace/warp",
+      "operation": "experimental.workspace.warp"
+    },
+    {
+      "method": "GET",
+      "path": "/api/health",
+      "operation": "v2.health.get"
+    },
+    {
+      "method": "GET",
+      "path": "/api/location",
+      "operation": "v2.location.get"
+    },
+    {
+      "method": "GET",
+      "path": "/api/agent",
+      "operation": "v2.agent.list"
+    },
+    {
+      "method": "GET",
+      "path": "/api/session",
+      "operation": "v2.session.list"
+    },
+    {
+      "method": "POST",
+      "path": "/api/session",
+      "operation": "v2.session.create"
+    },
+    {
+      "method": "GET",
+      "path": "/api/session/active",
+      "operation": "v2.session.active"
+    },
+    {
+      "method": "GET",
+      "path": "/api/session/{sessionID}",
+      "operation": "v2.session.get"
+    },
+    {
+      "method": "POST",
+      "path": "/api/session/{sessionID}/agent",
+      "operation": "v2.session.switchAgent"
+    },
+    {
+      "method": "POST",
+      "path": "/api/session/{sessionID}/model",
+      "operation": "v2.session.switchModel"
+    },
+    {
+      "method": "POST",
+      "path": "/api/session/{sessionID}/prompt",
+      "operation": "v2.session.prompt"
+    },
+    {
+      "method": "POST",
+      "path": "/api/session/{sessionID}/compact",
+      "operation": "v2.session.compact"
+    },
+    {
+      "method": "POST",
+      "path": "/api/session/{sessionID}/wait",
+      "operation": "v2.session.wait"
+    },
+    {
+      "method": "POST",
+      "path": "/api/session/{sessionID}/revert/stage",
+      "operation": "v2.session.revert.stage"
+    },
+    {
+      "method": "POST",
+      "path": "/api/session/{sessionID}/revert/clear",
+      "operation": "v2.session.revert.clear"
+    },
+    {
+      "method": "POST",
+      "path": "/api/session/{sessionID}/revert/commit",
+      "operation": "v2.session.revert.commit"
+    },
+    {
+      "method": "GET",
+      "path": "/api/session/{sessionID}/context",
+      "operation": "v2.session.context"
+    },
+    {
+      "method": "GET",
+      "path": "/api/session/{sessionID}/history",
+      "operation": "v2.session.history"
+    },
+    {
+      "method": "GET",
+      "path": "/api/session/{sessionID}/event",
+      "operation": "v2.session.events"
+    },
+    {
+      "method": "POST",
+      "path": "/api/session/{sessionID}/interrupt",
+      "operation": "v2.session.interrupt"
+    },
+    {
+      "method": "GET",
+      "path": "/api/session/{sessionID}/message/{messageID}",
+      "operation": "v2.session.message"
+    },
+    {
+      "method": "GET",
+      "path": "/api/session/{sessionID}/message",
+      "operation": "v2.session.messages"
+    },
+    {
+      "method": "GET",
+      "path": "/api/model",
+      "operation": "v2.model.list"
+    },
+    {
+      "method": "GET",
+      "path": "/api/provider",
+      "operation": "v2.provider.list"
+    },
+    {
+      "method": "GET",
+      "path": "/api/provider/{providerID}",
+      "operation": "v2.provider.get"
+    },
+    {
+      "method": "GET",
+      "path": "/api/integration",
+      "operation": "v2.integration.list"
+    },
+    {
+      "method": "GET",
+      "path": "/api/integration/{integrationID}",
+      "operation": "v2.integration.get"
+    },
+    {
+      "method": "POST",
+      "path": "/api/integration/{integrationID}/connect/key",
+      "operation": "v2.integration.connect.key"
+    },
+    {
+      "method": "POST",
+      "path": "/api/integration/{integrationID}/connect/oauth",
+      "operation": "v2.integration.connect.oauth"
+    },
+    {
+      "method": "GET",
+      "path": "/api/integration/attempt/{attemptID}",
+      "operation": "v2.integration.attempt.status"
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/integration/attempt/{attemptID}",
+      "operation": "v2.integration.attempt.cancel"
+    },
+    {
+      "method": "POST",
+      "path": "/api/integration/attempt/{attemptID}/complete",
+      "operation": "v2.integration.attempt.complete"
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/credential/{credentialID}",
+      "operation": "v2.credential.update"
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/credential/{credentialID}",
+      "operation": "v2.credential.remove"
+    },
+    {
+      "method": "GET",
+      "path": "/api/permission/request",
+      "operation": "v2.permission.request.list"
+    },
+    {
+      "method": "GET",
+      "path": "/api/permission/saved",
+      "operation": "v2.permission.saved.list"
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/permission/saved/{id}",
+      "operation": "v2.permission.saved.remove"
+    },
+    {
+      "method": "POST",
+      "path": "/api/session/{sessionID}/permission",
+      "operation": "v2.session.permission.create"
+    },
+    {
+      "method": "GET",
+      "path": "/api/session/{sessionID}/permission",
+      "operation": "v2.session.permission.list"
+    },
+    {
+      "method": "GET",
+      "path": "/api/session/{sessionID}/permission/{requestID}",
+      "operation": "v2.session.permission.get"
+    },
+    {
+      "method": "POST",
+      "path": "/api/session/{sessionID}/permission/{requestID}/reply",
+      "operation": "v2.session.permission.reply"
+    },
+    {
+      "method": "GET",
+      "path": "/api/fs/read/*",
+      "operation": "v2.fs.read"
+    },
+    {
+      "method": "GET",
+      "path": "/api/fs/list",
+      "operation": "v2.fs.list"
+    },
+    {
+      "method": "GET",
+      "path": "/api/fs/find",
+      "operation": "v2.fs.find"
+    },
+    {
+      "method": "GET",
+      "path": "/api/command",
+      "operation": "v2.command.list"
+    },
+    {
+      "method": "GET",
+      "path": "/api/skill",
+      "operation": "v2.skill.list"
+    },
+    {
+      "method": "GET",
+      "path": "/api/event",
+      "operation": "v2.event.subscribe"
+    },
+    {
+      "method": "GET",
+      "path": "/api/pty",
+      "operation": "v2.pty.list"
+    },
+    {
+      "method": "POST",
+      "path": "/api/pty",
+      "operation": "v2.pty.create"
+    },
+    {
+      "method": "GET",
+      "path": "/api/pty/{ptyID}",
+      "operation": "v2.pty.get"
+    },
+    {
+      "method": "PUT",
+      "path": "/api/pty/{ptyID}",
+      "operation": "v2.pty.update"
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/pty/{ptyID}",
+      "operation": "v2.pty.remove"
+    },
+    {
+      "method": "POST",
+      "path": "/api/pty/{ptyID}/connect-token",
+      "operation": "v2.pty.connectToken"
+    },
+    {
+      "method": "GET",
+      "path": "/api/pty/{ptyID}/connect",
+      "operation": "v2.pty.connect"
+    },
+    {
+      "method": "GET",
+      "path": "/api/question/request",
+      "operation": "v2.question.request.list"
+    },
+    {
+      "method": "GET",
+      "path": "/api/session/{sessionID}/question",
+      "operation": "v2.session.question.list"
+    },
+    {
+      "method": "POST",
+      "path": "/api/session/{sessionID}/question/{requestID}/reply",
+      "operation": "v2.session.question.reply"
+    },
+    {
+      "method": "POST",
+      "path": "/api/session/{sessionID}/question/{requestID}/reject",
+      "operation": "v2.session.question.reject"
+    },
+    {
+      "method": "GET",
+      "path": "/api/reference",
+      "operation": "v2.reference.list"
+    },
+    {
+      "method": "POST",
+      "path": "/experimental/project/{projectID}/copy",
+      "operation": "v2.projectCopy.create"
+    },
+    {
+      "method": "DELETE",
+      "path": "/experimental/project/{projectID}/copy",
+      "operation": "v2.projectCopy.remove"
+    },
+    {
+      "method": "POST",
+      "path": "/experimental/project/{projectID}/copy/refresh",
+      "operation": "v2.projectCopy.refresh"
+    },
+    {
+      "method": "GET",
+      "path": "/pty/{ptyID}/connect",
+      "operation": "pty.connect"
+    }
+  ]
+}

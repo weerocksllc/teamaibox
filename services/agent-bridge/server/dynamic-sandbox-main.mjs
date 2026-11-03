@@ -6,12 +6,12 @@ import {AgentModelCredentialAuthority,loadAgentModelSigningKey} from '../../comp
 import {AgentModelAccessService} from '../src/agent-model-access-service.mjs';
 import {generateSourceClientConfig,INTERNAL_SOURCE_GATEWAYS} from '../src/source-client-config.mjs';
 import {DynamicSandboxController,dynamicSandboxIdentity} from '../src/dynamic-sandbox-controller.mjs';
-import {sandboxMemoryAdmission} from '../src/sandbox-memory-admission.mjs';
+import {createDynamicSandboxRuntime} from '../src/dynamic-sandbox-runtime.mjs';
 
 const cfg=JSON.parse(await readFile('/run/config/agent-controller.json','utf8'));
 if (!/^sha256:[a-f0-9]{64}$/.test(cfg.image) || !/^[a-z0-9_-]+$/.test(cfg.volume)
  || !Array.isArray(cfg.networks) || cfg.networks.length!==2 || cfg.networks.some(n=>!/^[a-z0-9_-]+$/.test(n))) throw Error('agent_controller_configuration_invalid');
-const ROOT='/state', LABEL='com.teamaibox.dynamic-agent-owner', memory=8*1024**3;
+const ROOT='/state';
 const auth=(await readFile('/agent-control/dynamic-controller-token','utf8')).trim();
 if (!/^[A-Za-z0-9_-]{32,4096}$/.test(auth)) throw Error('agent_controller_token_invalid');
 const key=await loadAgentModelSigningKey('/run/secrets/agent-model-signing-key');
@@ -69,51 +69,10 @@ const identities={
  async active(id){return (await database.query("SELECT id FROM iam.identities WHERE id=$1 AND status='active' AND identity_kind='local_user'",[id])).rows.length===1;},
  async busy(id){return (await database.query("SELECT 1 FROM platform.agent_prompts p JOIN platform.agent_session_bindings b ON b.id=p.binding_id WHERE b.owner_identity_id=$1 AND p.status IN ('admitted','submitting','accepted','running','reconcile_required') LIMIT 1",[id])).rows.length>0;},
 };
-let starting=Promise.resolve();
-const runtime={
- async inspect(id){try{const v=await docker('GET','/containers/'+id.name+'/json');return {running:v.State.Running,raw:v};}catch(e){if(e.status===404)return null;throw e;}},
- assertOwned(id,current){const v=current.raw,h=v.HostConfig;
-  if(v.Config.Labels?.[LABEL]!==id.ownerIdentityId || v.Image!==cfg.image || v.Config.User!=='65532:65532'
-   || !h.ReadonlyRootfs || h.Privileged || h.Memory!==memory || h.MemorySwap!==memory
-   || h.CapDrop?.join()!=='ALL' || h.Devices?.length || h.Binds?.length)throw Error('agent_container_identity_conflict');
-  for(const [path,kind] of [['/workspace','workspace'],['/run/teamaibox','runtime'],['/run/secrets','model']]) {
-   const m=h.Mounts?.find(m=>m.Target===path);
-   if(m?.Type!=='volume'||m.Source!==cfg.volume||m.VolumeOptions?.Subpath!==id.key+'/'+kind||Boolean(m.ReadOnly)!==(kind!=='workspace'))throw Error('agent_workspace_identity_conflict');
-  }
- },
- async admit(){},
- async start(id,current){
-  let release;const previous=starting;starting=new Promise(r=>release=r);await previous;
-  try {
-   const available=Number((await readFile('/proc/meminfo','utf8')).match(/^MemAvailable:\s+(\d+)/m)?.[1])*1024;
-   const running=await docker('GET','/containers/json?filters='+encodeURIComponent(JSON.stringify({label:[LABEL],status:['running']})));
-   const observations=[];
-   for(const row of running) {
-    const owned=dynamicSandboxIdentity(row.Labels?.[LABEL]);
-    const inspected=await this.inspect(owned);this.assertOwned(owned,inspected);
-    const stats=await docker('GET','/containers/'+inspected.raw.Id+'/stats?stream=false&one-shot=true');
-    observations.push({limitBytes:memory,usageBytes:stats.memory_stats?.usage,
-      reclaimableBytes:stats.memory_stats?.stats?.inactive_file??stats.memory_stats?.stats?.total_inactive_file});
-   }
-   const admission=sandboxMemoryAdmission({availableBytes:available,requestedBytes:memory,running:observations});
-   if(!admission.eligible)throw Error('agent_capacity_unavailable');
-   if(!current) {
-    await docker('POST','/containers/create?name='+id.name,{
-     Image:cfg.image,User:'65532:65532',WorkingDir:'/workspace',Labels:{[LABEL]:id.ownerIdentityId},
-     HostConfig:{ReadonlyRootfs:true,Privileged:false,CapDrop:['ALL'],SecurityOpt:['no-new-privileges:true'],Init:true,
-      Memory:memory,MemorySwap:memory,MemoryReservation:1024**3,NanoCpus:4e9,PidsLimit:512,RestartPolicy:{Name:'no'},
-      NetworkMode:cfg.networks[0],Tmpfs:{'/tmp':'rw,noexec,nosuid,nodev,size=1g'},
-      Mounts:[['/workspace','workspace'],['/run/teamaibox','runtime'],['/run/secrets','model']].map(([Target,kind])=>({Type:'volume',Source:cfg.volume,Target,ReadOnly:kind!=='workspace',VolumeOptions:{Subpath:id.key+'/'+kind,NoCopy:true}}))},
-     NetworkingConfig:{EndpointsConfig:{[cfg.networks[0]]:{Aliases:[id.name]},[cfg.networks[1]]:{Aliases:[id.name]}}},
-    });
-   }
-   await docker('POST','/containers/'+id.name+'/start');return await this.inspect(id);
-  } finally {release();}
- },
- async healthy(id){const deadline=Date.now()+60000;while(Date.now()<deadline){const v=await this.inspect(id);this.assertOwned(id,v);
-  if(!v.running)throw Error('agent_start_failed');if(v.raw.State.Health?.Status==='healthy')return;await new Promise(r=>setTimeout(r,500));}throw Error('agent_start_timeout');},
- async stop(id,current){this.assertOwned(id,current);await docker('POST','/containers/'+id.name+'/stop?t=10');},
-};
+const runtime=createDynamicSandboxRuntime({config:cfg,docker,
+ availableMemory:async()=>Number((await readFile('/proc/meminfo','utf8')).match(/^MemAvailable:\s+(\d+)/m)?.[1])*1024,
+ bridgeToken:async id=>(await readFile(ROOT+'/'+id.key+'/runtime/secrets/agent-bridge-token','utf8')).trim(),
+});
 await mkdir(ROOT,{recursive:true});const controller=new DynamicSandboxController({identities,runtime,storage});
 let sweep=false;
 const timer=setInterval(async()=>{if(sweep)return;sweep=true;try{await controller.reconcile();}catch{console.error('agent_reconcile_failed');}finally{sweep=false;}},60000);

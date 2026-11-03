@@ -190,10 +190,10 @@ export class OpenCodeV118Adapter {
 
   async health({ signal = null } = {}) {
     const value = requireObject(await this.#json("/global/health", { signal }), "OpenCode health response is invalid");
-    if (value.healthy !== true || value.version !== SUPPORTED_VERSION) {
+    if (value.healthy !== true || value.version !== this.compatibility.version) {
       throw compatibilityError("OpenCode health version does not match the pinned adapter");
     }
-    return Object.freeze({ healthy: true, version: value.version, adapterKey: "opencode.http.v1.18" });
+    return Object.freeze({ healthy: true, version: value.version, adapterKey: this.compatibility.adapterKey });
   }
 
   async createSession({ directory, title = null, signal = null } = {}) {
@@ -324,7 +324,7 @@ export class OpenCodeV118Adapter {
           if (typeof value.type !== "string" || !value.type || value.type.length > 256) throw compatibilityError("OpenCode event type is invalid");
           ordinal += 1;
           const eventId = lines.find((line) => line.startsWith("id:"))?.slice(3).trim() || null;
-          yield Object.freeze({ adapterKey: "opencode.http.v1.18", connectionOrdinal: ordinal, upstreamEventId: eventId, type: value.type, event: structuredClone(value) });
+          yield Object.freeze({ adapterKey: this.compatibility.adapterKey, connectionOrdinal: ordinal, upstreamEventId: eventId, type: value.type, event: structuredClone(value) });
         }
         if (chunk.done) break;
       }

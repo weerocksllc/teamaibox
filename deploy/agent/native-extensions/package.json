@@ -1,0 +1,9 @@
+{
+  "name": "teamaibox-native-extension-runtime",
+  "version": "1.0.0",
+  "private": true,
+  "license": "MIT",
+  "dependencies": {
+    "@opencode-ai/plugin": "1.19.5"
+  }
+}

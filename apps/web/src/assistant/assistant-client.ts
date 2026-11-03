@@ -81,6 +81,7 @@ export type AssistantConversationSummary = Readonly<{
 }>;
 
 export type AssistantConversation = AssistantConversationSummary & Readonly<{
+  nativeSession?: Readonly<{id:string;directory:string}> | null;
   messages: AssistantMessage[];
   confirmations: AssistantConfirmation[];
   eventCursor: number;
@@ -154,16 +155,16 @@ async function mutation(path: string, body: object, headers: Record<string, stri
   });
 }
 
-export async function listAssistantConversations(): Promise<AssistantConversationSummary[]> {
-  return (await jsonRequest("/api/v1/assistant/conversations")).data;
+export async function listAssistantConversations(signal?: AbortSignal): Promise<AssistantConversationSummary[]> {
+  return (await jsonRequest("/api/v1/assistant/conversations", {signal})).data;
 }
 
 export async function createAssistantConversation(title: string | null = null): Promise<AssistantConversationSummary> {
   return mutation("/api/v1/assistant/conversations", { title });
 }
 
-export async function getAssistantConversation(conversationId: string): Promise<AssistantConversation> {
-  return jsonRequest(`/api/v1/assistant/conversations/${conversationId}`);
+export async function getAssistantConversation(conversationId: string, signal?: AbortSignal): Promise<AssistantConversation> {
+  return jsonRequest(`/api/v1/assistant/conversations/${encodeURIComponent(conversationId)}`, {signal});
 }
 
 export async function submitAssistantMessage(conversationId: string, input: string, mode: AssistantMode, inputReferenceIds: string[] = []) {

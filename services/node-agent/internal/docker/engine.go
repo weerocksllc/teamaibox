@@ -648,6 +648,7 @@ func WorkerCreateRequest(spec agent.WorkerStartPayload, ownership agent.Ownershi
 	if spec.WorkloadKind == "agent-sandbox" {
 		request.HostConfig.Tmpfs["/run/secrets"] = "rw,noexec,nosuid,nodev,size=1048576,uid=0,gid=0,mode=0755"
 		request.HostConfig.Tmpfs["/run/teamaibox"] = "rw,noexec,nosuid,nodev,size=1048576,uid=0,gid=0,mode=0755"
+		request.HostConfig.Tmpfs["/run/opencode-native"] = nativeRuntimeTmpfs(spec.Security)
 	}
 	request.HostConfig.Ulimits = []engineUlimit{{Name: "nofile", Soft: spec.Limits.OpenFilesLimit, Hard: spec.Limits.OpenFilesLimit}}
 	request.HostConfig.RestartPolicy.Name = "no"

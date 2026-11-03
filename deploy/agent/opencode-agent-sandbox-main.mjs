@@ -1,12 +1,19 @@
 import { spawn } from "node:child_process";
 import { once } from "node:events";
-import { readFile } from "node:fs/promises";
+import { mkdir, readFile } from "node:fs/promises";
+import {seedNativeExtensionRuntime} from "/opt/teamaibox/services/agent-bridge/src/native-extension-seed.mjs";
 
 import {
   createRotatingModelCredentialProxy,
   rotatingModelCredentialProxyContract,
 } from "/opt/teamaibox/services/agent-bridge/src/rotating-model-credential-proxy.mjs";
 
+// The workspace volume outlives the process. Never initialize it by replacing
+// existing native configuration, authentication or session databases.
+for (const directory of ['home', 'data', 'cache', 'config/opencode', 'state']) {
+  await mkdir(`/workspace/.teamaibox/${directory}`, { recursive: true, mode: 0o700 });
+}
+await seedNativeExtensionRuntime('/opt/opencode/native-extensions','/workspace/.teamaibox/config/opencode');
 const passwordBytes = await readFile("/run/teamaibox/secrets/opencode-password");
 let password;
 try {

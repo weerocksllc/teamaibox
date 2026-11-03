@@ -61,12 +61,12 @@ test("sandbox policy derives one owner namespace with bounded non-root resources
   assert.match(compiled.sourceClientConfig.aptSources, /arch=arm64/);
   assert.equal(compiled.nodeSpec.environment.OPENCODE_DISABLE_AUTOUPDATE, "1");
   assert.equal(compiled.nodeSpec.environment.OPENCODE_DISABLE_SHARE, "1");
-  assert.equal(compiled.nodeSpec.environment.XDG_CONFIG_HOME, "/run/teamaibox/xdg-config");
+  assert.equal(compiled.nodeSpec.environment.XDG_CONFIG_HOME, "/workspace/.teamaibox/config");
   assert.equal(compiled.nodeSpec.environment.OPENCODE_CONFIG, "/run/teamaibox/xdg-config/opencode/opencode.json");
-  assert.equal(compiled.nodeSpec.environment.OPENCODE_DISABLE_PROJECT_CONFIG, "1");
-  assert.equal(compiled.nodeSpec.environment.OPENCODE_PURE, "1");
-  assert.equal(compiled.nodeSpec.environment.OPENCODE_DISABLE_DEFAULT_PLUGINS, "1");
-  assert.equal(compiled.nodeSpec.environment.OPENCODE_DISABLE_EXTERNAL_SKILLS, "1");
+  assert.equal(compiled.nodeSpec.environment.OPENCODE_DISABLE_PROJECT_CONFIG, "0");
+  assert.equal(compiled.nodeSpec.environment.OPENCODE_PURE, "0");
+  assert.equal(compiled.nodeSpec.environment.OPENCODE_DISABLE_DEFAULT_PLUGINS, "0");
+  assert.equal(compiled.nodeSpec.environment.OPENCODE_DISABLE_EXTERNAL_SKILLS, "0");
   assert.equal(compiled.nodeSpec.environment.OPENCODE_DISABLE_MODELS_FETCH, "1");
   assert.equal(compiled.nodeSpec.environment.OPENCODE_DISABLE_EMBEDDED_WEB_UI, "1");
   assert.equal(compiled.nodeSpec.environment.OPENCODE_PERMISSION, '{"*":"ask"}');

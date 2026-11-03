@@ -7,15 +7,16 @@ const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-
 const IMAGE = /^(?:[a-z0-9][a-z0-9._:/-]*@)?sha256:[a-f0-9]{64}$/;
 const HOST = /^[a-zA-Z0-9][a-zA-Z0-9.-]{0,252}$/;
 const OPENCODE_ENVIRONMENT = Object.freeze({
-  XDG_CONFIG_HOME: "/run/teamaibox/xdg-config",
+  TMPDIR: "/run/opencode-native",
+  XDG_CONFIG_HOME: "/workspace/.teamaibox/config",
   OPENCODE_CONFIG: "/run/teamaibox/xdg-config/opencode/opencode.json",
-  OPENCODE_DISABLE_PROJECT_CONFIG: "1",
+  OPENCODE_DISABLE_PROJECT_CONFIG: "0",
   OPENCODE_DISABLE_AUTOUPDATE: "1",
   OPENCODE_DISABLE_SHARE: "1",
   OPENCODE_AUTO_SHARE: "false",
-  OPENCODE_PURE: "1",
-  OPENCODE_DISABLE_DEFAULT_PLUGINS: "1",
-  OPENCODE_DISABLE_EXTERNAL_SKILLS: "1",
+  OPENCODE_PURE: "0",
+  OPENCODE_DISABLE_DEFAULT_PLUGINS: "0",
+  OPENCODE_DISABLE_EXTERNAL_SKILLS: "0",
   OPENCODE_DISABLE_MODELS_FETCH: "1",
   OPENCODE_DISABLE_EMBEDDED_WEB_UI: "1",
   OPENCODE_PERMISSION: '{"*":"ask"}',

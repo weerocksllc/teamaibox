@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 2,
+  "lockPath": "architecture/opencode/upstream-lock.v1.json",
+  "adapterPath": "services/agent-bridge/src/opencode-adapter-v1-19.mjs",
+  "engineRecipes": ["deploy/agent/OpenCode.Dockerfile", "deploy/agent/AgentSandbox.Dockerfile"],
+  "requiredImageRoles": ["web", "platform-api", "node-agent", "agent-bridge", "agent-sandbox"],
+  "requiredReleaseChecks": ["native-version", "authenticated-native", "user-isolation", "runtime-isolation", "permission-interaction", "native-tool-result", "same-session-reconnect", "retained-user-data", "exact-runtime-images", "frontend-assets"],
+  "sourceRoots": [
+    "architecture/opencode/upstream-lock.v1.json",
+    "architecture/opencode/compatibility-gate.v2.json",
+    "services/agent-bridge/src", "services/agent-bridge/server", "services/agent-bridge/opencode-native-contract.json",
+    "services/node-agent/internal", "services/node-agent/cmd", "services/node-agent/go.mod",
+    "apps/platform-api", "apps/web",
+    "packages/authorization/src", "packages/observability/src", "packages/secrets/src", "packages/persistence/src", "packages/ui-system/src",
+    "deploy/agent", "deploy/images", "install/images",
+    "package.json", "pnpm-lock.yaml", "pnpm-workspace.yaml",
+    "tools/opencode_release_contract.py", "tools/validate_opencode_native_release.py"
+  ],
+  "historicalEvidence": "architecture/opencode/compatibility-evidence.v1.json",
+  "evidencePolicy": "External current-source-bound ARM64 observations required for release acceptance; historical receipts never satisfy this gate. No credentials, prompts or raw logs in the source release."
+}

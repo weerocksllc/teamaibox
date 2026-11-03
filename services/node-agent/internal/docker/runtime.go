@@ -198,6 +198,7 @@ func (r *Runtime) StartWorker(ctx context.Context, spec agent.WorkerStartPayload
 	if spec.WorkloadKind == "agent-sandbox" {
 		arguments = append(arguments, "--tmpfs", "/run/secrets:rw,noexec,nosuid,nodev,size=1048576,uid=0,gid=0,mode=0755")
 		arguments = append(arguments, "--tmpfs", "/run/teamaibox:rw,noexec,nosuid,nodev,size=1048576,uid=0,gid=0,mode=0755")
+		arguments = append(arguments, "--tmpfs", "/run/opencode-native:"+nativeRuntimeTmpfs(spec.Security))
 	}
 	seccompProfile := spec.Security.SeccompProfile
 	if seccompProfile == "teamaibox-plugin-v1" {

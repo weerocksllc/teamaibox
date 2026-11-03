@@ -639,6 +639,9 @@ async function serveStatic(request, response, config, pathname) {
     selected = await safeStaticFile(config.staticRoot, "/index.html");
     spaFallback = Boolean(selected);
   }
+  // Filesystem lookup is asynchronous. Navigation may have already closed the
+  // response; stream.pipeline throws synchronously for a destroyed destination.
+  if (request.aborted || response.destroyed || response.writableEnded) return;
   if (!selected) {
     jsonResponse(response, config, 404, { error: { code: "not_found" } });
     return;

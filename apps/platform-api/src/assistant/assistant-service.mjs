@@ -136,6 +136,7 @@ export class AssistantService {
   #clock;
   #audit;
   #artifactHandoff;
+  #nativeSessions;
   #controllers = new Map();
   #confirmationWaiters = new Map();
   #executions = new Map();
@@ -149,6 +150,7 @@ export class AssistantService {
     clock = () => new Date(),
     audit = async () => {},
     artifactHandoff = null,
+    nativeSessions = null,
   }) {
     const repositoryMethods = [
       "insertConversation", "findOwnedConversation", "listOwnedConversations", "updateConversation",
@@ -170,6 +172,7 @@ export class AssistantService {
     this.#clock = clock;
     this.#audit = audit;
     this.#artifactHandoff = artifactHandoff;
+    this.#nativeSessions = nativeSessions;
   }
 
   async createConversation(ownerIdentityId, { title = null } = {}) {
@@ -208,11 +211,22 @@ export class AssistantService {
       const run = await this.#repository.findRun(message.runId);
       return publicMessage(message, run?.error ?? null);
     }));
+    let nativeSession = null;
+    if (this.#nativeSessions) {
+      try {
+        const binding = await this.#nativeSessions.getBinding(ownerIdentityId, conversationId);
+        if (binding.ownerIdentityId === ownerIdentityId && binding.platformConversationId === conversationId
+          && /^ses_[A-Za-z0-9]+$/.test(binding.opencodeSessionId)) {
+          nativeSession = { id: binding.opencodeSessionId, directory: '/workspace' };
+        }
+      } catch (error) { if (error?.code !== 'agent_binding_not_found') throw error; }
+    }
     return Object.freeze({
       ...publicConversation(conversation),
       messages: Object.freeze(projectedMessages),
       confirmations: Object.freeze(confirmations),
       eventCursor: events.at(-1)?.sequence ?? 0,
+      nativeSession,
     });
   }
 

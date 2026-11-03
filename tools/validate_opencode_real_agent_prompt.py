@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
-"""Strictly validate the exact bounded real OpenCode/NVFP4 prompt journey."""
+"""Historical 1.18.16 exact-run validator; not a current release qualification.
+
+Use validate_opencode_compatibility_gate.py for the active pinned engine.
+"""
 
 from __future__ import annotations
 
@@ -39,7 +42,7 @@ PROOF_DIGEST = "sha256:8c672dae7503771e823085a247d5850f6de3cf426cfbdf9627e5c03f7
 
 if str(ROOT) not in __import__("sys").path:
     __import__("sys").path.insert(0, str(ROOT))
-from tools.spark_validation import _create_source_archive
+from tools.opencode_release_contract import _create_source_archive
 
 
 class RealAgentPromptEvidenceError(RuntimeError):

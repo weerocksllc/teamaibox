@@ -73,12 +73,19 @@ test('Escape closes only the foremost shell overlay, preserving the underlying a
   const states=['search','task','profile','notifications','mobileMenu'];
   for(const active of states) {
     const transitions=[];
-    new Function('event',...states.map(name=>`${name}Open`),
+    new Function('document','event',...states.map(name=>`${name}Open`),
       ...states.map(name=>`set${name[0].toUpperCase()+name.slice(1)}Open`),
-      'setActiveApp',body)({key:'Escape'},...states.map(name=>name===active),
+      'setActiveApp',body)({querySelector:()=>null},{key:'Escape'},...states.map(name=>name===active),
       ...states.map(name=>value=>transitions.push([name,value])),
       ()=>assert.fail('must not close underlying application'));
     assert.deepEqual(transitions,[[active,false]]);
+  }
+  for(const defaultPrevented of [false,true]){
+    new Function('document','event',...states.map(name=>`${name}Open`),
+      ...states.map(name=>`set${name[0].toUpperCase()+name.slice(1)}Open`),'setActiveApp',body)(
+      {querySelector:selector=>{assert.equal(selector,'dialog[open]');return {};}},
+      {key:'Escape',defaultPrevented},...states.map(()=>true),
+      ...states.map(()=>()=>assert.fail('native dialog owns Escape')),()=>assert.fail('must keep Assistant open'));
   }
 });
 test('collapsed mobile navigation is hidden and its badge uses actual active tasks',()=>{

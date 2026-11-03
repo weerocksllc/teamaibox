@@ -7,9 +7,10 @@ const client = await readFile(new URL("../src/assistant/assistant-client.ts", im
 const app = await readFile(new URL("../src/App.tsx", import.meta.url), "utf8");
 const styles = await readFile(new URL("../src/styles.css", import.meta.url), "utf8");
 
-test("AI Assistant is one application for answer-only, automatic, and Agent-capable work", () => {
+test("AI Assistant now routes to native React; retained legacy source is not the active execution UI", () => {
   assert.match(app, /activeApp\?\.pluginKey === "official\.assistant"/);
-  assert.match(app, /<AssistantWorkspace/);
+  assert.match(app, /<NativeAssistantWorkspace/);
+  assert.doesNotMatch(app, /<AssistantWorkspace\s/);
   assert.match(workspace, /\["auto", "answer", "agent"\]/);
   assert.match(workspace, /message\.effectiveMode/);
   assert.match(workspace, /message\.routing\.targetKind/);

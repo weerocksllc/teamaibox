@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
-"""Strictly validate one exact real OpenCode ARM64 compatibility run."""
+"""Historical 1.18.16 exact-run validator; not a current release qualification.
+
+Use validate_opencode_compatibility_gate.py for the active pinned engine.
+"""
 
 from __future__ import annotations
 
@@ -39,7 +42,7 @@ STEP_KEYS = {"key", "passed", "durationMilliseconds", "commandDigest", "stdoutDi
 if str(ROOT) not in __import__("sys").path:
     __import__("sys").path.insert(0, str(ROOT))
 
-from tools.spark_validation import _create_source_archive
+from tools.opencode_release_contract import _create_source_archive
 
 
 class OpenCodeRealEvidenceError(RuntimeError):

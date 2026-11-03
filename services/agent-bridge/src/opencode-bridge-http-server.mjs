@@ -14,6 +14,7 @@ import {
 } from "../../../packages/observability/src/index.mjs";
 
 import { bufferedMediaResponse, reserveBufferedMedia } from "../../object-service/src/buffered-media-budget.mjs";
+import { forwardNativeResponse } from './opencode-native-transport.mjs';
 const BEARER = /^Bearer ([A-Za-z0-9._~-]{32,4096})$/;
 const SESSION_PATH = /^\/v1\/sessions\/([^/]+)$/;
 const SESSION_OPERATION_PATH = /^\/v1\/sessions\/([^/]+)\/(prompts|messages|interrupt|diff|artifacts)$/;
@@ -289,6 +290,7 @@ export function createOpenCodeBridgeHttpServer({
   tokenProvider,
   workspace = "/workspace",
   workspaceReader = readWorkspaceArtifact,
+  nativeTransport = null,
 }) {
   const methods = [
     "health", "createSession", "getSession", "sessionStatus", "prompt", "listMessages", "interrupt", "diff",
@@ -299,12 +301,25 @@ export function createOpenCodeBridgeHttpServer({
   if (typeof tokenProvider !== "function") throw new TypeError("Agent Bridge token provider is required");
   if (typeof workspaceReader !== "function") throw new TypeError("Agent Bridge workspace reader is required");
   const directory = safeWorkspace(workspace);
-  return http.createServer((request, response) => {
+  const server = http.createServer((request, response) => {
     const correlationId = correlationIdFromRequest(request);
     void runWithCorrelation(correlationId, async () => {
       try {
         if (new URL(request.url ?? "/", "http://agent-bridge.invalid").pathname !== "/healthz") {
           await authenticate(request, tokenProvider);
+        }
+        if (nativeTransport && request.url?.startsWith('/native/')) {
+          const controller = new AbortController();
+          const abort = () => controller.abort();
+          request.once('aborted', abort); response.once('close', abort);
+          try {
+            const body = ['GET', 'HEAD'].includes(request.method) ? undefined : JSON.stringify(await requestBody(request));
+            const upstream = await nativeTransport.request(request.method, request.url.slice('/native'.length), {
+              body, signal: controller.signal, accept: request.headers.accept ?? 'application/json',
+            });
+            await forwardNativeResponse(upstream, response);
+          } finally { request.off('aborted', abort); response.off('close', abort); }
+          return;
         }
         await route({ request, response, adapter, workspace: directory, workspaceReader });
       } catch (error) {
@@ -318,4 +333,14 @@ export function createOpenCodeBridgeHttpServer({
       }
     });
   });
+  server.on('upgrade',(request,socket,head)=>{
+    void (async()=>{
+      try {
+        await authenticate(request,tokenProvider);
+        if(!nativeTransport || !request.url?.startsWith('/native/'))throw new Error('native_socket_unavailable');
+        await nativeTransport.upgrade(request.url.slice('/native'.length),request,socket,head);
+      } catch { if(!socket.destroyed)socket.end('HTTP/1.1 403 Forbidden\r\nConnection: close\r\n\r\n'); }
+    })();
+  });
+  return server;
 }

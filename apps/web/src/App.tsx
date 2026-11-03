@@ -51,7 +51,6 @@ import { taskLabel } from "./activity/task-label";
 
 import { applicationsFromCatalogFacts, buildWorkbenchCatalog, searchWorkbenchCatalog, reconcileOpenApplication } from "./catalog/workbench-catalog.mjs";
 import { loadApplicationCatalog, type ApplicationCatalogFact } from "./catalog/application-catalog-client";
-import { AssistantWorkspace } from "./assistant/AssistantWorkspace";
 import { DynamicApplicationWorkspace } from "./applications/DynamicApplicationWorkspace";
 import type { PluginHandoff } from "./translation/TranslationPluginWorkspace";
 import { cancelUserTask, loadUserActivity, type UserActivityOverview, type UserServiceAvailability, type UserTask } from "./activity/user-activity-client";
@@ -98,6 +97,7 @@ type CatalogGroup = (typeof categoryConfiguration)[number] & { applications: rea
 type AdminItem = { id: string; href: string; requiredPermissions: string[]; available: boolean };
 type Translate = (key: string, values?: Record<string, string | number>) => string;
 
+const NativeAssistantWorkspace = lazy(() => import("./assistant/NativeAssistantWorkspace").then(module => ({default:module.NativeAssistantWorkspace})));
 const UserAdministrationPanel = lazy(() => import("./users/UserAdministrationPanel").then((module) => ({ default: module.UserAdministrationPanel })));
 const RoleAdministrationPanel = lazy(() => import("./roles/RoleAdministrationPanel").then((module) => ({ default: module.RoleAdministrationPanel })));
 const TeamAdministrationPanel = lazy(() => import("./teams/TeamAdministrationPanel").then((module) => ({ default: module.TeamAdministrationPanel })));
@@ -503,6 +503,9 @@ export function App() {
         setSearchOpen(true);
       }
       if (event.key === "Escape") {
+        // A native dialog owns Escape even if a pending save temporarily
+        // disables its focused control. Do not close the entire application.
+        if (event.defaultPrevented || document.querySelector('dialog[open]')) return;
         if (searchOpen) { setSearchOpen(false); return; }
         if (taskOpen) { setTaskOpen(false); return; }
         if (profileOpen) { setProfileOpen(false); return; }
@@ -833,7 +836,7 @@ export function App() {
       )}
       {taskOpen && <TaskDrawer tasks={activity?.tasks ?? []} state={activityState} cancellingTaskId={cancellingTaskId} onCancel={cancelTask} t={t} onClose={() => setTaskOpen(false)} />}
       {activeApp?.pluginKey === "official.assistant" && activeApp.runtime.route?.integration === "workbench" ? (
-        <AssistantWorkspace locale={i18n.locale} initialPrompt={assistantInitialPrompt} onClose={closeApplication} t={t} />
+        <Suspense fallback={<div role="status">{t('common.loading')}</div>}><NativeAssistantWorkspace key={globalThis.__TEAM_AI_BOX_ACCOUNT_PREFERENCES__?.identityId ?? 'authenticated'} locale={i18n.locale} initialPrompt={assistantInitialPrompt} onClose={closeApplication} t={t} /></Suspense>
       ) : activeApp?.runtime.route?.integration === "iframe" ? (
         <DynamicApplicationWorkspace key={activeApp.pluginKey} fact={activeApp.runtime} label={translatedApplicationText(activeApp, "labelKey", t)} handoff={pluginHandoff?.targetPluginId === activeApp.pluginKey ? pluginHandoff : null} locale={i18n.locale} direction={i18n.direction} theme={theme} onClose={closeApplication} t={t} />
       ) : null}

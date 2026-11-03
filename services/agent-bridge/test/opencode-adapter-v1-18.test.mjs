@@ -179,7 +179,7 @@ test("ending an event subscription cancels the upstream SSE reader", async () =>
 });
 
 test("version, protocol, credential, input, and upstream errors fail closed without leaking bodies", async () => {
-  assert.deepEqual(supportedOpenCodeAdapters(), [{ adapterKey: "opencode.http.v1.18", version: "1.18.16", artifactDigest: DIGEST }]);
+  assert.deepEqual(supportedOpenCodeAdapters().find(value=>value.version==='1.18.16'), { adapterKey: "opencode.http.v1.18", version: "1.18.16", artifactDigest: DIGEST });
   assert.throws(() => createOpenCodeAdapter({ version: "1.18.17", artifactDigest: DIGEST }), { code: "opencode_version_unsupported" });
   const incompatible = new OpenCodeV118Adapter({
     origin: "http://127.0.0.1:4096",
