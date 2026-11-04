@@ -24,6 +24,33 @@ Opening a conversation does not resend its messages.
 
 ## Conversations and input
 
+### Reading messages
+
+Answers render Markdown while they arrive: headings, lists, links, quotes,
+tables and code blocks. Code blocks identify the language and offer **Copy code**.
+Mathematics appears inline or on its own line. Completed Mermaid blocks can show
+a diagram; **Source** returns to the code. If an expression or diagram cannot be
+rendered, its source remains available instead of hiding the answer.
+
+Workspace images and supported image attachments have previews. Select an image
+to enlarge it, then press Escape or **Close** to return. A missing or unsupported
+image shows a preview-unavailable message. External images are not loaded
+automatically: **Open external image** opens the indicated website in a separate
+tab. Ordinary file attachments show their name and type, with **Download file**
+when their bytes are available through the workspace or message.
+
+**Thinking** expands the reasoning supplied by the native engine. Tool cards
+show their actual pending, running, completed or failed state. Expand a card for
+inputs, output and attachments; **Raw details** preserves its original fields.
+Neither reading a tool card nor copying code executes it.
+
+The conversation follows new output while you are at the bottom. Scroll back to
+read earlier messages without being pulled forward; **Jump to latest** resumes
+following. Wide tables and code scroll inside the message, leaving the input
+available below.
+
+### Projects and conversations
+
 The project home shows your projects and recent conversations. Select a project
 to return to its last conversation, or choose **New conversation** in the project
 sidebar. **Find conversations** searches across your workspaces; the results can

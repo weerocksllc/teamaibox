@@ -1,7 +1,8 @@
 const prefix = '/api/v1/assistant/native';
 export type NativeSession = {id:string; title:string; parentID?:string; directory:string; revert?:{messageID:string;partID?:string};time:{created:number;updated:number;archived?:number}};
 export type NativePart = {id:string;type:string;text?:string;url?:string;filename?:string;mime?:string;tool?:string;
-  state?:{status:string;input?:unknown;output?:string;error?:string;title?:string};[key:string]:unknown};
+  time?:{start:number;end?:number};
+  state?:{status:string;input?:unknown;output?:string;error?:string;title?:string;metadata?:Record<string,unknown>;attachments?:NativePart[]};[key:string]:unknown};
 export type NativeMessage = {info:{id:string;role:string;sessionID:string;agent?:string;modelID?:string;providerID?:string;
   cost?:number;summary?:boolean;tokens?:{input:number;output:number;reasoning?:number;cache?:{read:number;write:number}};error?:unknown;time:{created:number;completed?:number}};parts:NativePart[]};
 export type NativePermission = {id:string;sessionID:string;permission:string;patterns:string[];metadata:Record<string,unknown>};
@@ -28,6 +29,17 @@ export function createNativeClient() {
     get signal() { return lifetime.signal; },
     activate() { if(lifetime.signal.aborted)lifetime = new AbortController(); },
     close() { lifetime.abort(); },
+    async readWorkspaceBytes(path:string,signal:AbortSignal):Promise<Uint8Array>{
+      if(!path||path.startsWith('/')||/[\\%\r\n\0]/.test(path)||path.split('/').some(p=>!p||['.','..','.git','.teamaibox'].includes(p)))throw new TypeError('Invalid file path');
+      const url=new URL(`${prefix}/api/fs/read/${path.split('/').map(encodeURIComponent).join('/')}`,window.location.origin);url.searchParams.set('directory','/workspace');
+      const response=await fetch(url,{credentials:'same-origin',redirect:'error',signal:AbortSignal.any([signal,lifetime.signal]),headers:{accept:'application/octet-stream'}});
+      if(!response.ok)throw new NativeApiError(response.status,`native_http_${response.status}`);
+      const reader=response.body?.getReader();if(!reader)throw new NativeApiError(502,'media_body_missing');
+      const chunks:Uint8Array[]=[];let length=0;
+      try{while(true){const {done,value}=await reader.read();if(done)break;length+=value.length;if(length>16*1024*1024)throw new NativeApiError(413,'media_too_large');chunks.push(value);}}
+      finally{await reader.cancel();reader.releaseLock();}
+      const bytes=new Uint8Array(length);let offset=0;for(const chunk of chunks){bytes.set(chunk,offset);offset+=chunk.length;}return bytes;
+    },
     async workspace<T>(operation:'folders'|'files',body:unknown):Promise<T>{
       const response=await fetch(`${prefix}/workspace/${operation}`,{method:'POST',credentials:'same-origin',redirect:'error',signal:lifetime.signal,
         headers:{accept:'application/json','content-type':'application/json','x-csrf-token':csrf()},body:JSON.stringify(body)});

@@ -45,6 +45,35 @@ test('editable native file reads preserve whitespace and use owner-scoped raw ro
   const client=createNativeClient();assert.equal(await client.readText('notes/日 one.txt','/workspace/project'),'  text\r\n\n');
   await assert.rejects(client.readText('../secrets','/workspace/project'));
 });
+test('message media bytes use only the authenticated owner raw route',async t=>{
+  const bytes=new Uint8Array([0,255,1,13,10]);
+  browser(t,async(url,init)=>{
+    assert.equal(url.pathname,'/api/v1/assistant/native/api/fs/read/project/a%20b.png');
+    assert.equal(url.searchParams.get('directory'),'/workspace');
+    assert.equal(init.credentials,'same-origin');assert.equal(init.redirect,'error');
+    assert.equal(init.headers.accept,'application/octet-stream');
+    return new Response(bytes);
+  });
+  const client=createNativeClient();assert.deepEqual(await client.readWorkspaceBytes('project/a b.png',new AbortController().signal),bytes);
+  for(const path of ['../secret','/etc/passwd','a//b','.git/config','project/.teamaibox/config','x%2fy','x\\y','x\ny'])await assert.rejects(client.readWorkspaceBytes(path,new AbortController().signal),TypeError);
+  client.close();
+});
+test('message media byte limit cancels and releases an oversized response',async t=>{
+  let cancelled=false;
+  browser(t,async()=>new Response(new ReadableStream({start(c){c.enqueue(new Uint8Array(16*1024*1024));c.enqueue(new Uint8Array(1));},cancel(){cancelled=true;}})));
+  await assert.rejects(createNativeClient().readWorkspaceBytes('large.png',new AbortController().signal),{status:413,code:'media_too_large'});
+  assert.ok(cancelled);
+});
+test('message media reads stop at both context and owner lifetime boundaries',async t=>{
+  const signals=[];
+  browser(t,async(_,init)=>{
+    signals.push(init.signal);
+    return new Response(new ReadableStream({start(c){init.signal.addEventListener('abort',()=>c.error(new DOMException('Stopped','AbortError')),{once:true});}}));
+  });
+  const client=createNativeClient(),context=new AbortController();
+  const pending=client.readWorkspaceBytes('late.png',context.signal);context.abort();await assert.rejects(pending,{name:'AbortError'});assert.ok(signals[0].aborted);
+  const next=client.readWorkspaceBytes('other.png',new AbortController().signal);client.close();await assert.rejects(next,{name:'AbortError'});assert.ok(signals[1].aborted);
+});
 test('React effect replay creates a fresh lifetime without reviving old requests',async t=>{
   const signals=[];browser(t,async(_,init)=>{signals.push(init.signal);return Response.json([]);});
   const client=createNativeClient();await client.request('/session');client.close();client.activate();await client.request('/session');

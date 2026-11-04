@@ -35,6 +35,21 @@ const assetRoot = resolve(root, "assets");
 const entries = await readdir(assetRoot, { withFileTypes: true });
 const productionAssets = [];
 const sourceMaps = new Set();
+// Rolldown has no original-source map for its generated interop runtime.
+// Accept only the build plugin's exact, digest-bound compiler-module receipt;
+// application and dependency implementation chunks still require source maps.
+const generatedRuntime=new Set();
+let generated;
+try{generated=JSON.parse(await readFile(resolve(root,'generated-runtime.json'),'utf8'));}catch(error){if(error.code!=='ENOENT')throw error;}
+if(generated){
+  if(generated.version!==1||!Array.isArray(generated.assets)||generated.assets.length>1)throw Error('Invalid generated runtime receipt');
+  for(const asset of generated.assets){
+    if(asset.kind!=='rolldown-runtime'||!/^assets\/rolldown-runtime-[A-Za-z0-9_-]+\.js$/.test(asset.file)||JSON.stringify(asset.modules)!==JSON.stringify(['\0rolldown/runtime.js']))throw Error('Invalid generated runtime identity');
+    const bytes=await readFile(resolve(root,asset.file));
+    if(createHash('sha256').update(bytes).digest('hex')!==asset.sha256)throw Error('Generated runtime digest mismatch');
+    generatedRuntime.add(asset.file);
+  }
+}
 for (const entry of entries) {
   if (!entry.isFile() || entry.isSymbolicLink()) throw new Error(`Web bundle asset is not a regular file: assets/${entry.name}`);
   const reference = `assets/${entry.name}`;
@@ -43,7 +58,7 @@ for (const entry of entries) {
     sourceMaps.add(reference);
     continue;
   }
-  if (!/^[A-Za-z0-9._-]+\.(?:js|css)$/.test(entry.name)) throw new Error(`Web bundle contains an unsupported production asset: ${reference}`);
+  if (!/^[A-Za-z0-9._-]+\.(?:js|css|woff2?|ttf)$/.test(entry.name)) throw new Error(`Web bundle contains an unsupported production asset: ${reference}`);
   const metadata = await stat(resolve(root, reference));
   if (metadata.size === 0) throw new Error(`Web bundle asset is empty: ${reference}`);
   productionAssets.push({ reference, bytes: metadata.size });
@@ -51,26 +66,29 @@ for (const entry of entries) {
 
 const available = new Set(productionAssets.map((asset) => asset.reference));
 const reachable = new Set(references);
-const queue = references.filter((reference) => reference.endsWith(".js"));
+const queue = references.filter((reference) => /\.(?:js|css)$/.test(reference));
 while (queue.length > 0) {
   const reference = queue.shift();
   const source = await readFile(resolve(root, reference), "utf8");
+  if(reference.endsWith('.css')&&/url\(["']?data:(?:font\/|application\/(?:font|x-font|vnd\.ms-fontobject))/i.test(source))throw Error('Web fonts must be local files under the release CSP');
   const dependencies = [
     ...source.matchAll(/(?:import\(|from)\s*["'`]\.\/([^"'`]+\.js)["'`]/g),
+    ...source.matchAll(/\bimport\s*["']\.\/([^"']+\.js)["']/g),
     // Vite records lazily loaded styles alongside their JavaScript chunks.
     ...source.matchAll(/["'`]assets\/([A-Za-z0-9._-]+\.(?:js|css))["'`]/g),
+    ...source.matchAll(/url\(["']?(?:\/assets\/|\.\/)([A-Za-z0-9._-]+\.(?:woff2?|ttf))["']?\)/g),
   ].map((match) => `assets/${match[1]}`);
   for (const dependency of dependencies) {
     if (!available.has(dependency)) throw new Error(`Web bundle JavaScript dependency is missing: ${dependency}`);
     if (!reachable.has(dependency)) {
       reachable.add(dependency);
-      if (dependency.endsWith(".js")) queue.push(dependency);
+      if (/\.(?:js|css)$/.test(dependency)) queue.push(dependency);
     }
   }
 }
 for (const asset of productionAssets) {
   if (!reachable.has(asset.reference)) throw new Error(`Web bundle contains an unreachable production asset: ${asset.reference}`);
-  if (asset.reference.endsWith(".js") && !sourceMaps.has(`${asset.reference}.map`)) throw new Error(`Web bundle JavaScript source map is missing: ${asset.reference}.map`);
+  if (asset.reference.endsWith(".js") && !sourceMaps.has(`${asset.reference}.map`) && !generatedRuntime.has(asset.reference)) throw new Error(`Web bundle JavaScript source map is missing: ${asset.reference}.map`);
 }
 for (const sourceMap of sourceMaps) {
   if (!available.has(sourceMap.slice(0, -4))) throw new Error(`Web bundle contains an orphaned source map: ${sourceMap}`);
@@ -86,6 +104,7 @@ console.log(JSON.stringify({
   entryAssets: checked.length,
   entryScriptBytes: script.bytes,
   sourceMaps: sourceMaps.size,
+  compilerRuntimeAssets: generatedRuntime.size,
   bytes: productionAssets.reduce((sum, item) => sum + item.bytes, 0),
   digest: `sha256:${manifestHash.digest("hex")}`,
 }));

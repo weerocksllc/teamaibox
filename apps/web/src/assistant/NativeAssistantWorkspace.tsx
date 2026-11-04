@@ -35,6 +35,10 @@ import {AssistantProjectNavigation,AssistantProjectHome,useAssistantProjects} fr
 import {AssistantDesignIcon as Icon} from './AssistantDesignIcon';
 import {projectSessionText,projectFeedbackText} from './project-session-copy';
 import {AssistantFolderPicker} from './AssistantFolderPicker';
+import {RichMessageContext} from './rich-message-context';
+import {NativeMessagePart} from './NativeMessagePart';
+import {AssistantTranscript} from './AssistantTranscript';
+import './rich-messages.css';
 
 type Translator=(key:string,values?:Record<string,string|number>)=>string;
 const segment=encodeURIComponent;
@@ -190,7 +194,9 @@ export function NativeAssistantWorkspace({locale,identityId='',initialPrompt='',
   };
   const openSettings=async()=>{setSettings(true);try{setConfig(pretty(await client.request('/global/config')));}catch(cause){report(cause);}};
   const saveSettings=async()=>{setSaving(true);try{await client.request('/global/config',{method:'PATCH',body:JSON.parse(config)});setConfigRevision(value=>value+1);setSettings(false);setConfig('');await refresh();}catch(cause){report(cause);}finally{setSaving(false);}};
-  const shownMessages=visibleNativeMessages(messages,selectedSession?.revert);
+  // Selection commits before the refresh effect clears old state. Never mount
+  // the previous session's media under the newly selected resource context.
+  const shownMessages=visibleNativeMessages(messages.filter(message=>message.info.sessionID===active),selectedSession?.id===active?selectedSession.revert:undefined);
   const pendingMessages=nativePendingMessages(shownMessages);
   const running=Boolean(active&&status[active]&&status[active].type!=='idle');
   const waiting=permissions.some(p=>p.sessionID===active)||questions.some(q=>q.sessionID===active);
@@ -227,13 +233,12 @@ export function NativeAssistantWorkspace({locale,identityId='',initialPrompt='',
         {active&&<><Button variant="quiet" onClick={()=>{setTitle(sessions.find(s=>s.id===active)?.title??'');setDialog('rename');}}>{nt('rename')}</Button><Button variant="quiet" onClick={()=>void fork()}>{nt('fork')}</Button><Button variant="quiet" onClick={()=>void openDetail('changes')}>{nt('changes')}</Button><Button variant="quiet" onClick={()=>void openDetail('context')}>{nt('context')}</Button><Button variant="quiet" disabled={!model&&!Object.keys(providers.default).length} onClick={()=>void compact()}>{nt('compact')}</Button><Button variant="quiet" onClick={()=>void mutate(`/session/${segment(active)}/unrevert`)}>{nt('redo')}</Button><Button variant="quiet" onClick={()=>setDialog('delete')}>{nt('delete')}</Button></>}
       </nav></details></div>
       {error&&<div className="assistant-error" role="alert"><span>{error}</span><button type="button" onClick={()=>void refresh()} aria-label={t('assistant.workspace.retry')}><RefreshCw size={16}/></button></div>}
-      <div className="assistant-transcript" aria-live="polite">
+      <RichMessageContext.Provider key={`${identityId}:${directory}:${active}`} value={{client,directory,locale,scopeKey:`${identityId}:${directory}:${active}`}}><AssistantTranscript>
         {!shownMessages.length&&<div className="assistant-empty"><Icon name="spark"/><h3>{t('assistant.workspace.empty_title')}</h3><p>{t('assistant.workspace.empty_body')}</p></div>}
         {shownMessages.map(message=><article key={message.info.id} className={`assistant-message assistant-message--${message.info.role}`}><div className="assistant-message__body">
           <header>{message.info.role==='assistant'&&<Icon name="spark"/>}<strong>{t(message.info.role==='user'?'assistant.workspace.you':'assistant.workspace.assistant')}</strong><time>{new Intl.DateTimeFormat(locale,{timeStyle:'short'}).format(message.info.time.created)}</time></header>
           {pendingMessages.has(message.info.id)&&<span className="native-pending" data-native-pending={message.info.id}>{nativeSessionText(locale,'queued')}</span>}
-          {message.parts.map(part=>['step-start','step-finish','snapshot'].includes(part.type)?null:part.type==='text'?<div key={part.id} className="assistant-message__content">{part.text}</div>:
-            <details key={part.id} className="native-part"><summary>{part.state?.status==='completed'?<Icon name="check"/>:part.filename?<Icon name="file"/>:null}{part.state?.title??part.tool??part.filename??part.type}{part.state?` · ${part.state.status}`:''}</summary><pre>{part.state?pretty(part.state):pretty(part)}</pre></details>)}
+          {message.parts.map(part=>['step-start','step-finish','snapshot'].includes(part.type)?null:<NativeMessagePart key={part.id} part={part} streaming={message.info.role==='assistant'&&message.info.time.completed===undefined&&!message.info.error}/>)}
           {message.info.tokens&&<footer>{t('assistant.workspace.usage',{input:message.info.tokens.input,output:message.info.tokens.output})}</footer>}
           {message.info.error!=null&&<pre role="alert">{pretty(message.info.error)}</pre>}
           <details className="assistant-message-options"><summary aria-label={pt('more')}><Icon name="more"/></summary><NativeMessageEditor client={client} directory={directory} message={message} running={Boolean(active&&status[active]&&status[active].type!=='idle')} locale={locale} onError={report} onSaved={()=>{setError('');void refresh();}}/>
@@ -246,7 +251,7 @@ export function NativeAssistantWorkspace({locale,identityId='',initialPrompt='',
           <div className="native-actions">{(['once','always','reject'] as const).map(reply=><Button key={reply} disabled={acting.has(`/permission/${segment(p.id)}/reply`)} variant="secondary" onClick={()=>void mutate(`/permission/${segment(p.id)}/reply`,{reply})}>{nt(reply)}</Button>)}</div></article>)}
         {questions.filter(q=>q.sessionID===active).map(q=><NativeQuestionForm key={q.id} question={q} t={t} onReply={answers=>mutate(`/question/${segment(q.id)}/reply`,{answers})} onReject={()=>mutate(`/question/${segment(q.id)}/reject`)}/>)}
         {failed.map((item,index)=><div key={index} className="assistant-error"><span>{nt('uncertain')}</span><code dir="ltr">{item.directory}</code><pre>{item.text}</pre><span>{item.files.map(f=>f.name).join(', ')}</span><Button variant="secondary" disabled={Boolean(browserState.get({directory:item.directory,sessionId:item.sessionId}).text||browserState.get({directory:item.directory,sessionId:item.sessionId}).attachments.length)} onClick={()=>{browserState.update({directory:item.directory,sessionId:item.sessionId},{text:item.text,attachments:item.files.map(attachmentFromFile),command:item.command,agent:item.agent,model:item.model});select(item.sessionId,item.directory);setFailed(items=>items.filter((_,i)=>i!==index));}}>{nt('restore')}</Button></div>)}
-      </div>
+      </AssistantTranscript></RichMessageContext.Provider>
       {toolsTab==='terminal'&&workspacePanel}
       <form className="assistant-workspace__composer" onSubmit={send}><div className="assistant-compose-surface">
         {browserState.notice&&<p role="status">{pt(browserState.notice==='conflict'?'storageConflict':'storageUnavailable')}</p>}

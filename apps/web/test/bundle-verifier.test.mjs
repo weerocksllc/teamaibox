@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import {createHash} from 'node:crypto';
 import { execFile } from "node:child_process";
 import { mkdtemp, mkdir, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
@@ -38,6 +39,36 @@ test("bundle verifier covers every reachable split production asset", async () =
   } finally {
     await rm(value.root, { recursive: true });
   }
+});
+
+test('bundle verifier follows bundled math fonts and rejects missing/orphan resources',async()=>{
+  const value=await fixture();
+  try{
+    await writeFile(join(value.assets,'index-a.css'),'@font-face{font-family:Math;src:url(data:font/woff2;base64,AA==)}');
+    await assert.rejects(execute(process.execPath,[verifier.pathname,value.root]),e=>/fonts must be local files/.test(e.stderr));
+    await writeFile(join(value.assets,'index-a.css'),'@font-face{font-family:Math;src:url(/assets/math-a.woff2)}');
+    await assert.rejects(execute(process.execPath,[verifier.pathname,value.root]),e=>/dependency is missing: assets\/math-a.woff2/.test(e.stderr));
+    await writeFile(join(value.assets,'math-a.woff2'),'synthetic-font-fixture');
+    assert.equal(JSON.parse((await execute(process.execPath,[verifier.pathname,value.root])).stdout).assets,4);
+    await writeFile(join(value.assets,'orphan-font.ttf'),'unused');
+    await assert.rejects(execute(process.execPath,[verifier.pathname,value.root]),e=>/unreachable production asset: assets\/orphan-font.ttf/.test(e.stderr));
+  }finally{await rm(value.root,{recursive:true});}
+});
+
+test('compiler runtime receipt never exempts ordinary chunks and binds exact emitted bytes',async()=>{
+  const value=await fixture();
+  try{
+    const code='export const helper=true;';const file='assets/rolldown-runtime-test.js';
+    await writeFile(join(value.assets,'panel-b.js'),'import "./rolldown-runtime-test.js";export const panel="ready";');
+    await writeFile(join(value.root,file),code);
+    const asset={file,kind:'rolldown-runtime',sha256:createHash('sha256').update(code).digest('hex'),modules:['\0rolldown/runtime.js']};
+    await writeFile(join(value.root,'generated-runtime.json'),JSON.stringify({version:1,assets:[asset]}));
+    assert.equal(JSON.parse((await execute(process.execPath,[verifier.pathname,value.root])).stdout).compilerRuntimeAssets,1);
+    await writeFile(join(value.root,file),code+'changed');
+    await assert.rejects(execute(process.execPath,[verifier.pathname,value.root]),e=>/Generated runtime digest mismatch/.test(e.stderr));
+    await writeFile(join(value.root,'generated-runtime.json'),JSON.stringify({version:1,assets:[{...asset,modules:['/src/product.ts']}]}));
+    await assert.rejects(execute(process.execPath,[verifier.pathname,value.root]),e=>/Invalid generated runtime identity/.test(e.stderr));
+  }finally{await rm(value.root,{recursive:true});}
 });
 
 test("bundle verifier rejects an unreachable emitted chunk", async () => {

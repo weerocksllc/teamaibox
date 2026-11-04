@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "inputSha256": {
-    "pnpm-lock.yaml": "3fe7996c44b60851573c96f0b0d9f1652ad4dad1e802c2e8dabbb95a880bd7f4",
+    "pnpm-lock.yaml": "e119542b7b39ccb2c9a9060938b8f728abe149e2d35b9142770acf20e7dd5edb",
     "services/drawing-worker/requirements.txt": "8a2b630a57beb83bc271c38650b3093f4508958aa5acc2ca0d73b26f2565643e",
     "services/node-agent/go.mod": "3432ef80a6e695c0d3693b70f592b02ae3664f95563cd302953d8580694f31fc",
     "services/ocr-worker/requirements.txt": "3937656bcfd92c79a05c60a60205d6010091e5fb1e7c6dd588a1dd5390632cfc",
@@ -9,6 +9,76 @@
     "services/translation-provider-adapter/go.mod": "de1a93b7d8a9d0c87406311d26f815235800fc5014ac1fe74ae631007d881453"
   },
   "dependencies": [
+    {
+      "ecosystem": "npm",
+      "name": "@antfu/install-pkg",
+      "version": "2.1.0",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "@braintree/sanitize-url",
+      "version": "7.1.2",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "@chevrotain/cst-dts-gen",
+      "version": "13.2.0",
+      "license": "Apache-2.0",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "@chevrotain/gast",
+      "version": "13.2.0",
+      "license": "Apache-2.0",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "@chevrotain/regexp-to-ast",
+      "version": "13.2.0",
+      "license": "Apache-2.0",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "@chevrotain/types",
+      "version": "13.2.0",
+      "license": "Apache-2.0",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "@chevrotain/utils",
+      "version": "13.2.0",
+      "license": "Apache-2.0",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "@iconify/types",
+      "version": "2.0.0",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "@iconify/utils",
+      "version": "3.1.7",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "@mermaid-js/parser",
+      "version": "2.0.1",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
     {
       "ecosystem": "npm",
       "name": "@oxc-project/types",
@@ -123,6 +193,286 @@
     },
     {
       "ecosystem": "npm",
+      "name": "@streamdown/math",
+      "version": "1.0.3",
+      "license": "Apache-2.0",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "@types/d3",
+      "version": "7.4.3",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "@types/d3-array",
+      "version": "3.2.2",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "@types/d3-axis",
+      "version": "3.0.6",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "@types/d3-brush",
+      "version": "3.0.6",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "@types/d3-chord",
+      "version": "3.0.6",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "@types/d3-color",
+      "version": "3.1.3",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "@types/d3-contour",
+      "version": "3.0.6",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "@types/d3-delaunay",
+      "version": "6.0.4",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "@types/d3-dispatch",
+      "version": "3.0.7",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "@types/d3-drag",
+      "version": "3.0.7",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "@types/d3-dsv",
+      "version": "3.0.7",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "@types/d3-ease",
+      "version": "3.0.2",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "@types/d3-fetch",
+      "version": "3.0.7",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "@types/d3-force",
+      "version": "3.0.10",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "@types/d3-format",
+      "version": "3.0.4",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "@types/d3-geo",
+      "version": "3.1.1",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "@types/d3-hierarchy",
+      "version": "3.1.7",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "@types/d3-interpolate",
+      "version": "3.0.4",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "@types/d3-path",
+      "version": "3.1.1",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "@types/d3-polygon",
+      "version": "3.0.2",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "@types/d3-quadtree",
+      "version": "3.0.6",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "@types/d3-random",
+      "version": "3.0.4",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "@types/d3-scale",
+      "version": "4.0.9",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "@types/d3-scale-chromatic",
+      "version": "3.1.0",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "@types/d3-selection",
+      "version": "3.0.12",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "@types/d3-shape",
+      "version": "3.2.0",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "@types/d3-time",
+      "version": "3.0.4",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "@types/d3-time-format",
+      "version": "4.0.3",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "@types/d3-timer",
+      "version": "3.0.2",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "@types/d3-transition",
+      "version": "3.0.9",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "@types/d3-zoom",
+      "version": "3.0.9",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "@types/debug",
+      "version": "4.1.13",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "@types/estree",
+      "version": "1.0.10",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "@types/estree-jsx",
+      "version": "1.0.5",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "@types/geojson",
+      "version": "7946.0.16",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "@types/hast",
+      "version": "3.0.5",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "@types/katex",
+      "version": "0.16.8",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "@types/mdast",
+      "version": "4.0.4",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "@types/ms",
+      "version": "2.1.0",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
       "name": "@types/react",
       "version": "19.2.18",
       "license": "MIT",
@@ -132,6 +482,34 @@
       "ecosystem": "npm",
       "name": "@types/react-dom",
       "version": "19.2.4",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "@types/repeat-string",
+      "version": "1.6.5",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "@types/trusted-types",
+      "version": "2.0.7",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "@types/unist",
+      "version": "2.0.11",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "@types/unist",
+      "version": "3.0.3",
       "license": "MIT",
       "evidence": "installed package.json at locked version"
     },
@@ -277,8 +655,141 @@
     },
     {
       "ecosystem": "npm",
+      "name": "@ungap/structured-clone",
+      "version": "1.4.0",
+      "license": "ISC",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "@upsetjs/venn.js",
+      "version": "2.0.0",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
       "name": "@vitejs/plugin-react",
       "version": "6.0.5",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "@xterm/addon-fit",
+      "version": "0.11.0",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "@xterm/xterm",
+      "version": "6.0.0",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "ajv",
+      "version": "8.17.1",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "bail",
+      "version": "2.0.2",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "ccount",
+      "version": "2.0.1",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "character-entities",
+      "version": "2.0.2",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "character-entities-html4",
+      "version": "2.1.0",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "character-entities-legacy",
+      "version": "3.0.0",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "character-reference-invalid",
+      "version": "2.0.1",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "chevrotain",
+      "version": "13.2.0",
+      "license": "Apache-2.0",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "clsx",
+      "version": "2.1.1",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "comma-separated-tokens",
+      "version": "2.0.3",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "commander",
+      "version": "15.0.0",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "commander",
+      "version": "7.0.0",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "commander",
+      "version": "8.3.0",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "cose-base",
+      "version": "1.0.3",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "cose-base",
+      "version": "2.2.0",
       "license": "MIT",
       "evidence": "installed package.json at locked version"
     },
@@ -291,9 +802,436 @@
     },
     {
       "ecosystem": "npm",
+      "name": "cytoscape",
+      "version": "3.34.4",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "cytoscape-cose-bilkent",
+      "version": "4.1.0",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "cytoscape-fcose",
+      "version": "2.2.0",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "d3",
+      "version": "7.9.0",
+      "license": "ISC",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "d3-array",
+      "version": "1.0.0",
+      "license": "BSD-3-Clause",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "d3-array",
+      "version": "3.0.0",
+      "license": "ISC",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "d3-array",
+      "version": "3.2.0",
+      "license": "ISC",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "d3-axis",
+      "version": "3.0.0",
+      "license": "ISC",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "d3-brush",
+      "version": "3.0.0",
+      "license": "ISC",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "d3-chord",
+      "version": "3.0.0",
+      "license": "ISC",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "d3-color",
+      "version": "1.0.0",
+      "license": "BSD-3-Clause",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "d3-color",
+      "version": "3.0.0",
+      "license": "ISC",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "d3-contour",
+      "version": "4.0.0",
+      "license": "ISC",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "d3-delaunay",
+      "version": "6.0.0",
+      "license": "ISC",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "d3-dispatch",
+      "version": "1.0.0",
+      "license": "BSD-3-Clause",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "d3-dispatch",
+      "version": "3.0.0",
+      "license": "ISC",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "d3-drag",
+      "version": "3.0.0",
+      "license": "ISC",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "d3-dsv",
+      "version": "3.0.0",
+      "license": "ISC",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "d3-ease",
+      "version": "1.0.0",
+      "license": "BSD-3-Clause",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "d3-ease",
+      "version": "3.0.0",
+      "license": "BSD-3-Clause",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "d3-fetch",
+      "version": "3.0.0",
+      "license": "ISC",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "d3-force",
+      "version": "3.0.0",
+      "license": "ISC",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "d3-format",
+      "version": "3.1.2",
+      "license": "ISC",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "d3-geo",
+      "version": "3.0.0",
+      "license": "ISC",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "d3-hierarchy",
+      "version": "3.0.0",
+      "license": "ISC",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "d3-interpolate",
+      "version": "1.0.0",
+      "license": "BSD-3-Clause",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "d3-interpolate",
+      "version": "3.0.0",
+      "license": "ISC",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "d3-path",
+      "version": "1.0.0",
+      "license": "BSD-3-Clause",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "d3-path",
+      "version": "3.1.1",
+      "license": "ISC",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "d3-polygon",
+      "version": "3.0.2",
+      "license": "ISC",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "d3-quadtree",
+      "version": "3.0.0",
+      "license": "ISC",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "d3-random",
+      "version": "3.0.2",
+      "license": "ISC",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "d3-sankey",
+      "version": "0.12.3",
+      "license": "BSD-3-Clause",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "d3-scale",
+      "version": "4.0.0",
+      "license": "ISC",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "d3-scale-chromatic",
+      "version": "3.0.0",
+      "license": "ISC",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "d3-selection",
+      "version": "3.0.0",
+      "license": "ISC",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "d3-shape",
+      "version": "1.2.0",
+      "license": "BSD-3-Clause",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "d3-shape",
+      "version": "3.0.0",
+      "license": "ISC",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "d3-time",
+      "version": "3.0.0",
+      "license": "ISC",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "d3-time-format",
+      "version": "4.0.0",
+      "license": "ISC",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "d3-timer",
+      "version": "1.0.0",
+      "license": "BSD-3-Clause",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "d3-timer",
+      "version": "3.0.0",
+      "license": "ISC",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "d3-transition",
+      "version": "3.0.0",
+      "license": "ISC",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "d3-transition",
+      "version": "3.0.1",
+      "license": "ISC",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "d3-zoom",
+      "version": "3.0.0",
+      "license": "ISC",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "dagre-d3-es",
+      "version": "7.0.14",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "dayjs",
+      "version": "1.11.23",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "debug",
+      "version": "4.4.3",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "decode-named-character-reference",
+      "version": "1.3.0",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "delaunator",
+      "version": "5.1.0",
+      "license": "ISC",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "dequal",
+      "version": "2.0.3",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
       "name": "detect-libc",
       "version": "2.1.2",
       "license": "Apache-2.0",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "devlop",
+      "version": "1.1.0",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "dompurify",
+      "version": "3.4.17",
+      "license": "(MPL-2.0 OR Apache-2.0)",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "elkjs",
+      "version": "0.9.3",
+      "license": "EPL-2.0",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "entities",
+      "version": "4.3.0",
+      "license": "BSD-2-Clause",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "es-toolkit",
+      "version": "1.53.1",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "escape-string-regexp",
+      "version": "5.0.0",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "estree-util-is-identifier-name",
+      "version": "3.0.0",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "extend",
+      "version": "3.0.2",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "fast-deep-equal",
+      "version": "3.1.3",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "fast-uri",
+      "version": "3.1.9",
+      "license": "BSD-3-Clause",
       "evidence": "installed package.json at locked version"
     },
     {
@@ -308,7 +1246,231 @@
       "name": "fsevents",
       "version": "2.3.3",
       "license": "MIT",
-      "evidence": "https://registry.npmjs.org/fsevents/2.3.3"
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "hachure-fill",
+      "version": "0.5.2",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "hast-util-from-dom",
+      "version": "5.0.1",
+      "license": "ISC",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "hast-util-from-html",
+      "version": "2.0.3",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "hast-util-from-html-isomorphic",
+      "version": "2.0.0",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "hast-util-from-parse5",
+      "version": "8.0.4",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "hast-util-parse-selector",
+      "version": "4.0.0",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "hast-util-raw",
+      "version": "9.1.0",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "hast-util-sanitize",
+      "version": "5.0.2",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "hast-util-to-jsx-runtime",
+      "version": "2.3.7",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "hast-util-to-parse5",
+      "version": "8.0.1",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "hast-util-to-text",
+      "version": "4.0.3",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "hast-util-whitespace",
+      "version": "3.0.0",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "hastscript",
+      "version": "9.0.3",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "highlight.js",
+      "version": "11.12.0",
+      "license": "BSD-3-Clause",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "html-url-attributes",
+      "version": "3.0.1",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "html-void-elements",
+      "version": "3.0.0",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "iconv-lite",
+      "version": "0.6.0",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "import-meta-resolve",
+      "version": "4.2.0",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "inline-style-parser",
+      "version": "0.2.9",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "internmap",
+      "version": "2.0.3",
+      "license": "ISC",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "is-alphabetical",
+      "version": "2.0.1",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "is-alphanumerical",
+      "version": "2.0.1",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "is-decimal",
+      "version": "2.0.1",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "is-hexadecimal",
+      "version": "2.0.1",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "is-plain-obj",
+      "version": "4.1.0",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "json-schema-traverse",
+      "version": "1.0.0",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "jsonc-parser",
+      "version": "3.3.1",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "katex",
+      "version": "0.16.47",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "katex",
+      "version": "0.18.11",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "khroma",
+      "version": "2.1.0",
+      "license": "MIT",
+      "evidence": "khroma@2.1.0 packaged license text (package.json omits license field)"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "layout-base",
+      "version": "1.0.2",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "layout-base",
+      "version": "2.0.1",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
     },
     {
       "ecosystem": "npm",
@@ -396,6 +1558,20 @@
     },
     {
       "ecosystem": "npm",
+      "name": "lodash-es",
+      "version": "4.18.1",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "longest-streak",
+      "version": "3.1.0",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
       "name": "lucide-react",
       "version": "1.30.0",
       "license": "ISC",
@@ -403,8 +1579,393 @@
     },
     {
       "ecosystem": "npm",
+      "name": "markdown-table",
+      "version": "3.0.0",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "marked",
+      "version": "16.3.0",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "marked",
+      "version": "18.1.3",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "mdast-util-find-and-replace",
+      "version": "3.0.4",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "mdast-util-from-markdown",
+      "version": "2.1.0",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "mdast-util-gfm",
+      "version": "3.1.0",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "mdast-util-gfm-autolink-literal",
+      "version": "2.0.1",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "mdast-util-gfm-footnote",
+      "version": "2.1.0",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "mdast-util-gfm-strikethrough",
+      "version": "2.0.1",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "mdast-util-gfm-table",
+      "version": "2.0.0",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "mdast-util-gfm-task-list-item",
+      "version": "2.0.0",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "mdast-util-math",
+      "version": "3.0.0",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "mdast-util-mdx-expression",
+      "version": "2.0.1",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "mdast-util-mdx-jsx",
+      "version": "3.0.0",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "mdast-util-mdxjs-esm",
+      "version": "2.0.1",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "mdast-util-phrasing",
+      "version": "4.1.0",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "mdast-util-to-hast",
+      "version": "13.2.1",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "mdast-util-to-markdown",
+      "version": "2.2.1",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "mdast-util-to-string",
+      "version": "4.0.0",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "mermaid",
+      "version": "12.2.0",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "micromark",
+      "version": "4.0.3",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "micromark-core-commonmark",
+      "version": "2.0.4",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "micromark-extension-gfm",
+      "version": "3.0.0",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "micromark-extension-gfm-autolink-literal",
+      "version": "2.1.0",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "micromark-extension-gfm-footnote",
+      "version": "2.1.0",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "micromark-extension-gfm-strikethrough",
+      "version": "2.1.0",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "micromark-extension-gfm-table",
+      "version": "2.1.2",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "micromark-extension-gfm-tagfilter",
+      "version": "2.0.0",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "micromark-extension-gfm-task-list-item",
+      "version": "2.1.0",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "micromark-extension-math",
+      "version": "3.1.0",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "micromark-factory-destination",
+      "version": "2.0.0",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "micromark-factory-label",
+      "version": "2.0.0",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "micromark-factory-space",
+      "version": "2.1.0",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "micromark-factory-title",
+      "version": "2.0.0",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "micromark-factory-whitespace",
+      "version": "2.0.0",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "micromark-util-character",
+      "version": "2.0.0",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "micromark-util-chunked",
+      "version": "2.0.0",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "micromark-util-classify-character",
+      "version": "2.0.0",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "micromark-util-combine-extensions",
+      "version": "2.0.0",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "micromark-util-decode-numeric-character-reference",
+      "version": "2.0.0",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "micromark-util-decode-string",
+      "version": "2.0.1",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "micromark-util-edit-map",
+      "version": "1.0.0",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "micromark-util-encode",
+      "version": "2.0.0",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "micromark-util-html-tag-name",
+      "version": "2.0.0",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "micromark-util-normalize-identifier",
+      "version": "2.0.0",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "micromark-util-resolve-all",
+      "version": "2.0.0",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "micromark-util-sanitize-uri",
+      "version": "2.0.0",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "micromark-util-subtokenize",
+      "version": "2.0.0",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "micromark-util-symbol",
+      "version": "2.0.0",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "micromark-util-types",
+      "version": "2.0.3",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "ms",
+      "version": "2.1.3",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
       "name": "nanoid",
       "version": "3.3.18",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "package-manager-detector",
+      "version": "1.9.0",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "parse-entities",
+      "version": "4.0.2",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "parse5",
+      "version": "7.0.0",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "path-data-parser",
+      "version": "0.1.0",
       "license": "MIT",
       "evidence": "installed package.json at locked version"
     },
@@ -420,7 +1981,7 @@
       "name": "pg-cloudflare",
       "version": "1.4.0",
       "license": "MIT",
-      "evidence": "https://registry.npmjs.org/pg-cloudflare/1.4.0"
+      "evidence": "installed package.json at locked version"
     },
     {
       "ecosystem": "npm",
@@ -480,6 +2041,20 @@
     },
     {
       "ecosystem": "npm",
+      "name": "points-on-curve",
+      "version": "0.2.0",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "points-on-path",
+      "version": "0.2.1",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
       "name": "postcss",
       "version": "8.5.26",
       "license": "MIT",
@@ -515,6 +2090,13 @@
     },
     {
       "ecosystem": "npm",
+      "name": "property-information",
+      "version": "7.2.0",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
       "name": "react",
       "version": "19.2.8",
       "license": "MIT",
@@ -529,8 +2111,120 @@
     },
     {
       "ecosystem": "npm",
+      "name": "rehype-harden",
+      "version": "1.1.8",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "rehype-katex",
+      "version": "7.0.1",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "rehype-raw",
+      "version": "7.0.0",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "rehype-sanitize",
+      "version": "6.0.0",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "remark-gfm",
+      "version": "4.0.1",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "remark-math",
+      "version": "6.0.0",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "remark-parse",
+      "version": "11.0.0",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "remark-rehype",
+      "version": "11.1.2",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "remark-stringify",
+      "version": "11.0.0",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "remend",
+      "version": "1.4.0",
+      "license": "Apache-2.0",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "repeat-string",
+      "version": "1.6.1",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "require-from-string",
+      "version": "2.0.2",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "robust-predicates",
+      "version": "3.0.3",
+      "license": "Unlicense",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
       "name": "rolldown",
       "version": "1.2.3",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "roughjs",
+      "version": "4.6.6",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "rw",
+      "version": "1.3.3",
+      "license": "BSD-3-Clause",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "safer-buffer",
+      "version": "2.1.2",
       "license": "MIT",
       "evidence": "installed package.json at locked version"
     },
@@ -550,6 +2244,13 @@
     },
     {
       "ecosystem": "npm",
+      "name": "space-separated-tokens",
+      "version": "2.0.2",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
       "name": "split2",
       "version": "4.2.0",
       "license": "ISC",
@@ -557,8 +2258,71 @@
     },
     {
       "ecosystem": "npm",
+      "name": "streamdown",
+      "version": "2.7.1",
+      "license": "Apache-2.0",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "stringify-entities",
+      "version": "4.0.4",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "style-to-object",
+      "version": "2.0.2",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "stylis",
+      "version": "4.4.0",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "tailwind-merge",
+      "version": "3.7.0",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "tinyexec",
+      "version": "1.3.1",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
       "name": "tinyglobby",
       "version": "0.2.17",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "trim-lines",
+      "version": "3.0.1",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "trough",
+      "version": "2.2.0",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "ts-dedent",
+      "version": "2.3.0",
       "license": "MIT",
       "evidence": "installed package.json at locked version"
     },
@@ -571,8 +2335,99 @@
     },
     {
       "ecosystem": "npm",
+      "name": "unified",
+      "version": "11.0.0",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "unified",
+      "version": "11.0.5",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "unist-util-is",
+      "version": "6.0.1",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "unist-util-position",
+      "version": "5.0.0",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "unist-util-remove-position",
+      "version": "5.0.0",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "unist-util-stringify-position",
+      "version": "4.0.0",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "unist-util-visit",
+      "version": "5.2.0",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "unist-util-visit-parents",
+      "version": "6.1.0",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "uuid",
+      "version": "14.0.3",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "vfile",
+      "version": "6.0.3",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "vfile-location",
+      "version": "5.0.3",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "vfile-message",
+      "version": "4.0.3",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
       "name": "vite",
       "version": "8.2.1",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "web-namespaces",
+      "version": "2.0.1",
       "license": "MIT",
       "evidence": "installed package.json at locked version"
     },
@@ -587,6 +2442,13 @@
       "ecosystem": "npm",
       "name": "xtend",
       "version": "4.0.2",
+      "license": "MIT",
+      "evidence": "installed package.json at locked version"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "zwitch",
+      "version": "2.0.4",
       "license": "MIT",
       "evidence": "installed package.json at locked version"
     },
@@ -697,7 +2559,7 @@
     }
   ],
   "coverage": {
-    "npmLocked": 83,
+    "npmLocked": 349,
     "unknownLicenseMetadata": 0,
     "notCovered": [
       "transitive Python/OS packages inside externally supplied images",

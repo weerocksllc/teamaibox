@@ -21,6 +21,7 @@ import {createNativeTransport} from '../../../services/agent-bridge/src/opencode
 import {supportedLocaleCodes} from '../../../packages/ui-system/src/locale-registry.mjs';
 import {OpenCodeBridgeClient} from '../../../services/agent-bridge/src/opencode-bridge-client.mjs';
 import {runProjectExperience} from './project-experience-browser.mjs';
+import {runRichMessages} from './rich-messages-browser.mjs';
 
 const image=process.env.NATIVE_CANDIDATE_IMAGE,playwright=process.env.NATIVE_PLAYWRIGHT;
 if(!image||!playwright)throw Error('Set local NATIVE_CANDIDATE_IMAGE and NATIVE_PLAYWRIGHT paths');
@@ -34,8 +35,8 @@ const checks=[],errors=[];
 const platformSockets=new Set();
 const requestedPhase=process.env.NATIVE_BROWSER_PHASE??'all';
 const phase=requestedPhase==='oauth-revoke'?'oauth':['raw-settings','project-settings','project-settings-recovery','tool-catalog','session-shell','git-changes','message-edit','message-layout','terminal-shell','session-index','session-index-layout','runtime-final','queue-view'].includes(requestedPhase)?'runtime-settings':requestedPhase;
-const production=['product-route','oauth','extensions','customization','mcp-settings','context','interactions','lost-receipt','tools','files-revert','providers','appearance','sessions','composer','projects','runtime-settings','transfer','worktrees','channel-isolation'].includes(phase)||(phase==='project-experience'&&process.env.NATIVE_EXPERIENCE_PRODUCTION==='1');
-assert.ok(['project-experience','all','terminal-layout','product-route','oauth','extensions','customization','mcp-settings','context','interactions','lost-receipt','tools','files-revert','providers','appearance','sessions','composer','projects','runtime-settings','transfer','worktrees','channel-isolation'].includes(phase));
+const production=['rich-messages','product-route','oauth','extensions','customization','mcp-settings','context','interactions','lost-receipt','tools','files-revert','providers','appearance','sessions','composer','projects','runtime-settings','transfer','worktrees','channel-isolation'].includes(phase)||(phase==='project-experience'&&process.env.NATIVE_EXPERIENCE_PRODUCTION==='1');
+assert.ok(['rich-messages','project-experience','all','terminal-layout','product-route','oauth','extensions','customization','mcp-settings','context','interactions','lost-receipt','tools','files-revert','providers','appearance','sessions','composer','projects','runtime-settings','transfer','worktrees','channel-isolation'].includes(phase));
 try{
   const reserve=createTcpServer();await new Promise(r=>reserve.listen(0,'127.0.0.1',r));
   const port=reserve.address().port;await new Promise(r=>reserve.close(r));
@@ -54,7 +55,7 @@ try{
     const resource={name,container:false,volume:false};resources.push(resource);
     docker('volume','create','--label',`${label}=${run}`,name);resource.volume=true;
     docker('run','--rm','--pull=never','--label',`${label}=${run}`,'--user','0:0','--network','none','--mount',`type=volume,source=${name},target=/workspace`,'--entrypoint','sh',image,'-c','mkdir -p /workspace/.teamaibox/config/opencode; chown -R 65532:65532 /workspace');
-    if(['customization','providers'].includes(phase))docker('run','--rm','--pull=never','--label',`${label}=${run}`,'--user','65532:65532','--network','none','--read-only','--mount',`type=volume,source=${name},target=/workspace`,'--entrypoint','node',image,'--input-type=module','-e',"import {seedNativeExtensionRuntime} from '/opt/teamaibox/services/agent-bridge/src/native-extension-seed.mjs';await seedNativeExtensionRuntime('/opt/opencode/native-extensions','/workspace/.teamaibox/config/opencode');");
+    if(['customization','providers','rich-messages'].includes(phase))docker('run','--rm','--pull=never','--label',`${label}=${run}`,'--user','65532:65532','--network','none','--read-only','--mount',`type=volume,source=${name},target=/workspace`,'--entrypoint','node',image,'--input-type=module','-e',"import {seedNativeExtensionRuntime} from '/opt/teamaibox/services/agent-bridge/src/native-extension-seed.mjs';await seedNativeExtensionRuntime('/opt/opencode/native-extensions','/workspace/.teamaibox/config/opencode');");
     docker('run','-d','--pull=never','--name',name,'--label',`${label}=${run}`,'--user','65532:65532','--read-only','--cap-drop=ALL','--security-opt=no-new-privileges','--mount',`type=volume,source=${name},target=/workspace`,
       '--tmpfs','/tmp:rw,nosuid,nodev,noexec,size=256m','--tmpfs','/run/opencode-native:rw,nosuid,nodev,exec,size=64m,uid=65532,gid=65532,mode=0700','-p','127.0.0.1::4096',
       ...(phase==='oauth'?['-p','127.0.0.1::4101']:[]),
@@ -81,7 +82,7 @@ try{
     if(phase==='projects')docker('exec',name,'node','-e',"const fs=require('fs');fs.mkdirSync('/workspace/blank',{recursive:true});fs.writeFileSync('/workspace/blank/retained.txt','Preserved synthetic content\\n');");
     const config={model:'synthetic/example',small_model:'synthetic/example',provider:{synthetic:{npm:'@ai-sdk/openai-compatible',options:{baseURL:'http://127.0.0.1:4100/v1',apiKey:'synthetic-not-a-credential'},models:{example:{name:'Synthetic',limit:{context:32000,output:2000}}}}},mcp:{synthetic:{type:'local',command:['node','/workspace/synthetic-services.mjs','mcp'],enabled:true}}};
     if(requestedPhase==='tool-catalog'&&identity.id===owner.id)config.mcp.synthetic.command.push('resources');
-    if(['extensions','customization','mcp-settings','context','lost-receipt','tools','files-revert','providers','sessions','composer','transfer'].includes(phase))config.mcp={};
+    if(['extensions','customization','mcp-settings','context','lost-receipt','tools','files-revert','providers','sessions','composer','transfer','rich-messages'].includes(phase))config.mcp={};
     if(phase==='providers'&&identity.id===owner.id){
       docker('cp',fileURLToPath(new URL('../../../services/agent-bridge/test/fixtures/native-provider-plugin.mjs',import.meta.url)),name+':/workspace/synthetic-provider-plugin.mjs');
       config.plugin=['file:///workspace/synthetic-provider-plugin.mjs'];
@@ -138,8 +139,10 @@ try{
   const externalRequests=[];
   await context.route(url=>url.hostname!=='127.0.0.1',route=>{externalRequests.push(route.request().url());return route.abort();});
   await page.goto(origin+(production?'/apps/assistant':'/test/fixtures/native-assistant.html'));
-  await page.locator(phase==='project-experience'?'.assistant-project-home':'.assistant-compose-input').waitFor();
-  if(requestedPhase==='project-experience'){
+  await page.locator(['project-experience','rich-messages'].includes(phase)?'.assistant-project-home':'.assistant-compose-input').waitFor();
+  if(requestedPhase==='rich-messages'){
+    await runRichMessages({page,context,routes,owner,second,origin,checks,errors,evidence,docker,resources,login,externalRequests});
+  }else if(requestedPhase==='project-experience'){
     await runProjectExperience({page,context,routes,owner,second,origin,checks,errors,evidence,docker,resources,login});
   }else if(requestedPhase==='session-index-layout'){
     await page.getByRole('button',{name:'Find conversations',exact:true}).click();const panel=page.locator('.native-session-index');await panel.getByText('No conversations found',{exact:true}).waitFor();

@@ -1,0 +1,5 @@
+{
+  "remark-math@6.0.0": {"file":"remark-math-license.txt","source":"https://github.com/remarkjs/remark-math/blob/d5d0660b150810a535bbb07eac6cc96a4510aa24/license"},
+  "rehype-katex@7.0.1": {"file":"rehype-katex-license.txt","source":"https://github.com/remarkjs/remark-math/blob/88a9497e1ede93b958237c85edbf5651faeca7af/license"},
+  "micromark@2.0.0-family": {"file":"micromark-license.txt","source":"https://github.com/micromark/micromark/blob/0d1a06707ffa59d9ac21f93b17e54e03df4cd6a0/license"}
+}
