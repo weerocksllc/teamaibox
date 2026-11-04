@@ -4,14 +4,22 @@ The Assistant is part of the existing Team AI Box web application. It does not
 download or embed OpenCode's Web GUI. React, xterm.js, fonts, application assets
 and their notices are included in the web image.
 
-From the repository root, build the affected images using the public recipes:
+From the repository root, build all affected service and runtime image roles
+using the public builder. Choose a new output directory:
 
 ```sh
-docker build -f deploy/images/web.Dockerfile -t teamaibox-web:local .
-docker build -f deploy/agent/AgentSandbox.Dockerfile -t teamaibox-agent:local .
+assistant_build_dir=$(mktemp -d)
+python3 install/build_public_services.py \
+  --output "$assistant_build_dir/images" \
+  --roles platform-api web node-agent agent-bridge agent-sandbox
 ```
 
-These recipes install locked build dependencies. The Agent recipe verifies the
+The builder records exact ARM64 image IDs and the source commit in `images.json`.
+These are affected-role build results, not a complete offline package or an
+upgrade command. Follow the root README's installation workflow to prepare a
+complete distribution. Do not run a fresh installer over existing user data.
+
+The recipes install locked build dependencies. The Agent recipe verifies the
 fixed upstream ARM64 archive before extraction. It includes OpenCode 1.19.5 and
 the matching native plugin SDK; it does not patch the upstream execution engine.
 The installer uses these same image roles. Building from source needs access to

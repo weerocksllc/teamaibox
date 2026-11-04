@@ -1,6 +1,6 @@
 # Native Assistant capability map — OpenCode 1.19.5
 
-Implementation target, **not an activated or accepted release**. Local image recipes and the bridge now select 1.19.5 after isolated native compatibility checks; deployed boxes are unchanged. The 1.18.16 adapter remains available for historical consumers. This document describes developer integration work, not product marketing copy.
+The React Assistant and runtime recipes use the pinned OpenCode 1.19.5 contract below. The 1.18.16 adapter remains available for historical consumers. Installation-specific release qualification uses the current source-bound gate described in the build guide; an older deployment is not upgraded merely by reading this document.
 
 ## Source contract
 
@@ -14,7 +14,7 @@ Implementation target, **not an activated or accepted release**. Local image rec
 
 ## Compatibility with 1.18.16
 
-The old bridge protocol remains available for existing history and callers. The new transport forwards native request bodies and SSE frames without converting them to platform runs or retrying a lost prompt. It is a candidate transport, not proof of every native endpoint.
+The old bridge protocol remains available for existing history and callers. The native transport forwards request bodies and SSE frames without converting them to platform runs or retrying a lost prompt. The supported product entry points and upstream limitations are listed below; the API inventory is not a claim that every endpoint is a separate supported feature.
 
 Source comparison of upstream migration directories found no change under `packages/opencode/migration`; one change under `packages/core/src/database/migration/20260410174513_workspace-name.ts` handles an existing workspace table without a name column. Local Docker acceptance now verifies synthetic 1.18.16 sessions, files, commands and Skills reopening in 1.19.5, independent user volumes, and recreation with retained state. A real native synthetic model/MCP call, once permission, managed/user configuration merge and PTY output through the product transport also passed. This does not establish in-place downgrade safety, full React acceptance or appliance deployment. Do not downgrade an upgraded database in place or change existing box data for this work.
 
@@ -55,7 +55,7 @@ owner-wide search/pagination and archived-history opening, runtime paths,
 byte-exact raw-patch download and individual history edits. Search does not
 implement a new session index; native cursors/order and their limits are retained.
 
-Two boundaries remain distinct from those passed local flows:
+The following boundaries remain explicit:
 
 - **Unimplemented experimental v2 conversation mode:** separate session/event
   store, delivery semantics and configuration/policy path. Native v2 shell,
