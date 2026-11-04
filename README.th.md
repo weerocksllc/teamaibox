@@ -30,6 +30,16 @@
 
 [ธีมสว่าง](docs/assets/screenshots/th/workbench-light.jpg) · [ธีมมืด](docs/assets/screenshots/th/workbench-dark.jpg)
 
+### ผู้ช่วย AI — บทสนทนาตัวอย่าง
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/assets/screenshots/th/assistant-dark.jpg">
+  <source media="(prefers-color-scheme: light)" srcset="docs/assets/screenshots/th/assistant-light.jpg">
+  <img src="docs/assets/screenshots/th/assistant-light.jpg" alt="ผู้ช่วย AI — บทสนทนาตัวอย่าง" width="1280" loading="lazy">
+</picture>
+
+[ธีมสว่าง](docs/assets/screenshots/th/assistant-light.jpg) · [ธีมมืด](docs/assets/screenshots/th/assistant-dark.jpg)
+
 <a id="features"></a>
 
 ## รายการคุณสมบัติทั้งหมด

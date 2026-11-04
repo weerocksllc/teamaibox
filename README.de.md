@@ -30,6 +30,16 @@
 
 [Helles Design](docs/assets/screenshots/de/workbench-light.jpg) · [Dunkles Design](docs/assets/screenshots/de/workbench-dark.jpg)
 
+### KI-Assistent — Demounterhaltung
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/assets/screenshots/de/assistant-dark.jpg">
+  <source media="(prefers-color-scheme: light)" srcset="docs/assets/screenshots/de/assistant-light.jpg">
+  <img src="docs/assets/screenshots/de/assistant-light.jpg" alt="KI-Assistent — Demounterhaltung" width="1280" loading="lazy">
+</picture>
+
+[Helles Design](docs/assets/screenshots/de/assistant-light.jpg) · [Dunkles Design](docs/assets/screenshots/de/assistant-dark.jpg)
+
 <a id="features"></a>
 
 ## Vollständige Funktionsübersicht

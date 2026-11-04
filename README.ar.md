@@ -30,6 +30,16 @@
 
 [السمة الفاتحة](docs/assets/screenshots/ar/workbench-light.jpg) · [السمة الداكنة](docs/assets/screenshots/ar/workbench-dark.jpg)
 
+### مساعد الذكاء الاصطناعي — محادثة توضيحية
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/assets/screenshots/ar/assistant-dark.jpg">
+  <source media="(prefers-color-scheme: light)" srcset="docs/assets/screenshots/ar/assistant-light.jpg">
+  <img src="docs/assets/screenshots/ar/assistant-light.jpg" alt="مساعد الذكاء الاصطناعي — محادثة توضيحية" width="1280" loading="lazy">
+</picture>
+
+[السمة الفاتحة](docs/assets/screenshots/ar/assistant-light.jpg) · [السمة الداكنة](docs/assets/screenshots/ar/assistant-dark.jpg)
+
 <a id="features"></a>
 
 ## القائمة الكاملة للميزات

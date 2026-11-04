@@ -30,6 +30,16 @@
 
 [Светлая тема](docs/assets/screenshots/ru/workbench-light.jpg) · [Тёмная тема](docs/assets/screenshots/ru/workbench-dark.jpg)
 
+### ИИ-помощник — демонстрационный диалог
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/assets/screenshots/ru/assistant-dark.jpg">
+  <source media="(prefers-color-scheme: light)" srcset="docs/assets/screenshots/ru/assistant-light.jpg">
+  <img src="docs/assets/screenshots/ru/assistant-light.jpg" alt="ИИ-помощник — демонстрационный диалог" width="1280" loading="lazy">
+</picture>
+
+[Светлая тема](docs/assets/screenshots/ru/assistant-light.jpg) · [Тёмная тема](docs/assets/screenshots/ru/assistant-dark.jpg)
+
 <a id="features"></a>
 
 ## Полный список возможностей

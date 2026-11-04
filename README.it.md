@@ -30,6 +30,16 @@
 
 [Tema chiaro](docs/assets/screenshots/it/workbench-light.jpg) · [Tema scuro](docs/assets/screenshots/it/workbench-dark.jpg)
 
+### Assistente IA — conversazione dimostrativa
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/assets/screenshots/it/assistant-dark.jpg">
+  <source media="(prefers-color-scheme: light)" srcset="docs/assets/screenshots/it/assistant-light.jpg">
+  <img src="docs/assets/screenshots/it/assistant-light.jpg" alt="Assistente IA — conversazione dimostrativa" width="1280" loading="lazy">
+</picture>
+
+[Tema chiaro](docs/assets/screenshots/it/assistant-light.jpg) · [Tema scuro](docs/assets/screenshots/it/assistant-dark.jpg)
+
 <a id="features"></a>
 
 ## Elenco completo delle funzionalità

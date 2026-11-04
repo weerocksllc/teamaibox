@@ -30,6 +30,16 @@
 
 [हल्की थीम](docs/assets/screenshots/hi/workbench-light.jpg) · [गहरी थीम](docs/assets/screenshots/hi/workbench-dark.jpg)
 
+### AI सहायक — डेमो बातचीत
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/assets/screenshots/hi/assistant-dark.jpg">
+  <source media="(prefers-color-scheme: light)" srcset="docs/assets/screenshots/hi/assistant-light.jpg">
+  <img src="docs/assets/screenshots/hi/assistant-light.jpg" alt="AI सहायक — डेमो बातचीत" width="1280" loading="lazy">
+</picture>
+
+[हल्की थीम](docs/assets/screenshots/hi/assistant-light.jpg) · [गहरी थीम](docs/assets/screenshots/hi/assistant-dark.jpg)
+
 <a id="features"></a>
 
 ## सुविधाओं की पूरी सूची

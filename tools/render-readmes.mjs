@@ -11,6 +11,7 @@ const filename=code=>code==='en'?'README.md':`README.${code}.md`;
 const languages=[...localeDefinitions].sort((a,b)=>a.code==='en'?-1:b.code==='en'?1:0);
 const languageLinks=languages.map(l=>`[${l.name}](${filename(l.code)})`).join(' · ');
 const sparkCopy=JSON.parse(await fs.readFile(path.join(root,'docs/readme-locales/dgx-spark.json'),'utf8'));
+const assistantGallery=JSON.parse(await fs.readFile(path.join(root,'docs/readme-locales/assistant-gallery.json'),'utf8'));
 const escape=s=>s.replaceAll('&','&amp;').replaceAll('"','&quot;').replaceAll('<','&lt;');
 const keys=['intro','whyTitle','why','screensTitle','light','dark','installTitle','requirements','installExplanation','resumeTitle','resume','firstTitle','first','limitsTitle','limits','contributeTitle','contribute','resourcesTitle','resources'];
 for(const locale of languages){
@@ -22,6 +23,9 @@ for(const locale of languages){
   if(t.first.length!==4||t.resources.length!==6)throw new Error(`${locale.code}: incomplete sections`);
   for(const theme of ['light','dark'])await fs.access(path.join(root,`docs/assets/screenshots/${locale.code}/workbench-${theme}.jpg`));
   const shot=`docs/assets/screenshots/${locale.code}/workbench`;
+  const assistantShot=`docs/assets/screenshots/${locale.code}/assistant`;
+  if(!assistantGallery[locale.code])throw new Error(`${locale.code}: missing assistant screenshot label`);
+  for(const theme of ['light','dark'])await fs.access(path.join(root,`${assistantShot}-${theme}.jpg`));
   const links=['install/SOURCE-INSTALL.md','install/README.md','docs/open-source/BUILDING.md','CONTRIBUTING.md','SECURITY.md','THIRD_PARTY_NOTICES.md'];
   const output=localizeLinks(`<!-- Generated from docs/readme-locales/ and docs/readme-features/${locale.code}.json by tools/render-readmes.mjs. -->
 # ${spark.readmeTitle}
@@ -51,6 +55,16 @@ ${t.why.map(x=>`- ${x}`).join('\n')}
 </picture>
 
 [${t.light}](${shot}-light.jpg) · [${t.dark}](${shot}-dark.jpg)
+
+### ${assistantGallery[locale.code]}
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="${assistantShot}-dark.jpg">
+  <source media="(prefers-color-scheme: light)" srcset="${assistantShot}-light.jpg">
+  <img src="${assistantShot}-light.jpg" alt="${escape(assistantGallery[locale.code])}" width="1280" loading="lazy">
+</picture>
+
+[${t.light}](${assistantShot}-light.jpg) · [${t.dark}](${assistantShot}-dark.jpg)
 
 ${renderFeatureChecklist(featureCopy)}
 
@@ -117,4 +131,4 @@ ${links.map((link,i)=>`- [${t.resources[i]}](${link})`).join('\n')}
   if(check){if(await fs.readFile(target,'utf8')!==output)throw new Error(`${filename(locale.code)} is out of date`);}
   else await fs.writeFile(target,output);
 }
-console.log(`${check?'Verified':'Rendered'} ${languages.length} README languages and ${languages.length*2} localized screenshots.`);
+console.log(`${check?'Verified':'Rendered'} ${languages.length} README languages and ${languages.length*4} localized screenshots.`);

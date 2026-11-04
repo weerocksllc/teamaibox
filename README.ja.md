@@ -30,6 +30,16 @@
 
 [ライト表示](docs/assets/screenshots/ja/workbench-light.jpg) · [ダーク表示](docs/assets/screenshots/ja/workbench-dark.jpg)
 
+### AI アシスタント — デモ会話
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/assets/screenshots/ja/assistant-dark.jpg">
+  <source media="(prefers-color-scheme: light)" srcset="docs/assets/screenshots/ja/assistant-light.jpg">
+  <img src="docs/assets/screenshots/ja/assistant-light.jpg" alt="AI アシスタント — デモ会話" width="1280" loading="lazy">
+</picture>
+
+[ライト表示](docs/assets/screenshots/ja/assistant-light.jpg) · [ダーク表示](docs/assets/screenshots/ja/assistant-dark.jpg)
+
 <a id="features"></a>
 
 ## 全機能チェックリスト

@@ -30,6 +30,16 @@
 
 [Light screenshot](docs/assets/screenshots/en/workbench-light.jpg) · [Dark screenshot](docs/assets/screenshots/en/workbench-dark.jpg)
 
+### AI assistant — demo conversation
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/assets/screenshots/en/assistant-dark.jpg">
+  <source media="(prefers-color-scheme: light)" srcset="docs/assets/screenshots/en/assistant-light.jpg">
+  <img src="docs/assets/screenshots/en/assistant-light.jpg" alt="AI assistant — demo conversation" width="1280" loading="lazy">
+</picture>
+
+[Light screenshot](docs/assets/screenshots/en/assistant-light.jpg) · [Dark screenshot](docs/assets/screenshots/en/assistant-dark.jpg)
+
 <a id="features"></a>
 
 ## Complete feature checklist

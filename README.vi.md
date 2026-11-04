@@ -30,6 +30,16 @@
 
 [Giao diện sáng](docs/assets/screenshots/vi/workbench-light.jpg) · [Giao diện tối](docs/assets/screenshots/vi/workbench-dark.jpg)
 
+### Trợ lý AI — hội thoại minh họa
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/assets/screenshots/vi/assistant-dark.jpg">
+  <source media="(prefers-color-scheme: light)" srcset="docs/assets/screenshots/vi/assistant-light.jpg">
+  <img src="docs/assets/screenshots/vi/assistant-light.jpg" alt="Trợ lý AI — hội thoại minh họa" width="1280" loading="lazy">
+</picture>
+
+[Giao diện sáng](docs/assets/screenshots/vi/assistant-light.jpg) · [Giao diện tối](docs/assets/screenshots/vi/assistant-dark.jpg)
+
 <a id="features"></a>
 
 ## Danh sách đầy đủ các tính năng

@@ -30,6 +30,16 @@
 
 [밝은 화면](docs/assets/screenshots/ko/workbench-light.jpg) · [어두운 화면](docs/assets/screenshots/ko/workbench-dark.jpg)
 
+### AI 어시스턴트 — 데모 대화
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/assets/screenshots/ko/assistant-dark.jpg">
+  <source media="(prefers-color-scheme: light)" srcset="docs/assets/screenshots/ko/assistant-light.jpg">
+  <img src="docs/assets/screenshots/ko/assistant-light.jpg" alt="AI 어시스턴트 — 데모 대화" width="1280" loading="lazy">
+</picture>
+
+[밝은 화면](docs/assets/screenshots/ko/assistant-light.jpg) · [어두운 화면](docs/assets/screenshots/ko/assistant-dark.jpg)
+
 <a id="features"></a>
 
 ## 전체 기능 목록

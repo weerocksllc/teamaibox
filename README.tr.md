@@ -30,6 +30,16 @@
 
 [Açık tema](docs/assets/screenshots/tr/workbench-light.jpg) · [Koyu tema](docs/assets/screenshots/tr/workbench-dark.jpg)
 
+### Yapay zekâ asistanı — demo sohbeti
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/assets/screenshots/tr/assistant-dark.jpg">
+  <source media="(prefers-color-scheme: light)" srcset="docs/assets/screenshots/tr/assistant-light.jpg">
+  <img src="docs/assets/screenshots/tr/assistant-light.jpg" alt="Yapay zekâ asistanı — demo sohbeti" width="1280" loading="lazy">
+</picture>
+
+[Açık tema](docs/assets/screenshots/tr/assistant-light.jpg) · [Koyu tema](docs/assets/screenshots/tr/assistant-dark.jpg)
+
 <a id="features"></a>
 
 ## Tüm özelliklerin kontrol listesi

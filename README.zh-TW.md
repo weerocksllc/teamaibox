@@ -30,6 +30,16 @@
 
 [淺色畫面](docs/assets/screenshots/zh-TW/workbench-light.jpg) · [深色畫面](docs/assets/screenshots/zh-TW/workbench-dark.jpg)
 
+### AI 助手 · 示範對話
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/assets/screenshots/zh-TW/assistant-dark.jpg">
+  <source media="(prefers-color-scheme: light)" srcset="docs/assets/screenshots/zh-TW/assistant-light.jpg">
+  <img src="docs/assets/screenshots/zh-TW/assistant-light.jpg" alt="AI 助手 · 示範對話" width="1280" loading="lazy">
+</picture>
+
+[淺色畫面](docs/assets/screenshots/zh-TW/assistant-light.jpg) · [深色畫面](docs/assets/screenshots/zh-TW/assistant-dark.jpg)
+
 <a id="features"></a>
 
 ## 完整功能清單

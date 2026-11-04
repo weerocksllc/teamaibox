@@ -1,0 +1,245 @@
+{
+  "schemaVersion": 1,
+  "source": "React product interface with localized demonstration messages",
+  "sourceCommit": "5b664aa6",
+  "images": [
+    {
+      "locale": "en",
+      "theme": "dark",
+      "file": "en/assistant-dark.jpg",
+      "bytes": 87459,
+      "sha256": "76a660487247cbc40014661e9d7cd35ec5edf06099ea37ad5ca8e031b4e89eee"
+    },
+    {
+      "locale": "en",
+      "theme": "light",
+      "file": "en/assistant-light.jpg",
+      "bytes": 85796,
+      "sha256": "2385dd3ff4d4316ee8f4bdbddc2810bc937b851c5e409f610ebbf9848eef51ff"
+    },
+    {
+      "locale": "zh-CN",
+      "theme": "dark",
+      "file": "zh-CN/assistant-dark.jpg",
+      "bytes": 79877,
+      "sha256": "5be953f4cf509357eb1a078175cac407e58e22f90f645d3f9df6a452a1474959"
+    },
+    {
+      "locale": "zh-CN",
+      "theme": "light",
+      "file": "zh-CN/assistant-light.jpg",
+      "bytes": 78301,
+      "sha256": "91dfbc70f30a60dc682beccf5a3b6477169c065946f0fa58456b056de4be63ff"
+    },
+    {
+      "locale": "zh-TW",
+      "theme": "dark",
+      "file": "zh-TW/assistant-dark.jpg",
+      "bytes": 81057,
+      "sha256": "74c465f2df72b2adf2821ceed265fe5eb3f488911bf06293f766030768b66b1a"
+    },
+    {
+      "locale": "zh-TW",
+      "theme": "light",
+      "file": "zh-TW/assistant-light.jpg",
+      "bytes": 79606,
+      "sha256": "7b64f13c19b0113869d6d4e842155844c94a7a631203983a05879eef5290c778"
+    },
+    {
+      "locale": "ja",
+      "theme": "dark",
+      "file": "ja/assistant-dark.jpg",
+      "bytes": 87697,
+      "sha256": "5900c4d09d339a0758427b4f9fe5d21c621105499832f20a6ad73849e09bc79b"
+    },
+    {
+      "locale": "ja",
+      "theme": "light",
+      "file": "ja/assistant-light.jpg",
+      "bytes": 85995,
+      "sha256": "3ed23a4ccb0c8ec1bddb747e7be5493907851716d50c729c0b2af65ac4f5564d"
+    },
+    {
+      "locale": "ko",
+      "theme": "dark",
+      "file": "ko/assistant-dark.jpg",
+      "bytes": 80964,
+      "sha256": "50b5520b15d7245fd57c056a8f02a6ab026af4cb734cb0a8b8eb4c74ef71dcd0"
+    },
+    {
+      "locale": "ko",
+      "theme": "light",
+      "file": "ko/assistant-light.jpg",
+      "bytes": 79169,
+      "sha256": "6fc567a4c529df56aef20985b35a932737558dbae80bc70827d5bf122ecc5407"
+    },
+    {
+      "locale": "fr",
+      "theme": "dark",
+      "file": "fr/assistant-dark.jpg",
+      "bytes": 94445,
+      "sha256": "f039f5f5a0c1f48fae3c29e2cb99dca4b2e52dd9ec47524349316faf7b5a85b3"
+    },
+    {
+      "locale": "fr",
+      "theme": "light",
+      "file": "fr/assistant-light.jpg",
+      "bytes": 93035,
+      "sha256": "66dd938c5c8cb97c500e67709b12064843fe6b92906979f6871758910dd20174"
+    },
+    {
+      "locale": "de",
+      "theme": "dark",
+      "file": "de/assistant-dark.jpg",
+      "bytes": 93582,
+      "sha256": "1db75267d732f04f4cdad006bb04b47f12c3002651a8e40356755e78907d9a95"
+    },
+    {
+      "locale": "de",
+      "theme": "light",
+      "file": "de/assistant-light.jpg",
+      "bytes": 92366,
+      "sha256": "bacaebbf484f1a6d6e79bcf5d6258df239590a41193543c9ccc58e0dbdb32320"
+    },
+    {
+      "locale": "es",
+      "theme": "dark",
+      "file": "es/assistant-dark.jpg",
+      "bytes": 94313,
+      "sha256": "9161381efd75357540569cb95580003f346d9c0460d7eb290ddf2291c573ad02"
+    },
+    {
+      "locale": "es",
+      "theme": "light",
+      "file": "es/assistant-light.jpg",
+      "bytes": 92699,
+      "sha256": "7c7748c4a3ac402097f6c1bcdff79a51581156526ff9f1065d18e1d0a53dafc5"
+    },
+    {
+      "locale": "pt-BR",
+      "theme": "dark",
+      "file": "pt-BR/assistant-dark.jpg",
+      "bytes": 93212,
+      "sha256": "c7a6396ed37eb59eec2e0f70b7d628c47ea95adbae7559302cba8c63d2b4bbaf"
+    },
+    {
+      "locale": "pt-BR",
+      "theme": "light",
+      "file": "pt-BR/assistant-light.jpg",
+      "bytes": 91580,
+      "sha256": "1607220135f3ca9d098288438856e6135abac0bfd112901447e77511685c3ebb"
+    },
+    {
+      "locale": "it",
+      "theme": "dark",
+      "file": "it/assistant-dark.jpg",
+      "bytes": 92120,
+      "sha256": "88abbfa7dd29789ceacbf618d2d7d546a3f21d55e89259d810f922ded17b0b4e"
+    },
+    {
+      "locale": "it",
+      "theme": "light",
+      "file": "it/assistant-light.jpg",
+      "bytes": 90653,
+      "sha256": "55e46f9e212354cd43c0b319007f499365164b994162cf86d460ae17e516f496"
+    },
+    {
+      "locale": "ru",
+      "theme": "dark",
+      "file": "ru/assistant-dark.jpg",
+      "bytes": 94691,
+      "sha256": "b44180a9821fcdd7744e7934365d6a3e30142c6172a3b68e6c6735241f772bd8"
+    },
+    {
+      "locale": "ru",
+      "theme": "light",
+      "file": "ru/assistant-light.jpg",
+      "bytes": 92961,
+      "sha256": "2c5303318305df86c2713894fd486836973a6a8d3abba1b1adac2843a115a314"
+    },
+    {
+      "locale": "ar",
+      "theme": "dark",
+      "file": "ar/assistant-dark.jpg",
+      "bytes": 81925,
+      "sha256": "96a83007e835af8a73acb2308b492d30e3b60af0c49da57726b5f7d036751108"
+    },
+    {
+      "locale": "ar",
+      "theme": "light",
+      "file": "ar/assistant-light.jpg",
+      "bytes": 79726,
+      "sha256": "4fdd9cf929f76406b535d80dfb9bb567483161c193834bf36d64f7db82dbb9ba"
+    },
+    {
+      "locale": "hi",
+      "theme": "dark",
+      "file": "hi/assistant-dark.jpg",
+      "bytes": 84595,
+      "sha256": "926a44b6b0df7ed1124b32e7f48263771938bffdfa7443bf824e820a5f9ef149"
+    },
+    {
+      "locale": "hi",
+      "theme": "light",
+      "file": "hi/assistant-light.jpg",
+      "bytes": 83353,
+      "sha256": "882db36e60633477633fe7ab23941f52c46f33aa4177ed0617d5e249a567b7b9"
+    },
+    {
+      "locale": "id",
+      "theme": "dark",
+      "file": "id/assistant-dark.jpg",
+      "bytes": 88025,
+      "sha256": "c41bcf12b9f1582756a042e79abc7c2369619216b85bc97babc66b4dca34a76d"
+    },
+    {
+      "locale": "id",
+      "theme": "light",
+      "file": "id/assistant-light.jpg",
+      "bytes": 86491,
+      "sha256": "aa6c913fffa0d58f022e36db6239b654de5054290b65347d41e72980f7cd15a1"
+    },
+    {
+      "locale": "tr",
+      "theme": "dark",
+      "file": "tr/assistant-dark.jpg",
+      "bytes": 88662,
+      "sha256": "d7678545d9c3cefae04fe4bb267a085c28abe4ec80b3cb24ffbc3fd441f258b2"
+    },
+    {
+      "locale": "tr",
+      "theme": "light",
+      "file": "tr/assistant-light.jpg",
+      "bytes": 87091,
+      "sha256": "469675377fedc7a3a964d9d02f43f1b59b43922d3f855ab367220d45b0351c28"
+    },
+    {
+      "locale": "vi",
+      "theme": "dark",
+      "file": "vi/assistant-dark.jpg",
+      "bytes": 91184,
+      "sha256": "b638d33b098868d903bdf71995a38781e1bc5f02db20d164cd4e08c63ee09b5a"
+    },
+    {
+      "locale": "vi",
+      "theme": "light",
+      "file": "vi/assistant-light.jpg",
+      "bytes": 89525,
+      "sha256": "9ca86373f732752ddcdd777a8bfa130a5e812943dde2da7e4aae87cbcd99302f"
+    },
+    {
+      "locale": "th",
+      "theme": "dark",
+      "file": "th/assistant-dark.jpg",
+      "bytes": 84780,
+      "sha256": "907bb198bfb31d9db1743ce77b886ff22c8b6b4fa1066e8240d2f43063a23ff2"
+    },
+    {
+      "locale": "th",
+      "theme": "light",
+      "file": "th/assistant-light.jpg",
+      "bytes": 83239,
+      "sha256": "55ae760e9dc8de2b894a95a9b57727ff611dbf30cd76970978e9932f9ca6375c"
+    }
+  ]
+}

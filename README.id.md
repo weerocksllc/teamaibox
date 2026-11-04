@@ -30,6 +30,16 @@
 
 [Tema terang](docs/assets/screenshots/id/workbench-light.jpg) · [Tema gelap](docs/assets/screenshots/id/workbench-dark.jpg)
 
+### Asisten AI — percakapan demo
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/assets/screenshots/id/assistant-dark.jpg">
+  <source media="(prefers-color-scheme: light)" srcset="docs/assets/screenshots/id/assistant-light.jpg">
+  <img src="docs/assets/screenshots/id/assistant-light.jpg" alt="Asisten AI — percakapan demo" width="1280" loading="lazy">
+</picture>
+
+[Tema terang](docs/assets/screenshots/id/assistant-light.jpg) · [Tema gelap](docs/assets/screenshots/id/assistant-dark.jpg)
+
 <a id="features"></a>
 
 ## Daftar lengkap fitur
