@@ -10,6 +10,7 @@ RUNTIME_ENTRIES = (
     'install/factory_bootstrap.py', 'install/factory_catalog.py', 'install/factory_recovery.py',
     'install/factory_casting.py', 'install/factory_office_ready.mjs', 'install/factory_owner.mjs',
     'tools/restore_existing_business_volumes.py', 'tools/restore_appliance_frontdoor.py',
+    'tools/restore_appliance_namespace.py',
     'tools/restore_calibrated_office_workers_v3.py', 'tools/appliance_network_identity.py',
     'tools/bootstrap_casting_service.py', 'deploy/android/cuttlefish/phone_usb_host_control.py',
     'deploy/android/cuttlefish/phone-seccomp.json', 'deploy/casting/trusted-media-seccomp.v1.json',

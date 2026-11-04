@@ -40,6 +40,23 @@ def unit(command, *, description, after='', requires='', kind='oneshot', restart
     return '\n'.join(lines)
 
 
+def namespace_definitions(root):
+    adapter = within(root / 'runtime', 'tools/restore_appliance_namespace.py')
+    need(adapter.is_file(), 'namespace recovery adapter missing')
+    command = ['/usr/bin/python3', adapter, '--installation', root / 'installation.json']
+    return {
+        'teamaibox-namespace-recovery.service': '\n'.join([
+            '[Unit]', 'Description=Recover Team AI Box internal control connections',
+            'After=docker.service teamaibox-frontdoor.service', 'Requisite=docker.service',
+            '[Service]', 'Type=oneshot', 'TimeoutStartSec=900', 'UMask=0077',
+            'ExecStart=' + ' '.join(argument(v) for v in command), '']),
+        'teamaibox-namespace-recovery.timer': '\n'.join([
+            '[Unit]', 'Description=Check Team AI Box internal control connections',
+            '[Timer]', 'OnBootSec=30s', 'OnUnitInactiveSec=15s', 'AccuracySec=1s',
+            'Unit=teamaibox-namespace-recovery.service', '[Install]', 'WantedBy=timers.target', '']),
+    }
+
+
 def definitions(root, installation, release):
     refs = installation['references']
     required = ('storageVolumes', 'frontdoor', 'networkIdentity', 'guestStorage', 'officeManifest', 'officeBoot', 'castingInstallation')
@@ -99,7 +116,14 @@ def definitions(root, installation, release):
             ['/usr/bin/python3', path, '--config', refs['guestCamera'], '--socket', root / 'guest-runtime/camera.sock'],
             description='Team AI Box local camera access', kind='simple', after='teamaibox-existing-business-volumes.service',
             requires='teamaibox-existing-business-volumes.service')
+    result.update(namespace_definitions(root))
     return result
+
+
+def enabled_units(files):
+    # Timer-triggered oneshots must not be enabled as boot services themselves.
+    return [name for name in files if name.endswith(('.service', '.timer'))
+            and name not in ('teamaibox-network-identity.service', 'teamaibox-namespace-recovery.service')]
 
 
 def install_files(root, installation_id, files, *, unit_root=Path('/etc/systemd/system'), check=False, command=run):
@@ -117,11 +141,11 @@ def install_files(root, installation_id, files, *, unit_root=Path('/etc/systemd/
         elif check:
             raise ValueError('installed recovery unit missing: ' + name)
     if check:
-        names = [n for n in files if n.endswith(('.service', '.timer')) and n != 'teamaibox-network-identity.service']
+        names = enabled_units(files)
         command(['systemctl', 'is-enabled', *names])
         return
     # Persist ownership BEFORE publication to permit an interrupted file copy.
-    ownership['files'] = {name: hashlib.sha256(raw.encode()).hexdigest() for name, raw in files.items()}
+    ownership['files'].update({name: hashlib.sha256(raw.encode()).hexdigest() for name, raw in files.items()})
     write_json(journal, ownership)
     for name, text in files.items():
         path = within(unit_root, name)
@@ -130,7 +154,7 @@ def install_files(root, installation_id, files, *, unit_root=Path('/etc/systemd/
     units = [str(within(unit_root, n)) for n in files if n.endswith(('.service', '.timer'))]
     command(['systemd-analyze', 'verify', *units])
     command(['systemctl', 'daemon-reload'])
-    names = [n for n in files if n.endswith(('.service', '.timer')) and n != 'teamaibox-network-identity.service']
+    names = enabled_units(files)
     command(['systemctl', 'enable', *names])
 
 
@@ -147,6 +171,8 @@ def activate_helpers(root, installation_id, *, check=False, command=run):
     if 'teamaibox-phone-camera.service' in owned['files']:
         names.append('teamaibox-phone-camera.service')
     names.append('teamaibox-network-identity.timer')
+    if 'teamaibox-namespace-recovery.timer' in owned['files']:
+        names.append('teamaibox-namespace-recovery.timer')
     need(all(name in owned['files'] for name in names), 'new installation helper units incomplete')
     if not check:
         command(['systemctl', 'start', *names], timeout=180)
@@ -158,11 +184,21 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--installation-root', type=Path, required=True)
     parser.add_argument('--check', action='store_true')
+    parser.add_argument('--namespace-only', action='store_true',
+                        help='Add control-connection recovery to an existing installation; no other services changed')
     args = parser.parse_args()
     need(os.geteuid() == 0, 'root required')
     root = args.installation_root.resolve()
     from appliance_installation import load
     installation = load(root / 'installation.json')
+    if args.namespace_only:
+        files = namespace_definitions(root)
+        install_files(root, installation['installationId'], files, check=args.check)
+        if not args.check:
+            run(['systemctl', 'start', 'teamaibox-namespace-recovery.timer'])
+        run(['systemctl', 'is-active', 'teamaibox-namespace-recovery.timer'])
+        print(json.dumps(dict(status='checked' if args.check else 'installed', units=len(files), dockerRestarted=False)))
+        return
     need(read_json(root / 'install-state.json')['installationId'] == installation['installationId'], 'installation identity differs')
     files = definitions(root, installation, read_json(root / 'release.json'))
     install_files(root, installation['installationId'], files, check=args.check)

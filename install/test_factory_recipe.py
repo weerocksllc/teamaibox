@@ -32,7 +32,8 @@ class RecipeTests(unittest.TestCase):
             for row in recipe['templates']:
                 json.loads((destination / row['input']).read_text())
             for required in ('install/factory_office_ready.mjs', 'install/factory_owner.mjs', 'install/factory_owner.py', 'tools/ai_cache_checkpoint.py',
-                             'tools/casting_service_credentials.py', 'tools/appliance_phone_media.py'):
+                             'tools/casting_service_credentials.py', 'tools/appliance_phone_media.py',
+                             'tools/restore_appliance_namespace.py'):
                 self.assertIn(required, runtime)
             self.assertNotIn('/home/', json.dumps(recipe))
             self.assertNotIn('factory_foundation.py', runtime)

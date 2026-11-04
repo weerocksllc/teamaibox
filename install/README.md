@@ -197,6 +197,36 @@ and models; compatible caches are retained. Boot recovery restores data and
 device services first, then core services and individual AI workers. The
 installer runs during installation only; it adds no resident installer manager.
 
+Internal control connections are also checked by the host's
+`teamaibox-namespace-recovery.timer`. Restarting the Platform API can replace its
+Linux network namespace even when its Docker container ID stays the same. The
+adapter compares live namespaces and reconnects only the registered, running
+sidecars that became detached. It verifies the gateway-to-API connection and
+fresh node heartbeat/metrics; a green container health check alone is not
+accepted. It does not restart the API, Docker, virtual machines, phones or AI
+workers, and does not start intentionally stopped sidecars.
+
+New packages include and activate this timer. To add it to an existing
+installation, deploy the matching `install/factory_recovery.py` and
+`tools/restore_appliance_namespace.py` into that installation's `runtime/`
+directory, preserving the existing files for rollback, then run:
+
+```bash
+sudo python3 /srv/teamaibox/installation/runtime/install/factory_recovery.py \
+  --installation-root /srv/teamaibox/installation --namespace-only
+sudo python3 /srv/teamaibox/installation/runtime/tools/restore_appliance_namespace.py \
+  --installation /srv/teamaibox/installation/installation.json --check
+```
+
+Use the actual installation root if different. `--namespace-only` installs only
+the additional recovery service/timer and preserves other unit definitions and
+their ownership records. `--check` never repairs or restarts anything. Inspect
+`journalctl -u teamaibox-namespace-recovery.service` for a failure reason. A
+replaced container ID/image/owner or a sidecar bound to a different parent is
+rejected, not silently adopted: container replacement must still use the exact
+namespace-cohort upgrade transaction. Do not edit identity records to bypass
+these checks or repeatedly restart the whole appliance.
+
 After interruption, repeat the original command. Completed steps are verified;
 do not hide conflicts by deleting data or recreating containers. Rerunning a
 completed same-version installation only checks it; different versions use the

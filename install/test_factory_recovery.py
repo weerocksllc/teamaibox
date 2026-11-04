@@ -4,10 +4,41 @@ import tempfile
 import unittest
 
 from offline_common import InstallError, read_json, write_json
-from factory_recovery import activate_helpers, argument, install_files, unit
+from factory_recovery import activate_helpers, argument, install_files, unit, namespace_definitions
 
 
 class RecoveryTests(unittest.TestCase):
+    def test_namespace_upgrade_is_additive_and_enables_only_timer(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root, units = Path(temp) / 'installation', Path(temp) / 'units'
+            adapter = root / 'runtime/tools/restore_appliance_namespace.py'
+            adapter.parent.mkdir(parents=True); adapter.write_text('# fixture')
+            units.mkdir()
+            write_json(root / 'recovery-units.json', dict(installationId='new', files={'existing.service': 'preserved'}))
+            files = namespace_definitions(root)
+            calls = []
+            install_files(root, 'new', files, unit_root=units, command=calls.append)
+            self.assertEqual(read_json(root / 'recovery-units.json')['files']['existing.service'], 'preserved')
+            self.assertEqual(calls[-1], ['systemctl', 'enable', 'teamaibox-namespace-recovery.timer'])
+            self.assertIn('OnUnitInactiveSec=15s', files['teamaibox-namespace-recovery.timer'])
+            self.assertNotIn('RemainAfterExit', files['teamaibox-namespace-recovery.service'])
+            self.assertNotIn('Restart=', files['teamaibox-namespace-recovery.service'])
+            self.assertIn('Requisite=docker.service', files['teamaibox-namespace-recovery.service'])
+            self.assertNotIn('Requires=docker.service', files['teamaibox-namespace-recovery.service'])
+            calls.clear()
+            install_files(root, 'new', files, unit_root=units, check=True, command=calls.append)
+            self.assertEqual(calls, [['systemctl', 'is-enabled', 'teamaibox-namespace-recovery.timer']])
+
+    def test_new_installation_starts_namespace_recovery_timer(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            names = ('teamaibox-guest-devices.service', 'teamaibox-phone-storage.service',
+                     'teamaibox-network-identity.timer', 'teamaibox-namespace-recovery.timer')
+            write_json(root / 'recovery-units.json', dict(installationId='new', files={n: 'digest' for n in names}))
+            calls = []
+            activate_helpers(root, 'new', command=lambda a, **k: calls.append(a))
+            self.assertIn('teamaibox-namespace-recovery.timer', calls[0])
+
     def test_first_install_starts_only_its_registered_helpers(self):
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)
