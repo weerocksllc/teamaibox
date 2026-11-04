@@ -221,5 +221,5 @@ are distinct. The Assistant supports the formal TUI/v1 conversation path;
 the independent experimental v2 conversation mode is not supported. Its
 queue/steer semantics are not emulated or mixed into this UI. See the
 [capability map](native-assistant-capabilities.md) for the supported boundary
-and native limitations. These local candidate changes have not been deployed
-to existing appliances.
+and native limitations. Updating a source checkout does not upgrade an installed
+appliance; deploy matching Web, Platform API and Agent runtime artifacts together.

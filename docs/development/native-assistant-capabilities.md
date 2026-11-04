@@ -77,8 +77,9 @@ The following boundaries remain explicit:
 This is not a claim that every experimental API is integrated or that a new
 appliance release has been qualified. Experimental v2 is an explicitly
 unsupported mode, not an unfinished task in the user-confirmed formal-TUI
-scope. Release qualification and deployment remain separate future work;
-already-passed unchanged v1 checks are not repeated to close this scope.
+scope. Release qualification and deployment are separate from source coverage;
+use the installed image identities and its release record to identify an
+appliance's version rather than inferring it from this document.
 
 ## Product boundaries and evidence
 
@@ -87,7 +88,7 @@ already-passed unchanged v1 checks are not repeated to close this scope.
 - Idle reclamation: native sessions, terminals, permissions and questions augment legacy prompt rows. Unknown activity conservatively prevents idle stop; account disable still stops the instance.
 - Production App uses the product-owned React Assistant. Its authenticated route, deep-link refresh, legacy-history continuation, native MCP calls/permissions, OAuth popup, files and PTY have local integration evidence. This is not a claim of complete UI coverage.
 - The production lifecycle controller/runtime and full image entrypoint have isolated two-owner reuse, ownership, activity and replacement checks. Native MCP OAuth reconnects after replacement; files, sessions, Skills and configuration persist. Small-machine acceptance uses explicitly synthetic capacity telemetry, not a physical host capacity claim.
-- Public affected-image builds and offline resource/startup checks have passed; see the [build guide](native-assistant-build.md). Session transfer, projects/worktrees, cross-user integration and the final formal-TUI capability reconciliation have local native evidence. The user-confirmed local scope is complete; the independent experimental v2 mode remains unsupported. Later frontend additions are production-built locally; earlier container-image digests are not claimed to contain those additions. No appliance deployment or new release qualification has been performed for this change.
+- Public affected-image builds and offline resource/startup checks have passed; see the [build guide](native-assistant-build.md). Session transfer, projects/worktrees, cross-user integration and the formal-TUI capability reconciliation have native integration evidence. The independent experimental v2 mode remains unsupported. Build Web, Platform API and Agent runtime artifacts from the same source when deploying an update; an earlier image digest does not contain later source changes. Appliance-specific rollout results remain in its release record, not in this capability map.
 - Do not count synthetic transport tests or TypeScript checks as native/container acceptance. Runtime evidence belongs in the local implementation record, not this source contract.
 
 ## Complete pinned endpoint inventory
