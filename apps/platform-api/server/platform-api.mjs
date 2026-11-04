@@ -1088,7 +1088,7 @@ export function createPlatformApiServer({
           // strictly; authentication, origin and CSRF checks above still apply.
           const hasBody = request.headers['transfer-encoding'] !== undefined
             || (request.headers['content-length'] !== undefined && request.headers['content-length'] !== '0');
-          const body = request.method === 'GET' || !hasBody ? undefined : await jsonBody(request, MAX_COMPUTE_BODY_BYTES);
+          const body = request.method === 'GET' || !hasBody ? undefined : await jsonBody(request, pathname.startsWith('/api/v1/assistant/native/workspace/') ? 24*1024*1024 : MAX_COMPUTE_BODY_BYTES);
           await nativeAssistantApi.handle({request, response, context, body, authenticate});
           return;
         }

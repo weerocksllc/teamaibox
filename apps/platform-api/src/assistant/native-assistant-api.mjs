@@ -43,7 +43,8 @@ export class NativeAssistantApi {
     const owner = context?.identityId;
     if (!owner || !context.permissions?.includes('ai:invoke')) throw denied();
     const target = request.url.slice(NATIVE_ASSISTANT_PREFIX.length);
-    nativeRequestTarget(request.method, target);
+    const workspaceOperation=/^\/workspace\/(folders|files)$/.exec(target)?.[1];
+    if(workspaceOperation){if(request.method!=='POST')throw denied();}else nativeRequestTarget(request.method, target);
     const controller = new AbortController();
     const abort = () => controller.abort();
     const live = this.#live.get(owner) ?? new Set();
@@ -64,6 +65,11 @@ export class NativeAssistantApi {
       if (route.ownerIdentityId !== owner || !route.native) throw denied();
       const current = await authenticate();
       if (current.identityId !== owner || !current.permissions?.includes('ai:invoke')) throw denied();
+      if(workspaceOperation){
+        if(typeof route.client?.workspaceOperation!=='function')throw new PlatformError('assistant_workspace_unavailable','Workspace file operations are unavailable',{status:503});
+        const result=await route.client.workspaceOperation(workspaceOperation,body,{signal:controller.signal});
+        response.writeHead(200,{'content-type':'application/json','cache-control':'no-store','x-content-type-options':'nosniff'});response.end(JSON.stringify(result));return;
+      }
       const upstream = await route.native.request(request.method, target, {
         body: body === undefined ? undefined : JSON.stringify(body),
         signal: controller.signal, accept: request.headers.accept ?? 'application/json',

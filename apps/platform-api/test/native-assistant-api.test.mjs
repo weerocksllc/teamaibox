@@ -23,7 +23,7 @@ async function fixture(t) {
   const password=randomBytes(24).toString('base64url');
   await authentication.bootstrapOwner({loginName:'synthetic-owner',displayName:'Synthetic',password});
   const calls=[];
-  const nativeAssistantApi=new NativeAssistantApi({routes:{async resolve(ownerIdentityId){return {ownerIdentityId,native:{async request(method,path,options){calls.push({ownerIdentityId,method,path,options});return Response.json({id:'ses_synthetic',parts:[{type:'text',text:'native'}]});}}};}}});
+  const nativeAssistantApi=new NativeAssistantApi({routes:{async resolve(ownerIdentityId){return {ownerIdentityId,client:{async workspaceOperation(operation,body){calls.push({ownerIdentityId,operation,body});return {status:'created'};}},native:{async request(method,path,options){calls.push({ownerIdentityId,method,path,options});return Response.json({id:'ses_synthetic',parts:[{type:'text',text:'native'}]});}}};}}});
   const server=createPlatformApiServer({authentication,preferences:new IdentityPreferencesService({repository}),publicOrigin:origin,nativeAssistantApi,
     logger:{warn(){},error(){},info(){}}});
   await new Promise(r=>server.listen(0,'127.0.0.1',r));t.after(()=>{server.closeAllConnections();server.close();});
@@ -52,6 +52,12 @@ test('cross-origin reads and prohibited native control routes never reach the in
   assert.equal((await request(f.server,'/api/v1/assistant/native/session',{headers:{...f.headers,origin:'https://other.test'}})).status,403);
   assert.equal((await request(f.server,'/api/v1/assistant/native/global/upgrade',{method:'POST',headers:f.headers,body:'{}'})).status,404);
   assert.equal(f.calls.length,0);
+});
+test('workspace imports use current owner Bridge and require the same browser CSRF/origin boundary',async t=>{
+  const f=await fixture(t),path='/api/v1/assistant/native/workspace/files',body=JSON.stringify({directory:'/workspace/project',name:'notes.txt',content:'eA=='});
+  for(const headers of [{},{...f.headers,'x-csrf-token':''},{...f.headers,origin:'https://other.test'}])assert.ok([400,401,403].includes((await request(f.server,path,{method:'POST',headers,body})).status));
+  assert.equal(f.calls.length,0);assert.equal((await request(f.server,path,{method:'POST',headers:f.headers,body})).status,200);
+  assert.equal(f.calls.length,1);assert.equal(f.calls[0].operation,'files');assert.deepEqual(f.calls[0].body,JSON.parse(body));assert.match(f.calls[0].ownerIdentityId,/^[a-f0-9-]{36}$/);
 });
 test('bodyless native actions preserve their contract without bypassing CSRF or JSON validation',async t=>{
   const f=await fixture(t),path='/api/v1/assistant/native/pty/pty_synthetic/connect-token';

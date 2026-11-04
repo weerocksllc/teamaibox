@@ -19,6 +19,8 @@ import {PasswordHasher} from '../../platform-api/src/identity/password.mjs';
 import {IdentityPreferencesService} from '../../platform-api/src/identity/preferences-service.mjs';
 import {createNativeTransport} from '../../../services/agent-bridge/src/opencode-native-transport.mjs';
 import {supportedLocaleCodes} from '../../../packages/ui-system/src/locale-registry.mjs';
+import {OpenCodeBridgeClient} from '../../../services/agent-bridge/src/opencode-bridge-client.mjs';
+import {runProjectExperience} from './project-experience-browser.mjs';
 
 const image=process.env.NATIVE_CANDIDATE_IMAGE,playwright=process.env.NATIVE_PLAYWRIGHT;
 if(!image||!playwright)throw Error('Set local NATIVE_CANDIDATE_IMAGE and NATIVE_PLAYWRIGHT paths');
@@ -32,8 +34,8 @@ const checks=[],errors=[];
 const platformSockets=new Set();
 const requestedPhase=process.env.NATIVE_BROWSER_PHASE??'all';
 const phase=requestedPhase==='oauth-revoke'?'oauth':['raw-settings','project-settings','project-settings-recovery','tool-catalog','session-shell','git-changes','message-edit','message-layout','terminal-shell','session-index','session-index-layout','runtime-final','queue-view'].includes(requestedPhase)?'runtime-settings':requestedPhase;
-const production=['product-route','oauth','extensions','customization','mcp-settings','context','interactions','lost-receipt','tools','files-revert','providers','appearance','sessions','composer','projects','runtime-settings','transfer','worktrees','channel-isolation'].includes(phase);
-assert.ok(['all','terminal-layout','product-route','oauth','extensions','customization','mcp-settings','context','interactions','lost-receipt','tools','files-revert','providers','appearance','sessions','composer','projects','runtime-settings','transfer','worktrees','channel-isolation'].includes(phase));
+const production=['product-route','oauth','extensions','customization','mcp-settings','context','interactions','lost-receipt','tools','files-revert','providers','appearance','sessions','composer','projects','runtime-settings','transfer','worktrees','channel-isolation'].includes(phase)||(phase==='project-experience'&&process.env.NATIVE_EXPERIENCE_PRODUCTION==='1');
+assert.ok(['project-experience','all','terminal-layout','product-route','oauth','extensions','customization','mcp-settings','context','interactions','lost-receipt','tools','files-revert','providers','appearance','sessions','composer','projects','runtime-settings','transfer','worktrees','channel-isolation'].includes(phase));
 try{
   const reserve=createTcpServer();await new Promise(r=>reserve.listen(0,'127.0.0.1',r));
   const port=reserve.address().port;await new Promise(r=>reserve.close(r));
@@ -56,6 +58,7 @@ try{
     docker('run','-d','--pull=never','--name',name,'--label',`${label}=${run}`,'--user','65532:65532','--read-only','--cap-drop=ALL','--security-opt=no-new-privileges','--mount',`type=volume,source=${name},target=/workspace`,
       '--tmpfs','/tmp:rw,nosuid,nodev,noexec,size=256m','--tmpfs','/run/opencode-native:rw,nosuid,nodev,exec,size=64m,uid=65532,gid=65532,mode=0700','-p','127.0.0.1::4096',
       ...(phase==='oauth'?['-p','127.0.0.1::4101']:[]),
+      ...(phase==='project-experience'?['-p','127.0.0.1::4102','--mount',`type=bind,source=${fileURLToPath(new URL('../../..',import.meta.url))},target=/source,readonly`]:[]),
       '-e','TMPDIR=/run/opencode-native','-e','XDG_CONFIG_HOME=/workspace/.teamaibox/config','-e','OPENCODE_CONFIG=',
       '-e','OPENCODE_PURE=0','-e','OPENCODE_DISABLE_DEFAULT_PLUGINS=0','-e','OPENCODE_DISABLE_PROJECT_CONFIG=0','-e','OPENCODE_DISABLE_EXTERNAL_SKILLS=0','-e','OPENCODE_PERMISSION={"*":"ask"}',
       '-e','OPENCODE_SERVER_PASSWORD='+credential,'--entrypoint','/opt/opencode/opencode',image,'serve','--hostname','0.0.0.0','--port','4096');resource.container=true;
@@ -96,7 +99,15 @@ try{
       config.mcp.syntheticOAuth={type:'remote',url:'http://127.0.0.1:4101/mcp',enabled:true};
     }
     const saved=await native.request('PATCH','/global/config',{body:JSON.stringify(config),signal:AbortSignal.timeout(30000)});assert.equal(saved.status,200);await saved.body.cancel();
-    routes.set(identity.id,{ownerIdentityId:identity.id,native});
+    let client;
+    if(phase==='project-experience'){
+      const bridgeCredential=randomBytes(48).toString('base64url');
+      docker('exec','-d','-e','SYNTHETIC_NATIVE_CREDENTIAL='+credential,'-e','SYNTHETIC_BRIDGE_CREDENTIAL='+bridgeCredential,name,'node','/source/apps/web/test/fixtures/assistant-workspace-bridge.mjs');
+      const bridgeOrigin='http://127.0.0.1:'+docker('port',name,'4102/tcp').split(':').at(-1);
+      client=new OpenCodeBridgeClient({origin:bridgeOrigin,tokenProvider:async()=>bridgeCredential});
+      for(let attempt=0;attempt<30;attempt++){try{await client.health();break;}catch{if(attempt===29)throw Error('workspace bridge readiness');await new Promise(r=>setTimeout(r,250));}}
+    }
+    routes.set(identity.id,{ownerIdentityId:identity.id,native,client});
   }
   const nativeAssistantApi=new NativeAssistantApi({routes:{resolve:async owner=>{assert.ok(routes.has(owner));return routes.get(owner);}}});
   const legacyId=randomUUID(),legacyFile=randomUUID();let legacyMutations=0;
@@ -125,10 +136,12 @@ try{
   await login('synthetic-a');
   page=await context.newPage();page.setDefaultTimeout(15000);page.on('pageerror',error=>errors.push(error.message));
   const externalRequests=[];
-  await context.route('**/*',route=>{if(new URL(route.request().url()).hostname==='127.0.0.1')return route.continue();externalRequests.push(route.request().url());return route.abort();});
+  await context.route(url=>url.hostname!=='127.0.0.1',route=>{externalRequests.push(route.request().url());return route.abort();});
   await page.goto(origin+(production?'/apps/assistant':'/test/fixtures/native-assistant.html'));
-  await page.locator('.assistant-compose-input').waitFor();
-  if(requestedPhase==='session-index-layout'){
+  await page.locator(phase==='project-experience'?'.assistant-project-home':'.assistant-compose-input').waitFor();
+  if(requestedPhase==='project-experience'){
+    await runProjectExperience({page,context,routes,owner,second,origin,checks,errors,evidence,docker,resources,login});
+  }else if(requestedPhase==='session-index-layout'){
     await page.getByRole('button',{name:'Find conversations',exact:true}).click();const panel=page.locator('.native-session-index');await panel.getByText('No conversations found',{exact:true}).waitFor();
     await page.setViewportSize({width:390,height:1000});await page.waitForFunction(()=>document.documentElement.scrollWidth<=innerWidth+1);
     for(const label of await panel.locator(':scope > label').all())assert.equal(await label.evaluate(node=>getComputedStyle(node).display),'flex');

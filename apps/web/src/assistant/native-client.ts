@@ -28,6 +28,12 @@ export function createNativeClient() {
     get signal() { return lifetime.signal; },
     activate() { if(lifetime.signal.aborted)lifetime = new AbortController(); },
     close() { lifetime.abort(); },
+    async workspace<T>(operation:'folders'|'files',body:unknown):Promise<T>{
+      const response=await fetch(`${prefix}/workspace/${operation}`,{method:'POST',credentials:'same-origin',redirect:'error',signal:lifetime.signal,
+        headers:{accept:'application/json','content-type':'application/json','x-csrf-token':csrf()},body:JSON.stringify(body)});
+      if(!response.ok)throw new NativeApiError(response.status,`native_http_${response.status}`);
+      return response.json() as Promise<T>;
+    },
     async readPatch(directory:string):Promise<string> {
       const url=new URL(`${prefix}/vcs/diff/raw`,window.location.origin);url.searchParams.set('directory',directory);
       const response=await fetch(url,{credentials:'same-origin',redirect:'error',signal:lifetime.signal,headers:{accept:'text/x-diff'}});

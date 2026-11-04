@@ -9,9 +9,10 @@ import {NativeFileSearch} from './NativeFileSearch';
 import {NativeGitChanges} from './NativeGitChanges';
 import {nativeHistoryEditText} from './native-history-edit-copy';
 
-export function NativeWorkspaceTools({client,directory,locale,onError}:{client:NativeClient;directory:string;locale:Locale;onError:(error:unknown)=>void}) {
+export function NativeWorkspaceTools({client,directory,locale,onError,initialTab='files',onTabChange}:{client:NativeClient;directory:string;locale:Locale;onError:(error:unknown)=>void;initialTab?:'files'|'terminal';onTabChange?:(tab:'files'|'terminal')=>void}) {
   const nt=(key:Parameters<typeof nativeText>[1])=>nativeText(locale,key);
-  const [tab,setTab]=useState<'files'|'terminal'>('files');
+  const [tab,setTab]=useState<'files'|'terminal'>(initialTab);
+  useEffect(()=>setTab(initialTab),[initialTab]);
   const [path,setPath]=useState('');
   const [files,setFiles]=useState<NativeFile[]>([]);
   const [file,setFile]=useState<{path:string;value:NativeFileContent}|null>(null);
@@ -26,7 +27,7 @@ export function NativeWorkspaceTools({client,directory,locale,onError}:{client:N
     return()=>{stale=true;};
   },[client,directory,path,onError]);
   const refreshTerminals=useCallback(async()=>{
-    const value=await client.request<NativePty[]>('/pty',{directory});if(!client.signal.aborted)setTerminals(value);
+    const value=await client.request<NativePty[]>('/pty',{directory});if(!client.signal.aborted){setTerminals(value);setTerminal(previous=>previous&&value.some(item=>item.id===previous)?previous:value.find(item=>item.status==='running')?.id??null);}
   },[client,directory]);
   useEffect(()=>{if(tab==='terminal')void refreshTerminals().catch(onError);},[tab,refreshTerminals,onError]);
   useEffect(()=>{if(tab!=='terminal')return;let stale=false;void client.request<typeof shells>('/pty/shells',{directory}).then(value=>{if(!stale&&!client.signal.aborted)setShells(value);}).catch(onError);return()=>{stale=true;};},[client,directory,tab,onError]);
@@ -57,7 +58,7 @@ export function NativeWorkspaceTools({client,directory,locale,onError}:{client:N
     }catch(error){onError(error);}finally{setBusy(false);}
   };
   return <section className="native-workspace-tools">
-    <nav className="native-actions" aria-label={nt('project')}>{(['files','terminal'] as const).map(value=><Button key={value} variant={tab===value?'primary':'secondary'} onClick={()=>setTab(value)} aria-pressed={tab===value}>{nt(value)}</Button>)}</nav>
+    <nav className="native-actions" aria-label={nt('project')}>{(['files','terminal'] as const).map(value=><Button key={value} variant={tab===value?'primary':'secondary'} onClick={()=>{setTab(value);onTabChange?.(value);}} aria-pressed={tab===value}>{nt(value)}</Button>)}</nav>
     {tab==='files'?<>
       <NativeGitChanges client={client} directory={directory} locale={locale} onError={onError}/>
       <NativeFileSearch client={client} directory={directory} locale={locale} onOpen={item=>void open(item)} onError={onError}/>

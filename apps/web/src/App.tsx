@@ -836,7 +836,7 @@ export function App() {
       )}
       {taskOpen && <TaskDrawer tasks={activity?.tasks ?? []} state={activityState} cancellingTaskId={cancellingTaskId} onCancel={cancelTask} t={t} onClose={() => setTaskOpen(false)} />}
       {activeApp?.pluginKey === "official.assistant" && activeApp.runtime.route?.integration === "workbench" ? (
-        <Suspense fallback={<div role="status">{t('common.loading')}</div>}><NativeAssistantWorkspace key={globalThis.__TEAM_AI_BOX_ACCOUNT_PREFERENCES__?.identityId ?? 'authenticated'} locale={i18n.locale} initialPrompt={assistantInitialPrompt} onClose={closeApplication} t={t} /></Suspense>
+        <Suspense fallback={<div role="status">{t('common.loading')}</div>}><NativeAssistantWorkspace key={globalThis.__TEAM_AI_BOX_ACCOUNT_PREFERENCES__?.identityId ?? 'authenticated'} identityId={globalThis.__TEAM_AI_BOX_ACCOUNT_PREFERENCES__?.identityId} locale={i18n.locale} initialPrompt={assistantInitialPrompt} onClose={closeApplication} t={t} /></Suspense>
       ) : activeApp?.runtime.route?.integration === "iframe" ? (
         <DynamicApplicationWorkspace key={activeApp.pluginKey} fact={activeApp.runtime} label={translatedApplicationText(activeApp, "labelKey", t)} handoff={pluginHandoff?.targetPluginId === activeApp.pluginKey ? pluginHandoff : null} locale={i18n.locale} direction={i18n.direction} theme={theme} onClose={closeApplication} t={t} />
       ) : null}

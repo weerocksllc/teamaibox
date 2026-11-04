@@ -65,6 +65,24 @@ workspace after refresh. The authenticated owner is always resolved on the
 server, independently of these parameters. The current React input submits
 directly to OpenCode, without the old keyword-based answer/Agent routing.
 
+Project navigation and browser drafts are presentation state, keyed by the
+authenticated identity, canonical directory and native session (or that
+directory's new-conversation view). The first direct-linked selection is
+remembered as well as selections made in the sidebar. A different identity in
+the same tab clears the previous identity's Assistant URL context before it is
+opened. Persisted drafts contain text, selections and attachment metadata;
+attachment bytes stay in memory and require reselection after refresh.
+
+`/api/v1/assistant/native/workspace/folders` and `/workspace/files` are product
+file operations, not OpenCode endpoints. They keep browser authentication,
+same-origin and CSRF checks, then use the current owner's authenticated Bridge
+to create a folder or import one ordinary file inside its container. The
+Bridge pins directory descriptors, rejects symlink traversal and reserved
+runtime paths, and creates files exclusively without overwriting existing
+ones. Import limits are 100 selected files per batch and 16 MiB per file;
+JSON bodies for these two routes are bounded separately. These operations do
+not start prompts, PTYs, Git initialization or platform execution records.
+
 Earlier platform conversations remain under **Earlier conversations**, with
 their original messages and artifact links. An existing owner-checked native
 binding offers **Continue original conversation**; opening it reads the same

@@ -175,6 +175,10 @@ export class OpenCodeBridgeClient {
   }
 
   health({ signal = null } = {}) { return this.#json("/v1/health", { signal }); }
+  workspaceOperation(operation,body,{signal=null}={}){
+    if(!['folders','files'].includes(operation))throw new TypeError('Invalid workspace operation');
+    return this.#json(`/v1/workspace/${operation}`,{method:'POST',body,signal});
+  }
   createSession({ title = null, signal = null } = {}) { return this.#json("/v1/sessions", { method: "POST", body: { title }, signal }); }
   getSession({ sessionId, signal = null }) { return this.#json(`/v1/sessions/${query(safeId(sessionId, "session ID"))}`, { signal }); }
   sessionStatus({ signal = null } = {}) { return this.#json("/v1/status", { signal }); }

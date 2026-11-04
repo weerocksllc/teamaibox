@@ -15,6 +15,7 @@ import {
 
 import { bufferedMediaResponse, reserveBufferedMedia } from "../../object-service/src/buffered-media-budget.mjs";
 import { forwardNativeResponse } from './opencode-native-transport.mjs';
+import {workspaceFileOperation} from './workspace-file-operations.mjs';
 const BEARER = /^Bearer ([A-Za-z0-9._~-]{32,4096})$/;
 const SESSION_PATH = /^\/v1\/sessions\/([^/]+)$/;
 const SESSION_OPERATION_PATH = /^\/v1\/sessions\/([^/]+)\/(prompts|messages|interrupt|diff|artifacts)$/;
@@ -145,10 +146,12 @@ async function authenticate(request, tokenProvider) {
   }
 }
 
-async function requestBody(request) {
+async function requestBody(request,maximumBytes=Infinity) {
+  if(Number(request.headers['content-length'])>maximumBytes)throw new PlatformError('assistant_workspace_content_invalid','File import request is too large',{status:413});
+  async function* bounded(){let size=0;for await(const chunk of request){size+=chunk.length;if(size>maximumBytes)throw new PlatformError('assistant_workspace_content_invalid','File import request is too large',{status:413});yield chunk;}}
   const content = await bufferedMediaResponse({
     headers: new Headers(request.headers["content-length"] ? { "content-length": request.headers["content-length"] } : {}),
-    body: request,
+    body: bounded(),
   });
   try {
     if (content.length === 0) return {};
@@ -178,6 +181,11 @@ async function writeEvent(response, event) {
 
 async function route({ request, response, adapter, workspace, workspaceReader }) {
   const url = new URL(request.url ?? "/", "http://agent-bridge.invalid");
+  if(['/v1/workspace/folders','/v1/workspace/files'].includes(url.pathname)){
+    if(request.method!=='POST')return methodNotAllowed(response,['POST']);
+    if(url.search)throw new PlatformError('assistant_workspace_operation_invalid','Workspace query is not supported',{status:400});
+    return json(response,200,await workspaceFileOperation({operation:url.pathname.split('/').at(-1),body:await requestBody(request,24*1024*1024),root:workspace}));
+  }
   if (url.pathname === "/healthz") {
     if (request.method !== "GET") return methodNotAllowed(response, ["GET"]);
     const upstream = await adapter.health();
