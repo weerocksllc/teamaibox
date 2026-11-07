@@ -14,6 +14,7 @@ L'[inventaire des composants](docs/open-source/components.json) lisible par mach
 
 | Composant / matériau | Limite de licence | Exigences de distribution |
 | --- | --- | --- |
+| Penpot 2.18.5, MCP/plugin officiels et modifications couvertes | MPL-2.0 ; licences propres aux dépendances | Conserver les mentions et fournir les sources modifiées exactes, les versions verrouillées et les scripts de construction lors de la redistribution. Les correctifs de transport OpenCode restent sous MIT ; la licence MIT racine ne s'applique pas à Penpot. |
 | Récepteur UxPlay et `deploy/casting/uxplay-*.patch` | GPL-3.0-only | Conservez la GPL, les notifications, la source exacte en amont, les correctifs et construisez les scripts avec n'importe quel binaire récepteur ; un simple lien vers l'amont est insuffisant pour une version binaire. |
 | gst-plugins-rs / `gst-webrtc-*.patch` | MPL-2.0 | Conservez les avis et rendez disponibles les fichiers sources couverts modifiés. |
 | GStreamer | Licences LGPL et plugins individuels | Inspectez l’ensemble de plugins réel et remplissez les obligations correspondantes. |

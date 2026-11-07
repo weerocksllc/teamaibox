@@ -19,8 +19,8 @@ RUNTIME_ENTRIES = (
 )
 
 
-def assemble(repository):
-    recipe = foundation(repository)
+def assemble(repository, *, penpot=False):
+    recipe = foundation(repository, penpot=penpot)
     recipe['schemaVersion'] = 1
     compose = next(t['value'] for t in recipe['templates'] if t['output'] == recipe['composeFile'])
     names = sorted(set(compose['services']) - {'database-migrate'})
@@ -33,10 +33,10 @@ def assemble(repository):
     return recipe
 
 
-def emit(repository, destination):
+def emit(repository, destination, *, penpot=False):
     destination = Path(destination)
     need(not destination.exists(), 'factory output must be a new directory')
-    recipe = assemble(repository)
+    recipe = assemble(repository, penpot=penpot)
     runtime = module_closure(Path(repository).resolve(), RUNTIME_ENTRIES)
     destination.mkdir(parents=True)
     for row in recipe['templates']:

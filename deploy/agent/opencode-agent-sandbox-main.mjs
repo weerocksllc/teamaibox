@@ -2,6 +2,7 @@ import { spawn } from "node:child_process";
 import { once } from "node:events";
 import { mkdir, readFile } from "node:fs/promises";
 import {seedNativeExtensionRuntime} from "/opt/teamaibox/services/agent-bridge/src/native-extension-seed.mjs";
+import {startPenpotCredentialTransport} from "/opt/teamaibox/services/agent-bridge/src/penpot-credential-transport.mjs";
 
 import {
   createRotatingModelCredentialProxy,
@@ -24,6 +25,10 @@ try {
 }
 
 const common = { stdio: "inherit", env: { ...process.env } };
+// Private credentials are injected only on this fixed loopback transport.
+// The optional context is checked on every request; disabling Design cannot
+// stop model requests or require replacing the user's container/workspace.
+const designTransport = await startPenpotCredentialTransport({onUnavailable: code => console.error(code)});
 const modelProxy = createRotatingModelCredentialProxy();
 modelProxy.listen(rotatingModelCredentialProxyContract.listenPort, rotatingModelCredentialProxyContract.listenHost);
 await once(modelProxy, "listening");
@@ -41,6 +46,7 @@ function stop(signal, exitCode = 0) {
   opencode.kill(signal);
   bridge.kill(signal);
   modelProxy.close();
+  designTransport?.close();
   const timer = setTimeout(() => {
     opencode.kill("SIGKILL");
     bridge.kill("SIGKILL");

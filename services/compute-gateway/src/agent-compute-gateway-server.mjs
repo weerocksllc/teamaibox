@@ -174,12 +174,13 @@ async function relayJson(upstream, response, { target, alias, memoryBudget }) {
   }
 }
 
-export function createAgentComputeGatewayServer({ credentialAuthority, modelAliasMap, platformOrigin, fetchImplementation = globalThis.fetch, memoryBudget = {} }) {
+export function createAgentComputeGatewayServer({ credentialAuthority, modelAliasMap, platformOrigin, localModelOrigin, fetchImplementation = globalThis.fetch, memoryBudget = {} }) {
   if (!credentialAuthority?.verify || typeof fetchImplementation !== "function") {
     throw new TypeError("Agent compute gateway dependencies are incomplete");
   }
   const aliases = safeAliasMap(modelAliasMap);
-  const origin = safeOrigin(platformOrigin);
+  if (Boolean(platformOrigin) === Boolean(localModelOrigin)) throw new TypeError('Exactly one compute origin is required');
+  const origin = safeOrigin(localModelOrigin || platformOrigin);
   return createServer((request, response) => {
     const abort = new AbortController();
     response.once("close", () => abort.abort());
@@ -204,17 +205,19 @@ export function createAgentComputeGatewayServer({ credentialAuthority, modelAlia
         const alias = body.model;
         const target = aliases.get(alias);
         if (!target) throw Object.assign(new Error("model unavailable"), { status: 503, code: "model_unavailable" });
-        const projected = projectBody(body, alias, target, credential);
+        const projected = localModelOrigin ? { ...body, model: target } : projectBody(body, alias, target, credential);
+        if (localModelOrigin) delete projected.x_teamaibox;
         const idempotency = idempotencyKey(request, credential, pathname, projected);
         const upstream = await fetchImplementation(`${origin}${pathname}`, {
           method: "POST",
           signal: abort.signal,
+          redirect: "error",
           headers: {
             accept: body.stream === true ? "text/event-stream" : "application/json",
-            authorization: `Bearer ${token}`,
             "content-type": "application/json",
-            "idempotency-key": idempotency,
-            "x-forwarded-proto": "https",
+            // Credentials and control metadata stay at the gateway boundary.
+            ...(!localModelOrigin ? { authorization: `Bearer ${token}`, "idempotency-key": idempotency,
+              "x-forwarded-proto": "https" } : {}),
           },
           body: JSON.stringify(projected),
         });

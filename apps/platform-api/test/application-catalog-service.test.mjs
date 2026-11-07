@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { test } from "node:test";
 
-import { ApplicationCatalogService } from "../src/applications/application-catalog-service.mjs";
+import { ApplicationCatalogService, localObjectHealthSource } from "../src/applications/application-catalog-service.mjs";
 
 function manifest({ dependencies = [], capabilities = ["ocr", "encrypted-objects"], scopes = ["ai:invoke"] } = {}) {
   return {
@@ -33,6 +33,32 @@ function fixture({ plugins = [plugin()], capabilities = [{ capabilityKey: "ocr",
 }
 
 const context = { permissions: ["application:catalog:view", "ai:invoke", "file:read", "file:write"] };
+
+test("source Design uses live protected object readiness without granting entry permissions", async () => {
+  let ready = true;
+  const rpcEndpoint = 'http://object-service:8080/internal/v1/call';
+  assert.throws(() => localObjectHealthSource({ rpcEndpoint, healthOrigin: 'http://other-service:8080' }), /Invalid object readiness origin/);
+  const liveCoreHealth = localObjectHealthSource({ rpcEndpoint, healthOrigin: 'http://object-service:8080',
+    fetcher: async (url, { redirect, signal }) => {
+      assert.equal(url.href, 'http://object-service:8080/health/ready');
+      assert.equal(redirect, 'error'); assert.ok(signal instanceof AbortSignal);
+      return Response.json({ status: 'ready', service: 'object-service', encryption: ready ? 'aes-256-gcm-envelope' : 'none' });
+    } });
+  const designManifest = JSON.parse(await readFile(new URL('../../../deploy/applications/penpot.release-template.json', import.meta.url), 'utf8'));
+  const service = new ApplicationCatalogService({
+    repository: { async snapshot() { return { plugins: [plugin({pluginKey:'official.penpot',currentVersion:designManifest.version,
+      manifest:designManifest,slotUpdatedAt:new Date()})], capabilities: [], health: [
+        {targetKind:'core_service',targetKey:'object-service',state:'healthy',observedAt:new Date()},
+      ] }; } },
+    routeSource: { async routes() { return [{pluginKey:'official.penpot',pathPrefix:designManifest.entryPoints.web.path}]; } },
+    liveCoreHealth,
+  });
+  const list = async (permissions) => (await service.list({context:{permissions:['application:catalog:view',...permissions]}})).applications[0];
+  assert.equal((await list(['design:use'])).launchable, true);
+  assert.deepEqual((await list([])).blockers, ['authorization_denied']);
+  ready = false;
+  assert.deepEqual((await list(['design:use'])).blockers, ['platform_capability_unavailable']);
+});
 
 test("virtual phone manifest joins the dynamic member catalog without granting operators user access", async () => {
   const phoneManifest = JSON.parse(await readFile(new URL("../../virtual-phones-plugin/manifest.release-template.json", import.meta.url), "utf8"));

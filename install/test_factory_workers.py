@@ -7,7 +7,7 @@ import unittest
 from unittest.mock import patch
 
 from factory_workers import create_stopped
-from offline_common import InstallError, read_json
+from offline_common import InstallError, nvidia_device_requests, read_json
 
 
 class Engine:
@@ -42,9 +42,34 @@ class WorkerCreationTests(unittest.TestCase):
                     for i, role in enumerate(('assistant', 'translation', 'embedding', 'asr', 'ocr', 'drawing'), 2)}
         requests = {role: dict(Image='sha256:' + 'a' * 64,
             Labels={'com.teamaibox.installation-id': installation, 'com.teamaibox.worker-id': p['workerId']},
-            Env=['HF_HUB_OFFLINE=1'], HostConfig=dict(RestartPolicy={'Name': 'no'}, AutoRemove=False, Memory=1234))
+            Env=['HF_HUB_OFFLINE=1'], HostConfig=dict(RestartPolicy={'Name': 'no'}, AutoRemove=False, Memory=1234,
+                DeviceRequests=[] if role == 'asr' else nvidia_device_requests()))
             for role, p in profiles.items()}
         return dict(profiles=profiles, createRequests=requests), installation
+
+    def test_cdi_cannot_replace_the_probed_gpu_request(self):
+        value, identity = self.fixture()
+        host = value['createRequests']['assistant']['HostConfig']
+        host['DeviceRequests'] = []
+        host['Devices'] = [{'PathOnHost': 'nvidia.com/gpu=all'}]
+        with tempfile.TemporaryDirectory() as directory:
+            engine = Engine()
+            with self.assertRaisesRegex(InstallError, 'direct device mapping'):
+                create_stopped(Path(directory), value, identity, engine=engine)
+            self.assertEqual(engine.calls, [])
+
+    def test_recovery_refuses_gpu_request_drift_on_the_same_container(self):
+        value, identity = self.fixture()
+        engine = Engine()
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            create_stopped(root, value, identity, engine=engine)
+            name = 'teamaibox-worker-' + value['profiles']['assistant']['workerId']
+            engine.containers[name]['HostConfig']['DeviceRequests'] = []
+            engine.calls.clear()
+            with self.assertRaisesRegex(InstallError, 'did not preserve'):
+                create_stopped(root, value, identity, check=True, engine=engine)
+            self.assertTrue(all(method == 'GET' for method, _ in engine.calls))
 
     def test_creates_only_new_stopped_containers_and_check_has_no_writes(self):
         value, identity = self.fixture()

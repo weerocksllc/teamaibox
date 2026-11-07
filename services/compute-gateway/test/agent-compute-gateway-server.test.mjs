@@ -85,6 +85,25 @@ test("relays fragmented SSE with model projection and a terminal marker", async 
   assert.equal(result.text.includes("local/qwen3.6-35b-nvfp4"), false);
 });
 
+test("dedicated local model receives only the authorized request, without platform credentials", async (t) => {
+  const calls = [];
+  const { server, issued } = await fixture(t, async (url, options) => {
+    calls.push({ url, options, body: JSON.parse(options.body) });
+    return Response.json({ model: "local/qwen3.6-35b-nvfp4", choices: [] });
+  }, { platformOrigin: undefined, localModelOrigin: "http://assistant-worker:8000" });
+  const body = { model: "agent.default", messages: [{role:"user", content:"draw"}], x_teamaibox:{ forged:true } };
+  assert.equal((await call(server, { token:"invalid", body })).status, 401);
+  assert.equal(calls.length, 0);
+  const result = await call(server, { token:issued.token, body });
+  assert.equal(result.status, 200);
+  assert.equal(JSON.parse(result.text).model, "agent.default");
+  assert.equal(calls[0].url, "http://assistant-worker:8000/v1/chat/completions");
+  assert.equal(calls[0].body.model, "local/qwen3.6-35b-nvfp4");
+  assert.equal(calls[0].body.x_teamaibox, undefined);
+  assert.equal(calls[0].options.headers.authorization, undefined);
+  assert.equal(calls[0].options.redirect, "error");
+});
+
 test("derives a stable per-request idempotency key instead of replaying every turn in one sandbox", async (t) => {
   const keys = [];
   const { server, issued } = await fixture(t, async (_url, options) => {

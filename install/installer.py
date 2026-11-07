@@ -17,7 +17,7 @@ import sys
 import time
 import uuid
 
-from offline_common import InstallError, atomic, digest, need, read_json, run, verify_package, within, write_json
+from offline_common import InstallError, atomic, digest, need, nvidia_gpu_argument, read_json, run, verify_package, within, write_json
 from offline_host_packages import install as install_tool_packages, ROOT_PACKAGES
 
 
@@ -100,6 +100,12 @@ def host_facts(runner=run):
     missing = [cmd for cmd in commands if not shutil.which(cmd)]
     need(not missing, 'factory system command missing: ' + ', '.join(missing))
     docker = json.loads(runner(['docker', 'info', '--format', '{{json .}}']))
+    # Factory workers and Node Agent use this Unix socket. A CLI context
+    # that targets another engine must not qualify GPU access for this one.
+    local_id = runner(['docker', '--host', 'unix:///var/run/docker.sock',
+                       'info', '--format', '{{.ID}}']).strip()
+    need(local_id and docker.get('ID') == local_id,
+         'Docker CLI must target the local /var/run/docker.sock engine used by Team AI Box')
     device = Path('/dev/kvm')
     return dict(platform=sys.platform, architecture=platform.machine(), uid=os.geteuid(),
                 os=os_info['ID'].strip('"') + ':' + os_info['VERSION_ID'].strip('"'),
@@ -117,9 +123,52 @@ def validate_host_facts(manifest, facts):
     need(docker['OSType'] == 'linux' and docker['Architecture'] in ('aarch64', 'arm64'), 'Docker must target this ARM64 Linux host')
     need(facts['compose'], 'Docker Compose required')
     need('GB10' in facts['gpu'], 'supported NVIDIA GB10 GPU not detected')
-    need('nvidia' in docker.get('Runtimes', {}), 'existing NVIDIA Docker runtime unavailable')
     need(facts['kvm'], 'KVM is unavailable')
     need(facts['timestamp'] > 1735689600, 'system clock invalid; correct the factory system clock')
+
+
+def local_probe_image(reference, runner=run):
+    # Don't treat an unreachable Docker daemon as a missing image.
+    if reference.startswith('sha256:'):
+        ids = runner(['docker', 'image', 'ls', '-a', '-q', '--no-trunc']).split()
+        if reference not in ids:
+            return None
+    result = subprocess.run(['docker', 'image', 'inspect', reference], capture_output=True, text=True, timeout=15)
+    if result.returncode:
+        need('No such image' in result.stderr, 'cannot inspect GPU probe image')
+        return None
+    image = json.loads(result.stdout)[0]
+    need(image['Os'] == 'linux' and image['Architecture'] == 'arm64'
+         and re.fullmatch('sha256:[0-9a-f]{64}', image['Id']), 'unexpected GPU probe image identity')
+    return image['Id']
+
+
+def verify_container_gpu(image_id, runner=run):
+    need(re.fullmatch('sha256:[0-9a-f]{64}', image_id), 'GPU probe requires a local image ID')
+    # Same device driver/count as office workers. No pulls, mounts, network,
+    # model allocation or daemon configuration; Docker removes the probe.
+    try:
+        output = runner(['docker', 'run', '--rm', '--pull=never', '--network=none',
+                         '--read-only', '--cap-drop=ALL', '--security-opt=no-new-privileges',
+                         '--label', 'com.teamaibox.gpu-probe=install',
+                         '--gpus', nvidia_gpu_argument(),
+                         '--env', 'NVIDIA_DRIVER_CAPABILITIES=utility',
+                         '--entrypoint', '/usr/bin/nvidia-smi', image_id, '-L'], timeout=30)
+    except (InstallError, subprocess.TimeoutExpired):
+        raise InstallError('Docker NVIDIA GPU probe failed using --gpus driver=nvidia,count=all; '
+                           'the installer did not change Docker or the NVIDIA driver') from None
+    need(re.search(r'^GPU \d+: NVIDIA GB10\b', output, re.MULTILINE),
+         'Docker GPU probe did not detect the NVIDIA GB10 inside the container')
+    return 'nvidia-device-requests'
+
+
+def packaged_gpu_probe(manifest, *, required=False):
+    image = next((r['imageId'] for r in manifest['images'] if r['role'] == 'translation-worker'), None)
+    image_id = local_probe_image(image) if image else None
+    if image_id:
+        return verify_container_gpu(image_id)
+    need(not required, 'verified release GPU worker image is not available for the Docker GPU probe')
+    return 'pending-image'
 
 
 def preflight(manifest, root, state, runner=run):
@@ -260,7 +309,8 @@ def install(package, root, check=False, *, lock_path=Path('/run/lock/teamaibox-o
     state = read_state(root, manifest)
     facts = preflight(manifest, root, state)
     if check:
-        return dict(status='preflight-passed', releaseId=manifest['releaseId'], installed=False, **facts)
+        return dict(status='preflight-passed', releaseId=manifest['releaseId'], installed=False,
+                    dockerGpuAccess=packaged_gpu_probe(manifest), **facts)
     fd = os.open(lock_path, os.O_CREAT | os.O_RDWR | os.O_NOFOLLOW, 0o600)
     with os.fdopen(fd, 'a') as lock:
         try:
@@ -291,6 +341,8 @@ def install(package, root, check=False, *, lock_path=Path('/run/lock/teamaibox-o
             # Import before sizing the new sparse data filesystem so its initial
             # physical-space calculation includes Docker's unpacked image use.
             import_images(manifest, package)
+            state['dockerGpuAccess'] = packaged_gpu_probe(manifest, required=True)
+            write_json(root / 'install-state.json', state)
             for step in manifest['steps']:
                 state['currentPhase'] = step['phase']
                 write_json(root / 'install-state.json', state)

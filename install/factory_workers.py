@@ -18,7 +18,7 @@ import sys
 from urllib.parse import quote
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'tools'))
-from offline_common import need, read_json, write_json
+from offline_common import need, nvidia_device_requests, read_json, write_json
 from restore_existing_office_workers import configuration_digest, validate_identity
 
 
@@ -51,6 +51,17 @@ def request_digest(value):
     return hashlib.sha256(json.dumps(value, sort_keys=True, separators=(',', ':')).encode()).hexdigest()
 
 
+def gpu_request(host):
+    # Docker normalizes omitted DeviceIDs and Options to null/empty. Reject
+    # nonempty overrides, CDI mappings and a changed device request.
+    need(not host.get('Devices'), 'unexpected direct device mapping for an AI worker')
+    result = []
+    for request in host.get('DeviceRequests') or []:
+        need(not request.get('DeviceIDs') and not request.get('Options'), 'unexpected AI worker GPU device overrides')
+        result.append({key: request.get(key) for key in ('Driver', 'Count', 'Capabilities')})
+    return result
+
+
 def owned_container(actual, request, installation_id, name):
     labels = actual.get('Config', {}).get('Labels') or {}
     need(actual.get('Name') == '/' + name and re.fullmatch('[a-f0-9]{64}', actual.get('Id', ''))
@@ -61,6 +72,8 @@ def owned_container(actual, request, installation_id, name):
     need(actual['HostConfig']['RestartPolicy']['Name'] == 'no'
          and actual['HostConfig'].get('AutoRemove') is False,
          'office container lifecycle policy differs')
+    need(gpu_request(actual['HostConfig']) == gpu_request(request['HostConfig']),
+         'Docker did not preserve the office worker GPU request: ' + name)
 
 
 def create_stopped(root, runtime, installation_id, *, check=False, engine=docker):
@@ -72,6 +85,9 @@ def create_stopped(root, runtime, installation_id, *, check=False, engine=docker
     pending = []
     for role, p in runtime['profiles'].items():
         request = deepcopy(runtime['createRequests'][role])
+        expected_gpu = [] if role == 'asr' else nvidia_device_requests()
+        need(gpu_request(request['HostConfig']) == expected_gpu,
+             'office worker GPU request does not match the installation probe: ' + role)
         name = 'teamaibox-worker-' + p['workerId']
         need(request['Labels']['com.teamaibox.installation-id'] == installation_id,
              'worker declaration belongs to another installation')

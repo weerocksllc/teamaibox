@@ -5,6 +5,7 @@ import { createOpenCodeAdapter } from "../services/agent-bridge/src/opencode-ada
 import { createOpenCodeBridgeHttpServer } from "../services/agent-bridge/src/opencode-bridge-http-server.mjs";
 import { createNativeTransport } from '../services/agent-bridge/src/opencode-native-transport.mjs';
 import { OPEN_CODE_V119_COMPATIBILITY } from '../services/agent-bridge/src/opencode-adapter-v1-19.mjs';
+import {createPenpotNativeActivation} from '../services/agent-bridge/src/penpot-native-activation.mjs';
 
 const OPENCODE_PASSWORD_FILE = "/run/teamaibox/secrets/opencode-password";
 const BRIDGE_TOKEN_FILE = "/run/teamaibox/secrets/agent-bridge-token";
@@ -30,14 +31,18 @@ const adapter = createOpenCodeAdapter({
   // client so the inner adapter does not cancel a healthy model request first.
   timeoutMs: 120_000,
 });
+const nativeTransport = createNativeTransport({
+  origin: 'http://127.0.0.1:4096',
+  authorization: async () => `Basic ${Buffer.from(`opencode:${await secret(OPENCODE_PASSWORD_FILE)}`).toString('base64')}`,
+});
+const designActivation = createPenpotNativeActivation({transport: nativeTransport,
+  onUnavailable: code => logger.warn(code, {})});
 const server = createOpenCodeBridgeHttpServer({
   adapter,
   tokenProvider: () => secret(BRIDGE_TOKEN_FILE),
   workspace: "/workspace",
-  nativeTransport: createNativeTransport({
-    origin: 'http://127.0.0.1:4096',
-    authorization: async () => `Basic ${Buffer.from(`opencode:${await secret(OPENCODE_PASSWORD_FILE)}`).toString('base64')}`,
-  }),
+  nativeTransport,
+  nativePreparation: (method, path) => designActivation.refresh(method, path),
 });
 
 server.listen(4097, "0.0.0.0", () => logger.info("agent_bridge.listening", { host: "0.0.0.0", port: 4097 }));

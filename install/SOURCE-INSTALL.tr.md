@@ -26,6 +26,8 @@ sudo bash install/from-source.sh --region cn
 
 Bu, çevrimdışı bir kaynak derlemesi değil, **çevrimiçi kaynak derlemesi ve ardından çevrimdışı yüklemedir**. Eksik derleme araçlarını otomatik olarak hazırlar, altı model girişini indirir, Android'i ve tüm uygulama görüntülerini derleyip birleştirir, iki kaynak modelini niceler, donanım yazılımı/ana bilgisayar paketlerini toplar, çevrimdışı paketin tamamını oluşturur ve mevcut yükleyicisini çalıştırır. Docker/NVIDIA'nin yerini almaz, Docker arka plan programını yeniden başlatmaz, mevcut kurulumu temizlemez veya ana bilgisayar yönlendirmesini, DNS veya VPN ayarlarını değiştirmez. Modeller, misafir giriş durumları ve özel pazarlama web sitesi başka bir kurulumdan alınmaz.
 
+Team AI Box’ta oturum açıp **Tüm uygulamalar → Tasarım** bölümünden Penpot’u açın. Aynı hesap, ekip izinleri, ekip sürücüsü ve yapay zekâ asistanı kullanılır. Ayrı kurulum veya oturum açma gerekmez.
+
 Varsayılan çalışma alanı: `/var/tmp/teamaibox-source-build`; indirme önbellekleri ve aşama başına günlükler, klonun dışında orada bulunur. Kurulum varsayılanı `/srv/teamaibox/installation` şeklindedir. Büyük indirmeler ve birkaç yüz GB geçici disk kullanımı bekleyebilirsiniz. Model yükleme ve GPU nicelemesi önemli ölçüde zaman alabilir; sabit bir tamamlanma süresi vaat edilmemektedir.
 
 ## Kurulumu sürdürme ve durum

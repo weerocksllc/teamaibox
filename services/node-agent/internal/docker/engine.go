@@ -666,9 +666,7 @@ func WorkerCreateRequest(spec agent.WorkerStartPayload, ownership agent.Ownershi
 			}}
 		}
 	}
-	if len(spec.Devices) > 0 {
-		request.HostConfig.DeviceRequests = []engineDeviceRequest{{Driver: "nvidia", Count: -1, Capabilities: [][]string{{"gpu"}}}}
-	}
+	request.HostConfig.DeviceRequests = expectedDeviceRequests(spec.Devices)
 	for name, value := range spec.Environment {
 		request.Env = append(request.Env, name+"="+value)
 	}

@@ -109,6 +109,15 @@ def run(args, *, timeout=120, env=None, stdout=None):
     return result.stdout or ''
 
 
+def nvidia_device_requests():
+    """Docker API equivalent of --gpus driver=nvidia,count=all."""
+    return [dict(Driver='nvidia', Count=-1, Capabilities=[['gpu']])]
+
+
+def nvidia_gpu_argument():
+    return 'driver=' + nvidia_device_requests()[0]['Driver'] + ',count=all'
+
+
 def validate_release(value, built=False):
     need(value.get('schemaVersion') == 1, 'unsupported release schema')
     need(ID.fullmatch(value.get('releaseId', '')), 'invalid releaseId')
@@ -128,9 +137,15 @@ def validate_release(value, built=False):
          'host command requirements incomplete')
     need(type(host.get('freeReserveBytes')) is int and host['freeReserveBytes'] >= 0, 'free space reserve required')
     images = value.get('images', [])
+    # A feature is an explicit complete closure, never an inferred extra image.
+    features = value.get('features', [])
+    need(isinstance(features, list) and all(isinstance(v, str) for v in features) and len(features) == len(set(features)) and set(features) <= {'penpot'}, 'invalid release features')
+    design_roles = {'penpot-' + name for name in ('frontend','backend','exporter','mcp','postgres','cache')} if 'penpot' in features else set()
     roles = [v.get('role') for v in images]
     need(len(set(roles)) == len(roles), 'duplicate image role')
     need(IMAGE_ROLES.issubset(roles), 'missing image roles: ' + ', '.join(sorted(IMAGE_ROLES - set(roles))))
+    need(design_roles == {role for role in roles if str(role).startswith('penpot-')}, 'incomplete or undeclared design images')
+    image_roles = set(roles)
     for row in images:
         need(ID.fullmatch(row['role']), 'invalid image role')
         need(re.fullmatch('sha256:[0-9a-f]{64}', row.get('imageId', '')), 'image content ID required: ' + row['role'])
@@ -144,6 +159,8 @@ def validate_release(value, built=False):
     roles = [v.get('role') for v in assets]
     need(len(set(roles)) == len(roles), 'duplicate asset role')
     need(ASSET_ROLES.issubset(roles), 'missing assets: ' + ', '.join(sorted(ASSET_ROLES - set(roles))))
+    if design_roles:
+        need({'penpot-plugin','penpot-corresponding-source'} <= set(roles), 'design plugin/source payload missing')
     destinations = []
     for row in assets:
         need(ID.fullmatch(row['role']), 'invalid asset role')
@@ -181,13 +198,14 @@ def validate_release(value, built=False):
         need(type(step.get('timeoutSeconds')) is int and step['timeoutSeconds'] > 0, 'phase timeout required')
     need(value.get('readiness'), 'component readiness inventory required')
     for row in value['readiness']:
-        need(ID.fullmatch(row['role']) and row['role'] in IMAGE_ROLES, 'invalid readiness role')
+        need(ID.fullmatch(row['role']) and row['role'] in IMAGE_ROLES | design_roles and row['role'] in image_roles, 'invalid readiness role')
         need(row.get('containerRole', row['role']) == ('sfu' if row['role'] == 'casting-sfu' else row['role']),
              'readiness container role differs from product contract')
         need(type(row.get('timeoutSeconds')) is int and row['timeoutSeconds'] > 0, 'readiness timeout required')
     required = {'platform-api', 'web', 'node-agent', 'assistant-worker', 'drawing-worker',
                 'ocr-worker', 'asr-worker', 'translation-worker', 'embedding-worker'}
     need(required.issubset({r['role'] for r in value['readiness']}), 'required component readiness missing')
+    need(design_roles <= {r['role'] for r in value['readiness']}, 'design readiness inventory missing')
     return value
 
 

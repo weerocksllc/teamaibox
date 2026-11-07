@@ -7,10 +7,19 @@ import {AgentModelAccessService} from '../src/agent-model-access-service.mjs';
 import {generateSourceClientConfig,INTERNAL_SOURCE_GATEWAYS} from '../src/source-client-config.mjs';
 import {DynamicSandboxController,dynamicSandboxIdentity} from '../src/dynamic-sandbox-controller.mjs';
 import {createDynamicSandboxRuntime} from '../src/dynamic-sandbox-runtime.mjs';
+import {penpotRuntimeContext,withPenpotRuntimeConfig,safePenpotConfiguration} from '../src/penpot-runtime-config.mjs';
 
 const cfg=JSON.parse(await readFile('/run/config/agent-controller.json','utf8'));
+cfg.penpot=safePenpotConfiguration(cfg.penpot,code=>console.error(code));
 if (!/^sha256:[a-f0-9]{64}$/.test(cfg.image) || !/^[a-z0-9_-]+$/.test(cfg.volume)
  || !Array.isArray(cfg.networks) || cfg.networks.length!==2 || cfg.networks.some(n=>!/^[a-z0-9_-]+$/.test(n))) throw Error('agent_controller_configuration_invalid');
+if (cfg.penpot?.previousAgentImage!==undefined
+ && (!/^sha256:[a-f0-9]{64}$/.test(cfg.penpot.previousAgentImage)||cfg.penpot.previousAgentImage===cfg.image)) {
+ // Invalid optional transition configuration must not take the controller
+ // down for all users. Do not guess a previous image or accept a tag.
+ console.error('penpot_previous_image_invalid');
+ delete cfg.penpot.previousAgentImage;
+}
 const ROOT='/state';
 const auth=(await readFile('/agent-control/dynamic-controller-token','utf8')).trim();
 if (!/^[A-Za-z0-9_-]{32,4096}$/.test(auth)) throw Error('agent_controller_token_invalid');
@@ -31,8 +40,17 @@ async function docker(method,path,body) {
 async function atomic(file,value,uid=65532,mode=0o400) {
  const temporary=file+'.next';await writeFile(temporary,value,{mode});await chown(temporary,uid,uid);await chmod(temporary,mode);await rename(temporary,file);
 }
+async function projectDesignContext(id, design=cfg.penpot) {
+ const path=ROOT+'/'+id.key+'/runtime/penpot';
+ const previous=await readFile(path+'/context.json','utf8').catch(error=>{if(error.code==='ENOENT')return null;throw error;});
+ if(!design && previous===null)return;
+ const next=JSON.stringify(penpotRuntimeContext(id.ownerIdentityId,design));
+ if(previous===next)return;
+ await mkdir(path,{recursive:true,mode:0o700});await chown(path,65532,65532);
+ await atomic(path+'/context.json',next);
+}
 const storage={
- async prepare(id) {
+ async prepare(id,current) {
   const base=ROOT+'/'+id.key;
   for(const relative of ['','runtime','runtime/secrets','runtime/xdg-config','runtime/xdg-config/opencode','runtime/source-config','runtime/source-config/apt','model','workspace','workspace/.teamaibox','workspace/.teamaibox/home','workspace/.teamaibox/data','workspace/.teamaibox/cache']) {
    const path=base+'/'+relative;await mkdir(path,{recursive:true,mode:0o700});
@@ -44,18 +62,28 @@ const storage={
    try {await writeFile(path,randomBytes(48).toString('base64url'),{flag:'wx',mode:0o400});}catch(e){if(e.code!=='EEXIST')throw e;}
    await chown(path,65532,65532);await chmod(path,0o400);
   }
+  // Existing read-only runtime mount, never a user configuration file.
+  if (!runtime.isLegacy(current)) await projectDesignContext(id);
   const source=generateSourceClientConfig(INTERNAL_SOURCE_GATEWAYS);
   await atomic(base+'/runtime/xdg-config/opencode/.gitignore','node_modules\npackage.json\npackage-lock.json\nbun.lock\n.gitignore\n',0,0o444);
   for(const [path,value] of [['pip.conf',source.pipConf],['npmrc',source.npmrc],['apt/apt.conf',source.aptConf],['apt/sources.list',source.aptSources]])await atomic(base+'/runtime/source-config/'+path,value,0,0o444);
   await atomic(base+'/owner.json',JSON.stringify({ownerIdentityId:id.ownerIdentityId,lastUsedAt:Date.now()}),0,0o600);
   return {token:(await readFile(base+'/runtime/secrets/agent-bridge-token','utf8')).trim()};
  },
- async credentials(id) {
+ async credentials(id,current) {
   const base=ROOT+'/'+id.key;
+  // Reconcile an already-running owner's disable too; no container restart.
+  const legacy=runtime.isLegacy(current);
+  const design=legacy?null:cfg.penpot;
+  await projectDesignContext(id,design);
   const service=new AgentModelAccessService({
    catalog:{async listApprovedAgentModels(){return [{alias:'agent.default',displayName:'Team AI Box Agent',contextTokens:32768,outputTokens:4096,approvedForAgent:true}];}},
    credentialIssuer:authority,sandboxProjector:{
-    async projectConfig(input){await atomic(base+'/runtime/xdg-config/opencode/opencode.json',input.contents,0,0o444);},
+    async projectConfig(input){
+     const contents=design?JSON.stringify(withPenpotRuntimeConfig(JSON.parse(input.contents.toString('utf8')),
+      penpotRuntimeContext(id.ownerIdentityId,design)),null,2)+'\n':input.contents;
+     await atomic(base+'/runtime/xdg-config/opencode/opencode.json',contents,0,0o444);
+    },
     async projectSecret(input){await atomic(base+'/model/teamaibox-model-token',input.contents);}
    }});
   // Owner UUID is a stable sandbox scope, unique across this controller.

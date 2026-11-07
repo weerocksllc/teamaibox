@@ -277,7 +277,7 @@ sudo bash install/from-source.sh
 
 1. Open `https://<BOX_LAN_IP>/` using the Spark's current LAN address. Verify that its locally generated HTTPS certificate belongs to your device.
 2. Sign in as `admin` / `admin`, **change the initial password**, then create ordinary accounts. Do not expose the initial credentials to the public internet.
-3. Wait for each AI application to become ready, select a language/theme in the profile menu and begin from the workbench.
+3. Open **All applications → Design** to use the built-in Penpot editor with your Team AI Box account. You can exchange files with Team Drive and use the AI assistant next to an open design. There is no separate Penpot install or login.
 4. For virtual computers, provide your own authorized Windows/Linux ARM64 ISO and OS license. For an offline target, first prepare the complete package, then follow [the package installation guide](install/README.md); source preparation itself is not offline.
 
 ## Open source, with clear boundaries

@@ -22,12 +22,16 @@ def argument(path):
     return '"' + text.replace('\\', '\\\\').replace('"', '\\"').replace('%', '%%') + '"'
 
 
-def unit(command, *, description, after='', requires='', kind='oneshot', restart=True, environment=None):
+def unit(command, *, description, after='', requires='', requisite='', part_of='', kind='oneshot', restart=True, environment=None):
     lines = ['[Unit]', 'Description=' + description, 'StartLimitIntervalSec=0']
     if after:
         lines.append('After=' + after)
     if requires:
         lines.append('Requires=' + requires)
+    if requisite:
+        lines.append('Requisite=' + requisite)
+    if part_of:
+        lines.append('PartOf=' + part_of)
     lines += ['[Service]', 'Type=' + kind]
     if kind == 'oneshot':
         lines += ['RemainAfterExit=yes', 'TimeoutStartSec=0']
@@ -81,7 +85,10 @@ def definitions(root, installation, release):
             description='Restore this Team AI Box encrypted data volume'),
         'teamaibox-frontdoor.service': unit(
             python('restore_appliance_frontdoor.py', '--configuration', refs['frontdoor']),
-            description='Restore installed Team AI Box services', after='docker.service network-online.target', requires='docker.service'),
+            description='Restore installed Team AI Box services',
+            after='docker.service network-online.target teamaibox-existing-business-volumes.service teamaibox-guest-devices.service teamaibox-casting-credentials.service',
+            requires='teamaibox-existing-business-volumes.service teamaibox-guest-devices.service teamaibox-casting-credentials.service',
+            requisite='docker.service', part_of='docker.service'),
         'teamaibox-phone-storage.service': unit(
             [binary, '--config', refs['guestStorage'], '--socket', root / 'guest-runtime/storage.sock'],
             description='Team AI Box local guest storage', kind='simple',
@@ -91,7 +98,8 @@ def definitions(root, installation, release):
             after='systemd-modules-load.service', restart=True),
         'teamaibox-existing-office-workers.service': unit(
             python('restore_calibrated_office_workers_v3.py', '--configuration', refs['officeBoot'], '--manifest', refs['officeManifest']),
-            description='Restore Team AI Box AI services independently', after='docker.service teamaibox-frontdoor.service', requires='docker.service',
+            description='Restore Team AI Box AI services independently', after='docker.service teamaibox-frontdoor.service',
+            requisite='docker.service', part_of='docker.service',
             environment={'TEAMAIBOX_POSTGRES_CONTAINER': installation['services']['postgres']['containerId'],
                          'PLATFORM_APPLIANCE_NODE_ID': installation['nodeId'],
                          'TEAMAIBOX_AI_BOOT_STATUS_FILE': str(root / 'public/ai-startup.json')}),
@@ -103,11 +111,6 @@ def definitions(root, installation, release):
             '[Unit]', 'Description=Track appliance address changes', '[Timer]', 'OnBootSec=5s',
             'OnUnitInactiveSec=15s', 'AccuracySec=1s', 'Unit=teamaibox-network-identity.service',
             '[Install]', 'WantedBy=timers.target', '']),
-        'docker.service.d/teamaibox-existing-business-volumes.conf': '\n'.join([
-            '[Unit]', 'Requires=teamaibox-existing-business-volumes.service teamaibox-guest-devices.service teamaibox-casting-credentials.service',
-            'After=teamaibox-existing-business-volumes.service teamaibox-guest-devices.service teamaibox-casting-credentials.service',
-            '[Service]', 'ExecStartPre=' + ' '.join(argument(v) for v in
-                python('restore_existing_business_volumes.py', '--configuration', refs['storageVolumes'], '--check')), '']),
     }
     if {'usb', 'udp'} & set(release['guestSystems']['cameraSources']):
         path = within(runtime, 'deploy/android/cuttlefish/phone_usb_host_control.py')
@@ -132,6 +135,9 @@ def install_files(root, installation_id, files, *, unit_root=Path('/etc/systemd/
     need(ownership['installationId'] == installation_id, 'recovery installation identity differs')
     # Validate every existing destination before writing any of them.
     for name, text in files.items():
+        need(re.fullmatch(r'teamaibox-[a-z0-9-]+\.(?:service|timer)', name)
+             or (unit_root != Path('/etc/systemd/system') and re.fullmatch(r'[a-z0-9-]+\.(?:service|timer)', name)),
+             'recovery may only write Team AI Box units')
         path = within(unit_root, name)
         sha = hashlib.sha256(text.encode()).hexdigest()
         previous = ownership['files'].get(name)
@@ -168,6 +174,8 @@ def activate_helpers(root, installation_id, *, check=False, command=run):
     owned = read_json(root / 'recovery-units.json')
     need(owned['installationId'] == installation_id, 'helper installation identity differs')
     names = ['teamaibox-guest-devices.service', 'teamaibox-phone-storage.service']
+    if 'teamaibox-frontdoor.service' in owned['files']:
+        names.insert(0, 'teamaibox-frontdoor.service')
     if 'teamaibox-phone-camera.service' in owned['files']:
         names.append('teamaibox-phone-camera.service')
     names.append('teamaibox-network-identity.timer')

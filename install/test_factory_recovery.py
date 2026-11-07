@@ -72,6 +72,14 @@ class RecoveryTests(unittest.TestCase):
         self.assertIn('Restart=on-failure', text)
         self.assertNotIn('restart docker', text)
 
+    def test_cannot_publish_a_docker_dropin_even_when_no_file_exists(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            with self.assertRaisesRegex(InstallError, 'only write Team AI Box'):
+                install_files(root, 'new', {'docker.service.d/teamaibox.conf': 'invalid'},
+                              unit_root=root / 'systemd', command=lambda _: self.fail('called systemctl'))
+            self.assertFalse((root / 'recovery-units.json').exists())
+
     def test_existing_unit_is_not_adopted_or_overwritten(self):
         with tempfile.TemporaryDirectory() as temp:
             root, units = Path(temp) / 'new', Path(temp) / 'systemd'

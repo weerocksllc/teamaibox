@@ -62,6 +62,20 @@ async function loadVersion(executor, fileId, versionNumber) {
   return version(rows(await executor.query("SELECT * FROM files.versions WHERE file_id=$1 AND version=$2", [fileId, versionNumber]))[0]);
 }
 
+async function lockDesignReceipt(transaction, receipt, ownerIdentityId) {
+  if (!receipt) return;
+  const result=await transaction.query(`SELECT 1 FROM design.drive_export_receipts
+    WHERE operation_id=$1 AND identity_id=$2 AND request_hash=$3 AND state='pending' FOR UPDATE`,
+  [receipt.operationId,ownerIdentityId,receipt.requestHash]);
+  if (rows(result).length!==1) throw new FileRepositoryError("design_export_conflict","The design export operation cannot commit");
+}
+
+async function completeDesignReceipt(transaction, receipt, fileId, fileVersion) {
+  if (!receipt) return;
+  await transaction.query(`UPDATE design.drive_export_receipts SET state='complete',file_id=$2,file_version=$3
+    WHERE operation_id=$1`,[receipt.operationId,fileId,fileVersion]);
+}
+
 export class PostgresFileRepository {
   #database;
 
@@ -97,30 +111,44 @@ export class PostgresFileRepository {
     } catch (error) { throw translated(error); }
   }
 
-  async createFile({ entry: value, version: versionValue }) {
+  async createDesignExport(input,receipt) { return this.createFile(input,receipt); }
+  async appendDesignExport(entryId,value,expectedRevision,receipt) { return this.appendVersion(entryId,value,expectedRevision,receipt); }
+
+  async createFile({ entry: value, version: versionValue }, designReceipt = null) {
     try {
       return await this.#database.transaction(async (transaction) => {
+        await lockDesignReceipt(transaction,designReceipt,versionValue.createdByIdentityId);
+        if (designReceipt && value.parentId) {
+          const parent=await loadEntry(transaction,value.parentId,true);
+          if(!parent||parent.trashedAt||parent.rootId!==value.rootId||parent.kind!=='folder')
+            throw new FileRepositoryError("file_parent_not_found","File destination is unavailable");
+        }
         const created = entry(rows(await transaction.query(`INSERT INTO files.entries (
           root_id,parent_id,entry_kind,entry_name,owner_identity_id,created_at,updated_at
         ) VALUES ($1,$2,'file',$3,$4,$5,$6) RETURNING *`, [value.rootId, value.parentId, value.name, value.ownerIdentityId, value.createdAt, value.updatedAt]))[0]);
         await transaction.query(`INSERT INTO files.versions (
           file_id,root_id,version,object_id,object_version,byte_size,media_type,sha256,provenance,created_by_identity_id,created_at
         ) VALUES ($1,$2,1,$3,$4,$5,$6,$7,$8::jsonb,$9,$10)`, [created.id, created.rootId, versionValue.objectId, versionValue.objectVersion, versionValue.size, versionValue.mediaType, binaryDigest(versionValue.sha256), JSON.stringify(versionValue.provenance), versionValue.createdByIdentityId, versionValue.createdAt]);
+        await completeDesignReceipt(transaction,designReceipt,created.id,1);
         return { entry: await loadEntry(transaction, created.id), version: await loadVersion(transaction, created.id, 1), root: await loadRoot(transaction, created.rootId) };
       });
     } catch (error) { throw translated(error); }
   }
 
-  async appendVersion(entryId, value, expectedRevision) {
+  async appendVersion(entryId, value, expectedRevision, designReceipt = null) {
     try {
       return await this.#database.transaction(async (transaction) => {
+        await lockDesignReceipt(transaction,designReceipt,value.createdByIdentityId);
         const selected = await loadEntry(transaction, entryId, true);
         if (!selected || selected.kind !== "file" || selected.trashedAt) throw new FileRepositoryError("file_not_found", "File is unavailable");
+        if(designReceipt && (selected.rootId!==designReceipt.rootId||selected.parentId!==designReceipt.parentId))
+          throw new FileRepositoryError("file_revision_conflict","File destination changed");
         if (selected.revision !== expectedRevision) throw new FileRepositoryError("file_revision_conflict", "File revision changed");
         const next = selected.currentVersion + 1;
         await transaction.query(`INSERT INTO files.versions (
           file_id,root_id,version,object_id,object_version,byte_size,media_type,sha256,provenance,created_by_identity_id,created_at
         ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9::jsonb,$10,$11)`, [entryId, selected.rootId, next, value.objectId, value.objectVersion, value.size, value.mediaType, binaryDigest(value.sha256), JSON.stringify(value.provenance), value.createdByIdentityId, value.createdAt]);
+        await completeDesignReceipt(transaction,designReceipt,entryId,next);
         return { entry: await loadEntry(transaction, entryId), version: await loadVersion(transaction, entryId, next), root: await loadRoot(transaction, selected.rootId) };
       });
     } catch (error) { throw translated(error); }

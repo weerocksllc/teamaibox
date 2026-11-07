@@ -44,20 +44,23 @@ def portable_header(info):
 def publish(root, pending, final, archive, checksum):
     """Publish only a verified package; an output collision never overwrites.
 
-    The checksum file is published last. Ordinary failures move newly published
-    paths back into our private stage; a power failure leaves an incomplete
-    output without the completion checksum and is refused on the next build.
+    The directory already has its internal checksums. When also publishing a
+    tar, its separate checksum is published last. Ordinary failures move
+    newly published paths back into our private stage.
     """
     checksum_path = archive.with_name(archive.name + '.sha256')
-    staged_checksum = pending.with_name('package.sha256')
-    atomic(staged_checksum, f'{checksum}  {archive.name}\n'.encode(), 0o644)
+    moves = [(root, final)]
+    if pending is not None:
+        staged_checksum = pending.with_name('package.sha256')
+        atomic(staged_checksum, f'{checksum}  {archive.name}\n'.encode(), 0o644)
+        moves.extend(((pending, archive), (staged_checksum, checksum_path)))
     fd = os.open(archive.parent, os.O_RDONLY | os.O_DIRECTORY)
     published = []
     try:
         fcntl.flock(fd, fcntl.LOCK_EX)
         need(not any(p.exists() or p.is_symlink() for p in (final, archive, checksum_path)),
              'output already exists; existing release preserved')
-        for source, destination in ((root, final), (pending, archive), (staged_checksum, checksum_path)):
+        for source, destination in moves:
             identity = (source.stat().st_dev, source.stat().st_ino)
             os.rename(source, destination)
             published.append((source, destination, identity))
@@ -153,7 +156,7 @@ def inventory_asset(source, destination, role):
     return dict(role=role, source=str(source), destination=destination, files=files)
 
 
-def build_space(config, output, runner=run):
+def build_space(config, output, runner=run, *, directory_only=False):
     images = {}
     for row in config['images']:
         observed = json.loads(runner(['docker', 'image', 'inspect', row['reference']]))[0]
@@ -161,9 +164,10 @@ def build_space(config, output, runner=run):
              'local image does not match release: ' + row['role'])
         images[row['imageId']] = observed['Size']
     assets = sum(item['size'] + 4096 for row in config['assets'] for item in row['files'])
-    # Keep both the extracted payload and distributable tar. Source assets are
-    # already charged against filesystem free space; do not count them again.
-    needed = 2 * (assets + sum(images.values()) * 11 // 10 + 64 * 1024**2)
+    # Source assets are already charged against filesystem free space. A tar
+    # is optional; keeping one on the same volume requires a second copy.
+    copies = 1 if directory_only else 2
+    needed = copies * (assets + sum(images.values()) * 11 // 10 + 64 * 1024**2)
     existing = output
     while not existing.exists():
         existing = existing.parent
@@ -172,7 +176,7 @@ def build_space(config, output, runner=run):
     return needed
 
 
-def build(release_path, output, repo, runner=run, allow_working_tree=False, image_cache=None):
+def build(release_path, output, repo, runner=run, allow_working_tree=False, image_cache=None, *, directory_only=False):
     release_path, repo, output = Path(release_path).resolve(), Path(repo).resolve(), Path(output).resolve()
     config = validate_release(read_json(release_path))
     for asset in config['assets']:
@@ -191,11 +195,13 @@ def build(release_path, output, repo, runner=run, allow_working_tree=False, imag
         if tracked.returncode != 0 or status:
             need(allow_working_tree, 'runtime input differs from source commit; use explicit --allow-working-tree for a candidate: ' + name)
             modified.append(name)
-    build_space(config, output, runner)
+    build_space(config, output, runner, directory_only=directory_only)
     output.mkdir(parents=True, exist_ok=True)
     name = 'teamaibox-' + config['releaseId'] + '-linux-arm64'
     final, archive = output / name, output / (name + '.tar')
-    need(not final.exists() and not archive.exists(), 'output already exists; choose a different release/output directory')
+    checksum_path = archive.with_name(archive.name + '.sha256')
+    need(not any(path.exists() or path.is_symlink() for path in (final, archive, checksum_path)),
+         'output already exists; choose a different release/output directory')
     stage = Path(tempfile.mkdtemp(prefix='.' + name + '-', dir=output))
     root = stage / name
     root.mkdir()
@@ -259,6 +265,11 @@ def build(release_path, output, repo, runner=run, allow_working_tree=False, imag
         sums = ''.join(f"{files[n]['sha256']}  {n}\n" for n in sorted(files)) + f'{digest(root / "release.json")}  release.json\n'
         atomic(root / 'checksums.sha256', sums.encode(), 0o644)
         verify_package(root)
+        if directory_only:
+            manifest_checksum = digest(root / 'release.json')
+            publish(root, None, final, archive, None)
+            return dict(status='built', releaseId=config['releaseId'], directory=str(final),
+                        manifestSha256=manifest_checksum, payloadBytes=manifest['payloadBytes'], installed=False)
         # PAX supports large model files. No compression avoids extra CPU/RAM.
         pending = stage / 'package.tar'
         with tarfile.open(pending, 'w', format=tarfile.PAX_FORMAT) as tar:
@@ -283,8 +294,11 @@ def main():
     parser.add_argument('--destination')
     parser.add_argument('--allow-working-tree', action='store_true', help='Explicit candidate build; record modified runtime input hashes')
     parser.add_argument('--image-cache', type=Path, help='Reuse exact image archives from a verified extracted package; never reuse live state')
+    parser.add_argument('--directory-only', action='store_true', help='Publish the complete verified install directory without a second tar copy')
     parser.add_argument('--describe-contract', action='store_true', help='Print mandatory release roles and phases')
     args = parser.parse_args()
+    if args.directory_only and (args.describe_contract or args.verify or args.inventory_asset):
+        parser.error('--directory-only is only valid when building a release')
     if args.describe_contract:
         result = dict(schemaVersion=1, architecture='arm64', images=sorted(IMAGE_ROLES), assets=sorted(ASSET_ROLES),
                       phases=list(PHASES), imageIdentity='full sha256 content ID; Linux ARM64; no registry fallback')
@@ -297,7 +311,7 @@ def main():
     else:
         need(args.release and args.output, '--release and --output required')
         result = build(args.release, args.output, args.repository, allow_working_tree=args.allow_working_tree,
-                       image_cache=args.image_cache)
+                       image_cache=args.image_cache, directory_only=args.directory_only)
     print(json.dumps(result, ensure_ascii=False, indent=2))
 
 

@@ -63,11 +63,21 @@ def public_image(value):
     return value
 
 
-def build(repository, output, roles, guacamole=None, guacd=None, network='default'):
+def validate_penpot_input(repository, roles, artifact, binary_sha256):
+    need(bool(artifact) == bool(binary_sha256), 'Penpot native artifact and checksum must be provided together')
+    if artifact:
+        need('agent-sandbox' in roles, 'Penpot native artifact requires the agent-sandbox build role')
+        from build_penpot_agent import validate_artifact
+        validate_artifact(artifact, binary_sha256, repository)
+
+
+def build(repository, output, roles, guacamole=None, guacd=None, network='default',
+          penpot_native_artifact=None, penpot_native_sha256=None):
     repository, output = repository.resolve(), output.absolute()
     supported = set(RECIPES) | set(ALIASES) | set(UPSTREAM_IMAGES) | {'desktop-proxy'}
     need(set(roles) <= supported and len(set(roles)) == len(roles), 'unknown or duplicate build role')
     need(not output.exists(), 'use a new output directory')
+    validate_penpot_input(repository, roles, penpot_native_artifact, penpot_native_sha256)
     if set(roles) & {'desktop-gateway', 'virtual-computers-plugin'}:
         public_image(guacamole)
     if 'desktop-proxy' in roles:
@@ -124,6 +134,15 @@ def build(repository, output, roles, guacamole=None, guacd=None, network='defaul
                 need(result.returncode == 0, 'build failed; see ' + role + '.log')
             image = json.loads(run(['docker', 'image', 'inspect', tag]))[0]
             need(image['Architecture'] == 'arm64' and image['Os'] == 'linux', 'image architecture mismatch')
+            if role == 'agent-sandbox' and penpot_native_artifact:
+                from build_penpot_agent import build as build_penpot_agent
+                candidate = build_penpot_agent(image['Id'], penpot_native_artifact, penpot_native_sha256,
+                                               output / 'penpot-agent', repository)
+                # Record the final verified image, never the unpatched base.
+                tag = 'teamaibox-penpot-agent:' + candidate['inputKey']
+                image = json.loads(run(['docker', 'image', 'inspect', tag]))[0]
+                need(image['Id'] == candidate['imageId'], 'Penpot Agent output identity changed')
+                report['penpotNativeRuntime'] = candidate
             report['images'][role] = image['Id']
             report['references'][role] = tag
             print(role + ': built', flush=True)
@@ -145,7 +164,10 @@ if __name__ == '__main__':
     p.add_argument('--guacamole-image', help='public guacamole/guacamole image with digest')
     p.add_argument('--guacd-image', help='public guacamole/guacd image with digest')
     p.add_argument('--network', choices=['default', 'host'], default='default', help='build network only; does not configure runtime networks')
+    p.add_argument('--penpot-native-artifact', type=Path, help='verified source-built native transport artifact directory')
+    p.add_argument('--penpot-native-sha256', help='SHA256 of that native binary; required with its artifact')
     a = p.parse_args()
-    result = build(a.repository, a.output, a.roles, a.guacamole_image, a.guacd_image, a.network)
+    result = build(a.repository, a.output, a.roles, a.guacamole_image, a.guacd_image, a.network,
+                   a.penpot_native_artifact, a.penpot_native_sha256)
     print(json.dumps(result, indent=2))
     raise SystemExit(bool(result['failures']))

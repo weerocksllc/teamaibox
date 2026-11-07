@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "status": "local-integration-candidate",
+  "repository": "https://github.com/anomalyco/opencode.git",
+  "commit": "810c0eba1a7348036f8bdf61e6632d0c36c6876c",
+  "tree": "29ad640381b991aa00c464347877f1ba75584f25",
+  "upstreamVersion": "1.19.5",
+  "candidateVersion": "1.19.5",
+  "patchRevision": "teamaibox-penpot-transport-2",
+  "modifiedByPlatform": true,
+  "license": "MIT",
+  "bunToolchain": {
+    "version": "1.4.4",
+    "platform": "linux/arm64",
+    "url": "https://github.com/oven-sh/bun/releases/download/bun-v1.4.4/bun-linux-aarch64.zip",
+    "sha256": "baa6bb36f51d6e58561e02bbea825038a9df454f673d6d776e8bbf86f8c7850e"
+  },
+  "contractFiles": {
+    "packages/opencode/src/session/tools.ts": "5ad3f44682fc8e2bacb2222157943de8ab7dd663a1e0ddf5e4a213539b1f67d7",
+    "packages/opencode/src/mcp/catalog.ts": "1123ce304cd647e0945aa98743f411a69988f6dde63867aea78b74c72a5abe11",
+    "packages/opencode/src/mcp/index.ts": "82c459309dfd005d25daecfabc1007d807d4bee23f6078434974277938a1c026",
+    "packages/plugin/src/index.ts": "7ce98ddab759903e6618b40a1c8beb1b621f0691f8f508ad2c07dba2041744e1",
+    "package.json": "889a89bf4b914323e7af206a854bd400d30395f04c377afbbfd65042f15f7288",
+    "bun.lock": "f65cf6d303cf0634b8e09bb545b99de33c6be31d4314008f4b5e7a4a85bb9327",
+    "packages/opencode/script/build.ts": "a9936f1f84bbcb0f084c50d18a9025708508a4c07da598aa96925b47aa030d5e",
+    "packages/opencode/script/generate.ts": "6351777e5e8bf0123f3ef31bc4fd13912ea7800249f130cb4893d8c9e8a16c0a",
+    "LICENSE": "625f0f619133f89bbbb2abe37369613dfa1885eba1e50d02170deb62bb42cb6b"
+  }
+}

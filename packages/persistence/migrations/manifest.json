@@ -946,6 +946,62 @@
       "upSha256": "b82cf30f117aebff7c8ea0fa91070c93810b2f1dfc442200a424f1dbcb7db95c",
       "down": "000118_retire_model_import_bookings.down.sql",
       "downSha256": "c404aa2b69d754b137ba4468b059cf176f50cefd706a5ff5ce8d026124e45d80"
+    },
+    {
+      "version": 119,
+      "name": "penpot_identity_boundary",
+      "up": "000119_penpot_identity_boundary.up.sql",
+      "upSha256": "0b012233da6ed035011156c749c261bbceac3cf8106d9da45673b11168bf6376",
+      "down": "000119_penpot_identity_boundary.down.sql",
+      "downSha256": "fd7452c462137787ce4159c94a0176c6b9d27d6e753ed2d11805aa30bc78d7b8"
+    },
+    {
+      "version": 120,
+      "name": "penpot_call_boundary",
+      "up": "000120_penpot_call_boundary.up.sql",
+      "upSha256": "0f379b71203b9a17171ed4b72e8c372ec981eb64bed9f44474f8486e498679e6",
+      "down": "000120_penpot_call_boundary.down.sql",
+      "downSha256": "aff12ca658da7b2732dde7edb62c6b096c7b221777a45ff4008c8016ffd7effb"
+    },
+    {
+      "version": 121,
+      "name": "penpot_team_directory",
+      "up": "000121_penpot_team_directory.up.sql",
+      "upSha256": "b9f701b05fd01ff5a19dcdb2b59749dd3c6598e2fab3a7f0b50446a1d426276e",
+      "down": "000121_penpot_team_directory.down.sql",
+      "downSha256": "af911027b0ae24bbde4167f394884273de63ea69dcde25f9929733a7117ad235"
+    },
+    {
+      "version": 122,
+      "name": "penpot_drive_export_receipts",
+      "up": "000122_penpot_drive_export_receipts.up.sql",
+      "upSha256": "73df1727b2b3da5bae6084405211313ca37ef082babcf33add8715eada45ae4b",
+      "down": "000122_penpot_drive_export_receipts.down.sql",
+      "downSha256": "c38084bc2efefef8ca80eebf9417cfb6e3de954c90c3423d172a5b76c31e855a"
+    },
+    {
+      "version": 123,
+      "name": "penpot_drive_import_requests",
+      "up": "000123_penpot_drive_import_requests.up.sql",
+      "upSha256": "9a8c64d6884f40c30eca2225fd605965abeefb4758ac34685a78dad14dadb887",
+      "down": "000123_penpot_drive_import_requests.down.sql",
+      "downSha256": "4a1fef27ab797ae0beefe4dc426b19cc745202fcb5adc1ff992785d6d960482e"
+    },
+    {
+      "version": 124,
+      "name": "penpot_team_activation",
+      "up": "000124_penpot_team_activation.up.sql",
+      "upSha256": "33da4520f7a4c1012b6bba91916c362c9b08abc085ee0672d3dc1b96defcb30c",
+      "down": "000124_penpot_team_activation.down.sql",
+      "downSha256": "77339e36017e0211734271c54c5875a10717dd9b5fb6654f97664947112dc6fc"
+    },
+    {
+      "version": 125,
+      "name": "penpot_write_review",
+      "up": "000125_penpot_write_review.up.sql",
+      "upSha256": "3bbdb0134ac6ac67b3e3ac7d45d9f7ccbe8fb2509463d84fcd6a1953ccbb25a8",
+      "down": "000125_penpot_write_review.down.sql",
+      "downSha256": "30e61aea1be009732cc423913f011f65d8883be886c0606dcdb2cc0ed44dc3b3"
     }
   ]
 }

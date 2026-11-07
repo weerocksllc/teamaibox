@@ -14,6 +14,7 @@ O [inventário de componentes](docs/open-source/components.json) legível por m�
 
 | Componente/material | Limite da licença | Requisitos de distribuição |
 | --- | --- | --- |
+| Penpot 2.18.5, MCP/plugin oficiais e alterações cobertas | MPL-2.0; licenças próprias das dependências | Na redistribuição, preservar os avisos e fornecer as fontes modificadas exatas, versões fixadas e scripts de compilação. As alterações de transporte do OpenCode mantêm MIT; o MIT da raiz não altera a licença do Penpot. |
 | Receptor UxPlay e `deploy/casting/uxplay-*.patch` | GPL-3.0-only | Retenha GPL, avisos, fonte upstream exata, patches e crie scripts com qualquer binário receptor; apenas vincular ao upstream é insuficiente para uma versão binária. |
 | gst-plugins-rs / `gst-webrtc-*.patch` | MPL-2.0 | Guarde os avisos e disponibilize os arquivos de origem cobertos modificados. |
 | GStreamer | Licenças LGPL e plugins individuais | Inspecione o conjunto real de plug-ins e cumpra as obrigações correspondentes. |

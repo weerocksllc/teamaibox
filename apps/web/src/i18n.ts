@@ -1,6 +1,8 @@
 import { localizedCatalogs } from "../../../packages/ui-system/src/product-localization.mjs";
 import { localeDefinitions, supportedLocaleCodes, normalizeProductLocale, type ProductLocale } from "../../../packages/ui-system/src/locale-registry.mjs";
 export const zhCN = {
+  "app.penpot.name": "设计",
+  "app.penpot.description": "与团队一起设计界面与原型",
   "presentation.label_0": "实时资源",
   "presentation.label_1": "模型详情",
   "presentation.label_2": "应用管理",
@@ -1291,6 +1293,8 @@ export const zhCN = {
 export type MessageKey = keyof typeof zhCN;
 
 export const en: Record<MessageKey, string> = {
+  "app.penpot.name": "Design",
+  "app.penpot.description": "Create interfaces and prototypes with your team",
   "presentation.label_0": "Live resources",
   "presentation.label_1": "Model details",
   "presentation.label_2": "Applications",

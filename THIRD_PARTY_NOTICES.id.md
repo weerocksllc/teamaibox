@@ -14,6 +14,7 @@ Hak Cipta © 2026 Weerocks LLC. Lisensi root [MIT](LICENSE) mencakup kode Team A
 
 | Komponen/bahan | Batas izin | Persyaratan distribusi |
 | --- | --- | --- |
+| Penpot 2.18.5, MCP/plugin resmi dan perubahan integrasi yang tercakup | MPL-2.0; lisensi masing-masing dependensi | Saat mendistribusikan ulang, pertahankan pemberitahuan dan sediakan sumber modifikasi yang tepat, versi terkunci, serta skrip build. Perubahan transport OpenCode tetap MIT; MIT di root tidak mengubah lisensi Penpot. |
 | Penerima UxPlay dan `deploy/casting/uxplay-*.patch` | GPL-3.0-only | Pertahankan GPL, pemberitahuan, sumber upstream yang tepat, patch dan buat skrip dengan biner penerima apa pun; hanya menghubungkan ke upstream saja tidak cukup untuk rilis biner. |
 | gst-plugins-rs / `gst-webrtc-*.patch` | MPL-2.0 | Simpan pemberitahuan dan sediakan file sumber tercakup yang dimodifikasi. |
 | GStreamer | Lisensi LGPL dan plugin individual | Periksa kumpulan plugin yang sebenarnya dan penuhi kewajiban terkait. |

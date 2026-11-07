@@ -10,6 +10,7 @@ import http from 'node:http';
 import {DynamicSandboxController,dynamicSandboxIdentity} from '../src/dynamic-sandbox-controller.mjs';
 import {createDynamicSandboxRuntime} from '../src/dynamic-sandbox-runtime.mjs';
 import {agentOpenCodeConfig} from '../src/agent-model-access-service.mjs';
+import {penpotRuntimePaths,withPenpotRuntimeConfig} from '../src/penpot-runtime-config.mjs';
 
 const label='com.teamaibox.native-lifecycle';
 const cli=(...args)=>execFileSync('docker',args,{encoding:'utf8',timeout:120000,maxBuffer:4*1024**2}).trim();
@@ -40,8 +41,14 @@ if(process.env.NATIVE_LIFECYCLE_CHILD==='1'){
       }
       const record={...id,token,lastUsedAt:now};records.set(id.key,record);return record;
     },
-    async credentials(id){
-      const config=agentOpenCodeConfig([{alias:'agent.default',displayName:'Synthetic managed model',contextTokens:32768,outputTokens:4096}], 'agent.default');
+    async credentials(id,selected){
+      let config=agentOpenCodeConfig([{alias:'agent.default',displayName:'Synthetic managed model',contextTokens:32768,outputTokens:4096}], 'agent.default');
+      if(cfg.penpot && selected?.raw.Image!==cfg.penpot.previousAgentImage && id.key===upgradeOwner?.key){
+        const context={schemaVersion:1,enabled:false};
+        const folder=root(id)+'/runtime/penpot';await mkdir(folder,{mode:0o755,recursive:true});
+        await writeFile(folder+'/context.json',JSON.stringify(context),{mode:0o444});
+        config=withPenpotRuntimeConfig(config,context);
+      }
       await writeFile(root(id)+'/runtime/xdg-config/opencode/opencode.json',JSON.stringify(config),{mode:0o444});
       const path=root(id)+'/model/teamaibox-model-token';await writeFile(path,randomBytes(48).toString('base64url'),{mode:0o400});await chown(path,65532,65532);
     },
@@ -49,8 +56,9 @@ if(process.env.NATIVE_LIFECYCLE_CHILD==='1'){
   };
   const runtime=createDynamicSandboxRuntime({config:cfg,docker,availableMemory:async()=>128*1024**3,
     bridgeToken:async id=>records.get(id.key).token});
-  const controller=new DynamicSandboxController({storage,runtime,clock:()=>now,idleMilliseconds:100,
-    identities:{active:async id=>owners.includes(id),busy:async()=>false}});
+  let upgradeOwner;
+  const ownerControl={storage,clock:()=>now,idleMilliseconds:100,identities:{active:async id=>owners.includes(id),busy:async()=>false}};
+  const controller=new DynamicSandboxController({...ownerControl,runtime});
   const call=async(route,path,method='GET',body)=>{
     const response=await fetch(route.origin+'/native'+path,{method,headers:{authorization:'Bearer '+route.token,'content-type':'application/json'},
       signal:AbortSignal.timeout(20000),...(body===undefined?{}:{body:JSON.stringify(body)})});
@@ -58,7 +66,52 @@ if(process.env.NATIVE_LIFECYCLE_CHILD==='1'){
     return response.status===204?null:response.json();
   };
   console.log('Lifecycle fixture uses synthetic capacity only; exact production Docker restrictions and entrypoint remain unchanged.');
-  if(process.env.NATIVE_LIFECYCLE_CASE==='oauth'){
+  if(process.env.NATIVE_LIFECYCLE_CASE==='penpot-upgrade'){
+    const oldRuntime=createDynamicSandboxRuntime({config:{...cfg,image:cfg.penpot.previousAgentImage,penpot:undefined},docker,
+      availableMemory:async()=>128*1024**3,bridgeToken:async id=>records.get(id.key).token});
+    const oldController=new DynamicSandboxController({...ownerControl,runtime:oldRuntime});
+    const prior=await oldController.ensure(owners[0]);const original=await oldRuntime.inspect(prior);
+    const session=await call(prior,'/session','POST',{title:'Synthetic Penpot upgrade retention'});
+    await call(prior,'/global/config','PATCH',{mcp:{retained:{type:'local',command:['node','missing-disabled-fixture'],enabled:false}}});
+    const file=root(prior)+'/workspace/retained.txt';await writeFile(file,'Synthetic retained file');
+    const skill=root(prior)+'/workspace/.teamaibox/config/opencode/skills/retained';await mkdir(skill,{recursive:true});
+    await writeFile(skill+'/SKILL.md','---\nname: retained\ndescription: Synthetic retained Skill\n---\nUse synthetic input.\n');
+    const pty=await call(prior,'/pty','POST',{command:'sh',cwd:'/workspace',title:'Synthetic active terminal'});
+    assert.equal((await controller.ensure(owners[0])).designRuntimeStatus,'upgrade_required');
+    now+=1000;await controller.reconcile();assert.equal((await runtime.inspect(prior)).raw.Id,original.raw.Id);
+    assert.equal((await runtime.inspect(prior)).running,true);
+    assert.ok(!(await call(prior,'/config')).plugin?.includes(penpotRuntimePaths.plugin));
+    await call(prior,`/pty/${pty.id}`,'DELETE');
+    // Test-owned runtime only; no attempt to cut over live work.
+    await oldRuntime.stop(prior,await oldRuntime.inspect(prior));
+    upgradeOwner=dynamicSandboxIdentity(owners[0]);
+    const replacement=await controller.ensure(owners[0]);
+    assert.equal(replacement.designRuntimeStatus,undefined);assert.equal(replacement.token,prior.token);
+    assert.equal((await runtime.inspect(replacement)).raw.Image,cfg.image);
+    const archived=await docker('GET','/containers/'+prior.name+'-before-penpot/json');
+    assert.equal(archived.Id,original.raw.Id);assert.equal(archived.State.Running,false);
+    assert.equal((await call(replacement,`/session/${session.id}`)).title,session.title);
+    assert.equal((await call(replacement,'/global/config')).mcp.retained.enabled,false);
+    assert.equal((await call(replacement,'/config')).model,'teamaibox/agent.default');
+    assert.ok((await call(replacement,'/config')).plugin.includes(penpotRuntimePaths.plugin));
+    assert.ok((await call(replacement,'/skill')).some(row=>row.name==='retained'));
+    assert.equal(await readFile(file,'utf8'),'Synthetic retained file');
+    console.log('PASS active legacy preserved, exact stopped legacy retained, patched entrypoint opens same session/MCP/Skill/model/file');
+    const after=await call(replacement,'/session','POST',{title:'Synthetic session after Penpot cutover'});
+    const candidate=await runtime.inspect(replacement);
+    // Rollback simulates an explicitly authorized operator with the controller
+    // quiesced. Keep both stopped container objects; never swap mounted data.
+    await runtime.stop(replacement,candidate);
+    await docker('POST','/containers/'+candidate.raw.Id+'/rename?name='+replacement.name+'-penpot-stopped');
+    await docker('POST','/containers/'+archived.Id+'/rename?name='+prior.name);
+    upgradeOwner=undefined;
+    const restored=await oldController.ensure(owners[0]);
+    assert.equal((await oldRuntime.inspect(restored)).raw.Id,original.raw.Id);
+    assert.equal((await call(restored,`/session/${session.id}`)).title,session.title);
+    assert.equal((await call(restored,`/session/${after.id}`)).title,after.title);
+    assert.ok(!(await call(restored,'/config')).plugin?.includes(penpotRuntimePaths.plugin));
+    console.log('PASS exact previous image reopens both sessions after stopped, data-preserving rollback');
+  }else if(process.env.NATIVE_LIFECYCLE_CASE==='oauth'){
     const service=spawn(process.execPath,['/source/services/agent-bridge/test/fixtures/native-oauth-service.mjs'],{
       stdio:'inherit',env:{...process.env,SYNTHETIC_RESOURCE_ORIGIN:'http://oauth-fixture:4101'},
     });
@@ -125,6 +178,8 @@ if(process.env.NATIVE_LIFECYCLE_CHILD==='1'){
 }else{
   const image=process.env.NATIVE_CANDIDATE_IMAGE;if(!image)throw Error('Set NATIVE_CANDIDATE_IMAGE to a local full AgentSandbox image');
   const imageId=cli('image','inspect','--format','{{.Id}}',image);
+  const upgrade=process.env.NATIVE_LIFECYCLE_CASE==='penpot-upgrade';
+  const previous=upgrade?cli('image','inspect','--format','{{.Id}}',process.env.NATIVE_PREVIOUS_IMAGE):null;
   const id='tab-native-life-'+randomUUID(),owners=[randomUUID(),randomUUID()];
   const networks=[id+'-a',id+'-b'];let volume=false,runner=false;const madeNetworks=[];
   const source=fileURLToPath(new URL('../../../',import.meta.url));
@@ -134,7 +189,8 @@ if(process.env.NATIVE_LIFECYCLE_CHILD==='1'){
     cli('create','--name',id,'--label',`${label}=${id}`,'--pull=never','--user','0:0','--network',networks[0],'--network-alias','oauth-fixture',
       '--mount',`type=volume,source=${id},target=/state`,'--mount',`type=bind,source=${source},target=/source,readonly`,
       '--mount',`type=bind,source=${process.env.NATIVE_DOCKER_SOCKET??'/var/run/docker.sock'},target=/var/run/docker.sock`,
-      '-e','NATIVE_LIFECYCLE_CHILD=1','-e','NATIVE_LIFECYCLE_CONFIG='+JSON.stringify({image:imageId,volume:id,networks}),
+      '-e','NATIVE_LIFECYCLE_CHILD=1','-e','NATIVE_LIFECYCLE_CONFIG='+JSON.stringify({image:imageId,volume:id,networks,
+        ...(upgrade?{penpot:{enabled:true,previousAgentImage:previous}}:{})}),
       '-e','NATIVE_LIFECYCLE_CASE='+(process.env.NATIVE_LIFECYCLE_CASE??'state'),
       '-e','NATIVE_LIFECYCLE_OWNERS='+JSON.stringify(owners),'--entrypoint','node',image,
       '/source/services/agent-bridge/test/native-lifecycle-acceptance.mjs');runner=true;
@@ -147,11 +203,14 @@ if(process.env.NATIVE_LIFECYCLE_CHILD==='1'){
     }
     console.log(cli('logs',id));assert.equal(exit,0,'production lifecycle fixture exit');
   }finally{
-    for(const owner of owners){const identity=dynamicSandboxIdentity(owner);let found;
-      try{found=JSON.parse(cli('inspect',identity.name))[0];}catch{continue;}
-      assert.equal(found.Config.Labels['com.teamaibox.dynamic-agent-owner'],owner);assert.equal(found.Image,imageId);
-      console.log(`Synthetic instance ${identity.key.slice(0,8)} logs:`,cli('logs','--tail','12',identity.name));
-      cli('stop','--time','10',identity.name);cli('rm',identity.name);
+    for(const owner of owners){const identity=dynamicSandboxIdentity(owner);
+      for(const name of upgrade?[identity.name,identity.name+'-before-penpot',identity.name+'-penpot-stopped']:[identity.name]){let found;
+        try{found=JSON.parse(cli('inspect',name))[0];}catch{continue;}
+        assert.equal(found.Config.Labels['com.teamaibox.dynamic-agent-owner'],owner);assert.ok([imageId,previous].includes(found.Image));
+        assert.ok(found.Mounts.some(mount=>mount.Name===id&&mount.Destination==='/workspace'));
+        console.log(`Synthetic instance ${identity.key.slice(0,8)} logs:`,cli('logs','--tail','12',found.Id));
+        if(found.State.Running)cli('stop','--time','10',found.Id);cli('rm',found.Id);
+      }
     }
     if(runner){assert.equal(cli('inspect','--format',`{{index .Config.Labels "${label}"}}`,id),id);cli('stop','--time','10',id);cli('rm',id);}
     for(const name of madeNetworks){assert.equal(cli('network','inspect','--format',`{{index .Labels "${label}"}}`,name),id);cli('network','rm',name);}

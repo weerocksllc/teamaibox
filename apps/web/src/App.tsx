@@ -28,6 +28,7 @@ import {
   MessagesSquare,
   Monitor,
   Palette,
+  PenTool,
   PackageOpen,
   RefreshCw,
   ScanText,
@@ -98,6 +99,7 @@ type AdminItem = { id: string; href: string; requiredPermissions: string[]; avai
 type Translate = (key: string, values?: Record<string, string | number>) => string;
 
 const NativeAssistantWorkspace = lazy(() => import("./assistant/NativeAssistantWorkspace").then(module => ({default:module.NativeAssistantWorkspace})));
+const PenpotWorkspace = lazy(() => import("./design/PenpotWorkspace").then(module => ({default:module.PenpotWorkspace})));
 const UserAdministrationPanel = lazy(() => import("./users/UserAdministrationPanel").then((module) => ({ default: module.UserAdministrationPanel })));
 const RoleAdministrationPanel = lazy(() => import("./roles/RoleAdministrationPanel").then((module) => ({ default: module.RoleAdministrationPanel })));
 const TeamAdministrationPanel = lazy(() => import("./teams/TeamAdministrationPanel").then((module) => ({ default: module.TeamAdministrationPanel })));
@@ -128,6 +130,7 @@ const iconMap: Record<string, LucideIcon> = {
   "folder-kanban": FolderKanban,
   sparkles: Sparkles,
   palette: Palette,
+  "pen-tool": PenTool,
   "scan-text": ScanText,
   "audio-lines": AudioLines,
   languages: Languages,
@@ -837,6 +840,8 @@ export function App() {
       {taskOpen && <TaskDrawer tasks={activity?.tasks ?? []} state={activityState} cancellingTaskId={cancellingTaskId} onCancel={cancelTask} t={t} onClose={() => setTaskOpen(false)} />}
       {activeApp?.pluginKey === "official.assistant" && activeApp.runtime.route?.integration === "workbench" ? (
         <Suspense fallback={<div role="status">{t('common.loading')}</div>}><NativeAssistantWorkspace key={globalThis.__TEAM_AI_BOX_ACCOUNT_PREFERENCES__?.identityId ?? 'authenticated'} identityId={globalThis.__TEAM_AI_BOX_ACCOUNT_PREFERENCES__?.identityId} locale={i18n.locale} initialPrompt={assistantInitialPrompt} onClose={closeApplication} t={t} /></Suspense>
+      ) : activeApp?.pluginKey === "official.penpot" && activeApp.runtime.launchable ? (
+        <Suspense fallback={<div role="status">{t('common.loading')}</div>}><PenpotWorkspace key={globalThis.__TEAM_AI_BOX_ACCOUNT_PREFERENCES__?.identityId ?? 'authenticated'} identityId={globalThis.__TEAM_AI_BOX_ACCOUNT_PREFERENCES__?.identityId ?? ''} locale={i18n.locale} onClose={closeApplication} t={t}/></Suspense>
       ) : activeApp?.runtime.route?.integration === "iframe" ? (
         <DynamicApplicationWorkspace key={activeApp.pluginKey} fact={activeApp.runtime} label={translatedApplicationText(activeApp, "labelKey", t)} handoff={pluginHandoff?.targetPluginId === activeApp.pluginKey ? pluginHandoff : null} locale={i18n.locale} direction={i18n.direction} theme={theme} onClose={closeApplication} t={t} />
       ) : null}

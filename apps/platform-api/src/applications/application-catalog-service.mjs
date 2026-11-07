@@ -20,6 +20,26 @@ function recent(value, clock, maximumAgeMilliseconds) {
     && observed <= clock && clock.getTime() - observed.getTime() <= maximumAgeMilliseconds);
 }
 
+// Container-only deployments have no appliance node to publish core health.
+// Probe only the origin already configured for the actual protected object RPC.
+export function localObjectHealthSource({ rpcEndpoint, healthOrigin, fetcher = fetch }) {
+  const rpc = new URL(rpcEndpoint), origin = new URL(healthOrigin);
+  if (!['http:', 'https:'].includes(origin.protocol) || origin.origin !== rpc.origin
+    || origin.username || origin.password || rpc.username || rpc.password
+    || origin.pathname !== '/' || origin.search || origin.hash) throw new TypeError('Invalid object readiness origin');
+  const url = new URL('/health/ready', origin);
+  return async () => {
+    let ready = false;
+    try {
+      const response = await fetcher(url, { redirect: 'error', signal: AbortSignal.timeout(1500) });
+      const payload = response.ok ? await response.json() : null;
+      ready = payload?.status === 'ready' && payload.service === 'object-service'
+        && payload.encryption === 'aes-256-gcm-envelope';
+    } catch { /* Connection loss is unavailability, not a reason to trust stale health. */ }
+    return [{ targetKind: 'core_service', targetKey: 'object-service', state: ready ? 'healthy' : 'unavailable', observedAt: new Date() }];
+  };
+}
+
 function pluginHealthy(plugin, signal, route, clock, maximumAgeMilliseconds) {
   const slot = plugin.slotHealth;
   const slotHealthy = slot?.healthy === true || slot?.state === "healthy" || slot?.status === "healthy";
@@ -71,8 +91,9 @@ export class ApplicationCatalogService {
   #clock;
   #maximumHealthAgeMilliseconds;
   #drawingProfile;
+  #liveCoreHealth;
 
-  constructor({ repository, routeSource, builtInSource = null, clock = () => new Date(), maximumHealthAgeMilliseconds = 120_000, drawingProfile = null }) {
+  constructor({ repository, routeSource, builtInSource = null, clock = () => new Date(), maximumHealthAgeMilliseconds = 120_000, drawingProfile = null, liveCoreHealth = null }) {
     if (!repository?.snapshot || !routeSource?.routes || (builtInSource !== null && !builtInSource?.applications)) throw new TypeError("Application catalog facts are required");
     if (typeof clock !== "function" || !Number.isSafeInteger(maximumHealthAgeMilliseconds) || maximumHealthAgeMilliseconds < 10_000 || maximumHealthAgeMilliseconds > 600_000) throw new TypeError("Application catalog health freshness policy is invalid");
     this.#repository = repository;
@@ -81,17 +102,19 @@ export class ApplicationCatalogService {
     this.#clock = clock;
     this.#maximumHealthAgeMilliseconds = maximumHealthAgeMilliseconds;
     this.#drawingProfile = drawingProfile;
+    if (liveCoreHealth !== null && typeof liveCoreHealth !== 'function') throw new TypeError('Invalid live core health source');
+    this.#liveCoreHealth = liveCoreHealth;
   }
 
   async list({ context }) {
     if (!context?.permissions?.includes("application:catalog:view")) return Object.freeze({ schemaVersion: 1, applications: Object.freeze([]) });
-    const [snapshot, routes, builtIns] = await Promise.all([
-      this.#repository.snapshot(), this.#routeSource.routes(), this.#builtInSource?.applications() ?? [],
+    const [snapshot, routes, builtIns, liveCoreHealth] = await Promise.all([
+      this.#repository.snapshot(), this.#routeSource.routes(), this.#builtInSource?.applications() ?? [], this.#liveCoreHealth?.() ?? [],
     ]);
     const plugins = new Map(snapshot.plugins.map((plugin) => [plugin.pluginKey, plugin]));
     const routeByPlugin = new Map(routes.map((route) => [route.pluginKey, route]));
     const capabilityByKey = new Map(snapshot.capabilities.map((capability) => [capability.capabilityKey, capability]));
-    const healthByTarget = new Map(snapshot.health.map((health) => [`${health.targetKind}:${health.targetKey}`, health]));
+    const healthByTarget = new Map([...snapshot.health, ...liveCoreHealth].map((health) => [`${health.targetKind}:${health.targetKey}`, health]));
     const permissions = new Set(context.permissions);
     const now = this.#clock();
 

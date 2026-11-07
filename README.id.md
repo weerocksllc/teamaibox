@@ -277,7 +277,7 @@ sudo bash install/from-source.sh
 
 1. Buka `https://<BOX_LAN_IP>/` dengan alamat LAN terkini dan pastikan sertifikat HTTPS lokal milik perangkat Anda.
 2. Masuk dengan `admin` / `admin`, **ubah kata sandi awal**, lalu buat akun biasa. Jangan paparkan kredensial awal ke Internet.
-3. Tunggu tiap aplikasi siap dan pilih bahasa/tema melalui profil.
+3. Masuk ke Team AI Box dan buka **Semua aplikasi → Desain** untuk memakai Penpot. Akun, izin tim, Drive Tim, dan asisten AI tetap sama. Tidak perlu instalasi atau login terpisah.
 4. Sediakan ISO ARM64 Windows/Linux dan lisensi yang sah. Untuk target offline, siapkan paket lengkap dahulu lalu ikuti [panduan paket](install/README.id.md); persiapan sumber tetap online.
 
 ## Lisensi dan batasan

@@ -12,6 +12,14 @@ import {
 
 const identity = { id: "user-1", status: "active", identityKind: "local_user" };
 
+test("Design application entry matches the shipped database grants", () => {
+  const allowed = new Set(["owner", "developer", "team_admin", "member"]);
+  for (const role of Object.keys(roles)) {
+    const principal = principalFromRoleKeys(identity, [role]);
+    assert.equal(grantedPermissions({ principal }).includes("design:use"), allowed.has(role), role);
+  }
+});
+
 test("keeps every role permission inside the closed permission catalog", () => {
   for (const role of Object.values(roles)) {
     for (const permission of role.permissions) assert.ok(permissionKeys.includes(permission));

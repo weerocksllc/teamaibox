@@ -1,0 +1,8 @@
+{
+  "schemaVersion": 1,
+  "platform": "linux/arm64",
+  "images": {
+    "penpot-postgres": "docker.io/library/postgres@sha256:83b9631dbb4121d9235ef910018272798b7d3041ef5b716aa481122d4c49353f",
+    "penpot-cache": "docker.io/valkey/valkey@sha256:464d7e8ae849ddcec73f4448fc77f672f7101744b90e98586c0581f1764a043e"
+  }
+}

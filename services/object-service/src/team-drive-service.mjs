@@ -194,6 +194,43 @@ export class TeamDriveService {
     catch (error) { throw translated(error); }
   }
 
+  /** Internal-only exact target check for a version-bound design export. */
+  async authorizeDesignDestination(context,{rootId,parentId=null,fileId=null,expectedRevision=null}){
+    uuid(rootId);if(parentId!==null)uuid(parentId);
+    if(fileId!==null){
+      const entry=await this.#repository.findEntry(uuid(fileId));
+      if(!entry||entry.trashedAt||entry.kind!=='file'||entry.rootId!==rootId||entry.parentId!==parentId)
+        throw new PlatformError('file_not_found','File is unavailable',{status:404});
+      const access=await this.#rootAccess(context,rootId,'file:write','editor',fileId);
+      if(entry.revision!==revision(expectedRevision))
+        throw new PlatformError('file_revision_conflict','File revision changed',{status:409});
+      return access.owner;
+    }
+    if(expectedRevision!==null)revision(expectedRevision);
+    return (await this.#rootAccess(context,rootId,'file:write','editor',parentId)).owner;
+  }
+
+  /** The operation receipt commits in the same transaction as the visible
+   * file version. No browser-supplied annotations can create a receipt. */
+  async commitDesignExport(context, target, {objectReferenceId, provenance: suppliedProvenance, receipt}){
+    if(!this.#repository.createDesignExport||!this.#repository.appendDesignExport||!Buffer.isBuffer(receipt?.requestHash)
+      ||receipt.requestHash.length!==32)throw new TypeError('Design export requires durable operation receipts');
+    uuid(receipt.operationId);
+    const owner=await this.authorizeDesignDestination(context,target);
+    const value=await this.#resolvedVersion(owner,objectReferenceId,suppliedProvenance);
+    await this.authorizeDesignDestination(context,target);
+    const boundReceipt={...receipt,rootId:target.rootId,parentId:target.parentId??null};
+    try{
+      const committed=target.fileId
+        ? await this.#repository.appendDesignExport(target.fileId,value,target.expectedRevision,boundReceipt)
+        : await this.#repository.createDesignExport({entry:{
+            rootId:target.rootId,parentId:target.parentId??null,kind:'file',name:name(target.name),
+            ownerIdentityId:owner.actorIdentityId,createdAt:value.createdAt,updatedAt:value.createdAt,
+          },version:value},boundReceipt);
+      return {entry:entryPublic(committed.entry),version:versionPublic(committed.version)};
+    }catch(error){throw translated(error);}
+  }
+
   async versions(context, fileId) {
     const entry = await this.#repository.findEntry(uuid(fileId));
     if (!entry || entry.kind !== "file") throw new PlatformError("file_not_found", "File is unavailable", { status: 404 });

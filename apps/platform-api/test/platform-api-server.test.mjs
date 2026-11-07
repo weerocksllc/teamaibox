@@ -1,9 +1,13 @@
 import assert from "node:assert/strict";
-import { randomBytes } from "node:crypto";
+import { randomBytes, randomUUID } from "node:crypto";
+import { mkdtemp, rm, writeFile } from 'node:fs/promises';
 import { request as httpRequest } from "node:http";
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 import { test } from "node:test";
 
 import { createPlatformApiServer } from "../server/platform-api.mjs";
+import { createPenpotRuntime } from '../server/penpot-runtime.mjs';
 import { LocalAuthentication } from "../src/identity/auth-service.mjs";
 import { MemoryIdentityRepository } from "../src/identity/memory-repository.mjs";
 import { PasswordHasher } from "../src/identity/password.mjs";
@@ -108,6 +112,45 @@ async function fixture(serverOptions = {}, { bootstrap = true } = {}) {
   });
   return { server, bootstrapResult };
 }
+
+test('factory Design route probes distinguish mounted protected editor and MCP from absent handlers', async t => {
+  const directory = await mkdtemp(join(tmpdir(), 'tab-factory-design-probe-'));
+  t.after(() => rm(directory,{recursive:true,force:true}));
+  const environment = {
+    PLATFORM_PENPOT_INSTALLATION_ID: randomUUID(),
+    PLATFORM_PENPOT_FRONTEND_ORIGIN: 'http://penpot-frontend:8080',
+    PLATFORM_PENPOT_BACKEND_ORIGIN: 'http://penpot-backend:6060',
+    PLATFORM_PENPOT_MCP_WEBSOCKET_ORIGIN: 'http://penpot-mcp:4402',
+    PLATFORM_PENPOT_MCP_PLUGIN_DIRECTORY: directory,
+  };
+  for (const name of ['TOKEN_PEPPER','BACKEND_KEY','MCP_KEY']) {
+    const path = join(directory,name);
+    await writeFile(path,randomBytes(32).toString('base64url'),{mode:0o440});
+    environment['PLATFORM_PENPOT_'+name+'_FILE'] = path;
+  }
+  const repository = new MemoryIdentityRepository();
+  const authentication = await LocalAuthentication.create({repository,hasher:new PasswordHasher()});
+  const runtime = await createPenpotRuntime({environment,authentication,
+    database:{async query(){assert.fail('anonymous readiness must not access user data');},
+      async transaction(){assert.fail('anonymous readiness must not write');}},
+    agentRoutes:{async resolve(){assert.fail('anonymous readiness must not start OpenCode');}}});
+  assert.ok(runtime.editor && runtime.mcpApi);
+  t.after(() => runtime.close());
+  const {server} = await fixture({penpotEditorGateway:runtime.editor,penpotMcpApi:runtime.mcpApi},{bootstrap:false});
+  t.after(() => new Promise(resolve => server.close(resolve)));
+  const editor = {path:'/api/v1/design/editor/',headers:{'x-forwarded-proto':'https'}};
+  const mcp = {path:'/internal/v1/design/call-authority',method:'POST',headers:{'content-type':'application/json'},body:'{}'};
+  const check = async (app, options, status, code) => {
+    const r = await request(app,options);
+    assert.equal(r.status,status);assert.equal(JSON.parse(r.text).error.code,code);
+  };
+  await check(server,editor,401,'invalid_session');
+  await check(server,mcp,403,'penpot_call_denied');
+  const {server: unconfigured} = await fixture({},{bootstrap:false});
+  t.after(() => new Promise(resolve => unconfigured.close(resolve)));
+  await check(unconfigured,editor,404,'not_found');
+  await check(unconfigured,mcp,404,'not_found');
+});
 
 test("exposes protected office-set control only through its narrow loopback handler", async (t) => {
   const calls = [];

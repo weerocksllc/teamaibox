@@ -23,20 +23,22 @@ export class DynamicSandboxController {
     const identity=dynamicSandboxIdentity(ownerIdentityId);
     return this.exclusive(ownerIdentityId,async()=>{
       if (!await this.identities.active(ownerIdentityId)) throw new Error('agent_owner_inactive');
-      const value=await this.storage.prepare(identity);
       let current=await this.runtime.inspect(identity);
       if (current) this.runtime.assertOwned(identity,current);
+      const value=await this.storage.prepare(identity,current);
       if (!current?.running) {
         await this.runtime.admit(identity);
-        await this.storage.credentials(identity);
-        current=await this.runtime.start(identity,current);
+        // An outstanding platform operation may be reconciling a stopped
+        // runtime. Let it recover on the original image before any cutover.
+        const allowUpgrade=!this.runtime.isLegacy?.(current)||!await this.identities.busy(ownerIdentityId);
+        current=await this.runtime.start(identity,current,selected=>this.storage.credentials(identity,selected),{allowUpgrade});
       }
       await this.runtime.healthy(identity,current);
       if (!await this.identities.active(ownerIdentityId)) {
         await this.runtime.stop(identity,current);throw new Error('agent_owner_inactive');
       }
       await this.storage.touch(identity,this.clock());
-      return {...identity,token:value.token};
+      return {...identity,token:value.token,...(this.runtime.isLegacy?.(current)?{designRuntimeStatus:'upgrade_required'}:{})};
     });
   }
   async reconcile() {
@@ -54,7 +56,7 @@ export class DynamicSandboxController {
         if (!active || (!busy && this.clock()-identity.lastUsedAt>=this.idleMilliseconds)) {
           await this.runtime.stop(identity,current);return;
         }
-        await this.storage.credentials(identity);
+        await this.storage.credentials(identity,current);
       });
     }
   }

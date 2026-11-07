@@ -26,6 +26,8 @@ sudo bash install/from-source.sh --region cn
 
 Ini adalah **pembuatan sumber online diikuti dengan pemasangan offline**, bukan pembuatan sumber offline. Secara otomatis menyiapkan alat pembangunan yang hilang, mengunduh enam input model, membangun dan merakit Android dan semua gambar aplikasi, mengkuantisasi dua model sumber, mengumpulkan paket firmware/host, membuat paket offline lengkap dan menjalankan penginstal yang ada. Itu tidak menggantikan Docker/NVIDIA, memulai ulang daemon Docker, menghapus instalasi yang ada, atau mengubah perutean host, pengaturan DNS atau VPN. Model, status login tamu, dan situs web pemasaran pribadi tidak diambil dari instalasi lain.
 
+Masuk ke Team AI Box dan buka **Semua aplikasi → Desain** untuk memakai Penpot. Akun, izin tim, Drive Tim, dan asisten AI tetap sama. Tidak perlu instalasi atau login terpisah.
+
 Ruang kerja defaultnya adalah `/var/tmp/teamaibox-source-build`; unduh cache dan log per tahap langsung di sana, di luar klon. Instalasi defaultnya adalah `/srv/teamaibox/installation`. Harapkan unduhan besar dan penggunaan disk sementara beberapa ratus GB. Pemuatan model dan kuantisasi GPU dapat memakan waktu lama; tidak ada waktu penyelesaian tetap yang dijanjikan.
 
 ## Melanjutkan instalasi dan memeriksa status

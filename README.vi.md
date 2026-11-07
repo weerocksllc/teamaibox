@@ -277,7 +277,7 @@ sudo bash install/from-source.sh
 
 1. Mở `https://<BOX_LAN_IP>/` bằng địa chỉ LAN hiện tại và xác minh chứng chỉ HTTPS cục bộ thuộc thiết bị của bạn.
 2. Đăng nhập `admin` / `admin`, **đổi mật khẩu ban đầu**, rồi tạo tài khoản thường. Không phơi thông tin mặc định ra Internet.
-3. Chờ từng ứng dụng sẵn sàng, chọn ngôn ngữ/chủ đề trong hồ sơ.
+3. Đăng nhập Team AI Box rồi mở **Tất cả ứng dụng → Thiết kế** để dùng Penpot. Trình chỉnh sửa dùng cùng tài khoản, quyền nhóm, ổ đĩa nhóm và trợ lý AI. Không cần cài đặt hay đăng nhập riêng.
 4. Tự cung cấp ISO ARM64 Windows/Linux và giấy phép hợp lệ. Máy ngoại tuyến cần gói hoàn chỉnh trước, rồi theo [hướng dẫn](install/README.vi.md); chuẩn bị mã nguồn cần mạng.
 
 ## Giấy phép và giới hạn

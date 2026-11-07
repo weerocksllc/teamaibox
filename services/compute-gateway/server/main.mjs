@@ -11,7 +11,9 @@ export async function startAgentComputeGateway(environment = process.env, depend
   const host = environment.AGENT_COMPUTE_GATEWAY_HOST || "0.0.0.0";
   const port = Number(environment.AGENT_COMPUTE_GATEWAY_PORT || "8080");
   if (!Number.isInteger(port) || port < 1 || port > 65535) throw new TypeError("AGENT_COMPUTE_GATEWAY_PORT is invalid");
-  if (!environment.PLATFORM_COMPUTE_ORIGIN) throw new TypeError("PLATFORM_COMPUTE_ORIGIN is required");
+  if (Boolean(environment.PLATFORM_COMPUTE_ORIGIN) === Boolean(environment.AGENT_COMPUTE_LOCAL_ORIGIN)) {
+    throw new TypeError("Exactly one platform or dedicated local compute origin is required");
+  }
   let authority = dependencies.credentialAuthority ?? null;
   let ownsAuthority = false;
   if (!authority) {
@@ -25,6 +27,7 @@ export async function startAgentComputeGateway(environment = process.env, depend
       credentialAuthority: authority,
       modelAliasMap: dependencies.modelAliasMap ?? await loadAgentModelAliasMap(environment.AGENT_MODEL_ALIAS_MAP_FILE),
       platformOrigin: environment.PLATFORM_COMPUTE_ORIGIN,
+      localModelOrigin: environment.AGENT_COMPUTE_LOCAL_ORIGIN,
       fetchImplementation: dependencies.fetchImplementation ?? globalThis.fetch,
     });
     if (ownsAuthority) server.once("close", () => authority.close());

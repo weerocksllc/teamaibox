@@ -3,8 +3,12 @@ from pathlib import Path
 import re
 import unittest
 import uuid
+import copy
+import tempfile
+from unittest.mock import patch
 
-from factory_applications import statements
+from factory_applications import statements, apply, check_design_gateway
+from factory_application_contract import BASE_APPLICATIONS
 from factory_bootstrap import expand
 from factory_recipe import assemble
 from offline_common import InstallError
@@ -48,6 +52,71 @@ class ApplicationsTests(unittest.TestCase):
             if name in ('platform-api', 'scheduler', 'object-service', 'messaging', 'event-bus'):
                 self.assertEqual(service['labels']['com.teamaibox.core-service-key'], name)
                 self.assertEqual(service['labels']['com.teamaibox.managed'], 'true')
+
+    def test_native_dependency_failure_prevents_catalog_registration(self):
+        rows=copy.deepcopy(self.rows)
+        native=copy.deepcopy(rows[0]['manifest']);native['id']='official.penpot';native['images']=[]
+        services=[]
+        for index, role in enumerate(['penpot-frontend','penpot-backend','penpot-exporter','penpot-mcp']):
+            native['images'].append(dict(name=role,variants=[dict(architecture='linux/arm64/v8',digest='sha256:'+str(index+1)*64)]))
+            services.append(dict(role=role,imageName=role,readiness='container-health'))
+        rows.append(dict(role='penpot-frontend',manifest=native,services=services))
+        required=sorted(BASE_APPLICATIONS|{'official.penpot'})
+        installation=str(uuid.uuid4())
+        by_role={service['role']:(row,service) for row in rows for service in row['services']}
+        mismatch=[False]
+        def command(args):
+            if args[:3]==['docker','ps','-q']:
+                return args[-1].rsplit('=',1)[1]
+            if args[:2]==['docker','inspect']:
+                role=args[2];row,service=by_role[role]
+                image=next(i for i in row['manifest']['images'] if i['name']==service['imageName'])['variants'][0]['digest']
+                if mismatch[0] and role=='penpot-backend':image='sha256:'+'0'*64
+                return json.dumps([dict(Id=role,Image=image,Config=dict(Labels={
+                    'com.teamaibox.installation-id':installation,'com.teamaibox.service-role':role}),
+                    State=dict(Running=True,Health=dict(Status='healthy')))])
+            if args[:2]==['docker','exec']:
+                row,service=by_role[args[2]]
+                self.assertEqual(service['readiness'],'plugin-http','native service must not run a Node UI probe')
+                return json.dumps(dict(status='ready',pluginId=row['manifest']['id'],version=row['manifest']['version']))
+            self.fail('unexpected command')
+        with tempfile.TemporaryDirectory() as directory:
+            root=Path(directory);(root/'config').mkdir()
+            (root/'config/application-catalog.json').write_text(json.dumps(dict(applications=rows,requiredApplications=required)))
+            with patch('appliance_installation.load',return_value={'installationId':installation}), patch('factory_applications.run',side_effect=command), patch('factory_database.query') as query, patch('factory_applications.check_design_gateway') as gateway:
+                self.assertEqual(apply(root)['applications'],10);query.assert_called_once()
+                gateway.assert_called_once_with({'installationId':installation})
+                query.reset_mock();gateway.side_effect=InstallError('protected Design editor route is not active')
+                with self.assertRaisesRegex(InstallError,'editor route'):
+                    apply(root)
+                query.assert_not_called()
+                gateway.reset_mock();gateway.side_effect=None
+                query.reset_mock();mismatch[0]=True
+                with self.assertRaisesRegex(InstallError,'image differs'):
+                    apply(root)
+                query.assert_not_called()
+                gateway.assert_not_called()
+
+    def test_factory_requires_a_mounted_editor_route_that_denies_anonymous_access(self):
+        api = {'Id':'product-api','Config':{'Labels':{'com.teamaibox.installation-id':'owned',
+              'com.teamaibox.service-role':'platform-api'}}}
+        with patch('appliance_installation.resolve',return_value=api), patch('factory_applications.run') as cmd:
+            expected={'editor':{'status':401,'code':'invalid_session'},'mcp':{'status':403,'code':'penpot_call_denied'}}
+            cmd.return_value=json.dumps(expected)
+            check_design_gateway({'installationId':'owned'})
+            self.assertIn('/api/v1/design/editor/',cmd.call_args.args[0][-1])
+            self.assertIn('/internal/v1/design/call-authority',cmd.call_args.args[0][-1])
+            for status, code in ((404,'not_found'),(200,None),(426,'https_required')):
+                cmd.return_value=json.dumps({**expected,'editor':{'status':status,'code':code}})
+                with self.subTest(status=status), self.assertRaisesRegex(InstallError,'editor route'):
+                    check_design_gateway({'installationId':'owned'})
+            cmd.return_value=json.dumps({**expected,'mcp':{'status':404,'code':'not_found'}})
+            with self.assertRaisesRegex(InstallError,'MCP route'):
+                check_design_gateway({'installationId':'owned'})
+            cmd.reset_mock()
+            with self.assertRaisesRegex(InstallError,'does not belong'):
+                check_design_gateway({'installationId':'foreign'})
+            cmd.assert_not_called()
 
 
 if __name__ == '__main__':

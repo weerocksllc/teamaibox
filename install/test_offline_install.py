@@ -423,6 +423,55 @@ class PackageTests(unittest.TestCase):
             with self.assertRaisesRegex(InstallError, 'damaged'):
                 verify_package(extracted)
 
+    def test_directory_only_publishes_verified_install_directory_without_tar(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            repo, value = self.make_inputs(root)
+            output = root / 'output'
+            name = 'teamaibox-' + value['releaseId'] + '-linux-arm64'
+            directory = output / name
+            # Fixture image bytes exercise packaging only, not executable image roles.
+            with patch('package.verify_application_role'), patch('package.tarfile.open') as open_tar:
+                result = package.build(root / 'input.json', output, repo, self.runner, directory_only=True)
+                open_tar.assert_not_called()
+            self.assertEqual(list(output.iterdir()), [directory])
+            self.assertEqual(result['directory'], str(directory.resolve()))
+            self.assertEqual(result['manifestSha256'], digest(directory / 'release.json'))
+            self.assertEqual(result['payloadBytes'], verify_package(directory)['payloadBytes'])
+            self.assertFalse(result['installed'])
+            subprocess.run(['bash', str(directory / 'install.sh'), '--verify-package'],
+                           check=True, capture_output=True, text=True)
+            with self.assertRaisesRegex(InstallError, 'output already exists'):
+                package.build(root / 'input.json', output, repo, self.runner, directory_only=True)
+            self.assertEqual(result['manifestSha256'], digest(directory / 'release.json'))
+
+    def test_directory_only_uses_one_copy_and_preserves_orphan_tar_checksum(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            repo, value = self.make_inputs(root)
+            one_copy = package.build_space(value, root, self.runner, directory_only=True)
+            with patch('package.shutil.disk_usage', return_value=SimpleNamespace(free=one_copy)):
+                self.assertEqual(package.build_space(value, root, self.runner, directory_only=True), one_copy)
+                with self.assertRaisesRegex(InstallError, str(2 * one_copy)):
+                    package.build_space(value, root, self.runner)
+            existing = root / ('teamaibox-' + value['releaseId'] + '-linux-arm64.tar.sha256')
+            existing.write_text('preserve the existing checksum')
+            with self.assertRaisesRegex(InstallError, 'output already exists'):
+                package.build(root / 'input.json', root, repo, self.runner, directory_only=True)
+            self.assertEqual(existing.read_text(), 'preserve the existing checksum')
+
+    def test_default_still_publishes_archive_and_checksum(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            repo, value = self.make_inputs(root)
+            with patch('package.verify_application_role'):
+                result = package.build(root / 'input.json', root / 'output', repo, self.runner)
+            archive = Path(result['archive'])
+            self.assertEqual(result['sha256'], digest(archive))
+            self.assertEqual(archive.with_name(archive.name + '.sha256').read_text(),
+                             f"{result['sha256']}  {archive.name}\n")
+            self.assertEqual(verify_package(archive.with_suffix(''))['releaseId'], value['releaseId'])
+
     def test_missing_asset_never_publishes(self):
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)

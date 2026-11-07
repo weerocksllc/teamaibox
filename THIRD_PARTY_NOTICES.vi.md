@@ -14,6 +14,7 @@ Bản quyền © 2026 Weerocks LLC. Giấy phép gốc [MIT](LICENSE) bao gồm 
 
 | Thành phần/vật liệu | Ranh giới giấy phép | Yêu cầu phân phối |
 | --- | --- | --- |
+| Penpot 2.18.5, MCP/plugin chính thức và các thay đổi thuộc phạm vi giấy phép | MPL-2.0; giấy phép riêng của từng phụ thuộc | Khi phân phối lại, giữ thông báo và cung cấp đúng mã nguồn đã sửa, phiên bản cố định và tập lệnh dựng. Thay đổi truyền tải OpenCode giữ MIT; MIT ở thư mục gốc không đổi giấy phép Penpot. |
 | Bộ thu UxPlay và `deploy/casting/uxplay-*.patch` | GPL-3.0-only | Giữ lại GPL, thông báo, nguồn ngược dòng chính xác, các bản vá và tập lệnh xây dựng với bất kỳ tệp nhị phân nào của máy thu; chỉ liên kết ngược dòng là không đủ để phát hành nhị phân. |
 | gst-plugins-rs / `gst-webrtc-*.patch` | MPL-2.0 | Giữ lại các thông báo và cung cấp các tệp nguồn được sửa đổi. |
 | GStreamer | LGPL và giấy phép plugin riêng lẻ | Kiểm tra bộ plugin thực tế và thực hiện các nghĩa vụ tương ứng. |

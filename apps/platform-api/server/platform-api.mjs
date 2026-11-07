@@ -17,6 +17,8 @@ import {
   runWithCorrelation,
 } from "../../../packages/observability/src/index.mjs";
 import { LocalAuthentication } from "../src/identity/auth-service.mjs";
+import { createPenpotRuntime } from './penpot-runtime.mjs';
+import { readPenpotNativeToken } from '../src/design/penpot-editor-gateway.mjs';
 import {
   clearCsrfCookie,
   clearSessionCookie,
@@ -58,7 +60,7 @@ import { PostgresAgentTaskCenterRepository } from "../src/tasks/postgres-agent-t
 import { TaskCenter } from "../src/tasks/task-center.mjs";
 import { CatalogUserServiceAvailabilitySource, ClusterUserServiceAvailabilitySource, UserActivityService } from "../src/tasks/user-activity-service.mjs";
 import { UserActivityHttpApi } from "../src/tasks/user-activity-http-api.mjs";
-import { ApplicationCatalogService } from "../src/applications/application-catalog-service.mjs";
+import { ApplicationCatalogService, localObjectHealthSource } from "../src/applications/application-catalog-service.mjs";
 import { ApplicationCatalogHttpApi } from "../src/applications/application-catalog-http-api.mjs";
 import { CompositeApplicationRouteSource } from "../src/applications/composite-application-route-source.mjs";
 import { FileApplicationRouteSource } from "../src/applications/file-application-route-source.mjs";
@@ -544,11 +546,23 @@ export function createPlatformApiServer({
   teamDriveApi = null,
   objectApi = null,
   credentialAuthentication = null,
+  penpotHandoffApi = null,
+  penpotEditorGateway = null,
+  penpotMcpApi = null,
   ownerSetupAuthority = null,
   ownerRecoveryAuthority = null,
   realtimeSpeechTransport = null,
 }) {
   if (!authentication || !preferences) throw new TypeError("authentication and preferences services are required");
+  if (penpotHandoffApi !== null && !['matches', 'isPrivate', 'handle'].every(key => typeof penpotHandoffApi[key] === 'function')) {
+    throw new TypeError('Design sign-in API is invalid');
+  }
+  if (penpotMcpApi !== null && !['matches', 'isPrivate', 'handle'].every(key => typeof penpotMcpApi[key] === 'function')) {
+    throw new TypeError('Invalid design MCP API');
+  }
+  if (penpotEditorGateway !== null && !['matches', 'handle', 'attachUpgrade', 'close'].every(key => typeof penpotEditorGateway[key] === 'function')) {
+    throw new TypeError('Design editor gateway is invalid');
+  }
   if (virtualComputerApi !== null && !['matches','handle'].every(k=>typeof virtualComputerApi[k]==='function')) throw new TypeError('Computer API is invalid');
   if (computerDesktopApi !== null && !['matches', 'handle', 'attachUpgrade', 'close', 'handleSignOut']
     .every(key => typeof computerDesktopApi[key] === 'function')) throw new TypeError('Computer desktop API is invalid');
@@ -682,6 +696,42 @@ export function createPlatformApiServer({
         }
         if (request.method === "GET" && pathname === "/health/ready") {
           jsonResponse(response, requestId, 200, { status: "ready" });
+          return;
+        }
+        if (penpotMcpApi?.matches(request.method, pathname)) {
+          const privateCallback = penpotMcpApi.isPrivate(pathname);
+          let context, nativeToken;
+          if (!privateCallback) {
+            requireSecureTransport(request); requireSameOrigin(request, allowedOrigin);
+            context = await authenticatedContext(request, authentication, { csrf: true });
+            nativeToken = readPenpotNativeToken(request);
+          }
+          const result = await penpotMcpApi.handle({ pathname, context, nativeToken,
+            headers: { ...request.headers, authorization: authorizationHeader(request) },
+            body: await jsonBody(request, privateCallback && pathname.endsWith('call-proof') ? 4096 : 1_100_000) });
+          jsonResponse(response, requestId, result.status, result.body); return;
+        }
+        if (penpotEditorGateway?.matches(pathname)) {
+          requireSecureTransport(request);
+          if (!['GET', 'HEAD'].includes(request.method) || request.headers.origin) requireSameOrigin(request, allowedOrigin);
+          if (request.headers['sec-fetch-site'] === 'cross-site') throw new PlatformError('origin_denied', 'Request origin is not allowed', { status: 403 });
+          await penpotEditorGateway.handle({ request, response,
+            authenticate: (options) => authenticatedContext(request, authentication, options),
+            sessionToken: sessionToken(request), csrfToken: csrfHeader(request) });
+          return;
+        }
+        if (penpotHandoffApi?.matches(request.method, pathname)) {
+          const privateCallback = penpotHandoffApi.isPrivate(pathname);
+          if (!privateCallback) {
+            requireSecureTransport(request);
+            requireSameOrigin(request, allowedOrigin);
+          }
+          const result = await penpotHandoffApi.handle({ pathname,
+            sessionToken: privateCallback ? null : sessionToken(request),
+            csrfToken: privateCallback ? null : csrfHeader(request),
+            headers: { ...request.headers, authorization: authorizationHeader(request) },
+            body: await jsonBody(request, 4096) });
+          jsonResponse(response, requestId, result.status, result.body);
           return;
         }
         if (protectedOfficeSetControlHandler?.matches(request.method, pathname)) {
@@ -1280,6 +1330,15 @@ export function createPlatformApiServer({
 
   server.on("upgrade", (request, socket, head) => {
     void (async () => {
+      if (request.url?.startsWith('/api/v1/design/editor/')) {
+        try {
+          requireSecureTransport(request); requireSameOrigin(request, allowedOrigin);
+          if (!penpotEditorGateway) throw new Error('design_unavailable');
+          await penpotEditorGateway.attachUpgrade({ request, socket, head,
+            authenticate: () => authenticatedContext(request, authentication) });
+        } catch { if (!socket.destroyed) rejectUpgrade(socket, 403, 'Forbidden'); }
+        return;
+      }
       if (request.url?.startsWith('/api/v1/assistant/native/')) {
         try {
           requireSecureTransport(request);
@@ -2292,14 +2351,26 @@ export async function startPlatformApi(environment = process.env, dependencies =
       },
       setId: environment.PLATFORM_PROTECTED_OFFICE_SET_ID, nodeId: environment.PLATFORM_PROTECTED_OFFICE_SET_NODE_ID,
       profiles: protectedOfficeCatalogProfiles(environment) }) : baseApplicationCatalogRepository;
+  let penpotRuntime = null;
   const applicationCatalogService = dependencies.applicationCatalogService ?? (
     dependencies.database && environment.PLATFORM_APPLICATION_ROUTES_FILE && environment.PLATFORM_BUILT_IN_APPLICATIONS_FILE
       ? new ApplicationCatalogService({
         repository: applicationCatalogRepository,
+        liveCoreHealth: !environment.PLATFORM_APPLIANCE_NODE_ID && environment.PLATFORM_OBJECT_SERVICE_ENDPOINT
+          && environment.PLATFORM_OBJECT_SERVICE_HEALTH_ORIGIN ? localObjectHealthSource({
+            rpcEndpoint: environment.PLATFORM_OBJECT_SERVICE_ENDPOINT,
+            healthOrigin: environment.PLATFORM_OBJECT_SERVICE_HEALTH_ORIGIN,
+            fetcher: dependencies.fetcher ?? fetch,
+          }) : null,
         drawingProfile: drawingWorkerConfigured ? { profileId: environment.DRAWING_PROFILE_ID,
           profileKey: environment.DRAWING_PROFILE_KEY } : null,
         routeSource: new CompositeApplicationRouteSource({ sources: [
           new FileApplicationRouteSource({ path: environment.PLATFORM_APPLICATION_ROUTES_FILE, readinessFetcher: dependencies.fetcher ?? fetch }),
+          { async routes({pluginKey=null}={}) {
+            if(pluginKey!==null&&pluginKey!=='official.penpot')return [];
+            const route=await penpotRuntime?.readiness.catalogRoute();
+            return route?[route]:[];
+          } },
           ...(dependencies.pluginApplicationRouteSource ? [dependencies.pluginApplicationRouteSource] : []),
         ] }),
         builtInSource: new FileBuiltInApplicationSource({ path: environment.PLATFORM_BUILT_IN_APPLICATIONS_FILE }),
@@ -2450,11 +2521,22 @@ export async function startPlatformApi(environment = process.env, dependencies =
       callback: { listening: () => false }, signallingEnabled: false });
     logger.warn("casting.service_start_isolated"); // No raw error/credential/path.
   }
+  try {
+    penpotRuntime = await createPenpotRuntime({ environment, database: dependencies.database, authentication, agentRoutes: agentBridgeRoutes,
+      teamDrive:teamDriveService,objectService:dependencies.objectService,artifactProvenance });
+  } catch {
+    // Missing design dependencies must not prevent unrelated platform use.
+    // Do not log raw configuration paths or secret-bearing error messages.
+    logger.warn('design.identity_start_isolated');
+  }
   const server = createPlatformApiServer({
     authentication,
     preferences,
     publicOrigin,
     logger,
+    penpotHandoffApi: penpotRuntime?.httpApi ?? null,
+    penpotEditorGateway: penpotRuntime?.editor ?? null,
+    penpotMcpApi: penpotRuntime?.mcpApi ?? null,
     computeApi,
     assistantApi: new AssistantHttpApi({ service: assistantService }),
     nativeAssistantApi: agentBridgeRoutes ? new NativeAssistantApi({routes:agentBridgeRoutes}) : null,
@@ -2501,6 +2583,7 @@ export async function startPlatformApi(environment = process.env, dependencies =
     realtimeSpeechTransport: dependencies.realtimeSpeechTransport ?? null,
   });
   if (ownedAgentCredentialAuthority) server.once("close", () => ownedAgentCredentialAuthority.close());
+  if (penpotRuntime) server.once('close', () => penpotRuntime.close());
   try {
     await new Promise((resolve, reject) => {
       server.once("error", reject);

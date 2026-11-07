@@ -14,6 +14,7 @@ import time
 from offline_common import digest, need, read_json, run, write_json
 
 ROOT = Path(__file__).resolve().parents[1]
+PRODUCT_FEATURES = ('penpot',)
 GUACAMOLE = 'docker.io/guacamole/guacamole@sha256:f344085e618bb05e22b964b0208dbd06d3468275bac70206f93805245e067b40'
 GUACD = 'docker.io/guacamole/guacd@sha256:8974eaa9ba32f713daf311e7cc8cd7e4cdfba1edea39eed75524e78ef4b08f4f'
 
@@ -107,6 +108,7 @@ class Pipeline:
 
 def configure_network(work,region,model_endpoint,registry_mirror):
     from public_model_git import endpoint
+    from source_network import registry_endpoint
     # Never reuse credentials or proxy settings from the developer's shell.
     for name in list(os.environ):
         if name.lower() in ('http_proxy','https_proxy','all_proxy','no_proxy'):
@@ -120,7 +122,7 @@ def configure_network(work,region,model_endpoint,registry_mirror):
     origin=endpoint(model_endpoint or ('https://hf-mirror.com' if region=='cn' else 'https://huggingface.co'))
     os.environ['TEAMAIBOX_MODEL_ENDPOINT']=origin
     if selected:
-        selected=endpoint(selected)
+        selected=registry_endpoint(selected)
         os.environ['TEAMAIBOX_REGISTRY_MIRROR']=selected
     else:
         os.environ.pop('TEAMAIBOX_REGISTRY_MIRROR',None)
@@ -156,7 +158,7 @@ def models(p,cache,origin):
     return results
 
 
-def build(p,cache,origin):
+def build(p,cache,origin,*,make_archive=False):
     from source_toolchain import prepare,UBUNTU
     from build_public_services import RECIPES,ALIASES,UPSTREAM_IMAGES,NODE_SERVICES
     tool=p.step('toolchain',lambda out:prepare(out,cache,lambda args:p.command(args,p.work/'toolchain.log')))
@@ -220,6 +222,9 @@ def build(p,cache,origin):
     image_map.update(read_json(google/'images.json')['images'])
     from offline_common import IMAGE_ROLES
     need(set(image_map)==IMAGE_ROLES,'factory image role closure incomplete')
+    from source_penpot import assemble
+    design_images,design_assets=assemble(p,cache/'penpot',image_map['agent-sandbox'])
+    image_map.update(design_images)
     images=p.work/'images.json';write_json(images,dict(images=image_map))
     modelopt=docker_tool('modelopt','deploy/compute/qwen38-modelopt/Dockerfile',[
         '--build-arg','OFFICE_ENGINE_IMAGE='+references['assistant-worker']],'deploy/compute/qwen38-modelopt')
@@ -238,18 +243,21 @@ def build(p,cache,origin):
     for role in ('assistant-model','translation-model','embedding-model','drawing-model','ocr-model','asr-model'):
         config_assets[role]=dict(source=str(assets[role]),destination='assets/'+role)
     config_assets['guest-host-tools']=dict(source=str(guest_tools),destination='assets/guest-host-tools')
+    config_assets.update(design_assets)
     commit=run(['git','rev-parse','HEAD']).strip()
     release_id='source-'+commit[:12]+'-'+p.state['sourceIdentity'][:12]
     inputs=p.work/'inputs.json'
     write_json(inputs,dict(schemaVersion=1,releaseId=release_id,sourceCommit=commit,agentVersion='1.0.0',
-        images=image_map,assets=config_assets,hostPackageCollection=str(packages/'collection.json'),
+        images=image_map,assets=config_assets,features=list(PRODUCT_FEATURES),hostPackageCollection=str(packages/'collection.json'),
         guestSystems=dict(androidVersion='17',androidBaseBuildId='16102939',cameraSources=['image','browser','video','usb','udp']),
         freeReserveBytes=16*1024**3))
     release=p.script('release','install/prepare-release.py',['--inputs',inputs])
     args=['--release',release/'release-input.json']
+    if not make_archive:
+        args.append('--directory-only')
     if run(['git','status','--porcelain']).strip():
         args.append('--allow-working-tree')
-    package=p.script('package','install/package.py',args)
+    package=p.script('package' if make_archive else 'package-install','install/package.py',args)
     return package/('teamaibox-'+release_id+'-linux-arm64')
 
 
@@ -257,6 +265,26 @@ def protect_existing_install(target, state):
     if target.exists() and any(target.iterdir()):
         need(state.get('package') and (target/'install-state.json').is_file(),
              'existing installation preserved; use its upgrade flow, not a fresh source install')
+
+
+def product_bundle(bundle):
+    # The package installer verifies the complete contents. A legacy package
+    # without Design must not count as standard source output, even build-only.
+    need(read_json(bundle/'release.json').get('features') == list(PRODUCT_FEATURES),
+         'standard source package must include the integrated Design application')
+    return bundle
+
+
+def check_source_host(*, allow_pull=False):
+    from installer import host_facts, local_probe_image, validate_host_facts, verify_container_gpu
+    from source_toolchain import UBUNTU
+    validate_host_facts({'host':{'os':['ubuntu:24.04']}},host_facts())
+    image = local_probe_image(UBUNTU)
+    if image is None and allow_pull:
+        run(['docker', 'pull', '--platform=linux/arm64', UBUNTU], timeout=900)
+        image = local_probe_image(UBUNTU)
+        need(image is not None, 'Docker GPU probe image missing after pull')
+    return verify_container_gpu(image) if image else 'pending-image'
 
 
 def main():
@@ -269,6 +297,8 @@ def main():
     parser.add_argument('--build-only',action='store_true')
     parser.add_argument('--download-models-only',action='store_true')
     parser.add_argument('--check',action='store_true',help='read-only host/source preflight; no downloads')
+    # Keep compatibility with previously documented commands.
+    parser.add_argument('--with-penpot',action='store_true',help=argparse.SUPPRESS)
     a=parser.parse_args()
     need(platform.system()=='Linux' and platform.machine() in ('aarch64','arm64'),'requires Linux ARM64 DGX Spark')
     need(os.geteuid()==0,'run sudo bash install/from-source.sh (host tools and final installation require root)')
@@ -280,8 +310,11 @@ def main():
     need(Path('/etc/os-release').read_text().find('VERSION_ID="24.04"')>=0,'requires Ubuntu 24.04')
     for tool in ('docker','git','nvidia-smi','dpkg-query'):
         need(shutil.which(tool), 'existing foundation tool missing: '+tool)
-    need(Path('/dev/kvm').exists(),'KVM unavailable')
-    run(['docker','info']);run(['nvidia-smi','-L'])
+    if not a.download_models_only or a.check:
+        gpu_access = check_source_host(allow_pull=not a.check)
+    else:
+        need(Path('/dev/kvm').exists(),'KVM unavailable')
+        run(['docker','info']);run(['nvidia-smi','-L'])
     work=a.work_dir.absolute();cache=(a.cache_dir or work/'cache').absolute();target=a.installation_root.absolute()
     for path in (work,cache,target):
         need(not path.resolve().is_relative_to(ROOT) and path != Path('/') and
@@ -289,23 +322,30 @@ def main():
     identity=source_identity(ROOT)
     if a.check:
         print(json.dumps(dict(status='preflight-passed',sourceIdentity=identity,
-            installed=False,networkDownloadsVerified=False)));return
+            features=list(PRODUCT_FEATURES),installed=False,networkDownloadsVerified=False,
+            dockerGpuAccess=gpu_access)));return
     p=Pipeline(work,identity,target)
     try:
+        features=list(PRODUCT_FEATURES)
+        need(p.state.get('features',[])==features or not p.state['stages'],
+             'installation features changed; use a new workspace and retain the download cache')
+        p.state['features']=features;write_json(p.file,p.state)
         if not a.build_only and not a.download_models_only:
             protect_existing_install(target,p.state)
         cache.mkdir(parents=True,exist_ok=True)
         origin=configure_network(work,a.region,a.model_endpoint,a.registry_mirror)
         if a.download_models_only:
             models(p,cache,origin);print('Model downloads verified; NOT built or installed.');return
-        bundle=build(p,cache,origin)
-        p.state['package']=str(bundle);write_json(p.file,p.state)
+        bundle=product_bundle(build(p,cache,origin,make_archive=a.build_only))
         if a.build_only:
+            p.state['archivePackage']=str(bundle);write_json(p.file,p.state)
             print('Package ready; NOT installed: '+str(bundle));return
+        p.state['package']=str(bundle);write_json(p.file,p.state)
         # The existing installer owns data protection, its lock and resume.
         subprocess.run(['bash',str(bundle/'install.sh'),'--installation-root',str(target)],check=True)
         p.state['installed']=True;write_json(p.file,p.state)
         print('Installation completed. See '+str(target/'readiness.json'))
+        print('Sign in to Team AI Box at its normal HTTPS address, then open All applications → Design (Penpot).')
     finally:
         p.lock.close()
 

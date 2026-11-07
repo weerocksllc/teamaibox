@@ -5,13 +5,38 @@ import uuid
 
 from offline_common import need, read_json, run
 from factory_guest_catalog import sql_value as q
+from factory_application_contract import BASE_APPLICATIONS, validate_application_set, application_services
 
 
-def statements(installation_id, applications, check=False):
+def check_design_gateway(record):
+    from appliance_installation import resolve
+    api = resolve(record, 'platform-api')
+    labels = api['Config']['Labels']
+    need(labels.get('com.teamaibox.installation-id') == record['installationId']
+         and labels.get('com.teamaibox.service-role') == 'platform-api',
+         'Design gateway does not belong to this installation')
+    # Exercise the actual Platform API registration. This probe sends no
+    # credentials, creates no Penpot user, and must not open the editor.
+    probe = """const probe=async(path,options)=>{
+      const r=await fetch('http://127.0.0.1:8080'+path,{
+        ...options,redirect:'error',signal:AbortSignal.timeout(5000)});
+      return {status:r.status,code:(await r.json()).error?.code};
+    };
+    Promise.all([
+      probe('/api/v1/design/editor/',{headers:{'x-forwarded-proto':'https'}}),
+      probe('/internal/v1/design/call-authority',{method:'POST',headers:{'content-type':'application/json'},body:'{}'})
+    ]).then(([editor,mcp])=>console.log(JSON.stringify({editor,mcp}))).catch(()=>process.exit(1))"""
+    result = json.loads(run(['docker', 'exec', api['Id'], 'node', '-e', probe], timeout=15))
+    need(result.get('editor') == dict(status=401, code='invalid_session'),
+         'protected Design editor route is not active on the installed Platform API')
+    need(result.get('mcp') == dict(status=403, code='penpot_call_denied'),
+         'protected Design MCP route is not active on the installed Platform API')
+
+
+def statements(installation_id, applications, check=False, required_applications=BASE_APPLICATIONS, *, profile='appliance'):
     namespace = uuid.UUID(installation_id)
     sql, assertions = [], []
-    keys = [r['manifest']['id'] for r in applications]
-    need(len(keys) == 9 and len(set(keys)) == 9, 'complete official application catalog required')
+    validate_application_set(applications, required_applications, profile=profile)
     for row in applications:
         manifest = row['manifest']
         key, version = manifest['id'], manifest['version']
@@ -32,23 +57,38 @@ def statements(installation_id, applications, check=False):
         'DO $check$ BEGIN', *assertions, 'END $check$;', 'COMMIT;'])
 
 
-def apply(root, check=False):
+def apply(root, check=False, *, profile='appliance'):
     from appliance_installation import load
     from factory_database import query
     record = load(root / 'installation.json')
-    rows = read_json(root / 'config/application-catalog.json')['applications']
-    for row in rows:
-        ids = run(['docker', 'ps', '-q', '--filter', 'label=com.teamaibox.installation-id=' + record['installationId'],
-                   '--filter', 'label=com.teamaibox.service-role=' + row['role']]).split()
-        need(len(ids) == 1, 'shipped application is not uniquely running')
-        container = json.loads(run(['docker', 'inspect', ids[0]]))[0]
-        need(container['Config']['Labels'].get('com.teamaibox.installation-id') == record['installationId'],
-             'application does not belong to this installation')
-        need(container['Image'] == row['manifest']['images'][0]['variants'][0]['digest'],
-             'shipped application image differs from package')
-        probe = json.loads(run(['docker', 'exec', container['Id'], 'node', '-e',
-            "fetch('http://127.0.0.1:8080/health/ready',{signal:AbortSignal.timeout(5000)}).then(async r=>{if(!r.ok)throw Error('not ready');console.log(JSON.stringify(await r.json()))}).catch(()=>process.exit(1))"]))
-        need(probe.get('status') == 'ready' and probe.get('pluginId') == row['manifest']['id']
-             and probe.get('version') == row['manifest']['version'], 'shipped application is not ready')
-    query(root, statements(record['installationId'], rows, check))
+    catalog = read_json(root / 'config/application-catalog.json')
+    rows = catalog['applications']
+    required = catalog.get('requiredApplications', sorted(BASE_APPLICATIONS))
+    validate_application_set(rows, required, profile=profile)
+    bindings = [(row, application_services(row)) for row in rows]
+    for row, services in bindings:
+        for service in services:
+            ids = run(['docker', 'ps', '-q', '--filter', 'label=com.teamaibox.installation-id=' + record['installationId'],
+                       '--filter', 'label=com.teamaibox.service-role=' + service['role']]).split()
+            need(len(ids) == 1, 'shipped application service is not uniquely running')
+            container = json.loads(run(['docker', 'inspect', ids[0]]))[0]
+            labels = container['Config']['Labels']
+            need(labels.get('com.teamaibox.installation-id') == record['installationId']
+                 and labels.get('com.teamaibox.service-role') == service['role'],
+                 'application service does not belong to this installation')
+            need(container['Image'] == service['digest'], 'shipped application service image differs from package')
+            if service['readiness'] == 'container-health':
+                # Native dependencies need their own image-specific readiness;
+                # do not run the platform's Node UI probe inside JDK/Nginx.
+                need(container.get('State', {}).get('Running') is True
+                     and container['State'].get('Health', {}).get('Status') == 'healthy',
+                     'native application service is not ready')
+            else:
+                probe = json.loads(run(['docker', 'exec', container['Id'], 'node', '-e',
+                    "fetch('http://127.0.0.1:8080/health/ready',{signal:AbortSignal.timeout(5000)}).then(async r=>{if(!r.ok)throw Error('not ready');console.log(JSON.stringify(await r.json()))}).catch(()=>process.exit(1))"]))
+                need(probe.get('status') == 'ready' and probe.get('pluginId') == row['manifest']['id']
+                     and probe.get('version') == row['manifest']['version'], 'shipped application is not ready')
+    if profile == 'appliance' and 'official.penpot' in required:
+        check_design_gateway(record)
+    query(root, statements(record['installationId'], rows, check, required, profile=profile))
     return dict(status='checked' if check else 'registered', applications=len(rows), accountsCreated=0)

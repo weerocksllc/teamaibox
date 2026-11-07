@@ -26,6 +26,8 @@ sudo bash install/from-source.sh --region cn
 
 Il s'agit d'une **version source en ligne suivie d'une installation hors ligne**, et non d'une version source hors ligne. Il prépare automatiquement les outils de construction manquants, télécharge les six entrées de modèle, construit et assemble Android et toutes les images d'application, quantifie les deux modèles sources, collecte les packages micrologiciels/hôtes, crée le package hors ligne complet et exécute son programme d'installation existant. Il ne remplace pas Docker/NVIDIA, ne redémarre pas le démon Docker, n'efface pas une installation existante ou ne modifie pas le routage de l'hôte, les paramètres DNS ou VPN. Les modèles, les états de connexion des invités et le site Web de marketing privé ne proviennent pas d'une autre installation.
 
+Connectez-vous à Team AI Box, puis ouvrez **Toutes les applications → Design** pour utiliser Penpot. Le compte, les droits d’équipe, le disque d’équipe et l’assistant IA sont les mêmes. Aucune installation ni connexion séparée.
+
 L'espace de travail par défaut est `/var/tmp/teamaibox-source-build` ; les caches de téléchargement et les journaux par étape se trouvent là, en dehors du clone. L'installation est par défaut `/srv/teamaibox/installation`. Attendez-vous à des téléchargements volumineux et à plusieurs centaines de Go d’utilisation temporaire du disque. Le chargement du modèle et la quantification GPU peuvent prendre un temps considérable ; aucun délai d'exécution fixe n'est promis.
 
 ## Reprise de l’installation et état

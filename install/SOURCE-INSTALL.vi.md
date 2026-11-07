@@ -26,6 +26,8 @@ sudo bash install/from-source.sh --region cn
 
 Đây là **bản dựng nguồn trực tuyến, sau đó là cài đặt ngoại tuyến**, không phải bản dựng nguồn ngoại tuyến. Nó tự động chuẩn bị các công cụ xây dựng còn thiếu, tải xuống sáu đầu vào mô hình, xây dựng và lắp ráp Android và tất cả hình ảnh ứng dụng, định lượng hai mô hình nguồn, thu thập các gói chương trình cơ sở/máy chủ, tạo gói ngoại tuyến hoàn chỉnh và chạy trình cài đặt hiện có. Nó không thay thế Docker/NVIDIA, khởi động lại daemon Docker, xóa cài đặt hiện có hoặc thay đổi cài đặt định tuyến máy chủ, DNS hoặc VPN. Mô hình, trạng thái đăng nhập của khách và trang web tiếp thị riêng không được lấy từ bản cài đặt khác.
 
+Đăng nhập Team AI Box rồi mở **Tất cả ứng dụng → Thiết kế** để dùng Penpot. Trình chỉnh sửa dùng cùng tài khoản, quyền nhóm, ổ đĩa nhóm và trợ lý AI. Không cần cài đặt hay đăng nhập riêng.
+
 Không gian làm việc mặc định là `/var/tmp/teamaibox-source-build`; bộ nhớ đệm tải xuống và nhật ký theo từng giai đoạn tồn tại ở đó, bên ngoài bản sao. Cài đặt mặc định là `/srv/teamaibox/installation`. Mong đợi lượt tải xuống lớn và vài trăm GB sử dụng đĩa tạm thời. Việc tải mô hình và lượng tử hóa GPU có thể mất nhiều thời gian; không có thời gian hoàn thành cố định được hứa hẹn.
 
 ## Tiếp tục cài đặt và kiểm tra trạng thái

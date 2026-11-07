@@ -1,6 +1,6 @@
 # Product workspace UI
 
-Approved design: [Team AI Box](https://www.figma.com/design/7hQqtwmQ8H9UWmn8Hvcnnu), foundations `15:7071` (light), `15:7131` (dark). The source distribution does not depend on local OpenSpec planning files.
+Approved design: [Team AI Box](https://www.figma.com/design/7hQqtwmQ8H9UWmn8Hvcnnu), foundations `15:7071` (light), `15:7131` (dark). See the [project documentation](../../docs/project/README.md) for maintenance conventions and planning.
 
 Focus Workspace design: page `151:7617`, overview `151:7618`, assistant `151:7619`, drawing `151:7620`, computers `151:7621`, phones `155:9875`. The light versions and empty/loading/error/laptop states are in the same Figma page. This is a presentation refresh, not a replacement for the product's catalog, routing or service contracts.
 

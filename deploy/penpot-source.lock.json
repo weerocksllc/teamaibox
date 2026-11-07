@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "repository": "https://github.com/penpot/penpot",
+  "tag": "2.18.5",
+  "commit": "f44566963daf61fce4d8608e7c5e8c27c5853a88",
+  "archiveUrl": "https://codeload.github.com/penpot/penpot/tar.gz/f44566963daf61fce4d8608e7c5e8c27c5853a88",
+  "archiveSha256": "669e15d93e80dd9cda65d8fd31243e4e952efbe6b59ead46d8f53f79de0464d8",
+  "license": "MPL-2.0; component notices apply",
+  "opencodeContract": "architecture/opencode/upstream-lock.v1.json",
+  "contractFiles": {
+    "LICENSE": "1f256ecad192880510e84ad60474eab7589218784b9a50bc7ceee34c2b91f1d5",
+    "mcp/pnpm-lock.yaml": "264272f9d01d8c3fe35edc6ea22695d384a6158963450605e7c1f6bbf2044581",
+    "mcp/packages/server/src/PenpotMcpServer.ts": "75bda04f3becfa4f10fee4dca5061a1d35deb616d66d3ebe11001bd29116e449",
+    "mcp/packages/server/src/PluginBridge.ts": "9e104952141cd83c26793d3cd9268183e6c6c214ae25f1365cb2e239ea4008d7",
+    "docker/devenv/Dockerfile": "70915f4ef9c22e2a7c37cebe46943b76cf7076622cee1e6fe51773d6f9676924",
+    "mcp/package.json": "4389e9cebfce46e45bdeeaa1a815a34e681126b57b244f83939ec7a2e8770a17",
+    "mcp/packages/server/package.json": "f8482f1769df2550d95ed2757f6a897ca5f25b791d8f354fb81ba31e1eaa1166",
+    "mcp/packages/plugin/package.json": "eb0842b67fa2314b6d6222b7915bd9492057580992c96f1cf7bb90f072c5a619",
+    "mcp/packages/plugin/src/plugin.ts": "ebd842ceb45557545fedc9f6eadb9768d1c9a48a4e509f43ed804ffe71fb604f",
+    "plugins/pnpm-lock.yaml": "9f4ee730c1d43f13f10034dadecc615309dc3356c4e63b23371c645ed0851e2c",
+    "frontend/pnpm-lock.yaml": "f99443ca49ab3a8f5bd6cd397bac77f1ae834e11ebf1d74f6206b2a4018094c4",
+    "backend/deps.edn": "90ac9ae8fc21effaa91c5fef40a0d82d9374ddb4de2ca96a02b2dba35d6ae666",
+    "frontend/deps.edn": "0122e01959b5ac9284fbe7a2064b5f9aa88e78ca1e824b99c2052eed64f04164",
+    "common/deps.edn": "de30b4f7bd74ea45095ada1423f7fde610d435447c50b621051420f00233b245",
+    "render-wasm/Cargo.lock": "35c4ed5c6e7414e99ea8eb4c744670aa6e641c23b6e5d18c7f9171c90583ba47",
+    "plugins/LICENSE": "5f6ffaee9f6b91edeceb058d3a37279c64406c7d2685d9d5fb1903d7f04e9288",
+    "frontend/packages/mousetrap/LICENSE": "58ac1a498cc4ead4f8323c83713659410555b490ce32ff88bfa7d4b36638f593"
+  },
+  "publicMcpBuildBase": "docker.io/library/node:24.22.1-bookworm-slim@sha256:932a44adcdb8f5dfbf00f00eb38da8d22b450b2ad258b6d1b2319beca823bfbd",
+  "integrationStatus": "source-pinned-not-release-accepted"
+}

@@ -13,6 +13,17 @@ from test_offline_install import release_fixture
 
 
 class PreflightTests(unittest.TestCase):
+    def test_probe_must_target_the_same_docker_engine_as_the_worker_factory(self):
+        def command(args):
+            if args[:2] == ['docker', 'info']:
+                return '{"ID":"other-context"}'
+            self.assertEqual(args[:3], ['docker', '--host', 'unix:///var/run/docker.sock'])
+            return 'local-engine'
+        with patch.object(Path, 'read_text', return_value='ID=ubuntu\nVERSION_ID=24.04'), \
+             patch.object(installer.shutil, 'which', return_value='/usr/bin/fixture'):
+            with self.assertRaisesRegex(InstallError, 'must target the local'):
+                installer.host_facts(command)
+
     def facts(self):
         return dict(platform='linux', architecture='aarch64', uid=0, os='ubuntu:24.04',
                     docker=dict(OSType='linux', Architecture='aarch64', Runtimes={'nvidia': {}},
@@ -36,10 +47,21 @@ class PreflightTests(unittest.TestCase):
             with self.subTest(field=field), self.assertRaisesRegex(InstallError, error), patch.object(installer, 'run') as command:
                 installer.validate_host_facts(release_fixture(), facts)
                 command.assert_not_called()
-        facts = self.facts()
-        facts['docker']['Runtimes'] = {}
-        with self.assertRaisesRegex(InstallError, 'NVIDIA Docker'):
-            installer.validate_host_facts(release_fixture(), facts)
+    def test_actual_probe_uses_the_worker_device_request_and_requires_gb10(self):
+        image = 'sha256:' + 'a' * 64
+        with patch.object(installer, 'run') as no_other_commands:
+            def probe(args, *, timeout):
+                self.assertEqual(args[:2], ['docker', 'run'])
+                self.assertIn('--network=none', args)
+                self.assertIn('--pull=never', args)
+                self.assertEqual(args[args.index('--gpus') + 1], 'driver=nvidia,count=all')
+                self.assertEqual(args[-2:], [image, '-L'])
+                self.assertEqual(timeout, 30)
+                return 'GPU 0: NVIDIA GB10 (UUID: GPU-fixture)\n'
+            self.assertEqual(installer.verify_container_gpu(image, probe), 'nvidia-device-requests')
+            with self.assertRaisesRegex(InstallError, 'did not detect'):
+                installer.verify_container_gpu(image, lambda *a, **k: 'GPU 0: Other')
+            no_other_commands.assert_not_called()
 
     def test_preflight_is_read_only_and_rejects_owned_containers(self):
         with tempfile.TemporaryDirectory() as temp, ExitStack() as stack:
@@ -71,9 +93,11 @@ class LifecycleTests(unittest.TestCase):
             package, root, _ = self.harness(stack, directory)
             calls = []
             stack.enter_context(patch.object(installer, 'import_images', side_effect=lambda *a: calls.append('images')))
+            stack.enter_context(patch.object(installer, 'packaged_gpu_probe',
+                side_effect=lambda *a, **kw: calls.append('gpu') or 'nvidia-device-requests'))
             stack.enter_context(patch.object(installer, 'execute_phase', side_effect=lambda s, r: calls.append(s['phase'])))
             installer.install(package, root, lock_path=directory / 'lock')
-            self.assertEqual(calls[:2], ['images', 'storage'])
+            self.assertEqual(calls[:3], ['images', 'gpu', 'storage'])
 
     def harness(self, stack, directory):
         package, root = directory / 'package', directory / 'new'
@@ -83,6 +107,7 @@ class LifecycleTests(unittest.TestCase):
         stack.enter_context(patch.object(installer, 'verify_package', return_value=manifest))
         stack.enter_context(patch.object(installer, 'preflight', return_value={'hostPackages': 0}))
         stack.enter_context(patch.object(installer, 'existing_installation_guard'))
+        stack.enter_context(patch.object(installer, 'packaged_gpu_probe', return_value='nvidia-device-requests'))
         for name in ('install_host_packages', 'install_runtime', 'import_images', 'install_assets', 'wait_ready'):
             stack.enter_context(patch.object(installer, name))
         return package, root, manifest

@@ -1,0 +1,41 @@
+import type {Locale} from '../i18n';
+
+export const penpotReviewCopy:Record<Locale,readonly [string,string,string,string,string]>={
+ en:['Result needs review','The change may have been saved. Check the original design and its history before reconnecting AI. Nothing was resent.','Open original design','I checked the result','You no longer have access to the original design. The result is still unknown.'],
+ 'zh-CN':['结果待核对','改动可能已保存。请检查原设计和它的历史记录，再重新连接 AI。系统没有重发。','打开原设计','我已核对','你目前无法访问原设计，结果仍未确认。'],
+ 'zh-TW':['結果待核對','變更可能已儲存。請檢查原設計及其記錄，再重新連線 AI。系統未重新送出。','開啟原設計','我已核對','你目前無法存取原設計，結果仍未確認。'],
+ ja:['結果の確認が必要です','変更は保存された可能性があります。AI を再接続する前に元のデザインと履歴を確認してください。再送はしていません。','元のデザインを開く','確認しました','元のデザインにアクセスできないため、結果は不明です。'],
+ ko:['결과 확인 필요','변경 사항이 저장되었을 수 있습니다. AI를 다시 연결하기 전에 원본 디자인과 기록을 확인하세요. 다시 전송하지 않았습니다.','원본 디자인 열기','결과 확인 완료','원본 디자인에 접근할 수 없어 결과를 확인하지 못했습니다.'],
+ fr:['Résultat à vérifier','La modification a peut-être été enregistrée. Vérifiez le design d’origine et son historique avant de reconnecter l’IA. Aucun renvoi.','Ouvrir le design d’origine','J’ai vérifié le résultat','Vous n’avez plus accès au design d’origine. Le résultat reste inconnu.'],
+ de:['Ergebnis prüfen','Die Änderung wurde möglicherweise gespeichert. Prüfe den ursprünglichen Entwurf und seinen Verlauf, bevor du die KI erneut verbindest. Nichts wurde erneut gesendet.','Ursprünglichen Entwurf öffnen','Ergebnis geprüft','Du hast keinen Zugriff auf den ursprünglichen Entwurf. Das Ergebnis ist weiterhin unklar.'],
+ es:['Resultado por verificar','Es posible que el cambio se haya guardado. Revisa el diseño original y su historial antes de reconectar la IA. No se ha reenviado nada.','Abrir el diseño original','Ya verifiqué el resultado','Ya no tienes acceso al diseño original. El resultado sigue sin confirmarse.'],
+ 'pt-BR':['Resultado a conferir','A alteração pode ter sido salva. Confira o design original e seu histórico antes de reconectar a IA. Nada foi reenviado.','Abrir design original','Conferi o resultado','Você não tem mais acesso ao design original. O resultado ainda é desconhecido.'],
+ ru:['Проверьте результат','Изменение могло сохраниться. Проверьте исходный дизайн и его историю перед повторным подключением ИИ. Запрос не отправлялся повторно.','Открыть исходный дизайн','Результат проверен','Исходный дизайн больше недоступен. Результат пока неизвестен.'],
+ ar:['النتيجة بحاجة إلى مراجعة','ربما حُفظ التغيير. راجع التصميم الأصلي وسجله قبل إعادة ربط الذكاء الاصطناعي. لم يُعَد إرسال الطلب.','فتح التصميم الأصلي','راجعت النتيجة','لم يعد التصميم الأصلي متاحًا لك. ما زالت النتيجة غير معروفة.'],
+ hi:['नतीजे की जाँच ज़रूरी है','बदलाव सहेजा गया हो सकता है। AI को फिर जोड़ने से पहले मूल डिज़ाइन और उसका इतिहास देखें। अनुरोध दोबारा नहीं भेजा गया।','मूल डिज़ाइन खोलें','मैंने नतीजा जाँचा','मूल डिज़ाइन अब आपके लिए उपलब्ध नहीं है। नतीजा अभी अज्ञात है।'],
+ id:['Hasil perlu diperiksa','Perubahan mungkin sudah tersimpan. Periksa desain asli dan riwayatnya sebelum menghubungkan ulang AI. Tidak ada yang dikirim ulang.','Buka desain asli','Saya telah memeriksa hasilnya','Anda tidak lagi memiliki akses ke desain asli. Hasilnya belum diketahui.'],
+ it:['Risultato da verificare','La modifica potrebbe essere stata salvata. Controlla il design originale e la sua cronologia prima di ricollegare l’IA. Non è stato reinviato nulla.','Apri il design originale','Ho verificato il risultato','Non hai più accesso al design originale. Il risultato rimane sconosciuto.'],
+ tr:['Sonuç incelenmeli','Değişiklik kaydedilmiş olabilir. Yapay zekâyı yeniden bağlamadan önce asıl tasarımı ve geçmişini kontrol et. İstek yeniden gönderilmedi.','Asıl tasarımı aç','Sonucu kontrol ettim','Asıl tasarıma artık erişemiyorsun. Sonuç hâlâ bilinmiyor.'],
+ vi:['Cần kiểm tra kết quả','Thay đổi có thể đã được lưu. Hãy xem thiết kế gốc và lịch sử trước khi kết nối lại AI. Yêu cầu không được gửi lại.','Mở thiết kế gốc','Tôi đã kiểm tra kết quả','Bạn không còn quyền truy cập thiết kế gốc. Kết quả vẫn chưa rõ.'],
+ th:['ต้องตรวจสอบผลลัพธ์','การเปลี่ยนแปลงอาจถูกบันทึกแล้ว ตรวจสอบงานออกแบบเดิมและประวัติก่อนเชื่อมต่อ AI ใหม่ ระบบไม่ได้ส่งคำขอซ้ำ','เปิดงานออกแบบเดิม','ตรวจสอบผลแล้ว','คุณไม่มีสิทธิ์เข้าถึงงานออกแบบเดิมแล้ว จึงยังไม่ทราบผล'],
+};
+
+export const penpotReopenCopy:Record<Locale,string>={
+ en:'AI could not reconnect. Save any unsaved edits, reopen this design, and connect again.',
+ 'zh-CN':'未能重新连接 AI。请先保存改动，再重新打开此设计并连接。',
+ 'zh-TW':'無法重新連線 AI。請先儲存變更，再重新開啟此設計並連線。',
+ ja:'AI に再接続できませんでした。編集内容を保存し、このデザインを開き直してから接続してください。',
+ ko:'AI에 다시 연결하지 못했습니다. 편집 내용을 저장하고 이 디자인을 다시 연 뒤 연결하세요.',
+ fr:'Impossible de reconnecter l’IA. Enregistrez vos modifications, rouvrez ce design, puis reconnectez l’IA.',
+ de:'Die KI konnte nicht erneut verbunden werden. Speichere deine Änderungen, öffne den Entwurf erneut und verbinde die KI wieder.',
+ es:'No se pudo reconectar la IA. Guarda los cambios, vuelve a abrir el diseño y conecta de nuevo.',
+ 'pt-BR':'Não foi possível reconectar a IA. Salve as alterações, reabra o design e conecte novamente.',
+ ru:'Не удалось повторно подключить ИИ. Сохраните правки, заново откройте дизайн и подключите ИИ.',
+ ar:'تعذرت إعادة ربط الذكاء الاصطناعي. احفظ تعديلاتك ثم أعد فتح التصميم وحاول الاتصال مجددًا.',
+ hi:'AI फिर से नहीं जुड़ सका। बदलाव सहेजें, यह डिज़ाइन फिर खोलें और दोबारा जोड़ें।',
+ id:'AI tidak dapat tersambung kembali. Simpan perubahan, buka ulang desain ini, lalu hubungkan kembali.',
+ it:'Impossibile ricollegare l’IA. Salva le modifiche, riapri il design e prova a collegarla di nuovo.',
+ tr:'Yapay zekâ yeniden bağlanamadı. Değişiklikleri kaydet, tasarımı yeniden aç ve tekrar bağlan.',
+ vi:'Không thể kết nối lại AI. Hãy lưu thay đổi, mở lại thiết kế này rồi kết nối lại.',
+ th:'เชื่อมต่อ AI ใหม่ไม่ได้ โปรดบันทึกการแก้ไข เปิดงานออกแบบนี้อีกครั้ง แล้วเชื่อมต่อใหม่',
+};

@@ -277,7 +277,7 @@ sudo bash install/from-source.sh
 
 1. Abre `https://<BOX_LAN_IP>/` con la dirección LAN actual y verifica el certificado HTTPS generado por tu dispositivo.
 2. Entra con `admin` / `admin`, **cambia la contraseña inicial** y crea cuentas normales. No expongas las credenciales iniciales a Internet.
-3. Espera a que cada aplicación esté lista y elige idioma/tema en el perfil.
+3. Inicia sesión en Team AI Box y abre **Todas las aplicaciones → Diseño** para usar Penpot. Se usan la misma cuenta, los permisos del equipo, la unidad de equipo y el asistente de IA. No necesitas instalar Penpot ni iniciar sesión por separado.
 4. Aporta ISO ARM64 y licencias autorizadas de Windows/Linux. Para un destino sin conexión, prepara el paquete completo y sigue [la guía](install/README.es.md); preparar desde el código requiere conexión.
 
 ## Licencia y límites

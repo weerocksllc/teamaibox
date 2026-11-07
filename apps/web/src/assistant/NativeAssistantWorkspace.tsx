@@ -44,11 +44,11 @@ type Translator=(key:string,values?:Record<string,string|number>)=>string;
 const segment=encodeURIComponent;
 const pretty=(value:unknown)=>JSON.stringify(value,null,2);
 
-export function NativeAssistantWorkspace({locale,identityId='',initialPrompt='',onClose,t}:{locale:Locale;identityId?:string;initialPrompt?:string;onClose:()=>void;t:Translator}) {
+export function NativeAssistantWorkspace({locale,identityId='',initialPrompt='',onClose,t,embedded=false,onSessionChange}:{locale:Locale;identityId?:string;initialPrompt?:string;onClose:()=>void;t:Translator;embedded?:boolean;onSessionChange?:(sessionId:string|null)=>void}) {
   const nt=(key:Parameters<typeof nativeText>[1])=>nativeText(locale,key);
   const pt=(key:Parameters<typeof projectSessionText>[1])=>projectSessionText(locale,key);
   const [client]=useState(createNativeClient);
-  const [shellHeader]=useState(()=>document.querySelector<HTMLElement>('.app-frame .topbar'));
+  const [shellHeader]=useState(()=>embedded?null:document.querySelector<HTMLElement>('.app-frame .topbar'));
   const [browserState]=useState(()=>{let storage:Storage|null=null;try{storage=localStorage;if(identityId){const key='tab.assistant.activeIdentity';const next=assistantAccountLocation(new URL(location.href),sessionStorage.getItem(key),identityId);history.replaceState(null,'',next);sessionStorage.setItem(key,identityId);}}catch{}return new AssistantBrowserState(identityId,storage);});
   useSyncExternalStore(browserState.subscribe,browserState.snapshot,browserState.snapshot);
   const [directory,setDirectory]=useState(()=>readNativeLocation(new URL(location.href)).directory);
@@ -78,7 +78,9 @@ export function NativeAssistantWorkspace({locale,identityId='',initialPrompt='',
   const [toolsTab,setToolsTab]=useState<'files'|'terminal'>('files');
   const [home,setHome]=useState(()=>{const url=new URL(location.href);return url.searchParams.get('assistantView')==='home'||(!url.searchParams.has('assistantSession')&&!url.searchParams.has('assistantDirectory')&&url.searchParams.get('assistantView')!=='conversation'&&!initialPrompt);});
   const [navigationOpen,setNavigationOpen]=useState(false);
-  const [narrow,setNarrow]=useState(()=>matchMedia('(max-width: 820px)').matches);
+  const [viewportNarrow,setNarrow]=useState(()=>matchMedia('(max-width: 820px)').matches);
+  const narrow=embedded||viewportNarrow;
+  useEffect(()=>{onSessionChange?.(active);},[active,onSessionChange]);
   const contextPanel=useRef<HTMLElement>(null);const contextOpener=useRef<HTMLElement|null>(null);
   const [folders,setFolders]=useState<'open'|'create'|null>(null);
   const [menu,setMenu]=useState(false);const menuRef=useRef<HTMLDetailsElement>(null);
@@ -212,7 +214,7 @@ export function NativeAssistantWorkspace({locale,identityId='',initialPrompt='',
       <button type="button" className="icon-button" onClick={()=>void openSettings()} aria-label={nt('settings')}><Settings2 size={18}/></button>
       <button type="button" className="icon-button" onClick={onClose} aria-label={t('app.close')}><X size={20}/></button>
     </div>;
-  return <section className={`assistant-workspace assistant-native ${shellHeader?'assistant-native--shell-header':''}`} role="region" aria-labelledby="native-assistant-title" onKeyDown={event=>{if(event.key==='Escape'&&tools){event.stopPropagation();setTools(false);}}}>
+  return <section className={`assistant-workspace assistant-native ${embedded?'assistant-native--embedded':''} ${shellHeader?'assistant-native--shell-header':''}`} role="region" aria-labelledby="native-assistant-title" onKeyDown={event=>{if(event.key==='Escape'&&tools){event.stopPropagation();setTools(false);}}}>
     {shellHeader?createPortal(header,shellHeader):header}
     <div className={`assistant-workspace__body ${navigationOpen?'is-navigation-open':''}`}>
       {!(narrow&&navigationOpen)&&navigation}
@@ -248,7 +250,7 @@ export function NativeAssistantWorkspace({locale,identityId='',initialPrompt='',
         {!!todos.length&&<details className="native-part"><summary>{nt('tasks')}</summary><ul>{todos.map((item,i)=><li key={i}>{item.content} · {item.status} · {item.priority}</li>)}</ul></details>}
         {!!children.length&&<details className="native-part"><summary>{nt('children')}</summary>{children.map(child=><Button key={child.id} variant="secondary" onClick={()=>select(child.id)}>{child.title}</Button>)}</details>}
         {permissions.filter(p=>p.sessionID===active).map(p=><article key={p.id} className="assistant-confirmation"><strong>{p.permission}</strong><pre>{pretty({patterns:p.patterns,...p.metadata})}</pre>
-          <div className="native-actions">{(['once','always','reject'] as const).map(reply=><Button key={reply} disabled={acting.has(`/permission/${segment(p.id)}/reply`)} variant="secondary" onClick={()=>void mutate(`/permission/${segment(p.id)}/reply`,{reply})}>{nt(reply)}</Button>)}</div></article>)}
+          <div className="native-actions">{(['once','always','reject'] as const).filter(reply=>reply!=='always'||p.permission!=='teamaibox-penpot_execute_code').map(reply=><Button key={reply} disabled={acting.has(`/permission/${segment(p.id)}/reply`)} variant="secondary" onClick={()=>void mutate(`/permission/${segment(p.id)}/reply`,{reply})}>{nt(reply)}</Button>)}</div></article>)}
         {questions.filter(q=>q.sessionID===active).map(q=><NativeQuestionForm key={q.id} question={q} t={t} onReply={answers=>mutate(`/question/${segment(q.id)}/reply`,{answers})} onReject={()=>mutate(`/question/${segment(q.id)}/reject`)}/>)}
         {failed.map((item,index)=><div key={index} className="assistant-error"><span>{nt('uncertain')}</span><code dir="ltr">{item.directory}</code><pre>{item.text}</pre><span>{item.files.map(f=>f.name).join(', ')}</span><Button variant="secondary" disabled={Boolean(browserState.get({directory:item.directory,sessionId:item.sessionId}).text||browserState.get({directory:item.directory,sessionId:item.sessionId}).attachments.length)} onClick={()=>{browserState.update({directory:item.directory,sessionId:item.sessionId},{text:item.text,attachments:item.files.map(attachmentFromFile),command:item.command,agent:item.agent,model:item.model});select(item.sessionId,item.directory);setFailed(items=>items.filter((_,i)=>i!==index));}}>{nt('restore')}</Button></div>)}
       </AssistantTranscript></RichMessageContext.Provider>

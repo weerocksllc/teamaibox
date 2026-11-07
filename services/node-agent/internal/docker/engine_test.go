@@ -93,6 +93,10 @@ func TestEngineRuntimeUsesTheUnixAPIWithAConstrainedCreateDocument(t *testing.T)
 		!strings.Contains(create.HostConfig.Tmpfs["/tmp"], "mode=0700") {
 		t.Fatalf("worker tmpfs is not owned by its non-root identity: %#v", create.HostConfig.Tmpfs)
 	}
+	gpu := create.HostConfig.DeviceRequests[0]
+	if gpu.Driver != "nvidia" || gpu.Count != -1 || len(gpu.Capabilities) != 1 || !slices.Equal(gpu.Capabilities[0], []string{"gpu"}) {
+		t.Fatalf("worker GPU request differs from the installer probe: %#v", gpu)
+	}
 	bindings := create.HostConfig.PortBindings["8000/tcp"]
 	if len(create.ExposedPorts) != 1 || len(bindings) != 1 || bindings[0].HostIP != "10.64.0.18" || bindings[0].HostPort != "18086" {
 		t.Fatalf("engine did not preserve the exact approved management port: %#v", create)

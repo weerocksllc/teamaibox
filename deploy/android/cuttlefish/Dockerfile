@@ -1,4 +1,3 @@
-# syntax=docker/dockerfile:1
 # Built from Dependencies.Dockerfile by install/build_public_android.py.
 ARG DEPENDENCY_IMAGE
 FROM ${DEPENDENCY_IMAGE} AS dependencies

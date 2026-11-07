@@ -277,7 +277,7 @@ sudo bash install/from-source.sh
 
 1. Güncel LAN adresiyle `https://<BOX_LAN_IP>/` açın ve yerel HTTPS sertifikasının cihazınıza ait olduğunu doğrulayın.
 2. `admin` / `admin` ile girin, **ilk parolayı değiştirin**, normal hesapları oluşturun. Varsayılan bilgileri internete açmayın.
-3. Uygulamaların hazır olmasını bekleyip profilden dil/tema seçin.
+3. Team AI Box’ta oturum açıp **Tüm uygulamalar → Tasarım** bölümünden Penpot’u açın. Aynı hesap, ekip izinleri, ekip sürücüsü ve yapay zekâ asistanı kullanılır. Ayrı kurulum veya oturum açma gerekmez.
 4. İzinli Windows/Linux ARM64 ISO ve lisanslarını kendiniz sağlayın. Çevrimdışı hedef için önce tam paketi hazırlayıp [kılavuzu](install/README.tr.md) izleyin; kaynak hazırlığı çevrimiçidir.
 
 ## Lisans ve sınırlar

@@ -299,6 +299,7 @@ export function createOpenCodeBridgeHttpServer({
   workspace = "/workspace",
   workspaceReader = readWorkspaceArtifact,
   nativeTransport = null,
+  nativePreparation = null,
 }) {
   const methods = [
     "health", "createSession", "getSession", "sessionStatus", "prompt", "listMessages", "interrupt", "diff",
@@ -317,6 +318,15 @@ export function createOpenCodeBridgeHttpServer({
           await authenticate(request, tokenProvider);
         }
         if (nativeTransport && request.url?.startsWith('/native/')) {
+          // Optional Design setup must not delay or fail ordinary Agent work.
+          // MCP discovery can wait for its bounded, native-only reconciliation.
+          if (nativePreparation) {
+            const preparing = nativePreparation(request.method, request.url.slice('/native'.length));
+            if (request.method === 'GET' && new URL(request.url, 'http://local').pathname === '/native/mcp') {
+              const state = await preparing;
+              response.setHeader('x-teamaibox-design-runtime', state.status);
+            } else void preparing.catch(() => {});
+          }
           const controller = new AbortController();
           const abort = () => controller.abort();
           request.once('aborted', abort); response.once('close', abort);

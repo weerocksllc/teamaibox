@@ -277,7 +277,7 @@ sudo bash install/from-source.sh
 
 1. 以當前區域網路位址開啟 `https://<BOX_LAN_IP>/`，確認本機 HTTPS 憑證屬於自己的裝置。
 2. 以 `admin` / `admin` 登入，**立即更改初始密碼**並建立一般帳號，不向公網暴露預設憑證。
-3. 等待各應用就緒，在個人選單選語言及主題。
+3. 登入 Team AI Box 後，從 **所有應用程式 → 設計** 開啟內建的 Penpot。沿用原有帳號、團隊權限、團隊雲端硬碟與 AI 助理，不必另外安裝或登入 Penpot。
 4. 虛擬電腦需自行提供合法 Windows/Linux ARM64 ISO 與授權。離線目標先準備完整安裝包，再依[離線說明](install/README.zh-TW.md)安裝；原始碼準備需連網。
 
 ## 授權與邊界

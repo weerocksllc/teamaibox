@@ -17,6 +17,12 @@ test('first use provisions the authenticated owner and concurrent calls coalesce
 test('invalid owner never reaches the provisioning service',async t=>{
  const routes=await fixture(t,()=>{throw Error('must not call');});await assert.rejects(routes.resolve('../admin'),{code:'agent_sandbox_unavailable'});
 });
+test('legacy owner retains ordinary native transport but does not receive design credentials',async t=>{
+ const routes=await fixture(t,async()=>Response.json({...dynamicSandboxIdentity(OWNER),token:'x'.repeat(48),designRuntimeStatus:'upgrade_required'}));
+ const route=await routes.resolve(OWNER);
+ assert.equal(route.designRuntimeStatus,'upgrade_required');assert.equal(route.designRuntime,null);
+ assert.equal(typeof route.native.request,'function');assert.ok(route.client);
+});
 for(const variant of ['owner','origin','key','token','failure'])test(`rejects ${variant} mismatch without exposing service detail`,async t=>{
  const value={...dynamicSandboxIdentity(OWNER),token:'x'.repeat(48)};
  if(variant==='owner')value.ownerIdentityId='00000000-0000-4000-8000-000000000012';

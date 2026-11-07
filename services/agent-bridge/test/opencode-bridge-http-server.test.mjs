@@ -12,7 +12,7 @@ import { createOpenCodeBridgeHttpServer, readWorkspaceArtifact } from "../src/op
 const TOKEN = "b".repeat(48);
 const AUTH = { authorization: `Bearer ${TOKEN}` };
 
-function fixture(nativeTransport = null) {
+function fixture(nativeTransport = null, nativePreparation = null) {
   const calls = [];
   let eventCancelled = false;
   const adapter = {
@@ -40,7 +40,7 @@ function fixture(nativeTransport = null) {
       }
     },
   };
-  const server = createOpenCodeBridgeHttpServer({ adapter, tokenProvider: async () => TOKEN, nativeTransport });
+  const server = createOpenCodeBridgeHttpServer({ adapter, tokenProvider: async () => TOKEN, nativeTransport, nativePreparation });
   return {
     calls,
     server,
@@ -78,6 +78,24 @@ test('native routes require the internal token and preserve native bodies withou
   assert.equal(result.response.status,200);assert.equal(result.value.native,true);
   assert.equal(calls[0].target,'/session/ses_native/prompt_async');assert.deepEqual(JSON.parse(calls[0].options.body),body);
   assert.equal(value.calls.length,0);
+});
+
+test('optional design activation is authenticated and cannot delay ordinary native requests', async context => {
+  const prepared=[];
+  const value=fixture({async request(){return Response.json({native:true});}},async(method,target)=>{
+    prepared.push([method,target]);
+    if(target.startsWith('/mcp'))return {status:'waiting_for_idle'};
+    // A discovery-specific dependency must not block sessions, messages or tools.
+    return new Promise(()=>{});
+  });
+  const origin=await start(value,context);
+  assert.equal((await json(origin,'/native/mcp',{headers:{}})).response.status,401);
+  assert.equal(prepared.length,0);
+  const mcp=await json(origin,'/native/mcp?directory=%2Fworkspace');
+  assert.equal(mcp.response.headers.get('x-teamaibox-design-runtime'),'waiting_for_idle');
+  assert.equal(mcp.value.native,true);
+  const ordinary=await fetch(origin+'/native/session',{headers:AUTH,signal:AbortSignal.timeout(1000)});
+  assert.equal(ordinary.status,200);await ordinary.body.cancel();
 });
 
 test("authenticated Bridge routes pin every upstream operation to the isolated workspace", async (context) => {

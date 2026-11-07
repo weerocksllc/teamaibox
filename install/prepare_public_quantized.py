@@ -10,7 +10,7 @@ import os
 from pathlib import Path
 import shutil
 import subprocess
-from offline_common import digest, need, read_json, run, write_json
+from offline_common import need, nvidia_gpu_argument, read_json, run, write_json
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -50,6 +50,25 @@ def unified_memory_arguments(names, meminfo, weight_bytes):
     return ['--offload_folder','/tmp/modelopt-offload','--max_gpu_memory_gb',str(gpu/gib),
             '--max_cpu_memory_gb',str(max(gib,int(available*0.15))/gib)]
 
+
+def finalize_weights(role, source, weights, inputs):
+    # Preserve the exporter's weights/config and fill only missing publisher
+    # notices/tokenizer resources. Publisher weight checksums do not describe
+    # the quantized tensors.
+    for entry in inputs['files']:
+        path = source/entry['path']
+        if path.parent == source and path.is_file() and path.suffix not in ('.safetensors','.bin') and path.name not in (
+                'publisher-inputs.json','model.safetensors.index.json','crc32.txt') and not (weights/path.name).exists():
+            shutil.copyfile(path,weights/path.name)
+    if role == 'translation':
+        from fetch_public_models import translation_license
+        translation_license(weights,source/'README.md')
+    from artifact_validation import validate_asset
+    from package import inventory_asset
+    inventory = validate_asset(inventory_asset(weights,'assets/'+role+'-model',role+'-model'),weights)
+    return [{'path':row['path'],'sha256':row['sha256']} for row in inventory['files']]
+
+
 if __name__ == '__main__':
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument('--role', choices=('assistant','translation'), required=True)
@@ -79,9 +98,11 @@ if __name__ == '__main__':
                   toolsImageId=tools_id, recipe=recipe, calibration='NVIDIA ModelOpt synthetic_conversations_1k',
                   privateDataUsed=False, deployed=False, memoryArguments=memory_args)
     write_json(output/'build.json',report,0o644)
-    command = ['docker','run','--rm','--network=none','--gpus','all','--ipc=private','--shm-size=8g',
+    command = ['docker','run','--rm','--network=none','--gpus',nvidia_gpu_argument(),'--ipc=private','--shm-size=8g',
         '--ulimit','memlock=-1','--ulimit','stack=67108864',
-        '--user','0:0','--env','HF_HUB_OFFLINE=1','--env','TRANSFORMERS_OFFLINE=1',
+        '--user',f'{weights.stat().st_uid}:{weights.stat().st_gid}',
+        '--env','HOME=/tmp','--env','USER=teamaibox-quantizer',
+        '--env','HF_HUB_OFFLINE=1','--env','TRANSFORMERS_OFFLINE=1',
         '--mount','type=bind,src='+str(source)+',dst=/source,readonly',
         '--mount','type=bind,src='+str(weights)+',dst=/output',
         '--mount','type=bind,src='+str(ROOT/'deploy/compute/qwen38-modelopt')+',dst=/recipe,readonly',
@@ -94,23 +115,7 @@ if __name__ == '__main__':
         result = subprocess.run(command,stdout=log,stderr=subprocess.STDOUT)
     try:
         need(result.returncode == 0,'quantization process failed; inspect build.log')
-        # Preserve the exporter's weights/config and fill only missing publisher
-        # notices/tokenizer resources. Original weight checksums are no longer
-        # meaningful for the converted weights.
-        for entry in inputs['files']:
-            path = source/entry['path']
-            if path.parent != source:
-                continue
-            if path.is_file() and path.suffix not in ('.safetensors','.bin') and path.name not in (
-                    'publisher-inputs.json','model.safetensors.index.json','crc32.txt') and not (weights/path.name).exists():
-                shutil.copyfile(path,weights/path.name)
-        if a.role == 'translation':
-            from fetch_public_models import translation_license
-            translation_license(weights,source/'README.md')
-        from artifact_validation import validate_asset
-        from package import inventory_asset
-        validate_asset(inventory_asset(weights,'assets/'+a.role+'-model',a.role+'-model'),weights)
-        report['files'] = [{'path':p.name,'sha256':digest(p)} for p in sorted(weights.iterdir()) if p.is_file()]
+        report['files'] = finalize_weights(a.role,source,weights,inputs)
         report['status'] = 'quantized'
     except Exception as error:
         report['status'] = 'failed'

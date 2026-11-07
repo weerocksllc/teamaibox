@@ -15,6 +15,7 @@ from offline_host_packages import ROOT_PACKAGES
 from package import inventory_asset
 from artifact_validation import validate_asset, validate_android_bindings
 from image_role import verify_application_role
+from factory_penpot import selected_features, PENPOT_IMAGE_ROLES, PENPOT_ASSET_ROLES
 
 
 def prepare(inputs, output, repository, command=run):
@@ -29,7 +30,8 @@ def prepare(inputs, output, repository, command=run):
     need(isinstance(config.get('agentVersion'), str) and re.fullmatch(r'\d+\.\d+\.\d+(?:[-+][A-Za-z0-9.-]+)?', config['agentVersion']),
          'declare the Node Agent build version')
     images = config.get('images', {})
-    need(set(images) == IMAGE_ROLES, 'image map must contain exactly the declared product roles')
+    penpot = selected_features(config.get('features', []))
+    need(set(images) == IMAGE_ROLES | (PENPOT_IMAGE_ROLES if penpot else set()), 'image map must contain exactly the declared product roles')
     pinned = []
     for role, image in sorted(images.items()):
         need(re.fullmatch('sha256:[0-9a-f]{64}', image or ''), 'exact local image ID required: ' + role)
@@ -37,9 +39,14 @@ def prepare(inputs, output, repository, command=run):
         need(actual['Id'] == image and actual['Os'] == 'linux' and actual['Architecture'] == 'arm64',
              'wrong local image architecture/identity: ' + role)
         verify_application_role(role, actual)
+        if penpot and role == 'agent-sandbox':
+            labels = actual.get('Config', {}).get('Labels', {})
+            need(labels.get('com.teamaibox.opencode.modified-by-platform') == 'true'
+                 and re.fullmatch('[0-9a-f]{64}', labels.get('com.teamaibox.penpot.agent-input', '')),
+                 'Penpot requires the source-verified native transport Agent image')
         pinned.append(dict(role=role, imageId=image, reference=image, architecture='arm64', unpackedBytes=actual['Size']))
     artifacts = config.get('assets', {})
-    need(set(artifacts) == ASSET_ROLES - {'factory-configuration'}, 'clean asset map is incomplete')
+    need(set(artifacts) == (ASSET_ROLES - {'factory-configuration'}) | (PENPOT_ASSET_ROLES if penpot else set()), 'clean asset map is incomplete')
     def source(value):
         path = Path(value)
         return path if path.is_absolute() else inputs.parent / path
@@ -57,10 +64,10 @@ def prepare(inputs, output, repository, command=run):
         path = source(row['source']).resolve(strict=True)
         need(path.suffix == '.deb' and digest(path) == row['sha256'], 'host package changed')
         row['source'] = str(path)
-    recipe, runtime = emit(repository, output / 'factory')
+    recipe, runtime = emit(repository, output / 'factory', penpot=penpot)
     assets.append(inventory_asset(output / 'factory', 'assets/factory', 'factory-configuration'))
     release = dict(schemaVersion=1, releaseId=config['releaseId'], sourceCommit=commit, architecture='arm64',
-        agentVersion=config['agentVersion'], images=pinned, assets=assets, hostPackages=packages,
+        agentVersion=config['agentVersion'], features=config.get('features', []), images=pinned, assets=assets, hostPackages=packages,
         guestSystems=config['guestSystems'],
         host=dict(os=['ubuntu:24.04'], commands=['docker', 'python3', 'openssl', 'cryptsetup', 'mkfs.ext4',
             'mount', 'findmnt', 'losetup', 'ip', 'lsusb', 'v4l2-ctl', 'qemu-img', 'iptables', 'modprobe'],

@@ -20,7 +20,7 @@ RUN apt-get update \
     && ln -s /run/teamaibox/xdg-config/opencode /etc/opencode
 
 WORKDIR /opt/teamaibox
-COPY deploy/agent/native-extensions/package.json deploy/agent/native-extensions/package-lock.json /opt/opencode/native-extensions/
+COPY --chmod=0644 deploy/agent/native-extensions/package.json deploy/agent/native-extensions/package-lock.json /opt/opencode/native-extensions/
 RUN npm ci --prefix /opt/opencode/native-extensions --ignore-scripts --omit=dev --no-audit --no-fund \
     && node -e "if(require('/opt/opencode/native-extensions/node_modules/@opencode-ai/plugin/package.json').version !== process.argv[1])process.exit(1)" "${OPENCODE_VERSION}"
 COPY --chown=65532:65532 packages/observability ./packages/observability

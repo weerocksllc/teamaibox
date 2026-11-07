@@ -26,6 +26,7 @@ assumed MIT. Regenerate it with `python3 tools/open_source_inventory.py`.
 
 | Component / material | License boundary | Distribution requirements |
 | --- | --- | --- |
+| Penpot 2.18.5, official MCP/plugin and covered integration changes | MPL-2.0; dependency licenses apply | Retain upstream notices and provide the exact modified covered source, source locks and build scripts with redistribution. OpenCode transport changes retain MIT. The root MIT license does not relicense Penpot. |
 | UxPlay receiver and `deploy/casting/uxplay-*.patch` | GPL-3.0-only | Retain GPL, notices, exact upstream source, patches and build scripts with any receiver binary; merely linking to upstream is insufficient for a binary release. |
 | gst-plugins-rs / `gst-webrtc-*.patch` | MPL-2.0 | Retain notices and make modified covered source files available. |
 | GStreamer | LGPL and individual plugin licenses | Inspect the actual plugin set and fulfill corresponding obligations. |

@@ -40,6 +40,10 @@ Docker/NVIDIA, restart the Docker daemon, clear an existing installation, or
 change host routing, DNS or VPN settings. Models, guest login states and the
 private marketing website are not taken from another installation.
 
+The standard installation includes Penpot. Sign in to Team AI Box and open
+**All applications → Design**. The editor uses the same account, team permissions,
+Team Drive and AI assistant. No separate Penpot install or login is required.
+
 The default workspace is `/var/tmp/teamaibox-source-build`; download caches and
 per-stage logs live there, outside the clone. Installation defaults to
 `/srv/teamaibox/installation`. Expect large downloads and several hundred GB of

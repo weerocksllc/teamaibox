@@ -40,6 +40,14 @@ def validate_asset(row, source):
                     ('license', 'license.txt', 'license.md', 'licence', 'licence.txt')]
         need(licenses and all(f['size'] > 0 for f in licenses),
              'include the model license text before packaging: ' + role)
+    if role == 'penpot-plugin':
+        need({'manifest.json','plugin.js','index.html','LICENSE'} <= names, 'official design plugin payload incomplete')
+        need(all(Path(n).suffix.lower() in ('.js','.css','.html','.json','.svg','.png','.jpg','.woff2','.txt')
+                 or n == 'LICENSE' for n in names), 'unexpected design plugin payload')
+    if role == 'penpot-corresponding-source':
+        need({'source.tar.gz','LICENSE'} == names, 'design corresponding-source payload incomplete')
+        from package_penpot_sources import verify_archive
+        verify_archive(source / 'source.tar.gz')
     if role in ('assistant-model', 'translation-model', 'embedding-model'):
         need({'config.json', 'tokenizer_config.json'} <= names and
              ('tokenizer.json' in names or 'tokenizer.model' in names), 'model configuration/tokenizer incomplete: ' + role)

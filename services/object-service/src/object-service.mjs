@@ -151,6 +151,8 @@ export class ProtectedObjectService {
   #referenceKey;
   #grantRepository;
   #authorizedGrantContexts = new WeakSet();
+  #designReadActors = new WeakMap();
+  #designReadAuthorization = null;
   #allowTestLegacyNamespaceContext;
 
   constructor({
@@ -568,7 +570,26 @@ export class ProtectedObjectService {
     }
     const selected = requestedVersion(object, version);
     if (!selected) throw new PlatformError("object_not_found", "Object was not found", { status: 404 });
+    if (operation === "read") {
+      const actorIdentityId=this.#designReadActors.get(context)
+        ?? (context?.identityKind==='local_user'?context.identityId:null);
+      await this.#assertDesignRead(actorIdentityId,object,selected);
+    }
     return { object, version: selected };
+  }
+
+  async #assertDesignRead(actorIdentityId,object,selected) {
+    if (!/^design\/exports\/[0-9a-f-]{36}\.(?:png|pdf)$/i.test(object.objectKey)) return;
+    if(!actorIdentityId||!this.#designReadAuthorization)
+      throw new PlatformError("object_not_found","Object was not found",{status:404});
+    await this.#designReadAuthorization({actorIdentityId,objectId:object.id,objectVersion:selected.version});
+  }
+
+  // Install once at service assembly. Without the Design authority, guarded
+  // PNG/PDF objects are unavailable rather than served as ordinary blobs.
+  setDesignReadAuthorization(check) {
+    if(typeof check!=='function'||this.#designReadAuthorization)throw new TypeError('Design object authority cannot be replaced');
+    this.#designReadAuthorization=check;
   }
 
   async head(input) {
@@ -911,6 +932,7 @@ export class ProtectedObjectService {
         const object = await this.#repository.findObjectById(objectId);
         const selected = requestedVersion(object, objectVersion);
         if (!object || object.deletedAt || !selected) throw new PlatformError("file_object_unavailable", "Referenced object version is unavailable", { status: 409 });
+        await this.#assertDesignRead(actorIdentityId,object,selected);
         const context = {
           identityId: actorIdentityId,
           identityKind: "local_user",
@@ -961,6 +983,7 @@ export class ProtectedObjectService {
         namespaceKey: grant.namespaceKey,
       };
       this.#authorizedGrantContexts.add(context);
+      this.#designReadActors.set(context,grant.issuedByIdentityId);
       return context;
     };
     return Object.freeze({
@@ -1047,6 +1070,7 @@ export class ProtectedObjectService {
         const object = await this.#repository.findObjectById(objectId);
         const selected = requestedVersion(object, objectVersion);
         if (!object || object.deletedAt || !selected) throw new PlatformError("artifact_object_unavailable", "Artifact object is unavailable", { status: 409 });
+        if(audience==='team-drive.download'||audience==='team-drive.preview')await this.#assertDesignRead(actorIdentityId,object,selected);
         const serviceContext = {
           identityId: actorIdentityId,
           identityKind: "local_user",
@@ -1257,6 +1281,7 @@ export class ProtectedObjectService {
       || grant.issuedByIdentityId !== context?.identityId) return context;
     const delegated = { identityId: `reference:${grant.referenceId}`, identityKind: "reference_grant", namespaceKey: grant.namespaceKey };
     this.#authorizedGrantContexts.add(delegated);
+    this.#designReadActors.set(delegated,context.identityId);
     return delegated;
   }
 

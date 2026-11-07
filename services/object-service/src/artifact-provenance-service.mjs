@@ -8,7 +8,7 @@ const SHA256 = /^sha256:[a-f0-9]{64}$/;
 const KEY = /^[a-z][a-z0-9_.:-]{1,190}$/;
 const ARTIFACT_KINDS = new Set([
   "chat-attachment", "drive-file", "agent-artifact", "ai-input", "ai-result",
-  "model-artifact",
+  "model-artifact", "design-export",
 ]);
 const PARTY_KINDS = new Set(["user", "application", "agent", "compute-job", "worker", "model-registry", "team-drive", "messaging"]);
 const RELATIONSHIPS = new Set(["source", "input", "derived-from", "checkpoint-of", "version-of", "export-of", "copy-of"]);

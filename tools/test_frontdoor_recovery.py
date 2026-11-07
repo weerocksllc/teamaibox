@@ -1,6 +1,6 @@
 import copy
 import unittest
-from restore_appliance_frontdoor import recover
+from restore_appliance_frontdoor import factory_order, recover
 from restore_calibrated_office_workers_v2 import settled_snapshot
 from test_calibrated_office_boot import fixture, G
 from restore_calibrated_office_workers import gpu_allow_arguments
@@ -36,6 +36,18 @@ class FakeDocker:
 
 
 class RecoveryTests(unittest.TestCase):
+    def test_factory_boot_orders_storage_services_and_api_namespaces_without_migrations(self):
+        services = {'database-migrate': {}, 'postgres': {},
+                    'platform-api': {'depends_on': {'postgres': {}, 'database-migrate': {}}},
+                    'desktop-proxy': {'network_mode': 'service:platform-api'},
+                    'penpot-backend': {'depends_on': ['penpot-postgres']}, 'penpot-postgres': {}}
+        order = factory_order(services)
+        self.assertNotIn('database-migrate', order)
+        self.assertLess(order.index('postgres'), order.index('platform-api'))
+        self.assertLess(order.index('platform-api'), order.index('desktop-proxy'))
+        self.assertLess(order.index('penpot-postgres'), order.index('penpot-backend'))
+        with self.assertRaisesRegex(ValueError, 'invalid_factory_service_dependency'):
+            factory_order({'a': {'depends_on': ['b']}, 'b': {'depends_on': ['a']}})
     def test_gpu_rules_keep_existing_device_permissions_and_are_exact(self):
         result = gpu_allow_arguments(['block-* m', '/dev/char/1:3 rwm'], ['/dev/nvidia0', '/dev/nvidiactl'])
         self.assertEqual(result, ['DeviceAllow=', 'DeviceAllow=block-* m', 'DeviceAllow=/dev/char/1:3 rwm',

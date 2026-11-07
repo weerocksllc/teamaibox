@@ -3,7 +3,7 @@ FROM ${POSTGRES_IMAGE}
 
 ARG IMAGE_REVISION=unknown
 ARG IMAGE_VERSION=0.1.0
-ARG MIGRATION_MANIFEST_SHA256=f90651348853df44ebd3f32cd59e688c5cdfa698a3c2758a2287950d0b8a20a3
+ARG MIGRATION_MANIFEST_SHA256=f23e5a415847b039e25cc23e1324f207bd3a36f37184ea63cb05c1aea1c4d721
 LABEL org.opencontainers.image.title="Team AI Box PostgreSQL" \
       org.opencontainers.image.version="${IMAGE_VERSION}" \
       org.opencontainers.image.revision="${IMAGE_REVISION}" \

@@ -33,6 +33,9 @@ class FoundationTests(unittest.TestCase):
         self.assertEqual(compose['services']['platform-api']['environment']['PLATFORM_API_SETUP_TOKEN_FILE'],
                          '/run/secrets/owner_setup_token')
         self.assertEqual(outputs['config/frontdoor.json']['value']['retired'], [])
+        self.assertEqual(outputs['config/frontdoor.json']['value']['factoryCompose'], '@@ROOT@@/config/core.json')
+        self.assertTrue(all(service['restart'] == 'on-failure' for name, service in
+                            outputs['config/core.json']['value']['services'].items() if name != 'database-migrate'))
 
     def test_phone_address_state_is_shared_by_network_maintainer_and_agent(self):
         output = {v['output']: v['value'] for v in self.recipe['templates']}

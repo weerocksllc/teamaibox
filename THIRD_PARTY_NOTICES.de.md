@@ -14,6 +14,7 @@ Das maschinenlesbare [Komponenteninventar](docs/open-source/components.json) erf
 
 | Komponente / Material | Lizenzgrenze | Vertriebsanforderungen |
 | --- | --- | --- |
+| Penpot 2.18.5, offizielles MCP/Plugin und erfasste Integrationsänderungen | MPL-2.0; eigene Lizenzen der Abhängigkeiten | Bei Weitergabe Hinweise sowie den exakten geänderten Quellcode, Versionsbindungen und Build-Skripte bereitstellen. OpenCode-Transportänderungen bleiben MIT; die MIT-Lizenz im Stammverzeichnis lizenziert Penpot nicht neu. |
 | UxPlay-Empfänger und `deploy/casting/uxplay-*.patch` | GPL-3.0-only | Behalten Sie GPL, Hinweise, genaue Upstream-Quelle, Patches und Build-Skripte mit jeder Empfänger-Binärdatei bei; Eine bloße Verlinkung zum Upstream reicht für eine Binärversion nicht aus. |
 | gst-plugins-rs / `gst-webrtc-*.patch` | MPL-2.0 | Bewahren Sie Hinweise auf und stellen Sie geänderte, abgedeckte Quelldateien zur Verfügung. |
 | GStreamer | LGPL und individuelle Plugin-Lizenzen | Überprüfen Sie das aktuelle Plugin-Set und erfüllen Sie die entsprechenden Verpflichtungen. |

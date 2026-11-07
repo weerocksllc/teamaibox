@@ -1,0 +1,27 @@
+{
+  "apiVersion": "teamaibox.io/plugin/v1",
+  "id": "official.penpot",
+  "type": "ApplicationPlugin",
+  "version": "2.18.5",
+  "official": true,
+  "publisher": {"id": "teamaibox.official", "displayName": "Team AI Box"},
+  "architectures": ["linux/arm64/v8"],
+  "images": [
+    {"name":"penpot-frontend","role":"application","variants":[{"architecture":"linux/arm64/v8","reference":"@@IMAGE.penpot-frontend@@","digest":"@@IMAGE.penpot-frontend@@","mediaType":"application/vnd.oci.image.manifest.v1+json"}]},
+    {"name":"penpot-backend","role":"application","variants":[{"architecture":"linux/arm64/v8","reference":"@@IMAGE.penpot-backend@@","digest":"@@IMAGE.penpot-backend@@","mediaType":"application/vnd.oci.image.manifest.v1+json"}]},
+    {"name":"penpot-exporter","role":"application","variants":[{"architecture":"linux/arm64/v8","reference":"@@IMAGE.penpot-exporter@@","digest":"@@IMAGE.penpot-exporter@@","mediaType":"application/vnd.oci.image.manifest.v1+json"}]},
+    {"name":"penpot-mcp","role":"application","variants":[{"architecture":"linux/arm64/v8","reference":"@@IMAGE.penpot-mcp@@","digest":"@@IMAGE.penpot-mcp@@","mediaType":"application/vnd.oci.image.manifest.v1+json"}]},
+    {"name":"penpot-postgres","role":"application","variants":[{"architecture":"linux/arm64/v8","reference":"@@IMAGE.penpot-postgres@@","digest":"@@IMAGE.penpot-postgres@@","mediaType":"application/vnd.oci.image.manifest.v1+json"}]},
+    {"name":"penpot-cache","role":"application","variants":[{"architecture":"linux/arm64/v8","reference":"@@IMAGE.penpot-cache@@","digest":"@@IMAGE.penpot-cache@@","mediaType":"application/vnd.oci.image.manifest.v1+json"}]}
+  ],
+  "entryPoints":{"web":{"path":"/api/v1/design/editor/","integration":"iframe"}},
+  "apis":[{"name":"platform.design","versionRange":">=1.0.0 <2.0.0","access":"delegated-user"}],
+  "ui":{"displayNameKey":"app.penpot.name","summaryKey":"app.penpot.description","icon":"pen-tool","category":"professional-tool","launchPath":"/apps/official.penpot","order":22},
+  "localization":{"supportedLocales":["en","zh-CN","zh-TW","ja","ko","fr","de","es","pt-BR","ru","ar","hi","id","it","tr","vi","th"],"fallbackLocale":"en","supportedDirections":["ltr","rtl"],"rtlReady":true},
+  "themes":{"supported":["light","dark"],"usesSemanticTokens":true,"livePreferenceEvents":true},
+  "permissions":{"platformApiScopes":["design:use"],"delegatedUserToken":true,"network":{"mode":"none","egressHosts":[]},"objectNamespaces":[],"devices":[]},
+  "resources":{"cpu":{"requestMillicores":1,"limitMillicores":6000},"unifiedMemoryBytes":5368709120,"ephemeralStorageBytes":268435456,"persistentStorageBytes":0,"network":{"ingressBitsPerSecond":100000000,"egressBitsPerSecond":100000000}},
+  "health":{"startup":{"path":"/readyz","intervalSeconds":10,"timeoutSeconds":5,"failureThreshold":12},"readiness":{"path":"/readyz","intervalSeconds":10,"timeoutSeconds":5,"failureThreshold":3},"liveness":{"path":"/readyz","intervalSeconds":30,"timeoutSeconds":5,"failureThreshold":3}},
+  "migrations":[],
+  "compatibility":{"platform":">=0.1.0 <1.0.0","pluginApi":">=1.0.0 <2.0.0","runtime":"oci-linux-arm64-v1","requiredCapabilities":["encrypted-objects"],"dependencies":[]}
+}

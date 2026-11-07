@@ -14,6 +14,7 @@ Makine tarafından okunabilen [bileşen envanteri](docs/open-source/components.j
 
 | Bileşen / malzeme | Lisans sınırı | Dağıtım gereksinimleri |
 | --- | --- | --- |
+| Penpot 2.18.5, resmî MCP/eklenti ve kapsanan entegrasyon değişiklikleri | MPL-2.0; bağımlılıkların kendi lisansları | Yeniden dağıtımda bildirimleri koruyun; değiştirilmiş kaynakları, sabit sürümleri ve derleme betiklerini sağlayın. OpenCode aktarım değişiklikleri MIT olarak kalır; kökteki MIT, Penpot lisansını değiştirmez. |
 | UxPlay alıcısı ve `deploy/casting/uxplay-*.patch` | GPL-3.0-only | Herhangi bir alıcı ikili dosyasıyla GPL'yi, bildirimleri, tam yukarı akış kaynağını, yamaları ve derleme komut dosyalarını saklayın; ikili sürüm için yalnızca yukarı akışa bağlanmak yeterli değildir. |
 | gst-eklentileri-rs / `gst-webrtc-*.patch` | MPL-2.0 | Bildirimleri saklayın ve değiştirilmiş kapsam dahilindeki kaynak dosyalarını kullanılabilir hale getirin. |
 | GSstreamer | LGPL ve bireysel eklenti lisansları | Gerçek eklenti setini inceleyin ve ilgili yükümlülükleri yerine getirin. |

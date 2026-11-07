@@ -1,7 +1,7 @@
 ARG POSTGRES_IMAGE=docker.io/library/postgres@sha256:83b9631dbb4121d9235ef910018272798b7d3041ef5b716aa481122d4c49353f
 FROM ${POSTGRES_IMAGE}
 ARG IMAGE_REVISION=unknown
-ARG MIGRATION_MANIFEST_SHA256=f90651348853df44ebd3f32cd59e688c5cdfa698a3c2758a2287950d0b8a20a3
+ARG MIGRATION_MANIFEST_SHA256=f23e5a415847b039e25cc23e1324f207bd3a36f37184ea63cb05c1aea1c4d721
 COPY --chown=999:999 packages/persistence/migrations /opt/teamaibox/migrations
 COPY --chown=999:999 --chmod=0555 deploy/runtime/apply-migrations.sh /usr/local/bin/teamaibox-apply-migrations
 RUN test -n "${MIGRATION_MANIFEST_SHA256}" \

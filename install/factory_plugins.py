@@ -1,23 +1,32 @@
 """Wire the existing plugin manager without a development registry dependency."""
 from offline_common import read_json
 from factory_services import bind
+from factory_application_contract import BASE_APPLICATIONS, bind_application_images, validate_application_set
 
 
 def plugins(repository, compose, secrets, directories, add):
     api = compose['services']['platform-api']
     applications = []
-    for route in read_json(repository / 'deploy/appliance/plugin-routes.json')['routes']:
+    declaration = read_json(repository / 'deploy/appliance/plugin-routes.json')
+    for route in declaration['routes']:
         role = route['pluginId'].removeprefix('official.') + '-plugin'
         manifest = read_json(repository / 'apps' / role / 'manifest.release-template.json')
         manifest['version'] = read_json(repository / 'apps' / role / 'package.json')['version']
         # The package checksum authenticates these shipped manifests. Do not
         # retain a placeholder signature or pretend to import a signed bundle.
         manifest.pop('signature', None)
-        for image in manifest['images']:
-            for variant in image['variants']:
-                variant.update(reference='@@IMAGE.' + role + '@@', digest='@@IMAGE.' + role + '@@')
-        applications.append(dict(role=role, manifest=manifest))
-    add('config/application-catalog.json', dict(schemaVersion=1, applications=applications), mode='0600')
+        # Existing single-service applications retain their exact role. Native
+        # multi-service applications must supply a reviewed explicit mapping.
+        mapping = route.get('factoryImages')
+        if mapping is None:
+            from offline_common import need
+            need(len(manifest['images']) == 1, 'multi-service application requires explicit image mapping')
+            mapping = {manifest['images'][0]['name']: role}
+        services = bind_application_images(manifest, mapping)
+        applications.append(dict(role=role, manifest=manifest, services=services))
+    required = declaration.get('requiredApplications', sorted(BASE_APPLICATIONS))
+    validate_application_set(applications, required)
+    add('config/application-catalog.json', dict(schemaVersion=1, requiredApplications=required, applications=applications), mode='0600')
     add('public/plugin-runtime.json', dict(schemaVersion=1,
         node=dict(nodeId='@@NODE_ID@@', nodeGeneration=1, host='127.0.0.1', port=9443,
                   expectedServerName='localhost', expectedCertificateFingerprint='@@NODE.certificateFingerprint@@',

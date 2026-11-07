@@ -3,6 +3,7 @@ import { readFile } from 'node:fs/promises';
 import { PlatformError } from '../../../../packages/observability/src/index.mjs';
 import { OpenCodeBridgeClient } from '../../../../services/agent-bridge/src/opencode-bridge-client.mjs';
 import { createNativeTransport } from '../../../../services/agent-bridge/src/opencode-native-transport.mjs';
+import { penpotRuntimeAuthentication } from '../../../../services/agent-bridge/src/penpot-runtime-credential.mjs';
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 const unavailable = () => new PlatformError('agent_sandbox_unavailable', 'Your Agent workspace could not be started', { status: 503, retryable: true });
@@ -30,7 +31,10 @@ export function createDynamicAgentRoutes({ origin, tokenFile, fetchImplementatio
     const expectedOrigin = `http://teamaibox-agent-${hash}:4097`;
     if (value.ownerIdentityId !== ownerIdentityId || value.sandboxKey !== `sandbox.${hash}` || value.origin !== expectedOrigin
       || !/^[A-Za-z0-9_-]{32,4096}$/.test(value.token ?? '')) throw unavailable();
+    const upgradeRequired=value.designRuntimeStatus==='upgrade_required';
     return Object.freeze({ownerIdentityId, sandboxKey: value.sandboxKey, origin: value.origin,
+      ...(upgradeRequired?{designRuntimeStatus:'upgrade_required'}:{}),
+      designRuntime: upgradeRequired ? null : penpotRuntimeAuthentication(ownerIdentityId, value.token),
       native: createNativeTransport({origin: value.origin, prefix: '/native', authorization: async () => `Bearer ${value.token}`, fetchImplementation}),
       client: new OpenCodeBridgeClient({origin: value.origin, tokenProvider: async () => value.token, fetchImplementation, timeoutMs:120000})});
   }

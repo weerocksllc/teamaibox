@@ -1,8 +1,10 @@
 """Bounded installer orchestration tests; no Docker, VPN, model or guest writes."""
 import hashlib
 import io
+import json
 from pathlib import Path
 import subprocess
+import sys
 import tempfile
 import unittest
 import os
@@ -15,6 +17,86 @@ from source_download import download
 
 
 class SourceInstallTests(unittest.TestCase):
+    def test_standard_entry_installs_the_same_complete_product_with_or_without_legacy_flag(self):
+        import source_install as source
+        from factory_recipe import assemble, readiness
+        from factory_penpot import PENPOT_IMAGE_ROLES, selected_features
+        read_text=Path.read_text
+        for flags in ([], ['--with-penpot'], ['--build-only']):
+            with self.subTest(flags=flags), tempfile.TemporaryDirectory() as tmp:
+                root=Path(tmp).resolve();target=root/'installed';work=root/'work';bundle=root/'bundle'
+                bundle.mkdir()
+                def build(p, cache, origin, *, make_archive):
+                    self.assertEqual(p.state['features'],['penpot'])
+                    self.assertEqual(make_archive,'--build-only' in flags)
+                    recipe=assemble(source.ROOT,penpot=selected_features(p.state['features']))
+                    templates={row['output']:row['value'] for row in recipe['templates']}
+                    catalog=templates['config/application-catalog.json']
+                    self.assertIn('official.penpot',catalog['requiredApplications'])
+                    app=next(row['manifest'] for row in catalog['applications'] if row['manifest']['id']=='official.penpot')
+                    self.assertEqual(app['entryPoints']['web']['path'],'/api/v1/design/editor/')
+                    self.assertTrue(PENPOT_IMAGE_ROLES <= {row['role'] for row in readiness(recipe)})
+                    controller=templates['config/agent-controller.json']
+                    self.assertEqual(controller['penpot']['mcpOrigin'],'http://penpot-mcp:4401')
+                    self.assertEqual(controller['image'],'@@IMAGE.agent-sandbox@@')
+                    (bundle/'release.json').write_text(json.dumps({'features':p.state['features']}))
+                    return bundle
+                with patch.object(sys,'argv',['source_install.py','--work-dir',str(work),'--installation-root',str(target),*flags]), \
+                     patch('source_install.platform.system',return_value='Linux'), patch('source_install.platform.machine',return_value='aarch64'), \
+                     patch('source_install.os.geteuid',return_value=0), patch.dict(os.environ), \
+                     patch('source_install.shutil.which',return_value='/usr/bin/docker'), \
+                     patch.object(Path,'read_text',autospec=True,side_effect=lambda p,*a,**kw:
+                         'VERSION_ID="24.04"' if p==Path('/etc/os-release') else read_text(p,*a,**kw)), \
+                     patch('source_install.check_source_host') as host, \
+                     patch('source_install.configure_network',return_value='https://huggingface.co'), \
+                     patch('source_install.source_identity',return_value='fixture'), patch('source_install.build',side_effect=build), \
+                     patch('source_install.subprocess.run') as execute:
+                    source.main()
+                    host.assert_called_once_with(allow_pull=True)
+                if '--build-only' in flags:
+                    execute.assert_not_called()
+                    self.assertNotIn('package',json.loads((work/'state.json').read_text()))
+                else:
+                    execute.assert_called_once_with(['bash',str(bundle/'install.sh'),'--installation-root',str(target)],check=True)
+
+    def test_standard_entry_rejects_a_legacy_package_without_design(self):
+        from source_install import product_bundle
+        with tempfile.TemporaryDirectory() as tmp:
+            bundle=Path(tmp)
+            (bundle/'release.json').write_text('{"features": []}')
+            with self.assertRaisesRegex(InstallError,'integrated Design'):
+                product_bundle(bundle)
+
+    def test_source_host_requires_real_gpu_access_not_a_runtime_name(self):
+        from source_install import check_source_host
+        facts=dict(platform='linux',architecture='aarch64',uid=0,os='ubuntu:24.04',compose='2.40.0',
+                   gpu='NVIDIA GB10',kvm=True,timestamp=1800000000,
+                   docker={'OSType':'linux','Architecture':'aarch64','Runtimes':{'runc':{}}})
+        with patch('installer.host_facts',return_value=facts), \
+             patch('installer.local_probe_image',return_value='sha256:'+'a'*64), \
+             patch('installer.verify_container_gpu',return_value='nvidia-device-requests') as probe:
+            self.assertEqual(check_source_host(), 'nvidia-device-requests')
+            probe.assert_called_once_with('sha256:'+'a'*64)
+            probe.side_effect = InstallError('Docker NVIDIA GPU probe failed')
+            facts['docker']['Runtimes']['nvidia']={}
+            with self.assertRaisesRegex(InstallError,'GPU probe failed'):
+                check_source_host()
+
+    def test_missing_probe_image_is_reported_in_check_and_pulled_for_install(self):
+        from source_install import check_source_host
+        from source_toolchain import UBUNTU
+        image = 'sha256:'+'a'*64
+        with patch('installer.host_facts'), patch('installer.validate_host_facts'), \
+             patch('installer.local_probe_image',side_effect=[None,None,image]), \
+             patch('installer.verify_container_gpu',return_value='nvidia-device-requests') as probe, \
+             patch('source_install.run') as run:
+            self.assertEqual(check_source_host(), 'pending-image')
+            run.assert_not_called()
+            probe.assert_not_called()
+            self.assertEqual(check_source_host(allow_pull=True), 'nvidia-device-requests')
+            run.assert_called_once_with(['docker','pull','--platform=linux/arm64',UBUNTU],timeout=900)
+            probe.assert_called_once_with(image)
+
     def test_official_downloads_use_bounded_parallelism(self):
         from source_install import models
         with tempfile.TemporaryDirectory() as tmp, patch('fetch_public_models.fetch') as fetch:
@@ -68,6 +150,70 @@ class SourceInstallTests(unittest.TestCase):
         raw=b'version https://git-lfs.github.com/spec/v1\noid sha256:'+b'a'*64+b'\nsize 10\n'
         self.assertEqual(pointer(raw,'b'*40,len(raw))['lfs']['sha256'],'a'*64)
         with self.assertRaises(InstallError):pointer(raw+b'evil\n','b'*40,len(raw)+5)
+
+    def test_registry_namespace_preserves_locked_digests(self):
+        sha='a'*64
+        ref='docker.io/library/node@sha256:'+sha
+        self.assertEqual(rewrite(ref,'https://public.ecr.aws/docker'),
+                         'public.ecr.aws/docker/library/node@sha256:'+sha)
+        self.assertEqual(rewrite('docker.io/valkey/valkey@sha256:'+sha,'https://public.ecr.aws/docker'),
+                         'public.ecr.aws/valkey/valkey@sha256:'+sha)
+        for value in ('https://mirror.example/a/../b','https://mirror.example/%2e',
+                      'https://user@mirror.example/cache','https://mirror.example/cache?token=sample'):
+            with self.subTest(value=value), self.assertRaises(InstallError):
+                rewrite(ref,value)
+
+    def test_docker_build_rewrites_explicit_file_options(self):
+        from source_network import main
+        import sys
+        sha='a'*64
+        with tempfile.TemporaryDirectory() as tmp:
+            dockerfile=Path(tmp)/'candidate.Dockerfile'
+            dockerfile.write_text('FROM docker.io/library/node@sha256:'+sha+'\n')
+            def check(args):
+                token=next(a for a in args if 'Dockerfile-' in a)
+                content=Path(token.split('=',1)[-1]).read_text()
+                self.assertIn('public.ecr.aws/docker/library/node@sha256:'+sha,content)
+                return 0
+            for flags in (['-f',str(dockerfile)],['--file',str(dockerfile)],['--file='+str(dockerfile)]):
+                with self.subTest(flags=flags), patch.dict(os.environ,{
+                    'TEAMAIBOX_REAL_DOCKER':'docker','TEAMAIBOX_REGISTRY_MIRROR':'https://public.ecr.aws/docker',
+                    'TEAMAIBOX_NETWORK_WORK':tmp}), patch.object(sys,'argv',['docker','build',*flags,tmp]), \
+                    patch('source_network.subprocess.call',side_effect=check):
+                    self.assertEqual(main(),0)
+
+    def test_penpot_emsdk_context_checks_hash_before_reuse(self):
+        from source_network import emsdk_context
+        content=b'verified-compiler'
+        inputs=(('compiler.tar.xz','official/compiler.tar.xz',len(content),hashlib.sha256(content).hexdigest()),)
+        with tempfile.TemporaryDirectory() as tmp, patch('source_network._EMSDK_INPUTS',inputs), \
+             patch('fetch_public_models.range_download',side_effect=lambda _url,_row,_cache,out,**_kw:out.write(content)) as download:
+            path=emsdk_context(tmp)/'compiler.tar.xz'
+            self.assertEqual(path.read_bytes(),content)
+            self.assertEqual(emsdk_context(tmp),path.parent)
+            self.assertEqual(download.call_count,1)
+            path.write_bytes(b'X'*len(content))
+            with self.assertRaisesRegex(InstallError,'cache SHA-256 mismatch'):
+                emsdk_context(tmp)
+
+    def test_penpot_emsdk_wrapper_scopes_prefetch_to_frontend(self):
+        import sys
+        from source_network import main
+        dockerfile=Path(__file__).resolve().parent/'images/penpot-editor-source.Dockerfile'
+        with tempfile.TemporaryDirectory() as tmp:
+            def check(args):
+                raw=Path(args[args.index('--file')+1]).read_text()
+                front='frontend-runtime' in args
+                self.assertEqual('EMSDK_KEEP_DOWNLOADS=1 ./emsdk install 4.0.6' in raw,front)
+                self.assertEqual('--build-context' in args,front)
+                return 0
+            with patch.dict(os.environ,{'TEAMAIBOX_REAL_DOCKER':'docker','TEAMAIBOX_NETWORK_WORK':tmp}), \
+                 patch('source_network.emsdk_context',return_value=Path(tmp)) as prepare, \
+                 patch('source_network.subprocess.call',side_effect=check):
+                for target in ('backend-runtime','frontend-runtime'):
+                    with patch.object(sys,'argv',['docker','build','--target',target,'--file',str(dockerfile),tmp]):
+                        self.assertEqual(main(),0)
+                self.assertEqual(prepare.call_count,1)
 
     def test_git_metadata_bound_to_real_commit_not_mirror_api(self):
         with tempfile.TemporaryDirectory() as tmp:

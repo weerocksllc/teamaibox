@@ -26,6 +26,8 @@ sudo bash install/from-source.sh --region cn
 
 Esta é uma **compilação de origem on-line seguida de instalação off-line**, não uma compilação de origem off-line. Ele prepara automaticamente as ferramentas de compilação ausentes, baixa as seis entradas do modelo, cria e monta o Android e todas as imagens do aplicativo, quantiza os dois modelos de origem, coleta pacotes de firmware/host, cria o pacote offline completo e executa o instalador existente. Ele não substitui o Docker/NVIDIA, não reinicia o daemon do Docker, limpa uma instalação existente ou altera as configurações de roteamento do host, DNS ou VPN. Modelos, estados de login de convidado e site de marketing privado não são retirados de outra instalação.
 
+Entre no Team AI Box e abra **Todos os aplicativos → Design** para usar o Penpot. O editor usa a mesma conta, as permissões da equipe, o drive da equipe e o assistente de IA. Não é preciso instalar o Penpot ou entrar separadamente.
+
 A área de trabalho padrão é `/var/tmp/teamaibox-source-build`; caches de download e logs por estágio ficam lá, fora do clone. O padrão de instalação é `/srv/teamaibox/installation`. Espere grandes downloads e várias centenas de GB de uso temporário do disco. O carregamento do modelo e a quantização da GPU podem levar muito tempo; nenhum tempo de conclusão fixo é prometido.
 
 ## Retomar a instalação e verificar o status

@@ -51,6 +51,7 @@
 !deploy/legal/airplay-compatible/NOTICE.v2.txt
 !deploy/plugins/**
 !deploy/windows-computer/**
+!deploy/windows-arm64-ppi/probe_ppi.py
 !deploy/runtime/**
 !deploy/compose/agent-model-aliases.v1.json
 !deploy/compose/foundation-service.mjs
@@ -61,3 +62,6 @@
 **/*.pyc
 **/.env
 **/.env.*
+# Private project planning and retired specifications are never build inputs.
+.project-local
+openspec

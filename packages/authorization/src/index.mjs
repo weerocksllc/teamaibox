@@ -12,6 +12,7 @@ const permissionList = [
   "computer:use",
   "computer:manage",
   "developer_credential:create",
+  "design:use",
   "diagnostic_sensitive:view",
   "file:read",
   "file:write",
@@ -114,19 +115,19 @@ const roleDefinitions = {
   developer: {
     allowedScopes: ["appliance"],
     permissions: [
-      ...ordinaryUse, "developer_credential:create",
+      ...ordinaryUse, "design:use", "developer_credential:create",
     ],
   },
   team_admin: {
     allowedScopes: ["appliance", "team"],
     permissions: [
-      ...ordinaryUse, "team:manage", "message:manage", "file:share", "file:manage",
+      ...ordinaryUse, "design:use", "team:manage", "message:manage", "file:share", "file:manage",
       "object_reference:revoke:any", "cast:share",
     ],
   },
   member: {
     allowedScopes: ["appliance", "team"],
-    permissions: ordinaryUse,
+    permissions: [...ordinaryUse, "design:use"],
   },
   guest: {
     allowedScopes: ["appliance", "team"],

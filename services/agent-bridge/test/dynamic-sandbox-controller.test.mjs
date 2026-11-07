@@ -9,7 +9,7 @@ function fixture() {
   storage:{async prepare(id){if(!items.has(id.ownerIdentityId))items.set(id.ownerIdentityId,{...id,token:'a'.repeat(48),lastUsedAt:now});return items.get(id.ownerIdentityId);},
    async touch(id,time){items.get(id.ownerIdentityId).lastUsedAt=time;},async list(){return [...items.values()];},async credentials(id){calls.push(['credentials',id.key]);}},
   runtime:{async inspect(id){return states.get(id.ownerIdentityId);},assertOwned(id,v){assert.equal(v.ownerIdentityId,id.ownerIdentityId);},
-   async admit(id){calls.push(['admit',id.key]);},async start(id){calls.push(['start',id.key]);const s={ownerIdentityId:id.ownerIdentityId,running:true};states.set(id.ownerIdentityId,s);return s;},
+   async admit(id){calls.push(['admit',id.key]);},async start(id,current,beforeStart){await beforeStart(current);calls.push(['start',id.key]);const s={ownerIdentityId:id.ownerIdentityId,running:true};states.set(id.ownerIdentityId,s);return s;},
    async healthy(){},async stop(id,v){calls.push(['stop',id.key]);v.running=false;}}
  });return {controller,items,states,calls,setActive:v=>active=v,setBusy:v=>busy=v,setTime:v=>now=v};
 }

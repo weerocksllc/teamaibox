@@ -12,7 +12,7 @@ from factory_office import definitions
 from offline_common import read_json
 
 
-def foundation(repository):
+def foundation(repository, *, penpot=False):
     repository = Path(repository)
     compose, secrets, directories = core_templates(repository)
     office = definitions(repository)
@@ -54,6 +54,15 @@ def foundation(repository):
     plugins(repository, compose, secrets, directories, add)
     from factory_realtime import realtime
     realtime(compose, add)
+    if penpot:
+        from factory_penpot import configure
+        configure(repository, compose, secrets, directories, templates)
+    # These containers must wait for Team AI Box storage and credentials on
+    # boot. Keep crash retries, but don't let Docker auto-start them on daemon
+    # startup; the installation's own frontdoor unit restores them.
+    for name, service in compose['services'].items():
+        if name != 'database-migrate':
+            service['restart'] = 'on-failure'
     add('config/core.json', compose, mode='0600')
     add('config/office-definition.json', office, mode='0600')
     add('config/office-runtime.json', '@@OFFICE.runtime@@', mode='0600')
@@ -75,7 +84,7 @@ def foundation(repository):
                                            status='preparing', updatedAt=0, runs={}), mutable=True)
     add('public/ai-startup.json', dict(schemaVersion=1, nodeId='@@NODE_ID@@', status='pending', workers={}), mutable=True)
     add('config/frontdoor.json', dict(installationFile='@@ROOT@@/installation.json', retired=[],
-        ordered=[{'role': r} for r in ('postgres', 'platform-api', 'node-agent', 'appliance-gateway', 'web')]), mode='0600')
+        ordered=[], factoryCompose='@@ROOT@@/config/core.json'), mode='0600')
     add('config/network-identity.json', dict(installationFile='@@ROOT@@/installation.json',
         tlsDirectory='@@ROOT@@/https', dnsNames=['teamaibox.local'],
         publicStateFile='@@ROOT@@/public/appliance-addresses.json', sfuConfig='@@CASTING.root@@/sfu/sfu.yaml',
