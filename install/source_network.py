@@ -3,8 +3,8 @@
 Only digest-pinned Docker Hub references are rewritten. Docker validates their
 manifest and layer digests. Mutable references are intentionally not mirrored.
 Temporary Dockerfiles and the executable wrapper live in the build workspace.
-TEAMAIBOX_DESKTOP_IMAGE_RELAY optionally selects an operator-provided loopback
-registry for the two Guacamole repositories when a general mirror lacks them.
+TEAMAIBOX_PINNED_IMAGE_RELAY optionally selects an operator-provided loopback
+registry for known non-library images when a general mirror lacks them.
 """
 import os
 from pathlib import Path
@@ -23,6 +23,7 @@ TAG_LOCKS = {
 }
 PUBLIC_ECR_PROJECTS = {'valkey/valkey': 'public.ecr.aws/valkey/valkey'}
 DESKTOP_REPOS = frozenset({'guacamole/guacamole', 'guacamole/guacd'})
+RELAY_REPOS = DESKTOP_REPOS | {'vllm/vllm-openai'}
 _EMSDK_BUCKET = 'https://storage.googleapis.com/webassembly/emscripten-releases-builds/'
 _EMSDK_INPUTS = (
     ('14767574a5c37ff9526a253a65ddbe0811cb3667-wasm-binaries-arm64.tar.xz',
@@ -100,19 +101,19 @@ def registry_endpoint(value):
     return origin + namespace
 
 
-def rewrite(text, mirror=None, desktop_relay=None):
+def rewrite(text, mirror=None, relay=None, relay_repos=RELAY_REPOS):
     host = registry_endpoint(mirror).removeprefix('https://') if mirror else None
-    if desktop_relay:
-        need(re.fullmatch(r'127\.0\.0\.1:[1-9][0-9]{0,4}', desktop_relay)
-             and int(desktop_relay.split(':')[1]) <= 65535,
-             'desktop image relay must be an explicit IPv4 loopback port')
+    if relay:
+        need(re.fullmatch(r'127\.0\.0\.1:[1-9][0-9]{0,4}', relay)
+             and int(relay.split(':')[1]) <= 65535,
+             'image relay must be an explicit IPv4 loopback port')
     if host:
         for tag, locked in TAG_LOCKS.items():
             text = re.sub(re.escape(tag)+r'(?![\w.@:-])',locked,text)
     def replace_image(match):
         repo, sha = match.groups()
-        if desktop_relay and repo in DESKTOP_REPOS:
-            return desktop_relay+'/'+repo+'@sha256:'+sha
+        if relay and repo in relay_repos:
+            return relay+'/'+repo+'@sha256:'+sha
         if not host:
             return match[0]
         ref = host+'/'+repo
@@ -123,35 +124,37 @@ def rewrite(text, mirror=None, desktop_relay=None):
     return SHORT_IMAGE.sub(lambda m: host+'/library/'+m[1]+'@sha256:'+m[2], text) if host else text
 
 
-def use_desktop_base(real, args, relay):
+def use_relay_bases(real, args, dockerfile, relay, repos=RELAY_REPOS):
     # The Docker engine can pull the pinned manifest from IPv4 loopback, but
     # forcing BuildKit to re-fetch that same manifest requires TLS there. Use
     # the Docker engine's exact local digest after a verified pull instead.
-    prefix = 'GUACAMOLE_IMAGE='+relay+'/guacamole/guacamole@sha256:'
-    references = [arg.removeprefix('GUACAMOLE_IMAGE=') for arg in args
-                  if arg.startswith(prefix) and re.fullmatch('[a-f0-9]{64}', arg[len(prefix):])]
+    ref_pattern = (re.escape(relay) + '/(?:' + '|'.join(map(re.escape, sorted(repos)))
+                   + r')@sha256:[a-f0-9]{64}')
+    references = {arg.removeprefix('GUACAMOLE_IMAGE=') for arg in args
+                  if arg.startswith('GUACAMOLE_IMAGE=')
+                  and re.fullmatch(ref_pattern, arg.removeprefix('GUACAMOLE_IMAGE='))}
+    references.update(re.findall(r'^\s*FROM\s+('+ref_pattern+r')(?=\s|$)', dockerfile, re.M))
     if not references:
         return args
-    need(len(references)==1, 'ambiguous desktop base image')
-    ref = references[0]
-    check = subprocess.run([real, 'image', 'inspect', ref, '--format={{.Os}}/{{.Architecture}}'],
-                           text=True, capture_output=True, timeout=30)
-    if check.returncode or check.stdout.strip() != 'linux/arm64':
-        subprocess.run([real, 'pull', '--platform=linux/arm64', ref], check=True, timeout=1200)
+    for ref in sorted(references):
+        check = subprocess.run([real, 'image', 'inspect', ref, '--format={{.Os}}/{{.Architecture}}'],
+                               text=True, capture_output=True, timeout=30)
+        if check.returncode or check.stdout.strip() != 'linux/arm64':
+            subprocess.run([real, 'pull', '--platform=linux/arm64', ref], check=True, timeout=3600)
     return ['--pull=false' if arg == '--pull=true' else arg for arg in args]
 
 
 def main():
     real = os.environ['TEAMAIBOX_REAL_DOCKER']
     mirror = os.environ.get('TEAMAIBOX_REGISTRY_MIRROR')
-    desktop_relay = os.environ.get('TEAMAIBOX_DESKTOP_IMAGE_RELAY')
+    relay = os.environ.get('TEAMAIBOX_PINNED_IMAGE_RELAY')
+    relay_repos = RELAY_REPOS if relay else DESKTOP_REPOS
+    relay = relay or os.environ.get('TEAMAIBOX_DESKTOP_IMAGE_RELAY')
     args = sys.argv[1:]
-    args = [rewrite(arg, mirror, desktop_relay) for arg in args] if mirror or desktop_relay else args
+    args = [rewrite(arg, mirror, relay, relay_repos) for arg in args] if mirror or relay else args
     temporary = None
     try:
         if args and args[0] == 'build':
-            if desktop_relay:
-                args = use_desktop_base(real, args, desktop_relay)
             explicit = next(((i, arg) for i, arg in enumerate(args)
                              if arg in ('-f', '--file') or arg.startswith('--file=')), None)
             inline = bool(explicit and explicit[1].startswith('--file='))
@@ -161,7 +164,9 @@ def main():
             # These recipes use the standard frontend only. Avoid an unpinned
             # external frontend fetch; do not rewrite any source file in place.
             text = re.sub(r'^#\s*syntax=docker/dockerfile:1\s*\n', '', text)
-            text = rewrite(text, mirror, desktop_relay) if mirror or desktop_relay else text
+            text = rewrite(text, mirror, relay, relay_repos) if mirror or relay else text
+            if relay:
+                args = use_relay_bases(real, args, text, relay, relay_repos)
             casting_cache=os.environ.get('TEAMAIBOX_CASTING_GIT_CACHE')
             if original.as_posix().endswith('deploy/casting/Public.Dockerfile') and casting_cache and Path(casting_cache).exists():
                 text=casting_git_context(text,Path(casting_cache))

@@ -171,7 +171,9 @@ class SourceInstallTests(unittest.TestCase):
         for repo in ('guacamole/guacamole', 'guacamole/guacd'):
             ref='docker.io/'+repo+pin
             self.assertEqual(rewrite(ref,mirror,relay),relay+'/'+repo+pin)
-            self.assertEqual(rewrite(ref,desktop_relay=relay),relay+'/'+repo+pin)
+            self.assertEqual(rewrite(ref,relay=relay),relay+'/'+repo+pin)
+        self.assertEqual(rewrite('docker.io/vllm/vllm-openai'+pin,mirror,relay),
+                         relay+'/vllm/vllm-openai'+pin)
         self.assertEqual(rewrite('docker.io/library/node'+pin,mirror,relay),
                          'public.ecr.aws/docker/library/node'+pin)
         self.assertEqual(rewrite('docker.io/guacamole/guacd:latest',mirror,relay),
@@ -181,21 +183,25 @@ class SourceInstallTests(unittest.TestCase):
                 rewrite(ref,mirror,value)
 
     def test_relay_build_prefers_the_exact_locally_pulled_base(self):
-        from source_network import use_desktop_base
+        from source_network import use_relay_bases
         relay='127.0.0.1:47183'
         ref=relay+'/guacamole/guacamole@sha256:'+'a'*64
         args=['build','--pull=true','--build-arg','GUACAMOLE_IMAGE='+ref]
         for present in (True,False):
             probe=subprocess.CompletedProcess([],0 if present else 1,'linux/arm64\n' if present else '')
             with patch('source_network.subprocess.run',return_value=probe) as run:
-                self.assertEqual(use_desktop_base('docker',args,relay),[args[0],'--pull=false',*args[2:]])
+                self.assertEqual(use_relay_bases('docker',args,'',relay),[args[0],'--pull=false',*args[2:]])
                 self.assertEqual(run.call_args_list[0].args[0][3],ref)
                 self.assertEqual(run.call_count,1 if present else 2)
                 if not present:
                     self.assertEqual(run.call_args.args[0],['docker','pull','--platform=linux/arm64',ref])
         with patch('source_network.subprocess.run') as run:
-            self.assertEqual(use_desktop_base('docker',['build','--pull=true'],relay),['build','--pull=true'])
+            self.assertEqual(use_relay_bases('docker',['build','--pull=true'],'FROM library/ubuntu',relay),['build','--pull=true'])
             run.assert_not_called()
+        ocr=relay+'/vllm/vllm-openai@sha256:'+'b'*64
+        with patch('source_network.subprocess.run',return_value=subprocess.CompletedProcess([],0,'linux/arm64\n')) as run:
+            self.assertEqual(use_relay_bases('docker',['build','--pull=true'],'FROM '+ocr+'\n',relay),['build','--pull=false'])
+            self.assertEqual(run.call_args.args[0][3],ocr)
 
     def test_docker_build_rewrites_explicit_file_options(self):
         from source_network import main
