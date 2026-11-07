@@ -12,6 +12,14 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'tools'))
 from offline_common import need, read_json, run, write_json
 
 
+def active_install_activity(root):
+    from factory_database import query
+    # Resource-booking tables were retired in migration 117. Only live guest
+    # and scheduler state can prevent a fresh installation's catalog commit.
+    return query(root, "SELECT (SELECT count(*) FROM platform.phones)+(SELECT count(*) FROM platform.computers)+"
+        "(SELECT count(*) FROM compute.lease_sets WHERE state='active' AND expires_at>clock_timestamp());")
+
+
 def host_memory(text):
     memory = {line.split(':', 1)[0]: int(line.split()[1]) * 1024
               for line in text.splitlines() if line.startswith(('MemTotal:', 'MemAvailable:'))}
@@ -40,7 +48,6 @@ def capture(root):
     from appliance_installation import load, resolve
     from boot_container_memory import memory_row, container_memory_rows
     from restore_existing_office_workers import inspect, manifest
-    from factory_database import query
     runtime = read_json(root / 'config/office-runtime.json')
     record = load(root / 'installation.json')
     stamp = datetime.datetime.now(datetime.timezone.utc).isoformat(timespec='milliseconds').replace('+00:00', 'Z')
@@ -61,9 +68,7 @@ def capture(root):
         core_healthy &= c['State']['Running'] and c['State'].get('Health', {}).get('Status') == 'healthy'
     # This path is only for installing a new set, not maintaining an appliance
     # with guests/jobs. Refuse rather than omit their resource reservations.
-    counts = query(root, "SELECT (SELECT count(*) FROM platform.phones)+(SELECT count(*) FROM platform.computers)+"
-        "(SELECT count(*) FROM compute.lease_sets WHERE state='active' AND expires_at>clock_timestamp())+"
-        "(SELECT count(*) FROM compute.cast_resource_reservations WHERE state='active');")
+    counts = active_install_activity(root)
     need(counts == '0', 'finish installation before creating phones, computers or active jobs')
     mem = host_memory(Path('/proc/meminfo').read_text())
     identities = {w['containerId']: w['workerId'] for w in workers}

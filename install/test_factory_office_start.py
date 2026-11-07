@@ -1,10 +1,21 @@
 import unittest
+from unittest.mock import patch
 
-from factory_office_start import host_memory, resident_memory
+from factory_office_start import active_install_activity, host_memory, resident_memory
 from offline_common import InstallError
 
 
 class FirstStartMemoryTests(unittest.TestCase):
+    def test_install_activity_uses_current_tables_and_only_live_scheduler_leases(self):
+        with patch('factory_database.query', return_value='0') as query:
+            self.assertEqual(active_install_activity('/install'), '0')
+            root, sql = query.call_args.args
+            self.assertEqual(root, '/install')
+            for table in ('platform.phones', 'platform.computers', 'compute.lease_sets'):
+                self.assertIn(table, sql)
+            self.assertIn("state='active' AND expires_at>clock_timestamp()", sql)
+            self.assertNotIn('cast_resource_reservations', sql)
+
     def test_resident_working_set_excludes_only_measured_inactive_file_cache(self):
         memory = dict(current=6554730496, inactiveFile=1930158080, shmem=134217728)
         self.assertEqual(resident_memory(memory), 4624572416)
