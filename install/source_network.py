@@ -29,6 +29,43 @@ _EMSDK_INPUTS = (
      24884024, 'a9ce85675ba33f00527f6234d90000946c0936fb4fca605f1891bb5f4fe6fb0a'),
 )
 
+CASTING_GIT = {
+    'gstreamer-rs': ('https://gitlab.freedesktop.org/gstreamer/gstreamer-rs', '4e20c0caa0100421080f081065e51f9341ba4693'),
+    'gtk-rs-core': ('https://github.com/gtk-rs/gtk-rs-core', 'ae5dabb51cedf4f32021ba861cdd69f6c5e60193'),
+    'gtk4-rs': ('https://github.com/gtk-rs/gtk4-rs', '6e427d7afd0e2ba0248736c3907761506887fbeb'),
+    'ffv1': ('https://github.com/rust-av/ffv1.git', 'bd9eabfc14c9ad53c37b32279e276619f4390ab8'),
+    'flavors': ('https://github.com/rust-av/flavors', '833508af656d298c269f2397c8541a084264d992'),
+}
+
+
+def casting_git_context(text, cache):
+    # Cargo.lock remains unchanged. Only these public Git repositories are
+    # redirected, inside this build layer, to their checked shallow objects.
+    need(cache.is_dir() and cache.resolve() == cache, 'invalid casting Git cache directory')
+    need({p.name for p in cache.iterdir()} == {name+'.git' for name in CASTING_GIT},
+         'casting Git cache must contain the exact locked repositories')
+    for name, (_, revision) in CASTING_GIT.items():
+        path=cache/(name+'.git')
+        need(path.is_dir() and path.resolve()==path and not any(f.is_symlink() for f in path.rglob('*')),
+             'linked casting Git cache rejected')
+        need(not (path/'objects/info/alternates').exists(), 'casting Git cache must be self-contained')
+        args=['git','-c','core.hooksPath=/dev/null','--git-dir',str(path)]
+        observed=subprocess.check_output([*args,'rev-parse','HEAD'],text=True,timeout=15).strip()
+        need(observed==revision,'casting Git cache revision differs: '+name)
+        subprocess.run([*args,'fsck','--strict','--no-reflogs',revision],check=True,timeout=45)
+    marker="RUN echo '78a29692305fa131cef236d5c22e061894f6cbc43f408d36df7bb2537cc10620"
+    online = ("GIT_CONFIG_COUNT=2 GIT_CONFIG_KEY_0=http.version GIT_CONFIG_VALUE_0=HTTP/1.1 \\\n"
+              "    GIT_CONFIG_KEY_1=url.https://github.com/GStreamer/gstreamer-rs.insteadOf \\\n"
+              "    GIT_CONFIG_VALUE_1=https://gitlab.freedesktop.org/gstreamer/gstreamer-rs \\\n")
+    need(text.count(marker)==1 and text.count(online)==1,'casting Git cache recipe changed')
+    configs=['git config --global protocol.file.allow always']
+    configs += ['git config --global url.file:///run/casting-git/'+name+'.git.insteadOf '+url
+                for name,(url,_) in CASTING_GIT.items()]
+    wrapper = "printf '%s\\n' '#!/bin/sh' 'if [ \"$1\" = fetch ]; then shift; set -- fetch --update-shallow \"$@\"; fi' 'exec /usr/bin/git \"$@\"' >/tmp/taib-cargo-bin/git"
+    setup=' && '.join([*configs,'mkdir -p /tmp/taib-cargo-bin',wrapper,'chmod 0755 /tmp/taib-cargo-bin/git'])
+    text=text.replace(marker,'RUN --mount=from=taib-casting-git,target=/run/casting-git,readonly '+marker[4:])
+    return text.replace(online,setup+' && PATH=/tmp/taib-cargo-bin:$PATH ')
+
 
 def emsdk_context(work):
     from fetch_public_models import range_download
@@ -92,6 +129,12 @@ def main():
             # external frontend fetch; do not rewrite any source file in place.
             text = re.sub(r'^#\s*syntax=docker/dockerfile:1\s*\n', '', text)
             text = rewrite(text, mirror) if mirror else text
+            casting_cache=os.environ.get('TEAMAIBOX_CASTING_GIT_CACHE')
+            if original.as_posix().endswith('deploy/casting/Public.Dockerfile') and casting_cache and Path(casting_cache).exists():
+                text=casting_git_context(text,Path(casting_cache))
+                args[1:1]=['--build-context','taib-casting-git='+casting_cache]
+                if index is not None:
+                    index += 2
             if original.name=='penpot-editor-source.Dockerfile' and '--target' in args and args[args.index('--target')+1]=='frontend-runtime':
                 marker = '&& cd /opt/emsdk && ./emsdk install 4.0.6 && ./emsdk activate 4.0.6 && rm /tmp/emsdk.tar.gz'
                 start = 'RUN curl -fL --retry 3 https://codeload.github.com/emscripten-core/emsdk/'
@@ -116,6 +159,21 @@ def main():
                 origin=endpoint(os.environ.get('TEAMAIBOX_MODEL_ENDPOINT','https://huggingface.co'))
                 # This download already checks a repository-pinned SHA-256.
                 text=text.replace('https://huggingface.co/',origin+'/')
+                diarization=os.environ.get('TEAMAIBOX_DIARIZATION_CACHE')
+                if diarization and Path(diarization).exists():
+                    context=Path(diarization)
+                    model=context/'model.gguf'
+                    sha='0679cfeb1ce356d0dea9470b31274f4bfc7eb927497d82005483770666da998a'
+                    need(context.resolve()==context and {f.name for f in context.iterdir()}=={'model.gguf'}
+                         and not model.is_symlink() and model.is_file() and digest(model)==sha,
+                         'diarization cache does not match the pinned public model')
+                    text,n=re.subn(r'RUN curl[^\n]+\\\n[^\n]+diar_streaming_sortformer[^\n]+\\\n[^\n]+model\.gguf[^\n]*',
+                        'COPY --from=taib-diarization-model /model.gguf /build/model.gguf\n'
+                        + "RUN echo '"+sha+"  model.gguf' | sha256sum -c -",text)
+                    need(n==1,'diarization Dockerfile no longer matches locked input')
+                    args[1:1]=['--build-context','taib-diarization-model='+diarization]
+                    if index is not None:
+                        index+=2
             with tempfile.NamedTemporaryFile(mode='w', prefix='Dockerfile-',
                     dir=os.environ['TEAMAIBOX_NETWORK_WORK'], delete=False) as out:
                 out.write(text); temporary = Path(out.name)

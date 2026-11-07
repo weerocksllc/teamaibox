@@ -168,6 +168,8 @@ def build(p,cache,origin,*,make_archive=False):
     os.environ['TEAMAIBOX_FACTORY_YAML_IMAGE']=tools['androidImage']
     assets=models(p,cache,origin)
     os.environ['TEAMAIBOX_ASR_MODEL']=str(assets['asr-model'])
+    os.environ['TEAMAIBOX_CASTING_GIT_CACHE']=str(cache/'casting-git')
+    os.environ['TEAMAIBOX_DIARIZATION_CACHE']=str(cache/'diarization')
     # One stage per image: successful roles survive failures in other roles.
     reports=[];references={};image_map={}
     roles=['platform-api',*sorted(set(RECIPES)-{'platform-api'})]

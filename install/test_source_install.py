@@ -237,6 +237,27 @@ class SourceInstallTests(unittest.TestCase):
             self.assertIsNone(metadata(repo,'0'*40,'https://huggingface.co',cache,cached_only=True))
             self.assertIsNone(metadata('example/missing',revision,'https://huggingface.co',cache,cached_only=True))
 
+    def test_casting_cache_requires_all_locked_revisions_before_using_local_git(self):
+        from source_network import CASTING_GIT, casting_git_context
+        from source_install import ROOT
+        recipe=(ROOT/'deploy/casting/Public.Dockerfile').read_text()
+        with tempfile.TemporaryDirectory() as tmp:
+            cache=Path(tmp).resolve()
+            for name in CASTING_GIT:
+                (cache/(name+'.git')).mkdir()
+            def git(args, **kwargs):
+                return CASTING_GIT[Path(args[args.index('--git-dir')+1]).stem][1]
+            with patch('source_network.subprocess.check_output',side_effect=git), \
+                 patch('source_network.subprocess.run') as fsck:
+                rendered=casting_git_context(recipe,cache)
+                self.assertIn('RUN --mount=from=taib-casting-git',rendered)
+                self.assertIn('fetch --update-shallow',rendered)
+                self.assertIn('cargo build --release --locked',rendered)
+                self.assertEqual(fsck.call_count,len(CASTING_GIT))
+            with patch('source_network.subprocess.check_output',return_value='0'*40):
+                with self.assertRaisesRegex(InstallError,'revision differs'):
+                    casting_git_context(recipe,cache)
+
     def test_completed_partial_needs_no_network(self):
         with tempfile.TemporaryDirectory() as tmp:
             target=Path(tmp).resolve()/'asset';raw=b'fixture';sha=hashlib.sha256(raw).hexdigest()
