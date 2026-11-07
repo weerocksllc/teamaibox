@@ -120,6 +120,17 @@ def inspect_image(reference, expected_key):
     return image['Id']
 
 
+def build_transport():
+    import os
+    import re
+    proxy = os.environ.get('TEAMAIBOX_PENPOT_BUILD_PROXY')
+    if not proxy:
+        return ['--network=default']
+    match = re.fullmatch(r'127\.0\.0\.1:([1-9][0-9]{0,4})', proxy)
+    need(match and int(match[1]) <= 65535, 'Design build proxy must use an explicit IPv4 loopback port')
+    return ['--network=host', '--build-arg', 'HTTPS_PROXY=http://'+proxy]
+
+
 def build_roles(source, source_key, output, state, roles):
     report = {'status': 'building', 'deployed': False, 'releaseAccepted': False,
               'sourceKey': source_key, 'images': {}, 'references': {}, 'reused': [], 'failures': []}
@@ -137,7 +148,7 @@ def build_roles(source, source_key, output, state, roles):
         tag = 'teamaibox-penpot-candidate:' + attempt.name
         write_json(attempt / 'inputs.json', {'inputs': inputs, 'sourceKey': source_key, 'tag': tag})
         recipe, target, _ = ROLES[role]
-        command = ['docker', 'build', '--platform=linux/arm64', '--network=default',
+        command = ['docker', 'build', '--platform=linux/arm64', *build_transport(),
                    '--label', 'com.teamaibox.purpose=penpot-source-candidate',
                    '--label', 'com.teamaibox.penpot.input=' + key,
                    '--tag', tag, '--file', str(ROOT / 'install/images' / recipe)]

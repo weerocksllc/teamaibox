@@ -225,6 +225,15 @@ class SourceInstallTests(unittest.TestCase):
             self.assertIn('explicit IPv4 loopback port',result.stderr)
             self.assertFalse(output.exists())
 
+    def test_design_build_proxy_is_opt_in_and_loopback_only(self):
+        from build_penpot_stack import build_transport
+        with patch.dict(os.environ, {}, clear=True):
+            self.assertEqual(build_transport(),['--network=default'])
+        with patch.dict(os.environ, {'TEAMAIBOX_PENPOT_BUILD_PROXY':'127.0.0.1:47188'}):
+            self.assertEqual(build_transport(),['--network=host','--build-arg','HTTPS_PROXY=http://127.0.0.1:47188'])
+        with patch.dict(os.environ, {'TEAMAIBOX_PENPOT_BUILD_PROXY':'192.0.2.1:47188'}), self.assertRaises(InstallError):
+            build_transport()
+
     def test_docker_build_rewrites_explicit_file_options(self):
         from source_network import main
         import sys
