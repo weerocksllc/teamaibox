@@ -3,6 +3,8 @@
 Only digest-pinned Docker Hub references are rewritten. Docker validates their
 manifest and layer digests. Mutable references are intentionally not mirrored.
 Temporary Dockerfiles and the executable wrapper live in the build workspace.
+TEAMAIBOX_DESKTOP_IMAGE_RELAY optionally selects an operator-provided loopback
+registry for the two Guacamole repositories when a general mirror lacks them.
 """
 import os
 from pathlib import Path
@@ -20,6 +22,7 @@ TAG_LOCKS = {
     'docker.io/library/golang:1.26': 'docker.io/library/golang@sha256:750c2fbc7cf8514249eaec73844b5ea96e32760b31adde66e1c93ac2fedc8166',
 }
 PUBLIC_ECR_PROJECTS = {'valkey/valkey': 'public.ecr.aws/valkey/valkey'}
+DESKTOP_REPOS = frozenset({'guacamole/guacamole', 'guacamole/guacd'})
 _EMSDK_BUCKET = 'https://storage.googleapis.com/webassembly/emscripten-releases-builds/'
 _EMSDK_INPUTS = (
     ('14767574a5c37ff9526a253a65ddbe0811cb3667-wasm-binaries-arm64.tar.xz',
@@ -97,25 +100,35 @@ def registry_endpoint(value):
     return origin + namespace
 
 
-def rewrite(text, mirror):
-    host = registry_endpoint(mirror).removeprefix('https://')
-    for tag, locked in TAG_LOCKS.items():
-        text = re.sub(re.escape(tag)+r'(?![\w.@:-])',locked,text)
+def rewrite(text, mirror=None, desktop_relay=None):
+    host = registry_endpoint(mirror).removeprefix('https://') if mirror else None
+    if desktop_relay:
+        need(re.fullmatch(r'127\.0\.0\.1:[1-9][0-9]{0,4}', desktop_relay)
+             and int(desktop_relay.split(':')[1]) <= 65535,
+             'desktop image relay must be an explicit IPv4 loopback port')
+    if host:
+        for tag, locked in TAG_LOCKS.items():
+            text = re.sub(re.escape(tag)+r'(?![\w.@:-])',locked,text)
     def replace_image(match):
         repo, sha = match.groups()
+        if desktop_relay and repo in DESKTOP_REPOS:
+            return desktop_relay+'/'+repo+'@sha256:'+sha
+        if not host:
+            return match[0]
         ref = host+'/'+repo
         if host == 'public.ecr.aws/docker':
             ref = PUBLIC_ECR_PROJECTS.get(repo, ref)
         return ref+'@sha256:'+sha
     text=IMAGE.sub(replace_image, text)
-    return SHORT_IMAGE.sub(lambda m: host+'/library/'+m[1]+'@sha256:'+m[2], text)
+    return SHORT_IMAGE.sub(lambda m: host+'/library/'+m[1]+'@sha256:'+m[2], text) if host else text
 
 
 def main():
     real = os.environ['TEAMAIBOX_REAL_DOCKER']
     mirror = os.environ.get('TEAMAIBOX_REGISTRY_MIRROR')
+    desktop_relay = os.environ.get('TEAMAIBOX_DESKTOP_IMAGE_RELAY')
     args = sys.argv[1:]
-    args = [rewrite(arg, mirror) for arg in args] if mirror else args
+    args = [rewrite(arg, mirror, desktop_relay) for arg in args] if mirror or desktop_relay else args
     temporary = None
     try:
         if args and args[0] == 'build':
@@ -128,7 +141,7 @@ def main():
             # These recipes use the standard frontend only. Avoid an unpinned
             # external frontend fetch; do not rewrite any source file in place.
             text = re.sub(r'^#\s*syntax=docker/dockerfile:1\s*\n', '', text)
-            text = rewrite(text, mirror) if mirror else text
+            text = rewrite(text, mirror, desktop_relay) if mirror or desktop_relay else text
             casting_cache=os.environ.get('TEAMAIBOX_CASTING_GIT_CACHE')
             if original.as_posix().endswith('deploy/casting/Public.Dockerfile') and casting_cache and Path(casting_cache).exists():
                 text=casting_git_context(text,Path(casting_cache))

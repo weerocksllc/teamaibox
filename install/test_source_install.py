@@ -164,6 +164,22 @@ class SourceInstallTests(unittest.TestCase):
             with self.subTest(value=value), self.assertRaises(InstallError):
                 rewrite(ref,value)
 
+    def test_desktop_relay_is_loopback_scoped_and_preserves_the_pin(self):
+        pin='@sha256:'+'a'*64
+        relay='127.0.0.1:47183'
+        mirror='https://public.ecr.aws/docker'
+        for repo in ('guacamole/guacamole', 'guacamole/guacd'):
+            ref='docker.io/'+repo+pin
+            self.assertEqual(rewrite(ref,mirror,relay),relay+'/'+repo+pin)
+            self.assertEqual(rewrite(ref,desktop_relay=relay),relay+'/'+repo+pin)
+        self.assertEqual(rewrite('docker.io/library/node'+pin,mirror,relay),
+                         'public.ecr.aws/docker/library/node'+pin)
+        self.assertEqual(rewrite('docker.io/guacamole/guacd:latest',mirror,relay),
+                         'docker.io/guacamole/guacd:latest')
+        for value in ('127.0.0.1:65536','192.0.2.1:47183','127.0.0.1:1/path','http://127.0.0.1:1'):
+            with self.subTest(value=value), self.assertRaises(InstallError):
+                rewrite(ref,mirror,value)
+
     def test_docker_build_rewrites_explicit_file_options(self):
         from source_network import main
         import sys
