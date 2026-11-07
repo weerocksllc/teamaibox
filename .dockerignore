@@ -35,6 +35,8 @@
 !services/media_io/**
 !services/realtime-asr-worker/**
 !services/ocr-worker/**
+!services/drawing-worker/requirements.txt
+!services/drawing-worker/flux2_bf16_protected_server.py
 !services/speaker-diarization-worker/**
 !services/trusted_media_service/**
 !services/trusted_media_runtime/**
@@ -49,6 +51,7 @@
 !deploy/casting/trusted-media-container/**
 !deploy/casting/**
 !deploy/legal/airplay-compatible/NOTICE.v2.txt
+!deploy/legal/airplay-compatible/NOTICE.v4.txt
 !deploy/plugins/**
 !deploy/windows-computer/**
 !deploy/windows-arm64-ppi/probe_ppi.py
