@@ -30,11 +30,14 @@ def pointer(raw, blob, size):
     return dict(size=size, blobId=blob)
 
 
-def metadata(repo, revision, origin, cache):
+def metadata(repo, revision, origin, cache, *, cached_only=False):
     origin = endpoint(origin)
     need(re.fullmatch(r'[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+', repo), 'invalid model repository')
     need(re.fullmatch(r'[a-f0-9]{40}', revision), 'model revision must be a pinned commit')
     directory = Path(cache) / hashlib.sha256(repo.encode()).hexdigest()
+    if cached_only and not (directory / 'HEAD').is_file():
+        return None
+    need(not directory.is_symlink() and not (directory / 'HEAD').is_symlink(), 'unsafe model metadata cache')
     directory.mkdir(parents=True, exist_ok=True)
     env = {**os.environ, 'GIT_CONFIG_NOSYSTEM': '1', 'GIT_CONFIG_GLOBAL': os.devnull,
            'GIT_TERMINAL_PROMPT': '0', 'GIT_LFS_SKIP_SMUDGE': '1'}
@@ -46,6 +49,8 @@ def metadata(repo, revision, origin, cache):
     if not (directory / 'HEAD').exists():
         git('init', '--bare')
     if git('cat-file', '-e', revision+'^{commit}', check=False).returncode:
+        if cached_only:
+            return None
         git('fetch', '--depth=1', '--no-tags', origin+'/'+repo, revision)
     need(git('rev-parse', revision+'^{commit}').stdout.decode().strip() == revision, 'wrong model commit')
     git('fsck', '--strict', '--no-reflogs', revision)

@@ -174,13 +174,19 @@ def _fetch(role, output, cache=None, resume=False, transfer='https', range_worke
     repo, revision = profile['model'], profile['revision']
     from public_model_git import endpoint as validate_endpoint, metadata as git_metadata
     endpoint = validate_endpoint(endpoint)
+    metadata_cache = output.parent/'.publisher-git-cache'
     if endpoint != 'https://huggingface.co':
         need(transfer != 'huggingface', 'alternate endpoints require the verified HTTPS/ranges transport')
-        metadata = git_metadata(repo, revision, endpoint, output.absolute().parent/'.publisher-git-cache')
+        metadata = git_metadata(repo, revision, endpoint, metadata_cache)
     else:
-        url = endpoint+'/api/models/'+repo+'/revision/'+revision+'?blobs=true'
-        with urlopen(url, timeout=60) as response:
-            metadata = json.load(response)
+        # A verified local copy of the pinned Git tree is equivalent to
+        # fetching its metadata again. It pins the Git blobs and LFS hashes;
+        # publisher-inputs.json alone is never trusted for this decision.
+        metadata = git_metadata(repo, revision, endpoint, metadata_cache, cached_only=True)
+        if metadata is None:
+            url = endpoint+'/api/models/'+repo+'/revision/'+revision+'?blobs=true'
+            with urlopen(url, timeout=60) as response:
+                metadata = json.load(response)
     need(metadata['sha'] == revision, 'publisher revision differs')
     records = [row for row in metadata['siblings'] if runtime_file(role,row['rfilename'])]
     need(records and any(row['rfilename'].endswith(('.safetensors', '.bin')) for row in records), 'weights missing')

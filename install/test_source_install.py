@@ -233,6 +233,9 @@ class SourceInstallTests(unittest.TestCase):
             result=metadata(repo,revision,'https://mirror.example',cache)
             self.assertEqual(result['sha'],revision)
             self.assertEqual(next(r for r in result['siblings'] if r['rfilename']=='model.bin')['size'],10)
+            self.assertEqual(metadata(repo,revision,'https://huggingface.co',cache,cached_only=True),result)
+            self.assertIsNone(metadata(repo,'0'*40,'https://huggingface.co',cache,cached_only=True))
+            self.assertIsNone(metadata('example/missing',revision,'https://huggingface.co',cache,cached_only=True))
 
     def test_completed_partial_needs_no_network(self):
         with tempfile.TemporaryDirectory() as tmp:
