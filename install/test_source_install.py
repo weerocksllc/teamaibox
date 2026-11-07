@@ -203,6 +203,17 @@ class SourceInstallTests(unittest.TestCase):
             self.assertEqual(use_relay_bases('docker',['build','--pull=true'],'FROM '+ocr+'\n',relay),['build','--pull=false'])
             self.assertEqual(run.call_args.args[0][3],ocr)
 
+    def test_go_proxy_is_opt_in_and_build_local(self):
+        from build_public_sfu import build_transport
+        with patch.dict(os.environ, {}, clear=True):
+            self.assertEqual(build_transport(),[])
+        with patch.dict(os.environ, {'TEAMAIBOX_GO_BUILD_PROXY':'127.0.0.1:47186'}):
+            self.assertEqual(build_transport(),['--network=host','--build-arg','HTTPS_PROXY=http://127.0.0.1:47186'])
+        for value in ('127.0.0.1:65536','192.0.2.1:47186','127.0.0.1:1/path'):
+            with self.subTest(value=value), patch.dict(os.environ, {'TEAMAIBOX_GO_BUILD_PROXY':value}), \
+                    self.assertRaises(InstallError):
+                build_transport()
+
     def test_docker_build_rewrites_explicit_file_options(self):
         from source_network import main
         import sys

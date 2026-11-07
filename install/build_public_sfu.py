@@ -2,13 +2,25 @@
 """Build the LiveKit forwarding service from its verified public source."""
 import argparse
 import json
+import os
 from pathlib import Path
+import re
 import shutil
 import subprocess
 import tempfile
 import uuid
 from build_public_android import acquire
 from offline_common import need, read_json, run, write_json
+
+
+def build_transport():
+    proxy = os.environ.get('TEAMAIBOX_GO_BUILD_PROXY')
+    if not proxy:
+        return []
+    match = re.fullmatch(r'127\.0\.0\.1:([1-9][0-9]{0,4})', proxy)
+    need(match and int(match[1]) <= 65535, 'Go build proxy must use an explicit IPv4 loopback port')
+    # Per-build CONNECT only: Go retains its normal TLS and module checksums.
+    return ['--network=host', '--build-arg', 'HTTPS_PROXY=http://'+proxy]
 
 
 def build(repository, cache, output):
@@ -25,7 +37,8 @@ def build(repository, cache, output):
         shutil.copyfile(archive, context / archive.name)
         shutil.copyfile(repository / 'deploy/casting/LiveKitServerSecurityFix.arm64.Dockerfile', context / 'Dockerfile')
         with (output / 'build.log').open('xb') as log:
-            result = subprocess.run(['docker', 'build', '--platform=linux/arm64', '--pull=true', '-t', tag, str(context)],
+            result = subprocess.run(['docker', 'build', '--platform=linux/arm64', '--pull=true',
+                                     *build_transport(), '-t', tag, str(context)],
                                     stdout=log, stderr=subprocess.STDOUT)
         need(result.returncode == 0, 'SFU build failed; inspect build.log')
     image = json.loads(run(['docker', 'image', 'inspect', tag]))[0]
