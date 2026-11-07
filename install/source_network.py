@@ -123,6 +123,24 @@ def rewrite(text, mirror=None, desktop_relay=None):
     return SHORT_IMAGE.sub(lambda m: host+'/library/'+m[1]+'@sha256:'+m[2], text) if host else text
 
 
+def use_desktop_base(real, args, relay):
+    # The Docker engine can pull the pinned manifest from IPv4 loopback, but
+    # forcing BuildKit to re-fetch that same manifest requires TLS there. Use
+    # the Docker engine's exact local digest after a verified pull instead.
+    prefix = 'GUACAMOLE_IMAGE='+relay+'/guacamole/guacamole@sha256:'
+    references = [arg.removeprefix('GUACAMOLE_IMAGE=') for arg in args
+                  if arg.startswith(prefix) and re.fullmatch('[a-f0-9]{64}', arg[len(prefix):])]
+    if not references:
+        return args
+    need(len(references)==1, 'ambiguous desktop base image')
+    ref = references[0]
+    check = subprocess.run([real, 'image', 'inspect', ref, '--format={{.Os}}/{{.Architecture}}'],
+                           text=True, capture_output=True, timeout=30)
+    if check.returncode or check.stdout.strip() != 'linux/arm64':
+        subprocess.run([real, 'pull', '--platform=linux/arm64', ref], check=True, timeout=1200)
+    return ['--pull=false' if arg == '--pull=true' else arg for arg in args]
+
+
 def main():
     real = os.environ['TEAMAIBOX_REAL_DOCKER']
     mirror = os.environ.get('TEAMAIBOX_REGISTRY_MIRROR')
@@ -132,6 +150,8 @@ def main():
     temporary = None
     try:
         if args and args[0] == 'build':
+            if desktop_relay:
+                args = use_desktop_base(real, args, desktop_relay)
             explicit = next(((i, arg) for i, arg in enumerate(args)
                              if arg in ('-f', '--file') or arg.startswith('--file=')), None)
             inline = bool(explicit and explicit[1].startswith('--file='))
