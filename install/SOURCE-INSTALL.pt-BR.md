@@ -24,7 +24,7 @@ Para uma rede da China continental onde os pontos finais do modelo/imagem upstre
 sudo bash install/from-source.sh --region cn
 ```
 
-Esta é uma **compilação de origem on-line seguida de instalação off-line**, não uma compilação de origem off-line. Ele prepara automaticamente as ferramentas de compilação ausentes, baixa as seis entradas do modelo, cria e monta o Android e todas as imagens do aplicativo, quantiza os dois modelos de origem, coleta pacotes de firmware/host, cria o pacote offline completo e executa o instalador existente. Ele não substitui o Docker/NVIDIA, não reinicia o daemon do Docker, limpa uma instalação existente ou altera as configurações de roteamento do host, DNS ou VPN. Modelos, estados de login de convidado e site de marketing privado não são retirados de outra instalação.
+O instalador compila o Team AI Box on-line e o instala diretamente com imagens locais e recursos de compilação verificados. Java, Android SDK e zipalign são executados em um contêiner de build do Docker, não no host. A instalação normal não exporta imagens nem gera um pacote off-line; use `--build-only` para isso. O instalador não substitui Docker ou NVIDIA, não reinicia o Docker, não apaga uma instalação existente nem altera a rede do host.
 
 Entre no Team AI Box e abra **Todos os aplicativos → Design** para usar o Penpot. O editor usa a mesma conta, as permissões da equipe, o drive da equipe e o assistente de IA. Não é preciso instalar o Penpot ou entrar separadamente.
 

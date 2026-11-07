@@ -24,7 +24,7 @@ Untuk jaringan Tiongkok daratan di mana titik akhir model/gambar upstream tidak 
 sudo bash install/from-source.sh --region cn
 ```
 
-Ini adalah **pembuatan sumber online diikuti dengan pemasangan offline**, bukan pembuatan sumber offline. Secara otomatis menyiapkan alat pembangunan yang hilang, mengunduh enam input model, membangun dan merakit Android dan semua gambar aplikasi, mengkuantisasi dua model sumber, mengumpulkan paket firmware/host, membuat paket offline lengkap dan menjalankan penginstal yang ada. Itu tidak menggantikan Docker/NVIDIA, memulai ulang daemon Docker, menghapus instalasi yang ada, atau mengubah perutean host, pengaturan DNS atau VPN. Model, status login tamu, dan situs web pemasaran pribadi tidak diambil dari instalasi lain.
+Penginstal membangun Team AI Box secara daring dan langsung memasangnya dari image lokal serta aset build yang telah diverifikasi. Java, Android SDK, dan zipalign berjalan di kontainer build Docker, bukan di host. Instalasi biasa tidak mengekspor image atau membuat paket luring; gunakan `--build-only` untuk itu. Penginstal tidak mengganti Docker atau NVIDIA, memulai ulang Docker, menghapus instalasi yang ada, atau mengubah jaringan host.
 
 Masuk ke Team AI Box dan buka **Semua aplikasi → Desain** untuk memakai Penpot. Akun, izin tim, Drive Tim, dan asisten AI tetap sama. Tidak perlu instalasi atau login terpisah.
 

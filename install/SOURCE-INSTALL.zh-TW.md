@@ -24,7 +24,7 @@ sudo bash install/from-source.sh
 sudo bash install/from-source.sh --region cn
 ```
 
-這是**在線來源建置然後離線安裝**，而不是離線來源建置。它會自動準備缺少的建置工具，下載六個模型輸入，建立和組裝 Android 和所有應用程式映像，量化兩個來源模型，收集韌體/主機包，創建完整的離線包並運行其現有安裝程式。它不會取代 Docker/NVIDIA、重新啟動 Docker 守護程式、清除現有安裝或更改主機路由、DNS 或 VPN 設定。模型、訪客登入狀態和私人行銷網站不是從其他安裝中取得的。
+安裝程式會在線上建置 Team AI Box，並直接使用已驗證的本機映像和建置資產安裝。Java、Android SDK 和 zipalign 在 Docker 建置容器內執行，不在主機上執行。一般安裝不匯出映像、不產生離線套件；需要離線套件時請使用 `--build-only`。安裝程式不會替換 Docker 或 NVIDIA 環境、重新啟動 Docker、清除現有安裝或變更主機網路。
 
 登入 Team AI Box 後，從 **所有應用程式 → 設計** 開啟內建的 Penpot。沿用原有帳號、團隊權限、團隊雲端硬碟與 AI 助理，不必另外安裝或登入 Penpot。
 

@@ -486,7 +486,10 @@ class PackageTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)
             repo, value = self.make_inputs(root)
-            package.build(root / 'input.json', root / 'output', repo, self.runner)
+            # Synthetic archives here exercise file/entrypoint integrity, not
+            # the separate executable application-image identity contract.
+            with patch('package.verify_application_role'):
+                package.build(root / 'input.json', root / 'output', repo, self.runner)
             extracted = root / 'output' / ('teamaibox-' + value['releaseId'] + '-linux-arm64')
             before = sorted(str(path.relative_to(extracted)) for path in extracted.rglob('*'))
             for _ in range(2):

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+from copy import deepcopy
 import fcntl
 import json
 import os
@@ -17,7 +18,7 @@ import sys
 import time
 import uuid
 
-from offline_common import InstallError, atomic, digest, need, nvidia_gpu_argument, read_json, run, verify_package, within, write_json
+from offline_common import InstallError, atomic, digest, need, nvidia_gpu_argument, read_json, run, validate_release, verify_package, within, write_json
 from offline_host_packages import install as install_tool_packages, ROOT_PACKAGES
 
 
@@ -191,7 +192,7 @@ def preflight(manifest, root, state, runner=run):
     if not state or state.get('status') != 'complete':
         # A partial import must not be charged again against already consumed
         # disk space. Only exact Linux ARM64 identities earn this credit.
-        local_ids = runner(['docker', 'image', 'ls', '-q', '--no-trunc']).split()
+        local_ids = runner(['docker', 'image', 'ls', '-a', '-q', '--no-trunc']).split()
         local = json.loads(runner(['docker', 'image', 'inspect', *sorted(set(local_ids))])) if local_ids else []
         installed = {v['Id'] for v in local if v.get('Architecture') == 'arm64' and v.get('Os') == 'linux'}
         space = check_space(manifest, root, docker['DockerRootDir'], resuming=bool(state), installed_images=installed)
@@ -199,8 +200,12 @@ def preflight(manifest, root, state, runner=run):
                 hostPackages=len(manifest.get('hostPackages', [])))
 
 
+def input_path(inputs, name):
+    return inputs[name] if isinstance(inputs, dict) else within(inputs, name)
+
+
 def install_host_packages(manifest, package, runner=run):
-    packages = [dict(source=str(within(package, row['path'])), sha256=row['sha256']) for row in manifest.get('hostPackages', [])]
+    packages = [dict(source=str(input_path(package, row['path'])), sha256=row['sha256']) for row in manifest.get('hostPackages', [])]
     install_tool_packages(packages, manifest['host'].get('requiredPackages', ROOT_PACKAGES), runner)
     for cmd in manifest['host']['commands']:
         need(shutil.which(cmd), 'required offline host tool unavailable: ' + cmd)
@@ -227,7 +232,7 @@ def stream_copy(source, target, expected, mode=0o644):
 def install_runtime(manifest, package, root):
     for name, info in manifest['files'].items():
         if name.startswith('runtime/'):
-            stream_copy(within(package, name), within(root, name), info, info['mode'])
+            stream_copy(input_path(package, name), within(root, name), info, info['mode'])
 
 
 def install_assets(manifest, package, root):
@@ -236,7 +241,7 @@ def install_assets(manifest, package, root):
     for asset in manifest['assets']:
         for item in asset['files']:
             target = within(data, asset['destination'] + '/' + item['path'])
-            source = within(package, asset['packagePath'] + '/' + item['path'])
+            source = input_path(package, asset['packagePath'] + '/' + item['path'])
             stream_copy(source, target, item, item.get('mode', 0o644))
 
 
@@ -304,8 +309,70 @@ def wait_ready(manifest, state, runner=run, *, clock=time.monotonic, sleep=time.
     return statuses
 
 
-def install(package, root, check=False, *, lock_path=Path('/run/lock/teamaibox-offline-install.lock')):
+INSTALL_LOCK = Path('/run/lock/teamaibox-offline-install.lock')
+
+
+def install(package, root, check=False, *, lock_path=INSTALL_LOCK):
     manifest = verify_package(package)
+    return install_verified(manifest, package, root, check, lock_path=lock_path,
+                            input_digest=digest(package / 'release.json'))
+
+
+def verify_source_images(manifest, runner=run):
+    """Direct installs cannot pull or import a missing image."""
+    from image_role import verify_application_role
+    for row in manifest['images']:
+        image = json.loads(runner(['docker','image','inspect',row['imageId']]))[0]
+        need(image['Id']==row['imageId'] and image['Os']=='linux' and image['Architecture']=='arm64'
+             and image['Size']==row['unpackedBytes'], 'local source image missing or changed: '+row['role'])
+        verify_application_role(row['role'], image)
+
+
+def source_inputs(release_path, repository, runner=run):
+    """Bind a prepared release to local files; never materialize an export."""
+    import hashlib
+    from artifact_validation import validate_android_bindings
+    manifest = deepcopy(validate_release(read_json(release_path)))
+    need(runner(['git','-C',repository,'rev-parse','HEAD']).strip()==manifest['sourceCommit'],
+         'prepared release does not match the source checkout')
+    validate_android_bindings(manifest['assets'],manifest['images'])
+    paths, records = {}, {}
+    def bind(name,path,info):
+        need(path.is_file() and path.resolve()==path and name not in paths, 'invalid source input: '+name)
+        paths[name], records[name] = path, info
+    for script in manifest['runtimeFiles']:
+        path = within(repository,script)
+        bind('runtime/'+script,path,dict(size=path.stat().st_size,sha256=digest(path),mode=path.stat().st_mode & 0o777))
+    for asset in manifest['assets']:
+        base = Path(asset.pop('source'))
+        asset['packagePath'] = 'assets/'+asset['role']
+        for item in asset['files']:
+            path = within(base,item['path'])
+            need(path.stat().st_size==item['size'] and digest(path)==item['sha256'],
+                 'source asset changed: '+asset['role']+'/'+item['path'])
+            bind(asset['packagePath']+'/'+item['path'],path,item)
+    for i,row in enumerate(manifest.get('hostPackages',[])):
+        path = Path(row.pop('source'))
+        need(path.suffix=='.deb' and digest(path)==row['sha256'], 'host package changed')
+        row['path'] = 'host-packages/'+str(i)+'.deb'
+        bind(row['path'],path,dict(size=path.stat().st_size,sha256=row['sha256'],mode=0o644))
+    for row in manifest['images']:
+        row.pop('reference')
+    manifest['files'] = records
+    # Only sanitized IDs/checksums go to the installation and resume journal.
+    manifest['imageTransport'] = 'local'
+    receipt = hashlib.sha256(json.dumps(manifest,sort_keys=True,separators=(',',':')).encode()).hexdigest()
+    return manifest,paths,receipt
+
+
+def install_source(release_path, repository, root, *, lock_path=INSTALL_LOCK):
+    manifest, paths, receipt = source_inputs(release_path, repository)
+    verify_source_images(manifest)
+    return install_verified(manifest, paths, safe_root(root), False, lock_path=lock_path,
+                            input_digest=receipt, local_images=True)
+
+
+def install_verified(manifest, package, root, check, *, lock_path, input_digest, local_images=False):
     state = read_state(root, manifest)
     facts = preflight(manifest, root, state)
     if check:
@@ -325,13 +392,13 @@ def install(package, root, check=False, *, lock_path=Path('/run/lock/teamaibox-o
             state = dict(schemaVersion=1, root=str(root), releaseId=manifest['releaseId'], sourceCommit=manifest['sourceCommit'],
                          installationId=str(uuid.uuid4()), nodeId=str(uuid.uuid4()), status='installing', completed=[])
             write_json(root / 'install-state.json', state)
-        need(state.get('packageDigest', digest(package / 'release.json')) == digest(package / 'release.json'),
-             'package changed during interrupted installation')
+        need(state.get('packageDigest', input_digest) == input_digest,
+             'install inputs changed during interrupted installation')
         if state['status'] == 'complete':
             for step in manifest['steps']:
                 run(phase_arguments(step, 'check', root), timeout=step['timeoutSeconds'])
             return dict(status='unchanged', releaseId=manifest['releaseId'], existingDataChanged=False)
-        state['packageDigest'] = digest(package / 'release.json')
+        state['packageDigest'] = input_digest
         write_json(root / 'install-state.json', state)
         try:
             install_host_packages(manifest, package)
@@ -340,7 +407,10 @@ def install(package, root, check=False, *, lock_path=Path('/run/lock/teamaibox-o
             write_json(root / 'release.json', manifest)
             # Import before sizing the new sparse data filesystem so its initial
             # physical-space calculation includes Docker's unpacked image use.
-            import_images(manifest, package)
+            if local_images:
+                verify_source_images(manifest)
+            else:
+                import_images(manifest, package)
             state['dockerGpuAccess'] = packaged_gpu_probe(manifest, required=True)
             write_json(root / 'install-state.json', state)
             for step in manifest['steps']:

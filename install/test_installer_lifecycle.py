@@ -180,9 +180,52 @@ class LifecycleTests(unittest.TestCase):
                 installer.install(package, root, lock_path=directory / 'lock')
             before = (root / 'install-state.json').read_bytes()
             write_json(package / 'release.json', {**manifest, 'changed': True})
-            with self.assertRaisesRegex(InstallError, 'package changed'):
+            with self.assertRaisesRegex(InstallError, 'install inputs changed'):
                 installer.install(package, root, lock_path=directory / 'lock')
             self.assertEqual((root / 'install-state.json').read_bytes(), before)
+
+    def test_direct_source_install_never_imports_or_exports_an_image(self):
+        with tempfile.TemporaryDirectory() as temp, ExitStack() as stack:
+            directory=Path(temp).resolve()
+            _, root, manifest = self.harness(stack,directory)
+            stack.enter_context(patch.object(installer,'source_inputs',return_value=(manifest,{},'source-inputs')))
+            verify=stack.enter_context(patch.object(installer,'verify_source_images'))
+            phase=stack.enter_context(patch.object(installer,'execute_phase'))
+            result=installer.install_source(directory/'release-input.json', directory, root, lock_path=directory/'lock')
+            installer.verify_package.assert_not_called()
+            installer.import_images.assert_not_called()
+            self.assertEqual(verify.call_count,2)
+            self.assertEqual(phase.call_count,len(manifest['steps']))
+            self.assertEqual(result['status'],'installed')
+
+    def test_source_receipt_binds_files_without_staging_or_retaining_paths(self):
+        import json
+        with tempfile.TemporaryDirectory() as temp:
+            root=Path(temp).resolve()
+            release=release_fixture()
+            (root/'tools').mkdir()
+            (root/'tools/phase.py').write_text('# fixture')
+            for row in release['assets']:
+                path=root/row['role']
+                path.mkdir()
+                (path/'asset').write_bytes(b'data')
+                row['source']=str(path)
+            release_path=root/'release-input.json'
+            write_json(release_path,release)
+            with patch('artifact_validation.validate_android_bindings'):
+                def command(args):
+                    self.assertEqual(args,['git','-C',root,'rev-parse','HEAD'])
+                    return release['sourceCommit']
+                manifest, paths, receipt=installer.source_inputs(release_path,root,command)
+                self.assertEqual(manifest['imageTransport'],'local')
+                self.assertNotIn(str(root),json.dumps(manifest))
+                self.assertTrue(all('archive' not in row for row in manifest['images']))
+                asset=release['assets'][0]['role']
+                self.assertEqual(paths['assets/'+asset+'/asset'],root/asset/'asset')
+                self.assertEqual(receipt,installer.source_inputs(release_path,root,command)[2])
+                (root/asset/'asset').write_bytes(b'fake')
+                with self.assertRaisesRegex(InstallError,'source asset changed'):
+                    installer.source_inputs(release_path,root,command)
 
 
 if __name__ == '__main__':

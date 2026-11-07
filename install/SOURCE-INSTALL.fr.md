@@ -24,7 +24,7 @@ Pour un réseau de Chine continentale où les points de terminaison du modèle/i
 sudo bash install/from-source.sh --region cn
 ```
 
-Il s'agit d'une **version source en ligne suivie d'une installation hors ligne**, et non d'une version source hors ligne. Il prépare automatiquement les outils de construction manquants, télécharge les six entrées de modèle, construit et assemble Android et toutes les images d'application, quantifie les deux modèles sources, collecte les packages micrologiciels/hôtes, crée le package hors ligne complet et exécute son programme d'installation existant. Il ne remplace pas Docker/NVIDIA, ne redémarre pas le démon Docker, n'efface pas une installation existante ou ne modifie pas le routage de l'hôte, les paramètres DNS ou VPN. Les modèles, les états de connexion des invités et le site Web de marketing privé ne proviennent pas d'une autre installation.
+Le programme compile Team AI Box en ligne et l’installe directement à partir des images locales et des ressources de build vérifiées. Java, le SDK Android et zipalign s’exécutent dans un conteneur Docker de build, pas sur l’hôte. L’installation normale n’exporte pas d’images et ne génère pas de paquet hors ligne ; utilisez `--build-only` pour cela. Le programme ne remplace ni Docker ni NVIDIA, ne redémarre pas Docker, ne supprime pas une installation existante et ne modifie pas le réseau de l’hôte.
 
 Connectez-vous à Team AI Box, puis ouvrez **Toutes les applications → Design** pour utiliser Penpot. Le compte, les droits d’équipe, le disque d’équipe et l’assistant IA sont les mêmes. Aucune installation ni connexion séparée.
 

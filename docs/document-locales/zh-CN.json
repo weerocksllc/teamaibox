@@ -3,6 +3,8 @@
   "locale": "zh-CN",
   "translationMethod": "machine-assisted; protected commands and links",
   "messages": {
+    "f968c83199a80c83be9d9f27b7325184773df428fe1d7df3801a8f8adfa75143": "安装器在线构建 Team AI Box，直接使用已校验的本地镜像和构建资产安装。Java、Android SDK 和 zipalign 在 Docker 构建容器内运行，不在宿主机上运行。正常安装不导出镜像、不生成离线包；需要离线包时使用 `--build-only`。安装器不会替换 Docker 或 NVIDIA 环境、重启 Docker、清除现有安装或更改宿主网络。",
+    "f4892a9244018318af37ef7198edf6f2c50d72f81a7ddf196725a4f9d279de7e": "在 **全部应用 → 设计** 打开内置的 Penpot 编辑器。沿用 Team AI Box 账号和团队权限，可以和团队网盘交换文件，也可以在打开设计后用旁边的 AI 助手协作。不用单独安装或登录 Penpot。",
     "f2b0dca5c6a63625c7468d6cfa88fff26b6471b2fd559f952afbd72d85eff9fa": "详细功能清单请编辑 `docs/readme-features/<locale>.json`；分组、条目的 ID 和顺序须与英文版一致，并维护 `docs/readme-features/evidence.json` 中的源码依据。",
     "86f2168c9bb87a1f857eed65ee4c58738bff4f7c646f3c9225579b8eaa30059b": "# 从公开源码克隆安装",
     "82c7169fd0a3d117f610e36b2c4653e3468e7663f4103d9986a4c44f59968b46": "此入口会准备所需的公开构建输入、构建应用镜像并生成完整安装包，然后执行安装。构建支持断点续跑；只有最终安装就绪检查通过，才能视为安装完成。下载或预检成功本身并不代表安装成功。",

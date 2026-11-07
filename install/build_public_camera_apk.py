@@ -21,6 +21,29 @@ from offline_common import digest, need, write_json
 ROOT = Path(__file__).resolve().parents[1]
 STOCK = '5888fe9106b4cd2d47a52a65f209e9464f77793b4477ff036c3797fdf44191d1'
 CERT = 'a40da80a59d170caa950cf15c18c454d47a39b26989d8b640ecd745ba71bf5dc'
+AOSP_REVISION = '045a3d6a3e359633a14853a5a5e1e4f2a11cbdae'
+AOSP_PUBLIC_TEST_KEY_SHA256 = '495675d32e89a149d5abe191f4e9c0e218b9068714e9b53a7c91e164a0741a23'
+
+
+def public_test_signer_file(name):
+    directory = 'target/product/security/'
+    github = 'https://api.github.com/repos/aosp-mirror/platform_build/contents/' + directory + name + '?ref=' + AOSP_REVISION
+    gitiles = 'https://android.googlesource.com/platform/build/+/' + AOSP_REVISION + '/' + directory + name + '?format=TEXT'
+    for url, github_response in ((github, True), (gitiles, False)):
+        try:
+            with urllib.request.urlopen(url,timeout=20) as response:
+                raw = response.read(16385)
+            need(len(raw)<=16384, 'AOSP test signing input too large')
+            if github_response:
+                raw = ''.join(json.loads(raw)['content'].split()).encode()
+            raw = base64.b64decode(raw,validate=True)
+            expected = CERT if name.endswith('.pem') else AOSP_PUBLIC_TEST_KEY_SHA256
+            content = ssl.PEM_cert_to_DER_cert(raw.decode()) if name.endswith('.pem') else raw
+            need(hashlib.sha256(content).hexdigest() == expected, 'AOSP public test signer checksum differs')
+            return raw
+        except (OSError, ValueError, KeyError):
+            continue
+    raise RuntimeError('pinned AOSP public test signer is not reachable')
 
 
 def build(stock, sdk, java, output, zipalign=None):
@@ -59,10 +82,8 @@ def build(stock, sdk, java, output, zipalign=None):
                 for item in z.infolist():
                     if not item.filename.upper().startswith('META-INF/'):
                         out.writestr(item, (p / 'merged.dex').read_bytes() if item.filename == 'classes.dex' else z.read(item))
-            url = 'https://android.googlesource.com/platform/build/+/refs/heads/main/target/product/security/'
             for name in ('testkey.x509.pem', 'testkey.pk8'):
-                with urllib.request.urlopen(url + name + '?format=TEXT', timeout=60) as response:
-                    raw = base64.b64decode(response.read(), validate=True)
+                raw = public_test_signer_file(name)
                 (p / name).write_bytes(raw); (p / name).chmod(0o600)
             need(hashlib.sha256(ssl.PEM_cert_to_DER_cert((p / 'testkey.x509.pem').read_text())).hexdigest() == CERT,
                  'public AOSP signer changed')

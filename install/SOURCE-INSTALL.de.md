@@ -24,7 +24,7 @@ Für ein Netzwerk auf dem chinesischen Festland, in dem die Upstream-Modell-/Ima
 sudo bash install/from-source.sh --region cn
 ```
 
-Dies ist ein **Online-Quell-Build mit anschließender Offline-Installation**, kein Offline-Quell-Build. Es bereitet fehlende Build-Tools automatisch vor, lädt die sechs Modelleingaben herunter, erstellt und assembliert Android- und alle Anwendungs-Images, quantisiert die beiden Quellmodelle, sammelt Firmware-/Host-Pakete, erstellt das vollständige Offline-Paket und führt das vorhandene Installationsprogramm aus. Es ersetzt weder Docker/NVIDIA noch den Docker-Daemon neu, löscht keine bestehende Installation oder ändert Host-Routing, DNS- oder VPN-Einstellungen. Modelle, Gast-Login-Status und die private Marketing-Website werden nicht von einer anderen Installation übernommen.
+Das Installationsprogramm erstellt Team AI Box online und installiert es direkt aus geprüften lokalen Images und Build-Artefakten. Java, das Android SDK und zipalign laufen in einem Docker-Build-Container, nicht auf dem Host. Die normale Installation exportiert keine Images und erstellt kein Offline-Paket; verwenden Sie dafür `--build-only`. Das Programm ersetzt weder Docker noch NVIDIA, startet Docker nicht neu, löscht keine vorhandene Installation und ändert nicht das Host-Netzwerk.
 
 Melden Sie sich bei Team AI Box an und öffnen Sie **Alle Apps → Design**. Penpot nutzt dasselbe Konto, dieselben Teamrechte, das Team-Laufwerk und den KI-Assistenten. Eine separate Installation oder Anmeldung ist nicht nötig.
 

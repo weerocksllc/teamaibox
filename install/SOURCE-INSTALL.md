@@ -31,14 +31,12 @@ be reached, use the same entry point with regional download sources:
 sudo bash install/from-source.sh --region cn
 ```
 
-This is an **online source build followed by offline installation**, not an
-offline source build. It automatically prepares missing build tools, downloads
-the six model inputs, builds and assembles Android and all application images,
-quantizes the two source models, collects firmware/host packages, creates the
-complete offline package and runs its existing installer. It does not replace
-Docker/NVIDIA, restart the Docker daemon, clear an existing installation, or
-change host routing, DNS or VPN settings. Models, guest login states and the
-private marketing website are not taken from another installation.
+The installer builds Team AI Box online and installs directly from the verified
+local images and build assets. Java, the Android SDK and zipalign run in a
+Docker build container, not on the host. The normal install does not export
+images or generate an offline package; use `--build-only` for that. The
+installer does not replace Docker or NVIDIA, restart Docker, clear an existing
+installation, or change host networking.
 
 The standard installation includes Penpot. Sign in to Team AI Box and open
 **All applications → Design**. The editor uses the same account, team permissions,

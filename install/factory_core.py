@@ -61,14 +61,24 @@ def substitute(value, environment):
 
 
 def core_templates(repository):
-    import yaml
+    import os
+    import subprocess
+    tool_image = os.environ.get('TEAMAIBOX_FACTORY_YAML_IMAGE')
+    if tool_image:
+        need(re.fullmatch('sha256:[0-9a-f]{64}', tool_image), 'invalid YAML tools image ID')
+        def load_yaml(value):
+            return json.loads(subprocess.check_output(['docker','run','--rm','--pull=never','--network=none',
+                '--read-only','--cap-drop=ALL','--security-opt=no-new-privileges','-i',tool_image,'python3','-c',
+                'import json,sys,yaml; print(json.dumps(yaml.safe_load(sys.stdin)))'],input=value,text=True,timeout=30))
+    else:
+        from yaml import safe_load as load_yaml
     migrations = json.loads((repository / 'packages/persistence/migrations/manifest.json').read_text())['migrations']
     versions = [row['version'] for row in migrations]
     need(versions == list(range(1, len(versions) + 1)), 'factory migration catalog must be contiguous')
     schema_version = str(versions[-1])
     combined = {}
     for name in SOURCES:
-        document = yaml.safe_load((repository / name).read_text())
+        document = load_yaml((repository / name).read_text())
         combined = merge(combined, {k: v for k, v in document.items() if not k.startswith('x-')})
     combined.pop('name', None)
     # YAML anchors intentionally share mappings; binding a role/secret to one

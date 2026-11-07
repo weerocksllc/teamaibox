@@ -24,7 +24,7 @@ sudo bash install/from-source.sh
 sudo bash install/from-source.sh --region cn
 ```
 
-Đây là **bản dựng nguồn trực tuyến, sau đó là cài đặt ngoại tuyến**, không phải bản dựng nguồn ngoại tuyến. Nó tự động chuẩn bị các công cụ xây dựng còn thiếu, tải xuống sáu đầu vào mô hình, xây dựng và lắp ráp Android và tất cả hình ảnh ứng dụng, định lượng hai mô hình nguồn, thu thập các gói chương trình cơ sở/máy chủ, tạo gói ngoại tuyến hoàn chỉnh và chạy trình cài đặt hiện có. Nó không thay thế Docker/NVIDIA, khởi động lại daemon Docker, xóa cài đặt hiện có hoặc thay đổi cài đặt định tuyến máy chủ, DNS hoặc VPN. Mô hình, trạng thái đăng nhập của khách và trang web tiếp thị riêng không được lấy từ bản cài đặt khác.
+Trình cài đặt xây dựng Team AI Box trực tuyến và cài trực tiếp từ các ảnh cục bộ cùng tài nguyên đã được xác minh. Java, Android SDK và zipalign chạy trong container dựng Docker, không chạy trên máy chủ. Cài đặt thông thường không xuất ảnh hay tạo gói ngoại tuyến; dùng `--build-only` khi cần. Trình cài đặt không thay thế Docker hay NVIDIA, không khởi động lại Docker, không xóa bản cài đặt hiện có và không thay đổi mạng máy chủ.
 
 Đăng nhập Team AI Box rồi mở **Tất cả ứng dụng → Thiết kế** để dùng Penpot. Trình chỉnh sửa dùng cùng tài khoản, quyền nhóm, ổ đĩa nhóm và trợ lý AI. Không cần cài đặt hay đăng nhập riêng.
 

@@ -159,11 +159,13 @@ def models(p,cache,origin):
 
 
 def build(p,cache,origin,*,make_archive=False):
-    from source_toolchain import prepare,UBUNTU
+    from source_toolchain import prepare,UBUNTU,android_command,mount
     from build_public_services import RECIPES,ALIASES,UPSTREAM_IMAGES,NODE_SERVICES
-    tool=p.step('toolchain',lambda out:prepare(out,cache,lambda args:p.command(args,p.work/'toolchain.log')))
+    tools_tag='teamaibox-source-tools:'+p.state['sourceIdentity'][:16]+'-android'
+    tool=p.step('toolchain',lambda out:prepare(out,cache,lambda args:p.command(args,p.work/'toolchain.log'),ROOT,tools_tag),images=True)
     tools=read_json(tool/'tools.json')
     os.environ['PATH']=tools['go']+':'+os.environ['PATH']
+    os.environ['TEAMAIBOX_FACTORY_YAML_IMAGE']=tools['androidImage']
     assets=models(p,cache,origin)
     os.environ['TEAMAIBOX_ASR_MODEL']=str(assets['asr-model'])
     # One stage per image: successful roles survive failures in other roles.
@@ -206,8 +208,25 @@ def build(p,cache,origin,*,make_archive=False):
             '--entrypoint','python3','--mount','type=bind,src='+str(ROOT/'deploy/android/cuttlefish')+',dst=/build,readonly',
             '--mount','type=bind,src='+str(out)+',dst=/work',phone_tools,'/build/prepare_camera_rom_inputs.py'],out/'extract.log')
     stock_dir=p.step('stock-camera',stock)
-    apk=p.script('camera-apk','install/build_public_camera_apk.py',['--stock',stock_dir/'inputs/stock-Camera2.apk',
-        '--sdk',tools['sdk'],'--java-home',tools['java'],'--zipalign',tools['zipalign']], 'camera-preview.json',('built',))
+    def camera_apk(out):
+        out.mkdir()
+        # APK extraction may leave restrictive modes from the Android image.
+        # Give the build container one root-owned, read-only copy.
+        stock_input=out/'stock.apk'
+        shutil.copyfile(stock_dir/'inputs/stock-Camera2.apk',stock_input)
+        stock_input.chmod(0o400)
+        result=out/'result'
+        result.mkdir()
+        p.command([*android_command(ROOT,result),
+            *mount(ROOT/'deploy/android/cuttlefish/camera-app','/src/deploy/android/cuttlefish/camera-app',readonly=True),
+            *mount(ROOT/'tools/fixtures/camera-preview-patch-stubs','/src/tools/fixtures/camera-preview-patch-stubs',readonly=True),
+            *mount(stock_input,'/stock/Camera2.apk',readonly=True),
+            *mount(tool/'android-sdk','/sdk',readonly=True),
+            tools['androidImage'],'python3','/src/install/build_public_camera_apk.py','--stock','/stock/Camera2.apk',
+            '--sdk','/sdk','--java-home','/usr/lib/jvm/java-17-openjdk-arm64','--zipalign','/usr/bin/zipalign',
+            '--output','/out/apk'],out/'build.log')
+        need(read_json(result/'apk/camera-preview.json')['status']=='built','camera APK build did not complete')
+    apk=p.step('camera-apk',camera_apk)/'result/apk'
     rom=p.script('camera-rom','install/build_public_phone_rom.py',['--base-image',base,'--tools-image',phone_tools,
         '--apk',apk,'--module',driver])
     phone=p.script('phone','install/build_public_phone_runtime.py',[
@@ -252,25 +271,25 @@ def build(p,cache,origin,*,make_archive=False):
         guestSystems=dict(androidVersion='17',androidBaseBuildId='16102939',cameraSources=['image','browser','video','usb','udp']),
         freeReserveBytes=16*1024**3))
     release=p.script('release','install/prepare-release.py',['--inputs',inputs])
-    args=['--release',release/'release-input.json']
     if not make_archive:
-        args.append('--directory-only')
+        return release/'release-input.json'
+    args=['--release',release/'release-input.json']
     if run(['git','status','--porcelain']).strip():
         args.append('--allow-working-tree')
-    package=p.script('package' if make_archive else 'package-install','install/package.py',args)
+    package=p.script('package','install/package.py',args)
     return package/('teamaibox-'+release_id+'-linux-arm64')
 
 
 def protect_existing_install(target, state):
     if target.exists() and any(target.iterdir()):
-        need(state.get('package') and (target/'install-state.json').is_file(),
+        need((state.get('installInputs') or state.get('package')) and (target/'install-state.json').is_file(),
              'existing installation preserved; use its upgrade flow, not a fresh source install')
 
 
 def product_bundle(bundle):
     # The package installer verifies the complete contents. A legacy package
     # without Design must not count as standard source output, even build-only.
-    need(read_json(bundle/'release.json').get('features') == list(PRODUCT_FEATURES),
+    need(read_json(bundle/'release.json' if bundle.is_dir() else bundle).get('features') == list(PRODUCT_FEATURES),
          'standard source package must include the integrated Design application')
     return bundle
 
@@ -340,9 +359,10 @@ def main():
         if a.build_only:
             p.state['archivePackage']=str(bundle);write_json(p.file,p.state)
             print('Package ready; NOT installed: '+str(bundle));return
-        p.state['package']=str(bundle);write_json(p.file,p.state)
-        # The existing installer owns data protection, its lock and resume.
-        subprocess.run(['bash',str(bundle/'install.sh'),'--installation-root',str(target)],check=True)
+        p.state['installInputs']=str(bundle);write_json(p.file,p.state)
+        # The same coordinator owns data protection, locking and recovery.
+        from installer import install_source
+        install_source(bundle,ROOT,target)
         p.state['installed']=True;write_json(p.file,p.state)
         print('Installation completed. See '+str(target/'readiness.json'))
         print('Sign in to Team AI Box at its normal HTTPS address, then open All applications → Design (Penpot).')

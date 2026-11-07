@@ -11,7 +11,9 @@ On a supported fresh DGX Spark, use the normal installation command:
 sudo bash install/from-source.sh
 ```
 
-Use `--build-only` to prepare a package without installing it. This adds pinned
+Normal source installation uses local image IDs and copies verified assets
+directly into the installation. Use `--build-only` to export an offline
+package without installing it. The standard build includes pinned
 Penpot frontend, backend, exporter and official MCP source builds, the native
 OpenCode transport patch, pinned PostgreSQL/Valkey dependencies, the browser
 plugin and corresponding source/licenses. It does not copy accounts or files

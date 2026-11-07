@@ -39,8 +39,9 @@ class SourceInstallTests(unittest.TestCase):
                     controller=templates['config/agent-controller.json']
                     self.assertEqual(controller['penpot']['mcpOrigin'],'http://penpot-mcp:4401')
                     self.assertEqual(controller['image'],'@@IMAGE.agent-sandbox@@')
-                    (bundle/'release.json').write_text(json.dumps({'features':p.state['features']}))
-                    return bundle
+                    release=bundle/'release.json'
+                    release.write_text(json.dumps({'features':p.state['features']}))
+                    return bundle if make_archive else release
                 with patch.object(sys,'argv',['source_install.py','--work-dir',str(work),'--installation-root',str(target),*flags]), \
                      patch('source_install.platform.system',return_value='Linux'), patch('source_install.platform.machine',return_value='aarch64'), \
                      patch('source_install.os.geteuid',return_value=0), patch.dict(os.environ), \
@@ -50,14 +51,14 @@ class SourceInstallTests(unittest.TestCase):
                      patch('source_install.check_source_host') as host, \
                      patch('source_install.configure_network',return_value='https://huggingface.co'), \
                      patch('source_install.source_identity',return_value='fixture'), patch('source_install.build',side_effect=build), \
-                     patch('source_install.subprocess.run') as execute:
+                     patch('installer.install_source') as execute:
                     source.main()
                     host.assert_called_once_with(allow_pull=True)
                 if '--build-only' in flags:
                     execute.assert_not_called()
                     self.assertNotIn('package',json.loads((work/'state.json').read_text()))
                 else:
-                    execute.assert_called_once_with(['bash',str(bundle/'install.sh'),'--installation-root',str(target)],check=True)
+                    execute.assert_called_once_with(bundle/'release.json',source.ROOT,target)
 
     def test_standard_entry_rejects_a_legacy_package_without_design(self):
         from source_install import product_bundle

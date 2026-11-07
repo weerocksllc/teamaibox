@@ -3,6 +3,8 @@
   "locale": "zh-TW",
   "translationMethod": "machine-assisted; protected commands and links",
   "messages": {
+    "f968c83199a80c83be9d9f27b7325184773df428fe1d7df3801a8f8adfa75143": "安裝程式會在線上建置 Team AI Box，並直接使用已驗證的本機映像和建置資產安裝。Java、Android SDK 和 zipalign 在 Docker 建置容器內執行，不在主機上執行。一般安裝不匯出映像、不產生離線套件；需要離線套件時請使用 `--build-only`。安裝程式不會替換 Docker 或 NVIDIA 環境、重新啟動 Docker、清除現有安裝或變更主機網路。",
+    "f4892a9244018318af37ef7198edf6f2c50d72f81a7ddf196725a4f9d279de7e": "登入 Team AI Box 後，從 **所有應用程式 → 設計** 開啟內建的 Penpot。沿用原有帳號、團隊權限、團隊雲端硬碟與 AI 助理，不必另外安裝或登入 Penpot。",
     "f2b0dca5c6a63625c7468d6cfa88fff26b6471b2fd559f952afbd72d85eff9fa": "詳細功能清單請編輯 `docs/readme-features/<locale>.json`；群組與項目的 ID 及順序須與英文版一致，並維護 `docs/readme-features/evidence.json` 中的原始碼參照。",
     "86f2168c9bb87a1f857eed65ee4c58738bff4f7c646f3c9225579b8eaa30059b": "# 從公共克隆安裝",
     "82c7169fd0a3d117f610e36b2c4653e3468e7663f4103d9986a4c44f59968b46": "此入口點準備所需的公共輸入，建立應用程式映像並在安裝之前產生完整的套件。建置進度可恢復；只有最終的安裝就緒結果顯示設備已安裝。僅下載或預檢成功並不重要。",

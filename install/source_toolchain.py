@@ -1,4 +1,5 @@
 """Prepare public build tools; does not replace Docker, NVIDIA or guest data."""
+import argparse
 import json
 import os
 from pathlib import Path
@@ -27,20 +28,44 @@ def safe_extract(archive, root):
                 (root/item.filename).chmod(0o755)
 
 
-def prepare(output, cache, run):
+def mount(path, target, *, readonly=False):
+    # Docker's --mount grammar has no escaping for these separators.
+    path = str(Path(path).resolve(strict=True))
+    need(not any(ch in path for ch in (',', '\n', '\r')), 'unsupported Docker build mount path')
+    return ['--mount', 'type=bind,src='+path+',dst='+target+(',readonly' if readonly else '')]
+
+
+def android_command(repository, output):
+    return ['docker','run','--rm','--pull=never','--read-only','--cap-drop=ALL',
+            '--security-opt=no-new-privileges','--tmpfs','/tmp:rw,nosuid,nodev',
+            *mount(repository/'install','/src/install',readonly=True), *mount(output,'/out')]
+
+
+def prepare(output, cache, run, repository, tag):
     output.mkdir(parents=True, exist_ok=True)
-    required = ['python3-yaml', 'git', 'jq', 'unzip', 'openjdk-17-jdk-headless', 'zipalign']
-    missing = [p for p in required if subprocess.run(['dpkg-query','-W','-f=${Status}',p],
-        capture_output=True).stdout != b'install ok installed']
-    if missing:
-        run(['apt-get','update'])
-        run(['apt-get','install','-y','--no-install-recommends',*missing])
+    run(['docker','build','--network=host','-t',tag,
+         '-f',repository/'install/images/android-source-tools.Dockerfile',repository/'install/images'])
+    image = json.loads(subprocess.check_output(['docker','image','inspect',tag],text=True))[0]
+    need(image['Architecture']=='arm64' and image['Os']=='linux','Android build tools must be Linux ARM64')
+    image_id = image['Id']
     run(['docker','pull','--platform=linux/arm64',GO])
     cid = subprocess.check_output(['docker','create','--entrypoint','true',GO],text=True).strip()
     try:
         run(['docker','cp',cid+':/usr/local/go',str(output/'go')])
     finally:
         run(['docker','rm',cid])
+    sdk_cache = cache/'android-sdk-downloads'
+    need(not sdk_cache.is_symlink(),'Android SDK cache cannot be a symlink')
+    sdk_cache.mkdir(mode=0o700,exist_ok=True)
+    need(sdk_cache.stat().st_uid==os.geteuid() and not sdk_cache.stat().st_mode & 0o022,
+         'Android SDK cache must belong to the installer')
+    run([*android_command(repository,output), *mount(sdk_cache,'/cache'),
+         image_id,'python3','/src/install/source_toolchain.py','--sdk-output','/out','--cache','/cache'])
+    write_json(output/'tools.json',dict(go=str(output/'go/bin'),androidImage=image_id))
+    write_json(output/'images.json',dict(status='selected-images-built',images={'android-source-tools':image_id}))
+
+
+def prepare_sdk(output, cache):
     # Publisher HTTPS metadata authenticates archive checksums. No mirror is
     # allowed to invent SDK hashes. Reuse the downloaded XML in this workspace.
     metadata = cache/'android-repository.xml'
@@ -70,6 +95,11 @@ def prepare(output, cache, run):
         need(len(dirs)==1 and dirs[0].is_dir(), 'unexpected SDK archive layout')
         target=sdk/destination; target.parent.mkdir(parents=True,exist_ok=True)
         shutil.move(str(dirs[0]),str(target))
-    java = Path(shutil.which('javac')).resolve().parent.parent
-    write_json(output/'tools.json',dict(go=str(output/'go/bin'),sdk=str(sdk),java=str(java),
-                                     zipalign=shutil.which('zipalign')))
+
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--sdk-output',type=Path,required=True)
+    parser.add_argument('--cache',type=Path,required=True)
+    args = parser.parse_args()
+    prepare_sdk(args.sdk_output,args.cache)

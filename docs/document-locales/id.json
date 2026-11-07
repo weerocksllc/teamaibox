@@ -3,6 +3,8 @@
   "locale": "id",
   "translationMethod": "machine-assisted; protected commands and links",
   "messages": {
+    "f968c83199a80c83be9d9f27b7325184773df428fe1d7df3801a8f8adfa75143": "Penginstal membangun Team AI Box secara daring dan langsung memasangnya dari image lokal serta aset build yang telah diverifikasi. Java, Android SDK, dan zipalign berjalan di kontainer build Docker, bukan di host. Instalasi biasa tidak mengekspor image atau membuat paket luring; gunakan `--build-only` untuk itu. Penginstal tidak mengganti Docker atau NVIDIA, memulai ulang Docker, menghapus instalasi yang ada, atau mengubah jaringan host.",
+    "f4892a9244018318af37ef7198edf6f2c50d72f81a7ddf196725a4f9d279de7e": "Masuk ke Team AI Box dan buka **Semua aplikasi → Desain** untuk memakai Penpot. Akun, izin tim, Drive Tim, dan asisten AI tetap sama. Tidak perlu instalasi atau login terpisah.",
     "f2b0dca5c6a63625c7468d6cfa88fff26b6471b2fd559f952afbd72d85eff9fa": "Untuk daftar fitur terperinci, edit `docs/readme-features/<locale>.json`; pertahankan ID dan urutan grup serta item sesuai versi bahasa Inggris, dan perbarui referensi kode sumber di `docs/readme-features/evidence.json`.",
     "86f2168c9bb87a1f857eed65ee4c58738bff4f7c646f3c9225579b8eaa30059b": "# Instal dari klon publik",
     "82c7169fd0a3d117f610e36b2c4653e3468e7663f4103d9986a4c44f59968b46": "Titik masuk ini mempersiapkan masukan publik yang diperlukan, membangun gambar aplikasi dan menghasilkan paket lengkap sebelum menginstalnya. Kemajuan pembangunan dapat dilanjutkan; hanya hasil kesiapan pemasangan akhir yang menunjukkan peralatan terpasang. Keberhasilan pengunduhan atau pra-penerbangan saja tidak cukup.",
