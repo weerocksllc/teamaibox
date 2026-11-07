@@ -200,7 +200,7 @@ def build(p,cache,origin,*,make_archive=False):
         ['--build-arg','PHONE_BASE_IMAGE='+base],'deploy/android/cuttlefish')
     backend=p.script('camera-backend','install/build_public_camera_backend.py',['--cache',cache/'camera-downloads'],
                      'build.json',('backend-built',))
-    kernel=p.script('camera-kernel','install/fetch_public_camera_kernel.py',[])
+    kernel=p.script('camera-kernel','install/fetch_public_camera_kernel.py',['--cache',cache/'camera-kernel'])
     guest=p.script('camera-guest-source','tools/prepare_phone_camera_guest_driver.py',[])
     driver=p.script('camera-driver','tools/build_phone_camera_guest_driver.py',[
         '--inputs',kernel,'--source',guest,'--compiler-image',read_json(backend/'build.json')['compiler']])

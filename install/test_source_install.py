@@ -214,6 +214,17 @@ class SourceInstallTests(unittest.TestCase):
                     self.assertRaises(InstallError):
                 build_transport()
 
+    def test_android_source_proxy_rejects_nonlocal_transport_before_download(self):
+        script=Path(__file__).resolve().parents[1]/'tools/prepare_phone_camera_guest_driver.py'
+        with tempfile.TemporaryDirectory() as tmp:
+            output=Path(tmp)/'source'
+            result=subprocess.run([sys.executable,str(script),'--output',str(output)],
+                                  env={**os.environ,'TEAMAIBOX_ANDROID_SOURCE_PROXY':'192.0.2.1:47187'},
+                                  capture_output=True,text=True,timeout=5)
+            self.assertNotEqual(result.returncode,0)
+            self.assertIn('explicit IPv4 loopback port',result.stderr)
+            self.assertFalse(output.exists())
+
     def test_docker_build_rewrites_explicit_file_options(self):
         from source_network import main
         import sys
