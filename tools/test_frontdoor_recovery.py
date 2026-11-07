@@ -1,6 +1,11 @@
 import copy
+import json
+from pathlib import Path
+import tempfile
+from types import SimpleNamespace
 import unittest
-from restore_appliance_frontdoor import factory_order, recover
+from unittest.mock import patch
+from restore_appliance_frontdoor import factory_config, factory_order, recover
 from restore_calibrated_office_workers_v2 import settled_snapshot
 from test_calibrated_office_boot import fixture, G
 from restore_calibrated_office_workers import gpu_allow_arguments
@@ -36,6 +41,41 @@ class FakeDocker:
 
 
 class RecoveryTests(unittest.TestCase):
+    def test_factory_recovery_pins_an_owned_service_without_optional_managed_label(self):
+        identity='abcde123-4567-4000-8000-000000000001'
+        role='agent-bridge'
+        container='a'*64
+        image='sha256:'+'b'*64
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp).resolve()
+            path=root/'config/core.json'
+            path.parent.mkdir()
+            labels={'com.teamaibox.installation-id':identity,'com.teamaibox.service-role':role}
+            path.write_text(json.dumps({'services':{role:{'image':image,'labels':labels}}}))
+            installation={'installationId':identity,'references':{'composeFile':str(path)},'services':{}}
+            config={'factoryCompose':str(path),'ordered':[],'retired':[]}
+            expected={**labels,'com.docker.compose.project':'teamaibox-'+identity[:12],
+                      'com.docker.compose.service':role}
+            record={'Id':container,'Name':'/factory-agent-bridge','Image':image,'Config':{'Labels':expected}}
+            actual_stat=Path.lstat
+            def stat(p, *args, **kwargs):
+                actual=actual_stat(p,*args,**kwargs)
+                return SimpleNamespace(st_uid=0,st_mode=actual.st_mode) if p==path else actual
+            def command(*args):
+                if args[0]=='ps':
+                    self.assertEqual({v for v in args if v.startswith('label=')},
+                                     {'label='+k+'='+v for k,v in expected.items()})
+                    return container+'\n'
+                self.assertEqual(args,('inspect',container))
+                return json.dumps([record])
+            with patch.object(Path,'lstat',stat), patch('restore_appliance_frontdoor.os.path.ismount',return_value=True):
+                docker=SimpleNamespace(run=command)
+                self.assertEqual(factory_config(config,installation,docker,root)['ordered'],
+                                 [{'name':'factory-agent-bridge','id':container}])
+                record['Image']='sha256:'+'c'*64
+                with self.assertRaisesRegex(ValueError,'factory_service_image_or_identity_changed'):
+                    factory_config(config,installation,docker,root)
+
     def test_factory_boot_orders_storage_services_and_api_namespaces_without_migrations(self):
         services = {'database-migrate': {}, 'postgres': {},
                     'platform-api': {'depends_on': {'postgres': {}, 'database-migrate': {}}},

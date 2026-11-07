@@ -80,8 +80,13 @@ def factory_config(config, installation, docker, root):
     for name in factory_order(services):
         service = services[name]
         role = service['labels']['com.teamaibox.service-role']
-        owner = {'com.teamaibox.installation-id': identity, 'com.teamaibox.managed': 'true',
-                 'com.teamaibox.service-role': role}
+        owner = {'com.teamaibox.installation-id': identity, 'com.teamaibox.service-role': role}
+        # Some factory services declare the legacy managed label, others only
+        # carry the installation and service-role labels. Match the recipe,
+        # then pin unregistered roles by Compose project, service and image.
+        managed = service['labels'].get('com.teamaibox.managed')
+        if managed is not None:
+            owner['com.teamaibox.managed'] = managed
         if role in installation['services']:
             current = resolve(installation, role)
         else:
