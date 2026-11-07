@@ -99,13 +99,38 @@ class PortableDelivery(unittest.TestCase):
             if args[:3]==['docker','network','ls']:return ''
             if args[:2]==['ip','-j']:return '[{"dst":"192.168.40.0/24"}]'
             if args[:3]==['docker','network','create']:
-                if args[-1]=='fixture-plugin-ingress':return 'new-network'
+                if args[-1]=='fixture-plugin-ingress':
+                    actual['IPAM']['Config'][0]['Subnet']=args[args.index('--subnet')+1]
+                    return 'new-network'
                 raise RuntimeError('allocation failure')
             if args[:3]==['docker','network','inspect']:return json.dumps([actual])
             if args==['docker','network','rm','new-network']:return ''
             raise AssertionError(args)
         with self.assertRaises(RuntimeError):networks.prepare(record,command)
         self.assertEqual([c for c in calls if c[:3]==['docker','network','rm']],[['docker','network','rm','new-network']])
+
+    def test_explicit_factory_networks_avoid_routes_and_existing_docker_subnets(self):
+        used=['10.0.0.0/8','172.16.0.0/13','2001:db8::/32']
+        one=networks.private_subnet(used,'install:plugin')
+        self.assertFalse(networks.overlaps(one,used))
+        self.assertEqual(networks.private_subnet(used,'install:plugin'),one)
+        self.assertNotEqual(networks.private_subnet([*used,one],'install:plugin'),one)
+        with self.assertRaisesRegex(ValueError,'no_non_overlapping_private_subnet'):
+            networks.private_subnet(['10.0.0.0/8','172.16.0.0/12','192.168.0.0/16'],'install')
+        def command(args):
+            if args[:3]==['docker','network','ls']:return 'existing'
+            if args[:3]==['docker','network','inspect']:
+                return json.dumps([{'IPAM':{'Config':[{'Subnet':one}]}}])
+            if args==['ip','-j','route','show','table','all']:
+                return json.dumps([{'dst':n} for n in used])
+            raise AssertionError(args)
+        defs={'edge':{},'data':{'internal':True},'plugin':{'external':True},
+              'configured':{'ipam':{'config':[{'subnet':'172.31.9.0/24'}]}}}
+        plan=networks.plan_compose_subnets({'installationId':'install'},defs,command)
+        self.assertEqual(set(plan),{'edge','data'})
+        self.assertEqual(len(set(plan.values())),2)
+        self.assertTrue(all(not networks.overlaps(n,[*used,one,'172.31.9.0/24']) for n in plan.values()))
+        self.assertEqual(networks.plan_compose_subnets({'composeSubnets':plan},defs,None),plan)
 
     def test_block_mapper_and_missing_mount_are_read_only_rejections(self):
         volume={'kind':'block','source':'/dev/customer-data','keyFile':'/secure/key','mountPoint':'/srv/data','mapper':'fixture','fsUuid':'filesystem'}

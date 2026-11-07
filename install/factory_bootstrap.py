@@ -222,7 +222,7 @@ def variables(root, state, release):
 
 
 def configuration(root, check=False):
-    from appliance_networks import ENV, prepare
+    from appliance_networks import ENV, prepare, plan_compose_subnets
     from appliance_installation import load, save
     from appliance_https import initialize as https_init
     state, release = read_json(root / 'install-state.json'), read_json(root / 'release.json')
@@ -247,6 +247,9 @@ def configuration(root, check=False):
                                        'internal': True} for role in ENV})
         save(target, record)
     record = prepare(record)
+    compose_template = next(row for row in recipe['templates'] if row['output'] == recipe['composeFile'])
+    definitions = read_json(within(directory, compose_template['input']))['networks']
+    record['composeSubnets'] = plan_compose_subnets(record, definitions)
     save(target, record)
     vals = variables(root, state, release)
     vals['CONFIGURATION_DIGEST'] = 'sha256:' + hashlib.sha256(
@@ -334,6 +337,9 @@ def configuration(root, check=False):
         need(not dest.exists() or not (root / 'configuration-complete.json').exists(),
              'configuration already completed; refusing to rewrite')
         value = expand(read_json(source), vals)
+        if row['output'] == recipe['composeFile']:
+            for network, subnet in record['composeSubnets'].items():
+                value['networks'][network]['ipam'] = {'config':[{'subnet':subnet}]}
         if row['format'] == 'json':
             raw = (json.dumps(value, indent=2) + '\n').encode()
         elif row['format'] == 'env':

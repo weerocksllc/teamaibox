@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Prepare installation-owned Compose networks, preserving attached endpoints."""
 import argparse
+import hashlib
 import ipaddress
 import json
 from pathlib import Path
@@ -13,6 +14,51 @@ ENV = {'plugin-ingress':'TEAMAIBOX_PLUGIN_INGRESS_NETWORK', 'compute-internal':'
 def overlaps(subnet, existing):
     wanted = ipaddress.ip_network(subnet)
     return any(wanted.version == ipaddress.ip_network(n).version and wanted.overlaps(ipaddress.ip_network(n)) for n in existing)
+
+
+def private_subnet(existing, seed):
+    """Find a product-owned /24 without relying on the daemon's automatic pool."""
+    used = [ipaddress.ip_network(n, strict=False) for n in existing]
+    used = [n for n in used if n.version == 4]
+    start = int.from_bytes(hashlib.sha256(seed.encode()).digest()[:4], 'big')
+    for block in map(ipaddress.ip_network, ('10.0.0.0/8', '172.16.0.0/12', '192.168.0.0/16')):
+        if any(block.subnet_of(n) for n in used):
+            continue
+        count = block.num_addresses // 256
+        for offset in range(count):
+            candidate = ipaddress.ip_network((int(block.network_address) + 256*((start+offset) % count), 24))
+            if not any(candidate.overlaps(n) for n in used):
+                return str(candidate)
+    raise ValueError('no_non_overlapping_private_subnet')
+
+
+def inventory(command):
+    ids = command(['docker','network','ls','-q','--no-trunc']).split()
+    networks = json.loads(command(['docker','network','inspect',*ids])) if ids else []
+    routes = json.loads(command(['ip','-j','route','show','table','all']))
+    return networks, [r['dst'] for r in routes if r.get('dst') and r['dst'] != 'default']
+
+
+def subnets(networks):
+    return [v['Subnet'] for n in networks for v in (n['IPAM'].get('Config') or []) if v.get('Subnet')]
+
+
+def plan_compose_subnets(record, definitions, command=execute):
+    names = sorted(key for key, spec in definitions.items() if not spec.get('external') and not spec.get('ipam'))
+    prior = record.get('composeSubnets')
+    if prior is not None:
+        if set(prior) != set(names):
+            raise ValueError('installed_compose_network_plan_changed')
+        return prior
+    networks, used = inventory(command)
+    used += subnets(networks)
+    used += [row['subnet'] for spec in definitions.values() for row in spec.get('ipam', {}).get('config', [])
+             if row.get('subnet')]
+    plan = {}
+    for key in names:
+        plan[key] = private_subnet(used, record['installationId']+':compose:'+key)
+        used.append(plan[key])
+    return plan
 
 
 def verify(record, role, spec, actual):
@@ -31,10 +77,7 @@ def verify(record, role, spec, actual):
 
 
 def prepare(record, command=execute):
-    ids = command(['docker','network','ls','-q','--no-trunc']).split()
-    networks = json.loads(command(['docker','network','inspect',*ids])) if ids else []
-    routes = json.loads(command(['ip','-j','route','show']))
-    route_subnets = [r['dst'] for r in routes if r.get('dst') and r['dst'] != 'default']
+    networks, route_subnets = inventory(command)
     by_name = {n['Name']:n for n in networks}
     created = []; planned = {}
     try:
@@ -43,8 +86,9 @@ def prepare(record, command=execute):
             if spec['name'] in by_name:
                 planned[role] = verify(record, role, spec, by_name[spec['name']]); continue
             if spec.get('id'): raise ValueError('installed_network_missing:' + role)
-            used = route_subnets + [v['Subnet'] for n in networks for v in (n['IPAM'].get('Config') or []) if v.get('Subnet')]
+            used = route_subnets + subnets(networks)
             if spec.get('subnet') and overlaps(spec['subnet'], used): raise ValueError('network_subnet_overlap:' + role)
+            spec = {**spec, 'subnet':spec.get('subnet') or private_subnet(used,record['installationId']+':'+role)}
             args = ['docker','network','create','--driver','bridge','--label','com.teamaibox.installation-id='+record['installationId'], '--label','com.teamaibox.network-role='+role]
             if spec['internal']: args.append('--internal')
             if spec.get('subnet'): args += ['--subnet',spec['subnet']]
