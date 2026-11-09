@@ -1,5 +1,5 @@
 import {useCallback,useEffect,useRef,useState,type CSSProperties} from 'react';
-import {ArrowLeft,MessageSquare,Link2,Unlink,RefreshCw} from 'lucide-react';
+import {ArrowLeft,MessageSquare,Link2,Unlink,RefreshCw,Layers,SlidersHorizontal,Ellipsis} from 'lucide-react';
 import {Button} from '@teamaibox/ui-system/components';
 import type {Locale} from '../i18n';
 import {NativeAssistantWorkspace} from '../assistant/NativeAssistantWorkspace';
@@ -7,6 +7,9 @@ import {penpotText} from './penpot-copy';
 import {penpotReopenCopy,penpotReviewCopy} from './penpot-review-copy';
 import {PenpotTransfer} from './PenpotTransfer';
 import {PenpotTeamSpaces} from './PenpotTeamSpaces';
+import {observeCanvas,type CanvasPanel,type CanvasFile} from './penpot-canvas';
+import {canvasCopy} from './penpot-canvas-copy';
+import canvasStyles from './penpot-canvas.css?url&no-inline';
 import './penpot-workspace.css';
 
 type Translator=(key:string,values?:Record<string,string|number>)=>string;
@@ -22,8 +25,25 @@ export function PenpotWorkspace({identityId,locale,onClose,t}:{identityId:string
   const text=(key:Parameters<typeof penpotText>[1])=>penpotText(locale,key);
   const frame=useRef<HTMLIFrameElement>(null),current=useRef(initial),session=useRef<string|null>(null);
   const [source,setSource]=useState(''),[failed,setFailed]=useState(false),[attempt,setAttempt]=useState(0);
-  const [waiting,setWaiting]=useState(false),[editorLoaded,setEditorLoaded]=useState(false);
-  const [status,setStatus]=useState(initial),[active,setActive]=useState<string|null>(null),[showAssistant,setShowAssistant]=useState(true);
+  const [waiting,setWaiting]=useState(false),[editorGeneration,setEditorGeneration]=useState(0);
+  const editorLoaded=editorGeneration>0;
+  const [status,setStatus]=useState(initial),[active,setActive]=useState<string|null>(null),[showAssistant,setShowAssistant]=useState(false);
+  const [assistantOpened,setAssistantOpened]=useState(false);
+  const [canvas,setCanvas]=useState<CanvasFile|null>(null),[panel,setPanel]=useState<CanvasPanel>(null),[actions,setActions]=useState(false);
+  const native=useRef<ReturnType<typeof observeCanvas>>(undefined);
+  const fileId=canvas?.id;
+  const [backLabel,layersLabel,propertiesLabel,actionsLabel]=canvasCopy[locale];
+  useEffect(()=>{setPanel(null);setActions(false);},[fileId]);
+  useEffect(()=>{
+    if(!editorLoaded||!frame.current)return;
+    const iframe=frame.current;
+    native.current=observeCanvas(iframe,canvasStyles,next=>setCanvas(before=>
+      before?.id===next?.id&&before?.name===next?.name&&before?.saveText===next?.saveText&&before?.saved===next?.saved?before:next));
+    const dismiss=()=>setPanel(null);
+    iframe.addEventListener('design-panel-dismiss',dismiss);
+    return()=>{iframe.removeEventListener('design-panel-dismiss',dismiss);native.current?.dispose();native.current=undefined;};
+  },[editorGeneration,editorLoaded,source]);
+  useEffect(()=>{native.current?.setPanel(panel);},[panel,fileId]);
   const [width,setWidth]=useState(440);
   const command=useCallback((action:string,extra:Record<string,unknown>={})=>{
     frame.current?.contentWindow?.postMessage({type:'teamaibox.design.command/v1',requestId:crypto.randomUUID(),action,...extra},location.origin);
@@ -51,7 +71,7 @@ export function PenpotWorkspace({identityId,locale,onClose,t}:{identityId:string
   },[command]);
   useEffect(()=>{
     const abort=new AbortController();let timer:ReturnType<typeof setTimeout>|undefined;
-    setFailed(false);setSource('');setWaiting(false);setEditorLoaded(false);current.current=initial;setStatus(initial);
+    setFailed(false);setSource('');setWaiting(false);setEditorGeneration(0);setCanvas(null);current.current=initial;setStatus(initial);
     const cookies=document.cookie.split(';').map(v=>v.trim()).filter(v=>v.startsWith('__Host-teamaibox-csrf='));
     if(cookies.length!==1){setFailed(true);return;}
     const headers={'x-csrf-token':cookies[0].slice(cookies[0].indexOf('=')+1)};
@@ -82,12 +102,31 @@ export function PenpotWorkspace({identityId,locale,onClose,t}:{identityId:string
   const review=status.review?.state==='uncertain'?status.review:null;
   const atOriginal=Boolean(review?.target&&status.target?.fileId===review.target.fileId&&status.target?.pageId===review.target.pageId);
   const [reviewTitle,reviewHelp,openOriginal,reviewed,noAccess]=penpotReviewCopy[locale];
-  return <section className="plugin-workspace penpot-workspace" aria-label={text('title')}>
-    <header className="penpot-toolbar"><Button variant="quiet" onClick={onClose}><ArrowLeft size={18}/>{t('nav.home')}</Button><h2>{text('title')}</h2>
-      <PenpotTeamSpaces key={identityId} frame={frame} locale={locale} t={t} ready={Boolean(source)&&editorLoaded}/>
-      <PenpotTransfer frame={frame} identityId={identityId} locale={locale} t={t} ready={Boolean(source)}/>
-      <span role="status" className="penpot-ai-state">{text(status.state)}</span>
-      <Button variant="quiet" onClick={()=>setShowAssistant(v=>!v)} aria-pressed={showAssistant}><MessageSquare size={18}/>{t('assistant.workspace.title')}</Button>
+  return <section className="plugin-workspace penpot-workspace" data-focus={Boolean(canvas)} aria-label={text('title')}
+    onKeyDown={event=>{if(event.key==='Escape'){setPanel(null);setActions(false);}}}>
+    <header className="penpot-toolbar">
+      {canvas?<Button variant="quiet" className="penpot-tool-icon" onClick={()=>native.current?.back()}
+        aria-label={backLabel} title={backLabel} disabled={!canvas.saved}><ArrowLeft size={18}/></Button>
+        :<Button variant="quiet" onClick={onClose}><ArrowLeft size={18}/>{t('nav.home')}</Button>}
+      <div className="penpot-file-meta">
+        <h2 title={canvas?.name}>{canvas?.name||text('title')}</h2>
+        {canvas?.saveText&&<span className="penpot-save-state" role="status" data-saved={canvas.saved}>{canvas.saveText}</span>}
+      </div>
+      {canvas&&<div className="penpot-canvas-panels">
+        <Button variant="quiet" className="penpot-tool-icon" aria-label={layersLabel} title={layersLabel}
+          aria-pressed={panel==='layers'} onClick={()=>{setActions(false);setShowAssistant(false);setPanel(value=>value==='layers'?null:'layers');}}><Layers size={18}/></Button>
+        <Button variant="quiet" className="penpot-tool-icon" aria-label={propertiesLabel} title={propertiesLabel}
+          aria-pressed={panel==='properties'} onClick={()=>{setActions(false);setShowAssistant(false);setPanel(value=>value==='properties'?null:'properties');}}><SlidersHorizontal size={18}/></Button>
+      </div>}
+      <Button variant="quiet" className="penpot-assistant-toggle" onClick={()=>{setPanel(null);setActions(false);setAssistantOpened(true);setShowAssistant(v=>!v);}}
+        title={t('assistant.workspace.title')} aria-label={t('assistant.workspace.title')} aria-pressed={showAssistant}><MessageSquare size={18}/><span>{t('assistant.workspace.title')}</span></Button>
+      {canvas&&<Button variant="quiet" className="penpot-tool-icon" aria-label={actionsLabel} title={actionsLabel}
+        aria-expanded={actions} aria-controls="penpot-design-actions" onClick={()=>{setPanel(null);setActions(v=>!v);}}><Ellipsis size={19}/></Button>}
+      <div id="penpot-design-actions" className="penpot-actions" data-open={actions}>
+        <PenpotTeamSpaces key={identityId} frame={frame} locale={locale} t={t} ready={Boolean(source)&&editorLoaded}/>
+        <PenpotTransfer frame={frame} identityId={identityId} locale={locale} t={t} ready={Boolean(source)}/>
+        <span role="status" className="penpot-ai-state">{text(status.state)}</span>
+      </div>
     </header>
     {review&&<div className="penpot-write-review" role="alert"><div><strong>{reviewTitle}</strong><p>{review.target?reviewHelp:noAccess}</p></div>
       {review.target&&<><Button variant="secondary" onClick={()=>command('open-review')} disabled={atOriginal}>{openOriginal}</Button>
@@ -96,7 +135,7 @@ export function PenpotWorkspace({identityId,locale,onClose,t}:{identityId:string
     <div className="penpot-panes" data-assistant={showAssistant} style={{'--design-assistant-width':`${width}px`} as CSSProperties}>
       <div className="penpot-editor-pane" tabIndex={0} aria-label={text('editor')} dir="ltr">
         {failed?<div role="alert" className="penpot-entry-state"><p>{t('applications.startup_failed')}</p><Button onClick={()=>setAttempt(v=>v+1)}><RefreshCw size={16}/>{t('applications.retry')}</Button></div>
-          :source?<iframe ref={frame} src={source} title={text('editor')} onLoad={()=>{setEditorLoaded(true);command('status');}}
+          :source?<iframe ref={frame} src={source} title={text('editor')} onLoad={()=>{setEditorGeneration(value=>value+1);command('status');}}
             sandbox="allow-downloads allow-forms allow-same-origin allow-scripts" allow="camera 'none'; microphone 'none'"/>
           :<div role="status" className="penpot-entry-state">{t(waiting?'applications.startup_unavailable_detail':'applications.loading')}</div>}
       </div>
@@ -110,7 +149,7 @@ export function PenpotWorkspace({identityId,locale,onClose,t}:{identityId:string
             <Button variant="quiet" onClick={()=>command('status')} aria-label={text('refresh')}><RefreshCw size={16}/></Button></div>
           <label className="penpot-pane-size">{text('width')}<input type="range" min="340" max="700" step="20" value={width} onChange={event=>setWidth(Number(event.target.value))}/></label>
         </div>
-        <NativeAssistantWorkspace embedded identityId={identityId} locale={locale} t={t} onClose={()=>setShowAssistant(false)} onSessionChange={selectSession}/>
+        {assistantOpened&&<NativeAssistantWorkspace embedded identityId={identityId} locale={locale} t={t} onClose={()=>setShowAssistant(false)} onSessionChange={selectSession}/>}
       </aside>
     </div>
   </section>;

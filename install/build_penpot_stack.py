@@ -18,6 +18,7 @@ from prepare_penpot_source import prepare
 from apply_penpot_patches import apply as patch_identity
 from apply_penpot_mcp_binding_patch import apply as patch_mcp
 from penpot_download_patch import patch as patch_download
+from penpot_save_status_patch import patch as patch_save_status
 
 ROOT = Path(__file__).resolve().parents[1]
 ROLES = {
@@ -35,7 +36,7 @@ PATCH_INPUTS = ('apply_penpot_patches.py', 'apply_penpot_mcp_binding_patch.py',
                 'penpot-patches/DesignCallAuthority.ts',
                 'penpot-patches/TargetBoundApi.ts', 'penpot-patches/ProtectedExecuteCode.ts',
                 'penpot-patches/svg-target-functions.cljs', 'penpot_download_patch.py',
-                'penpot-patches/ProtectedDownloadURL.mjs')
+                'penpot-patches/ProtectedDownloadURL.mjs', 'penpot_save_status_patch.py')
 
 
 def fingerprint(value):
@@ -92,6 +93,7 @@ def prepare_candidate(cache, output, state, archive=None):
         identity = patch_identity(original, stage / 'identity')
         combined = patch_mcp(identity, stage / 'combined')
         patch_download(combined)
+        patch_save_status(combined)
         write_json(combined / 'teamaibox-integration-inputs.json', inputs)
         shutil.copyfile(combined / 'LICENSE', combined / 'mcp/LICENSE.penpot')
         write_json(combined / 'mcp/teamaibox-integration-inputs.json', inputs)

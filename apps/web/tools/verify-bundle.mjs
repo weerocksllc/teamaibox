@@ -74,8 +74,8 @@ while (queue.length > 0) {
   const dependencies = [
     ...source.matchAll(/(?:import\(|from)\s*["'`]\.\/([^"'`]+\.js)["'`]/g),
     ...source.matchAll(/\bimport\s*["']\.\/([^"']+\.js)["']/g),
-    // Vite records lazily loaded styles alongside their JavaScript chunks.
-    ...source.matchAll(/["'`]assets\/([A-Za-z0-9._-]+\.(?:js|css))["'`]/g),
+    // Vite records lazy dependencies and emits root-relative same-origin asset URLs.
+    ...source.matchAll(/["'`]\/?assets\/([A-Za-z0-9._-]+\.(?:js|css))["'`]/g),
     ...source.matchAll(/url\(["']?(?:\/assets\/|\.\/)([A-Za-z0-9._-]+\.(?:woff2?|ttf))["']?\)/g),
   ].map((match) => `assets/${match[1]}`);
   for (const dependency of dependencies) {

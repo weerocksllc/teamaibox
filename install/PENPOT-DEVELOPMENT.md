@@ -302,6 +302,20 @@ creates a separate, version-checked build tree. It refuses changed input contrac
 
 Migration 119 and the protected platform routes register the identity mapping and handoff service. Team synchronization and the complete authorization lifecycle remain required before enabling the app. Do not expose the native callback or backend ports to the network.
 
+### Canvas layout and native save status
+
+An open Design file uses a compact toolbar and a canvas-first layout. On
+narrow screens, Layers and Properties open over the canvas without changing
+its width. The AI assistant opens on request. The toolbar displays Penpot's
+native save status; it does not infer successful saves from network activity.
+
+The source build applies `penpot_save_status_patch.py` to the checksum-pinned
+Penpot persistence source. After a fast save triggered by loss of focus, a
+delayed pending notification is ignored only if the local buffer has already
+been flushed. The native save queue, acknowledgements and retry/error handling
+are unchanged. The build fingerprints the patch and includes it in the
+corresponding source; no runtime JavaScript rewriting is required.
+
 Use paths outside this checkout for all downloaded sources, logs and build output:
 
 ```sh

@@ -16,6 +16,11 @@ function Fixture(){
   useEffect(()=>{document.documentElement.lang=locale;document.documentElement.dir=localeDirections[locale];},[locale]);
   useEffect(()=>{void fetch('/api/auth/session').then(r=>r.json()).then(value=>setIdentity(value.identity?.id??value.session?.identity?.id??''));},[]);
   const i18n=createI18nRuntime({locale});
-  return identity!==null&&<PenpotWorkspace identityId={identity} locale={locale} t={i18n.translate} onClose={()=>{}}/>;
+  return identity!==null&&<div className="app-frame">
+    <aside className="sidebar" aria-label="Fixture platform sidebar"/>
+    <div className="workspace"><header className="topbar">Fixture platform header</header></div>
+    <nav className="mobile-nav">Fixture platform navigation</nav>
+    <PenpotWorkspace identityId={identity} locale={locale} t={i18n.translate} onClose={()=>{}}/>
+  </div>;
 }
 createRoot(document.getElementById('root')!).render(<Fixture/>);

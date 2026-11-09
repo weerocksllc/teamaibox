@@ -100,10 +100,12 @@ test("bundle verifier rejects a split chunk without its source map", async () =>
 test("bundle verifier follows lazy CSS dependencies but still rejects missing or orphan styles", async () => {
   const value = await fixture();
   try {
-    await writeFile(join(value.assets, "panel-b.js"), 'const deps=["assets/panel-b.css"];export const panel="ready";');
+    await writeFile(join(value.assets, "panel-b.js"), 'const deps=["assets/panel-b.css"];const frameStyles="/assets/frame-a.css";export const panel="ready";');
     await assert.rejects(execute(process.execPath, [verifier.pathname, value.root]), error => /dependency is missing: assets\/panel-b.css/.test(error.stderr));
     await writeFile(join(value.assets, "panel-b.css"), '.panel{color:green}');
-    assert.equal(JSON.parse((await execute(process.execPath, [verifier.pathname, value.root])).stdout).assets, 4);
+    await assert.rejects(execute(process.execPath, [verifier.pathname, value.root]), error => /dependency is missing: assets\/frame-a.css/.test(error.stderr));
+    await writeFile(join(value.assets, "frame-a.css"), '.frame{color:green}');
+    assert.equal(JSON.parse((await execute(process.execPath, [verifier.pathname, value.root])).stdout).assets, 5);
     await writeFile(join(value.assets, "orphan-c.css"), '.orphan{color:red}');
     await assert.rejects(execute(process.execPath, [verifier.pathname, value.root]), error => /unreachable production asset: assets\/orphan-c.css/.test(error.stderr));
   } finally { await rm(value.root, { recursive: true }); }
