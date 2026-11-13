@@ -8,6 +8,8 @@ notes are retained locally; they are not copied into this public log.
 
 - Keep Penpot templates below recent files in compact dashboards so template
   controls cannot cover file cards.
+- Keep the Design loading surface in the workspace theme until Penpot applies
+  its own theme, avoiding a blank iframe during startup.
 
 ## Unreleased — 2026-11-07
 

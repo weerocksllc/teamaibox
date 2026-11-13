@@ -8,6 +8,7 @@ import {penpotReopenCopy,penpotReviewCopy} from './penpot-review-copy';
 import {PenpotTransfer} from './PenpotTransfer';
 import {PenpotTeamSpaces} from './PenpotTeamSpaces';
 import {observeCanvas,type CanvasPanel,type CanvasFile} from './penpot-canvas';
+import {observePenpotPresentation} from './penpot-presentation';
 import {canvasCopy} from './penpot-canvas-copy';
 import canvasStyles from './penpot-canvas.css?url&no-inline';
 import './penpot-workspace.css';
@@ -26,6 +27,7 @@ export function PenpotWorkspace({identityId,locale,onClose,t}:{identityId:string
   const frame=useRef<HTMLIFrameElement>(null),current=useRef(initial),session=useRef<string|null>(null);
   const [source,setSource]=useState(''),[failed,setFailed]=useState(false),[attempt,setAttempt]=useState(0);
   const [waiting,setWaiting]=useState(false),[editorGeneration,setEditorGeneration]=useState(0);
+  const [presented,setPresented]=useState(false);
   const editorLoaded=editorGeneration>0;
   const [status,setStatus]=useState(initial),[active,setActive]=useState<string|null>(null),[showAssistant,setShowAssistant]=useState(false);
   const [assistantOpened,setAssistantOpened]=useState(false);
@@ -34,6 +36,15 @@ export function PenpotWorkspace({identityId,locale,onClose,t}:{identityId:string
   const fileId=canvas?.id;
   const [backLabel,layersLabel,propertiesLabel,actionsLabel]=canvasCopy[locale];
   useEffect(()=>{setPanel(null);setActions(false);},[fileId]);
+  useEffect(()=>{
+    if(!source||!editorLoaded||!frame.current)return;
+    return observePenpotPresentation(frame.current,()=>setPresented(true));
+  },[source,editorLoaded,editorGeneration]);
+  useEffect(()=>{
+    if(!source||presented||failed)return;
+    const deadline=setTimeout(()=>setFailed(true),30_000);
+    return ()=>clearTimeout(deadline);
+  },[source,presented,failed]);
   useEffect(()=>{
     if(!editorLoaded||!frame.current)return;
     const iframe=frame.current;
@@ -71,7 +82,7 @@ export function PenpotWorkspace({identityId,locale,onClose,t}:{identityId:string
   },[command]);
   useEffect(()=>{
     const abort=new AbortController();let timer:ReturnType<typeof setTimeout>|undefined;
-    setFailed(false);setSource('');setWaiting(false);setEditorGeneration(0);setCanvas(null);current.current=initial;setStatus(initial);
+    setFailed(false);setSource('');setWaiting(false);setEditorGeneration(0);setPresented(false);setCanvas(null);current.current=initial;setStatus(initial);
     const cookies=document.cookie.split(';').map(v=>v.trim()).filter(v=>v.startsWith('__Host-teamaibox-csrf='));
     if(cookies.length!==1){setFailed(true);return;}
     const headers={'x-csrf-token':cookies[0].slice(cookies[0].indexOf('=')+1)};
@@ -135,9 +146,13 @@ export function PenpotWorkspace({identityId,locale,onClose,t}:{identityId:string
     <div className="penpot-panes" data-assistant={showAssistant} style={{'--design-assistant-width':`${width}px`} as CSSProperties}>
       <div className="penpot-editor-pane" tabIndex={0} aria-label={text('editor')} dir="ltr">
         {failed?<div role="alert" className="penpot-entry-state"><p>{t('applications.startup_failed')}</p><Button onClick={()=>setAttempt(v=>v+1)}><RefreshCw size={16}/>{t('applications.retry')}</Button></div>
-          :source?<iframe ref={frame} src={source} title={text('editor')} onLoad={()=>{setEditorGeneration(value=>value+1);command('status');}}
-            sandbox="allow-downloads allow-forms allow-same-origin allow-scripts" allow="camera 'none'; microphone 'none'"/>
-          :<div role="status" className="penpot-entry-state">{t(waiting?'applications.startup_unavailable_detail':'applications.loading')}</div>}
+          :<>
+            {!presented&&<div role="status" className="penpot-entry-state">{t(waiting?'applications.startup_unavailable_detail':'applications.loading')}</div>}
+            {source&&<iframe ref={frame} src={source} title={text('editor')} data-presented={presented}
+              aria-hidden={!presented||undefined}
+              onLoad={()=>{setPresented(false);setEditorGeneration(value=>value+1);command('status');}}
+              sandbox="allow-downloads allow-forms allow-same-origin allow-scripts" allow="camera 'none'; microphone 'none'"/>}
+          </>}
       </div>
       <aside className="penpot-assistant-pane" hidden={!showAssistant} aria-label={text('assistant')}>
         <div className="penpot-connection-controls">
