@@ -18,6 +18,9 @@ export function observeCanvas(frame:HTMLIFrameElement, stylesheet:string, update
     scheduled=0;
     const [route,query]=win.location.hash.split('?',2);
     if(route.startsWith('#/dashboard/'))dashboard=win.location.hash;
+    const recent=route==='#/dashboard/recent';
+    html.toggleAttribute('data-tab-design-recent',recent);
+    frame.toggleAttribute('data-tab-design-recent',recent);
     const id=new URLSearchParams(query).get('file-id')??'';
     const next=route==='#/workspace'&&uuid.test(id)?id:'';
     if(next!==fileId)delete html.dataset.tabDesignPanel;
@@ -46,6 +49,7 @@ export function observeCanvas(frame:HTMLIFrameElement, stylesheet:string, update
       else if(uuid.test(team))win.location.hash='#/dashboard/recent?team-id='+team;
     },
     dispose(){observer.disconnect();win.removeEventListener('hashchange',queue);win.removeEventListener('keydown',dismiss);
-      if(scheduled)win.cancelAnimationFrame(scheduled);css.remove();delete html.dataset.tabDesignPanel;html.removeAttribute('data-tab-design-canvas');},
+      if(scheduled)win.cancelAnimationFrame(scheduled);css.remove();delete html.dataset.tabDesignPanel;html.removeAttribute('data-tab-design-canvas');
+      html.removeAttribute('data-tab-design-recent');frame.removeAttribute('data-tab-design-recent');},
   };
 }

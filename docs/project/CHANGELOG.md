@@ -4,6 +4,11 @@ This record separates local maintenance work from published releases. Commit and
 tag history remains authoritative for released source. Older private working
 notes are retained locally; they are not copied into this public log.
 
+## Unreleased — 2026-11-14
+
+- Keep Penpot templates below recent files in compact dashboards so template
+  controls cannot cover file cards.
+
 ## Unreleased — 2026-11-07
 
 - Build the Android SDK and Camera2 APK with Java and zipalign inside a

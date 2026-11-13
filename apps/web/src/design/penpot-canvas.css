@@ -22,3 +22,44 @@
   html[data-tab-design-canvas][data-tab-design-panel="layers"] #left-sidebar-aside,
   html[data-tab-design-canvas][data-tab-design-panel="properties"] #right-sidebar-aside { display: grid; }
 }
+
+/* Recent files and the template drawer share the embedded dashboard. In a
+   compact pane, keep them in one scrollable column instead of overlaying files. */
+@media (max-width: 980px), (max-height: 560px) {
+  html[data-tab-design-recent] .main_ui_dashboard__dashboard-content {
+    display: block;
+    min-inline-size: 0;
+    min-block-size: 0;
+    overflow: hidden auto;
+  }
+  html[data-tab-design-recent] .main_ui_dashboard_projects__dashboard-projects {
+    block-size: auto;
+    overflow: visible;
+  }
+  html[data-tab-design-recent] .main_ui_dashboard_templates__dashboard-templates-section {
+    position: relative;
+    inset: auto;
+    inline-size: auto;
+    block-size: auto;
+    min-inline-size: 0;
+    margin-block-start: 16px;
+    transition: none;
+  }
+  html[data-tab-design-recent] .main_ui_dashboard_templates__title {
+    position: static;
+    inline-size: 100%;
+  }
+  html[data-tab-design-recent] .main_ui_dashboard_templates__collapsed
+    :is(.main_ui_dashboard_templates__content, .main_ui_dashboard_templates__content-description) {
+    display: none;
+  }
+}
+
+@media (max-width: 760px) {
+  html[data-tab-design-recent] .main_ui_dashboard__dashboard {
+    grid-template-columns: 32px minmax(0, 188px) minmax(0, 1fr);
+  }
+  html[data-tab-design-recent] .main_ui_dashboard__dashboard-content {
+    padding-inline-end: 8px;
+  }
+}

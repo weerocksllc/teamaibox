@@ -37,10 +37,29 @@ function fixture(){
     },
   };
   const frame=Object.assign(new EventTarget(),{contentWindow:win,contentDocument:doc,
+    toggleAttribute(name,value){value?this.attributes.add(name):this.attributes.delete(name);},
+    removeAttribute(name){this.attributes.delete(name);},attributes:new Set(),
     ownerDocument:{location:{origin,href:origin+'/apps/penpot'}}});
   return {frame,win,link,attributes,dataset,updates,setSave(value){save=value;mutationCallback();},
     flush(){const cb=frameCallback;frameCallback=undefined;cb?.();}, disconnected:()=>disconnected};
 }
+
+test('recent dashboard layout marker is scoped to the native recent route',()=>{
+  const f=fixture();
+  const bridge=observeCanvas(f.frame,'/assets/style.css',()=>{});
+  const marker='data-tab-design-recent';
+  assert.ok(f.attributes.has(marker));
+  assert.ok(f.frame.attributes.has(marker));
+  f.win.location.hash='#/dashboard/files';
+  f.win.dispatchEvent(new Event('hashchange'));f.flush();
+  assert.ok(!f.attributes.has(marker));
+  assert.ok(!f.frame.attributes.has(marker));
+  f.win.location.hash=dashboard;
+  f.win.dispatchEvent(new Event('hashchange'));f.flush();
+  bridge.dispose();
+  assert.ok(!f.attributes.has(marker));
+  assert.ok(!f.frame.attributes.has(marker));
+});
 
 test('canvas follows the same-origin native file and its real save acknowledgement',()=>{
   const f=fixture();
