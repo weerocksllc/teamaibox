@@ -1,7 +1,5 @@
 # Verified plugin import and supply-chain gates
 
-OpenSpec task: `6.2`
-
 ## Sources share one security boundary
 
 Marketplace, private OCI registry, and signed offline bundle imports are source

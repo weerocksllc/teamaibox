@@ -10,6 +10,8 @@ MIT được áp dụng theo hướng dẫn của chủ dự án cho các khoả
 
 | Chất liệu | Xử lý giấy phép | Bằng chứng và giới hạn |
 | --- | --- | --- |
+| Mã nguồn Penpot thuộc phạm vi giấy phép và các bản vá tích hợp | MPL-2.0 | `deploy/penpot-source.lock.json` · `install/penpot-patches/`; Giữ thông báo từ dự án gốc và cung cấp mã nguồn thuộc phạm vi giấy phép đã sửa đổi; không cấp phép MIT chung |
+| Thay đổi giao thức Penpot gốc trong OpenCode | MIT | `deploy/opencode-penpot-transport.lock.json`; Môi trường chạy gốc đã sửa đổi được ghi riêng, không gồm giao diện web Solid |
 | Ứng dụng/dịch vụ/gói gốc và mã cài đặt | MIT | hướng dẫn của chủ dự án; GIẤY PHÉP gốc và siêu dữ liệu gói; tiêu đề hiện tại của bên thứ ba ghi đè mặc định này |
 | Sửa đổi UxPlay và tài liệu xây dựng đi kèm | GPL-3.0-only | Giấy phép ngược dòng hiện có, cam kết được ghim và thông báo nguồn tương ứng trong `deploy/legal/`; không được cấp lại giấy phép thành MIT |
 | Sửa đổi WebRTC của GStreamer | MPL-2.0 | Giấy phép ngược dòng cấp tệp và bản ghi bản vá/bản dựng được ghim |

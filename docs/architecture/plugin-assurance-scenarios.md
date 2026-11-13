@@ -1,6 +1,6 @@
 # Plugin lifecycle and supply-chain assurance
 
-OpenSpec task 6.7 is enforced by an executable scenario inventory at
+Plugin lifecycle assurance uses an executable scenario inventory at
 `services/plugin-runtime/test/assurance-scenario-coverage.v1.json`. A contract
 test proves that every required scenario points to an exact test name, so a
 rename or accidental removal fails CI instead of silently reducing coverage.

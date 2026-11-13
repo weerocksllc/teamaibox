@@ -67,6 +67,8 @@ Hai vai trò có thể chia sẻ một ID nội dung hình ảnh; kho lưu trữ
 
 Đầu ra là `teamaibox-<releaseId>-linux-arm64.tar`, tệp `.sha256` của nó và thư mục được giải nén. Việc sao chép, xuất hình ảnh, băm và lưu trữ diễn ra trong một thư mục tạm thời trước khi tổng kiểm tra cuối cùng được xuất bản. Kết quả đầu ra hiện tại không bị ghi đè; một bản dựng bị gián đoạn không được giống như một bản phát hành hoàn chỉnh. Đối với những thay đổi chỉ dành cho trình cài đặt với nhận dạng hình ảnh không thay đổi, hãy sử dụng `--image-cache <previous-extracted-package>`. Toàn bộ gói cũ được xác minh trước khi kho lưu trữ của nó được sử dụng lại bằng ID hình ảnh thực tế và gói mới được xác minh lại. Không có dữ liệu nào được lấy từ lớp cài đặt cũ hoặc lớp có thể ghi trong vùng chứa. Điều này tránh xuất lại hàng trăm GB hình ảnh giống hệt nhau.
 
+Khi chuyển trực tiếp toàn bộ thư mục cài đặt, hãy dùng `--directory-only` để bỏ bản tar bổ sung. Thư mục vẫn có đủ tệp và mã kiểm tra. Sao chép toàn bộ thư mục rồi chạy `bash ./install.sh --verify-package` trong thư mục đó trước khi cài đặt. Tùy chọn này không thay đổi đầu ra tar mặc định hay yêu cầu phần cứng.
+
 Một bản phát hành thông thường yêu cầu các tệp nguồn đi kèm của nó phải thuộc về cam kết Git đã khai báo. Một `--allow-working-tree` rõ ràng tạo ra một ứng cử viên phát triển; Bản kê khai của nó ghi lại `candidate: true` và các tệp đã thay đổi. Việc vượt qua sự chấp nhận tập trung không biến nguồn không được cam kết thành một bản phát hành đã xuất bản.
 
 Bố trí gói:

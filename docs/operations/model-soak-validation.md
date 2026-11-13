@@ -4,8 +4,6 @@ This document records an older qualification protocol, not current appliance
 startup or admission rules. Its fixed memory floor is retired. Existing
 evidence is retained as historical evidence, not rerun or used to deny work.
 
-OpenSpec task: `7.13`
-
 The initial-certification soak is selected by
 `models/model-soak-suite.v1.json`. The BF16 profile remains the high-precision
 reference but is not an initial certification candidate because its worst

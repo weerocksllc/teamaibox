@@ -33,6 +33,8 @@ def require(condition: bool, message: str) -> None:
 
 
 def validate(path: Path, *, live_commands: bool = True) -> dict:
+    if live_commands:
+        raise RuntimeError("Retired OpenSpec qualification runner. See docs/project/legacy-validation.md; no checks or reports were run.")
     resolved = path.resolve()
     require(resolved.is_file() and resolved.is_relative_to(EVIDENCE_ROOT),
             "supported-environment qualification path is unsafe")
@@ -67,12 +69,6 @@ def validate(path: Path, *, live_commands: bool = True) -> dict:
     require(len(rows) == len(COMMANDS)
             and all(row.get("exitCode") == 0 and row.get("outputRetained") is False for row in rows),
             "supported-environment qualification recorded command failed")
-    if live_commands:
-        for command in COMMANDS:
-            completed = subprocess.run(command, cwd=ROOT, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
-                                       timeout=2400, check=False)
-            require(completed.returncode == 0,
-                    f"supported-environment current validator failed: {' '.join(command[:2])}")
     return {"valid": True, "runId": value["runId"], "status": "passed",
             "evidenceDigest": recorded, "task20_5Satisfied": True,
             "task20_1Satisfied": False, "task20_6Satisfied": False}

@@ -10,6 +10,8 @@ MIT, proje sahibinin talimatı üzerine, Weerocks LLC'ye atfedilen orijinal Team
 
 | Malzeme | Lisans tedavisi | Kanıtlar ve sınırlar |
 | --- | --- | --- |
+| Lisans kapsamındaki Penpot kaynak kodu ve entegrasyon yamaları | MPL-2.0 | `deploy/penpot-source.lock.json` · `install/penpot-patches/`; Kaynak projenin bildirimlerini koruyun ve değiştirilen kapsamdaki kaynak kodu sağlayın; genel bir MIT lisansı uygulanmaz |
+| OpenCode yerel Penpot iletişimi değişiklikleri | MIT | `deploy/opencode-penpot-transport.lock.json`; Değiştirilmiş yerel çalışma ortamı ayrı tanımlanır; Solid web arayüzü dahil değildir |
 | Orijinal uygulama/hizmetler/paketler ve yükleyici kodu | MIT | Proje sahibinin talimatı; kök LİSANS ve paket meta verileri; mevcut üçüncü taraf üstbilgileri bu varsayılanı geçersiz kılar |
 | UxPlay değişiklikleri ve beraberindeki yapı malzemeleri | GPL-3.0-only | `deploy/legal/` içindeki mevcut yukarı akış lisansı, sabitlenmiş taahhüt ve karşılık gelen kaynak bildirimleri; MIT olarak yeniden lisanslanmadı |
 | GStreamer WebRTC değişiklikleri | MPL-2.0 | Dosya düzeyinde yukarı akış lisansı ve sabitlenmiş yama/derleme kayıtları |

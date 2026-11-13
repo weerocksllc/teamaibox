@@ -108,6 +108,8 @@ def load(path: Path) -> dict[str, Any]:
 
 
 def validate(path: Path, *, revalidate: bool = True) -> dict[str, Any]:
+    if revalidate:
+        raise RuntimeError("Retired OpenSpec qualification runner. See docs/project/legacy-validation.md; no checks or reports were run.")
     resolved = path.resolve()
     require(
         resolved.is_file()
@@ -243,9 +245,6 @@ def validate(path: Path, *, revalidate: bool = True) -> dict[str, Any]:
         "exitCode": 0,
     }, "recorded strict OpenSpec check drifted")
 
-    if revalidate:
-        current = readiness_checks()
-        require(current == checks, "current strict source checks no longer match the immutable record")
     return {
         "valid": True,
         "runId": run_id,

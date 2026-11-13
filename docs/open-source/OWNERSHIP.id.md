@@ -10,6 +10,8 @@ MIT diterapkan atas instruksi pemilik proyek ke kontribusi asli Team AI Box yang
 
 | Bahan | Perawatan lisensi | Bukti dan batasan |
 | --- | --- | --- |
+| Kode sumber Penpot yang tercakup dan patch integrasi | MPL-2.0 | `deploy/penpot-source.lock.json` · `install/penpot-patches/`; Pertahankan pemberitahuan hulu dan sediakan kode sumber tercakup yang telah dimodifikasi, bukan lisensi MIT menyeluruh |
+| Perubahan transport Penpot native di OpenCode | MIT | `deploy/opencode-penpot-transport.lock.json`; Runtime native yang dimodifikasi dicantumkan terpisah, tanpa antarmuka web Solid |
 | Aplikasi/layanan/paket asli dan kode penginstal | MIT | instruksi pemilik proyek; LISENSI root dan metadata paket; header pihak ketiga yang ada menggantikan |
 | Modifikasi UxPlay dan materi build yang menyertainya | GPL-3.0-only | Lisensi upstream yang ada, penerapan yang dipasangi pin, dan pemberitahuan sumber terkait di `deploy/legal/`; tidak dilisensikan ulang sebagai MIT |
 | Modifikasi GStreamer WebRTC | MPL-2.0 | Lisensi upstream tingkat file dan catatan patch/build yang disematkan |

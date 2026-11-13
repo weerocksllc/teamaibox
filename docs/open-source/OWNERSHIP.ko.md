@@ -10,6 +10,8 @@ MIT는 Weerocks LLC에 귀속된 원본 Team AI Box 기여에 대한 프로젝�
 
 | 소재 | 라이센스 처리 | 증거와 한계 |
 | --- | --- | --- |
+| Penpot 라이선스 적용 소스 및 통합 패치 | MPL-2.0 | `deploy/penpot-source.lock.json` · `install/penpot-patches/`; 업스트림 고지를 유지하고 수정한 적용 대상 소스를 제공해야 하며, 일괄 MIT 허가는 아님 |
+| OpenCode 네이티브 Penpot 전송 변경 사항 | MIT | `deploy/opencode-penpot-transport.lock.json`; 수정한 네이티브 런타임을 별도로 명시하며 Solid Web GUI는 포함하지 않음 |
 | 원래 애플리케이션/서비스/패키지 및 설치 프로그램 코드 | MIT | 프로젝트 소유자의 지시 루트 라이센스 및 패키지 메타데이터 기존 타사 헤더가 이 기본값을 재정의합니다 |
 | UxPlay 수정 및 관련 빌드 자료 | GPL-3.0-only | `deploy/legal/`의 기존 업스트림 라이선스, 고정된 커밋 및 해당 소스 알림 MIT 라이선스가 재발급되지 않음 |
 | GStreamer WebRTC 수정 | MPL-2.0 | 파일 수준 업스트림 라이선스 및 고정된 패치/빌드 기록 |

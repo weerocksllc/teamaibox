@@ -156,6 +156,12 @@ before its archives are reused by actual image ID, and the new package is
 verified again. No data is taken from an old installation or container writable
 layer. This avoids exporting hundreds of GB of identical images again.
 
+When transferring the complete install directory directly, add
+`--directory-only` to omit the second, tar copy. The directory still contains
+every required file and checksum. Copy the entire directory and run
+`bash ./install.sh --verify-package` inside it before installing. This option
+does not change the default tar output or the target hardware requirements.
+
 A normal release requires its bundled source files to belong to the declared
 Git commit. An explicit `--allow-working-tree` creates a development candidate;
 its manifest records `candidate: true` and changed files. Passing focused

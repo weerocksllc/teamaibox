@@ -14,6 +14,18 @@ from appliance_installation import DEFAULT, execute, imported, inspect, inventor
 from appliance_network_identity import atomic_write
 
 
+def require_stateless_replacement(roles):
+    # Generic restart/rollback reuses the live mounts. Penpot's backend can
+    # migrate those mounts; an older native image must never be started on them
+    # merely because the candidate failed its health check.
+    if {'penpot-backend', 'penpot-postgres'}.intersection(roles):
+        raise ValueError('penpot_data_upgrade_required: use a verified Penpot database and asset recovery path')
+
+
+def check_journal_roles(job):
+    require_stateless_replacement([job['role'], *(job['members'] if job.get('namespaceGroup') else ())])
+
+
 def docker_api(method, path, body=None):
     class Connection(http.client.HTTPConnection):
         def connect(self):
@@ -68,6 +80,7 @@ def configuration_changes(record, patch_file):
 
 
 def replace(path, role, image, journal, patch_file=None):
+    require_stateless_replacement([role])
     record = load(path); old = resolve(record, role)
     selected = json.loads(execute(['docker', 'image', 'inspect', image]))[0]
     if selected['Architecture'] != 'arm64' or selected['Os'] != 'linux': raise ValueError('service_image_architecture')
@@ -83,6 +96,7 @@ def replace(path, role, image, journal, patch_file=None):
     if not old['Config'].get('Healthcheck'): raise ValueError('service_healthcheck_required')
     from appliance_namespace_upgrade import dependents, replace_group
     group=dependents(record,old)
+    require_stateless_replacement(group)
     if group:return replace_group(path,record,role,old,selected,group,journal,patch_file)
     previous = None
     if Path(journal).exists():
@@ -147,7 +161,7 @@ def replace(path, role, image, journal, patch_file=None):
 
 
 def rollback(path, journal):
-    record = load(path); job = json.loads(Path(journal).read_text())
+    job = json.loads(Path(journal).read_text()); check_journal_roles(job); record = load(path)
     if job.get('namespaceGroup'):
         from appliance_namespace_upgrade import rollback_group
         return rollback_group(path,journal,record,job)
@@ -169,7 +183,7 @@ def rollback(path, journal):
 
 
 def resume(path, journal):
-    record=load(path);job=json.loads(Path(journal).read_text())
+    job=json.loads(Path(journal).read_text());check_journal_roles(job);record=load(path)
     if job.get('namespaceGroup'):
         from appliance_namespace_upgrade import resume_group
         return resume_group(path,journal,record,job)

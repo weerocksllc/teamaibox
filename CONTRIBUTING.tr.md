@@ -16,7 +16,7 @@ Team AI Box'nin iyileştirilmesine yardımcı olduğunuz için teşekkür ederiz
 4. En küçük tutarlı değişikliği yapın, etkilenen belgeleri güncelleyin ve ilgili kontrolleri çalıştırın. Çalıştıramadığınız donanıma bağlı kontrolleri açıklayın.
 5. Sorunu, çözümü, uyumluluğun etkisini ve kontrolleri açıklayan bir çekme isteği açın. Görünür değişiklikler için arındırılmış ekran görüntüleri ekleyin. İnceleme geri bildirimine yanıt verin; bakımcılar birleşmeden önce gözden geçirir.
 
-Yerel OpenSpec çalışma alanı isteğe bağlıdır ve bu depoda yayınlanmaz. Kamu katkıda bulunanlar bir sayıya veya PR'ye doğrudan teklif ve kabul kriterleri koyabilir; Katılmak için herhangi bir özel spesifikasyonun eksik olması gerekmemektedir.
+Çalışmayı, beklenen sonuçları ve kabul ölçütlerini açıkça belirten sade Markdown planlarıyla yönetin. Codex, `AGENTS.md` dosyasına uyar; katkıda bulunanlar tercih ettikleri araçları kullanabilir ve değişiklikleri issue veya PR üzerinden tartışabilir. OpenSpec kullanılmaz ve gerekli değildir.
 
 ## Çeviriler ve ekran görüntüleri
 

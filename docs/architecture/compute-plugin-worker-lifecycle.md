@@ -1,7 +1,5 @@
 # ComputePlugin worker lifecycle
 
-OpenSpec task: `5.7`
-
 ## Ownership boundaries
 
 The scheduler owns lifecycle policy and the durable worker projection. It never

@@ -10,6 +10,8 @@ MIT wird auf Anweisung des Projektinhabers auf die ursprünglichen Team AI Box-B
 
 | Material | Lizenzbehandlung | Beweise und Grenzen |
 | --- | --- | --- |
+| Erfasster Penpot-Quellcode und Integrationspatches | MPL-2.0 | `deploy/penpot-source.lock.json` · `install/penpot-patches/`; Upstream-Hinweise beibehalten und den geänderten erfassten Quellcode bereitstellen; keine pauschale MIT-Lizenzierung |
+| Änderungen am nativen Penpot-Transport in OpenCode | MIT | `deploy/opencode-penpot-transport.lock.json`; Geänderte native Laufzeit separat gekennzeichnet, ohne Solid-Weboberfläche |
 | Ursprüngliche Anwendung/Dienste/Pakete und Installationscode | MIT | Anweisung des Projektinhabers; Root-LIZENZ und Paketmetadaten; Vorhandene Header von Drittanbietern überschreiben diesen Standard |
 | UxPlay-Modifikationen und begleitendes Build-Material | GPL-3.0-only | Vorhandene Upstream-Lizenz, angehefteter Commit und Hinweise zur entsprechenden Quelle in `deploy/legal/`; nicht erneut lizenziert als MIT |
 | GStreamer WebRTC-Änderungen | MPL-2.0 | Upstream-Lizenz auf Dateiebene und angeheftete Patch-/Build-Datensätze |

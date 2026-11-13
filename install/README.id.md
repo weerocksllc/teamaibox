@@ -67,6 +67,8 @@ Dua peran dapat berbagi satu ID konten gambar; arsipnya hanya diekspor sekali. I
 
 Outputnya adalah `teamaibox-<releaseId>-linux-arm64.tar`, file `.sha256` dan direktori yang diekstraksi. Penyalinan, ekspor gambar, hashing, dan pengarsipan terjadi di direktori sementara sebelum checksum akhir diterbitkan. Keluaran yang ada tidak ditimpa; build yang terputus tidak boleh terlihat seperti rilis lengkap. Untuk perubahan khusus penginstal dengan identitas gambar tidak berubah, gunakan `--image-cache <previous-extracted-package>`. Seluruh paket lama diverifikasi sebelum arsipnya digunakan kembali dengan ID gambar sebenarnya, dan paket baru diverifikasi lagi. Tidak ada data yang diambil dari instalasi lama atau lapisan kontainer yang dapat ditulisi. Hal ini untuk menghindari pengeksporan lagi gambar identik berukuran ratusan GB.
 
+Saat memindahkan direktori instalasi lengkap secara langsung, gunakan `--directory-only` untuk melewati salinan tar tambahan. Semua berkas dan checksum yang diperlukan tetap disertakan. Salin seluruh direktori lalu jalankan `bash ./install.sh --verify-package` di dalamnya sebelum memasang. Opsi ini tidak mengubah keluaran tar bawaan atau persyaratan perangkat keras.
+
 Rilis normal memerlukan file sumber yang dibundel untuk menjadi milik Git commit yang dinyatakan. `--allow-working-tree` yang eksplisit menciptakan kandidat pengembangan; manifesnya mencatat `candidate: true` dan mengubah file. Melewati penerimaan terfokus tidak mengubah sumber yang tidak terikat menjadi rilis yang dipublikasikan.
 
 Tata letak paket:

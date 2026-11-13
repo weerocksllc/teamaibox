@@ -4,8 +4,6 @@ This records an older qualification protocol. Its fixed core-memory floor is
 retired and must not be used as an appliance startup or admission gate. Retain
 past evidence without repeating already accepted business tests.
 
-OpenSpec task: `7.14`
-
 `models/model-coexistence-suite.v1.json` defines the bounded real-Spark test
 that follows the successful 24-hour NVFP4 soak. The runner fails before making
 an SSH connection unless the exact formal soak report passes its strict

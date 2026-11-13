@@ -3,6 +3,9 @@
 
 from __future__ import annotations
 
+if __name__ == "__main__":
+    raise SystemExit("Retired OpenSpec qualification runner. See docs/project/legacy-validation.md; no checks or reports were run.")
+
 import argparse
 from datetime import datetime, timezone
 import hashlib
@@ -222,13 +225,8 @@ def iso_now() -> str:
 
 
 def run_command(argv: Sequence[str], timeout_seconds: int) -> dict[str, Any]:
-    started = time.monotonic()
-    try:
-        completed = subprocess.run(list(argv), cwd=ROOT, check=False, stdout=subprocess.PIPE, stderr=subprocess.PIPE, timeout=timeout_seconds, env=os.environ.copy())
-        code, stdout, stderr, timed_out = completed.returncode, completed.stdout, completed.stderr, False
-    except subprocess.TimeoutExpired as error:
-        code, stdout, stderr, timed_out = 124, error.stdout or b"", error.stderr or b"", True
-    return {"argvDigest": digest_bytes(canonical_bytes(list(argv))), "exitCode": code, "timedOut": timed_out, "durationMilliseconds": round((time.monotonic() - started) * 1000), "stdoutDigest": digest_bytes(stdout), "stderrDigest": digest_bytes(stderr)}
+    """Reject new execution; historical record readers remain separate."""
+    raise RuntimeError("Retired OpenSpec qualification runner. See docs/project/legacy-validation.md; no checks or reports were run.")
 
 
 def git_facts() -> dict[str, Any]:
@@ -248,35 +246,8 @@ def write_evidence(value: Mapping[str, Any], replace: bool) -> Path:
 
 
 def main(argv: Sequence[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--manifest", type=Path, required=True)
-    parser.add_argument("--run-id", required=True)
-    parser.add_argument("--timeout-seconds", type=int, default=900)
-    parser.add_argument("--replace", action="store_true")
-    args = parser.parse_args(argv)
-    require(RUN_ID.fullmatch(args.run_id) is not None, "run ID must match release-YYYYMMDD-name")
-    require(30 <= args.timeout_seconds <= 3600, "timeout must be between 30 and 3600 seconds")
-    catalog = validate_catalog(json.loads(CATALOG.read_text(encoding="utf-8")))
-    manifest_path = args.manifest.resolve()
-    require(manifest_path.is_file(), "release candidate manifest is missing")
-    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
-    artifacts = validate_manifest_and_evidence(manifest, evidence_root=manifest_path.parent)
-    source = git_facts()
-    command_results = []
-    for gate in catalog["commandGates"]:
-        results = [run_command(command, args.timeout_seconds) for command in gate["commands"]]
-        command_results.append({"key": gate["key"], "status": "passed" if all(item["exitCode"] == 0 for item in results) else "failed", "commands": results})
-    failed = [item["key"] for item in command_results if item["status"] != "passed"]
-    if catalog["requireCleanWorktree"] and source["worktreeDirty"]:
-        failed.append("clean_worktree")
-    if source["head"] != manifest["sourceRevision"]:
-        failed.append("source_revision")
-    failed = list(dict.fromkeys(failed))
-    status = "passed" if len(failed) <= catalog["maximumFailures"] else "failed"
-    result = {"schemaVersion": 1, "suiteId": catalog["suiteId"], "runId": args.run_id, "releaseCandidateId": manifest["releaseCandidateId"], "releaseDigest": manifest["releaseDigest"], "status": status, "promotionEligible": status == "passed", "completedAt": iso_now(), "source": {**source, "catalogDigest": digest_bytes(canonical_bytes(catalog)), "manifestDigest": digest_bytes(manifest_path.read_bytes())}, "failedGateKeys": failed, "commandGates": command_results, "artifactEvidence": [{"evidenceClass": item["evidenceClass"], "claimsDigest": digest_bytes(canonical_bytes(item["claims"]))} for item in artifacts], "commandOutputRetained": False}
-    target = write_evidence(result, args.replace)
-    print(json.dumps({"runId": args.run_id, "status": status, "promotionEligible": result["promotionEligible"], "failedGateKeys": failed, "evidence": target.relative_to(ROOT).as_posix()}, sort_keys=True, separators=(",", ":")))
-    return 0 if status == "passed" else 1
+    """Reject new execution; historical record readers remain separate."""
+    raise RuntimeError("Retired OpenSpec qualification runner. See docs/project/legacy-validation.md; no checks or reports were run.")
 
 
 if __name__ == "__main__":

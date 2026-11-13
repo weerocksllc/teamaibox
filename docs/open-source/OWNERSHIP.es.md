@@ -10,6 +10,8 @@ MIT se aplica según las instrucciones del propietario del proyecto a las contri
 
 | Materiales | Tratamiento de licencia | Evidencias y límites |
 | --- | --- | --- |
+| Código fuente cubierto de Penpot y parches de integración | MPL-2.0 | `deploy/penpot-source.lock.json` · `install/penpot-patches/`; Conservar los avisos originales y proporcionar el código cubierto modificado, sin una licencia MIT general |
+| Cambios en el transporte nativo de Penpot en OpenCode | MIT | `deploy/opencode-penpot-transport.lock.json`; Entorno nativo modificado identificado por separado, sin la interfaz web de Solid |
 | Aplicación/servicios/paquetes originales y código de instalación | MIT | Instrucción del propietario del proyecto; LICENCIA raíz y metadatos del paquete; los encabezados de terceros existentes anulan este valor predeterminado |
 | Modificaciones de UxPlay y material de construcción adjunto | GPL-3.0-only | Licencia ascendente existente, confirmación fijada y avisos de fuente correspondiente en `deploy/legal/`; sin nueva licencia como MIT |
 | Modificaciones de GStreamer WebRTC | MPL-2.0 | Licencia ascendente a nivel de archivo y registros de parches/compilaciones anclados |

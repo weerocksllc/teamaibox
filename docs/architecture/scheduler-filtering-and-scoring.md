@@ -1,6 +1,6 @@
 # Scheduler filtering and scoring
 
-OpenSpec task 5.4 introduces a pure, deterministic decision core. Its input is
+The scheduler uses a pure, deterministic decision core. Its input is
 a durable queued job, one or more expanded target/model-profile pairs, current
 fair-share state, and administrator routing policy. It does not mutate queue
 state, acquire resources, or start workers.

@@ -10,6 +10,8 @@ MIT 根據專案擁有者的指示應用於歸因於 Weerocks LLC 的原始 Team
 
 |材質 |執照待遇 |證據與限制|
 | ---| ---| ---|
+| Penpot 受授權條款約束的原始碼與整合補丁 | MPL-2.0 | `deploy/penpot-source.lock.json` · `install/penpot-patches/`; 保留上游聲明並提供修改後的對應原始碼，不統一改用 MIT |
+| OpenCode 原生 Penpot 傳輸變更 | MIT | `deploy/opencode-penpot-transport.lock.json`; 獨立標示修改後的原生執行環境，不含 Solid Web GUI |
 |原始應用程式/服務/軟體包和安裝程式代碼 | MIT |專案業主的指示；根許可證和包元資料；現有的第三方標頭會覆蓋此預設值 |
 | UxPlay 修改並隨附的建置資料 | GPL-3.0-only |現有上游授權、固定提交與 `deploy/legal/` 中對應的來源通知；未重新授權為 MIT |
 | GStreamer WebRTC 修改 | MPL-2.0 |檔案級上游許可證和固定補丁/建置記錄 |

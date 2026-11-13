@@ -23,5 +23,7 @@ bin/
 vendor/usb-key-sdk/
 # The marketing website is maintained only in the private repository.
 /website/
-# OpenSpec planning and specifications stay local, outside the public repository.
+# Private maintainer plans, specifications and retired history never enter public source.
+/.project-local/
+# Retain this exclusion for old checkouts and accidentally restored legacy files.
 /openspec/

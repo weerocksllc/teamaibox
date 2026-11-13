@@ -54,7 +54,8 @@ The v1 policy limits per-owner queued and active work, per-capability queued
 work, per-owner rolling daily submissions, and serialized request size.
 `compute.job_quota_policies` persists versioned appliance/owner/capability
 policy records. Priority remains an integer from 0 to 100, but it cannot bypass
-quota admission; scheduler fairness and scoring are task 5.4.
+quota admission; see [scheduler filtering and scoring](scheduler-filtering-and-scoring.md)
+for fairness and target selection.
 
 ## Retry boundary
 

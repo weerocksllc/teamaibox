@@ -16,7 +16,7 @@ Cảm ơn bạn đã giúp cải thiện Team AI Box. Chúng tôi hoan nghênh n
 4. Thực hiện thay đổi mạch lạc nhỏ nhất, cập nhật tài liệu bị ảnh hưởng và tiến hành kiểm tra liên quan. Giải thích mọi hoạt động kiểm tra phụ thuộc vào phần cứng mà bạn không thể thực hiện.
 5. Mở một yêu cầu kéo mô tả vấn đề, giải pháp, tác động và kiểm tra tính tương thích. Bao gồm các ảnh chụp màn hình đã được làm sạch để có những thay đổi rõ ràng. Trả lời phản hồi đánh giá; người bảo trì xem xét trước khi sáp nhập.
 
-Không gian làm việc OpenSpec cục bộ là tùy chọn và không được xuất bản trong kho lưu trữ này. Những người đóng góp của công chúng có thể đưa trực tiếp đề xuất và tiêu chí chấp nhận vào một vấn đề hoặc PR; không thiếu thông số kỹ thuật riêng tư nào được yêu cầu để tham gia.
+Quản lý công việc bằng các kế hoạch Markdown thông thường, nêu rõ kết quả mong đợi và tiêu chí nghiệm thu. Codex tuân theo `AGENTS.md`; người đóng góp có thể dùng công cụ mình ưa thích và thảo luận thay đổi qua issue hoặc PR. Dự án không sử dụng hay yêu cầu OpenSpec.
 
 ## Bản dịch và ảnh chụp màn hình
 

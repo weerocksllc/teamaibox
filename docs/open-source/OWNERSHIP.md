@@ -16,6 +16,8 @@ inferred from that history.
 
 | Material | License treatment | Evidence and limits |
 | --- | --- | --- |
+| Penpot covered source and integration overlays | MPL-2.0 | `deploy/penpot-source.lock.json` and `install/penpot-patches/`; retain upstream notices and provide exact modified covered source, not a blanket MIT grant |
+| OpenCode native Penpot transport changes | MIT | `deploy/opencode-penpot-transport.lock.json`; separately identified modified native runtime, without the Solid Web GUI |
 | Original application/services/packages and installer code | MIT | Project owner's instruction; root LICENSE and package metadata; existing third-party headers override this default |
 | UxPlay modifications and accompanying build material | GPL-3.0-only | Existing upstream license, pinned commit and corresponding-source notices in `deploy/legal/`; not relicensed as MIT |
 | GStreamer WebRTC modifications | MPL-2.0 | File-level upstream license and pinned patch/build records |

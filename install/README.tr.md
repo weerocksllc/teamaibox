@@ -67,6 +67,8 @@ Hazırlık interneti kullanabilir. Teslim edilen paketten kurulum bağımlılık
 
 Çıkışlar `teamaibox-<releaseId>-linux-arm64.tar`, onun `.sha256` dosyası ve çıkarılan dizindir. Kopyalama, görüntü dışa aktarma, karma oluşturma ve arşivleme, son sağlama toplamı yayınlanmadan önce geçici bir dizinde gerçekleşir. Mevcut çıktıların üzerine yazılmaz; kesintiye uğramış bir yapı, tam bir sürüm gibi görünmemelidir. Görüntü kimlikleri değişmeden yalnızca yükleyiciye yönelik değişiklikler için `--image-cache <previous-extracted-package>` kullanın. Eski paketin tamamı, arşivleri gerçek görüntü kimliğiyle yeniden kullanılmadan önce doğrulanır ve yeni paket yeniden doğrulanır. Eski bir kurulumdan veya kapsayıcının yazılabilir katmanından hiçbir veri alınmaz. Bu, yüzlerce GB'lık aynı görselin tekrar dışa aktarılmasını önler.
 
+Kurulum dizininin tamamını doğrudan aktarırken ek tar kopyasını atlamak için `--directory-only` kullanın. Dizin, gerekli tüm dosyaları ve sağlama toplamlarını içerir. Tüm dizini kopyalayın ve kurmadan önce içinde `bash ./install.sh --verify-package` çalıştırın. Bu seçenek varsayılan tar çıktısını veya donanım gereksinimlerini değiştirmez.
+
 Normal bir sürüm, paketlenmiş kaynak dosyalarının bildirilen Git işlemine ait olmasını gerektirir. Açık bir `--allow-working-tree`, bir geliştirme adayı oluşturur; manifest kayıtları `candidate: true` ve değişen dosyalar. Odaklanmış kabulü geçmek, taahhüt edilmemiş kaynağı yayınlanmış bir sürüme dönüştürmez.
 
 Paket düzeni:

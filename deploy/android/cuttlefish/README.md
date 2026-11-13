@@ -105,7 +105,7 @@ the front end changed. Reuse an existing authorized signed-in test phone when
 account-dependent verification is needed; never copy its account into a base
 image.
 
-Current product requirements belong in OpenSpec. This source distribution does
+Current product boundaries are in the [project handbook](../../../docs/project/REQUIREMENTS.md). This source distribution does
 not include historical installation results or privately retained evidence.
 New verification must bind the actual installation and current source version.
 

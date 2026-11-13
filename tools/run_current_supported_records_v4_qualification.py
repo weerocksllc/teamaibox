@@ -3,6 +3,9 @@
 
 from __future__ import annotations
 
+if __name__ == "__main__":
+    raise SystemExit("Retired OpenSpec qualification runner. See docs/project/legacy-validation.md; no checks or reports were run.")
+
 import argparse
 import hashlib
 import json
@@ -78,68 +81,13 @@ def artifact(path: Path, identity_key: str, identity: str) -> tuple[dict[str, An
 
 
 def command(argv: tuple[str, ...]) -> dict[str, Any]:
-    started = time.monotonic()
-    completed = subprocess.run(argv, cwd=ROOT, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
-                               timeout=2400, check=False)
-    return {"argvDigest": digest(json.dumps(list(argv), separators=(",", ":")).encode()),
-            "exitCode": completed.returncode,
-            "durationMilliseconds": int((time.monotonic() - started) * 1000),
-            "stdoutDigest": digest(completed.stdout), "stderrDigest": digest(completed.stderr),
-            "outputRetained": False}
+    """Reject new execution; historical record readers remain separate."""
+    raise RuntimeError("Retired OpenSpec qualification runner. See docs/project/legacy-validation.md; no checks or reports were run.")
 
 
 def main(argv: Sequence[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--run-id", required=True)
-    args = parser.parse_args(argv)
-    require(RUN_ID.fullmatch(args.run_id) is not None, "supported records v4 run ID is invalid")
-    output = EVIDENCE_ROOT / f"{args.run_id}.json"
-    require(not output.exists(), "supported records v4 qualification already exists")
-    matrix, matrix_binding = artifact(MATRIX, "matrixId", "teamaibox.supported-environment.v4")
-    catalog, catalog_binding = artifact(CATALOG, "catalogId", "teamaibox.feature-acceptance.v18")
-    review, review_binding = artifact(REVIEW, "reviewId", "teamaibox.final-acceptance.v4")
-    browser, browser_binding = artifact(BROWSER, "runnerId", "teamaibox.current-catalog-browser-smoke.v1")
-    require(matrix["gatePolicy"]["task20_5Satisfied"] is True
-            and catalog["technicalClosure"]["productAcceptedCount"] == 40
-            and catalog["technicalClosure"]["componentReadyCount"] == 4
-            and catalog["technicalClosure"]["task20_1Satisfied"] is False
-            and review["technicalClosure"]["task20_5Satisfied"] is True
-            and review["technicalClosure"]["pendingPrerequisiteCount"] == 2
-            and browser["claimBoundary"]["systemTrustedBrowser"] is True,
-            "supported records v4 claim boundary drifted")
-    started = utc_now()
-    rows = [command(item) for item in COMMANDS]
-    passed = all(row["exitCode"] == 0 for row in rows)
-    report: dict[str, Any] = {
-        "schemaVersion": 1, "runnerId": "teamaibox.current-supported-records-v4-qualification.v1",
-        "runId": args.run_id, "status": "passed" if passed else "failed",
-        "startedAt": started, "completedAt": utc_now(),
-        "artifacts": {"supportedEnvironment": matrix_binding, "featureCatalog": catalog_binding,
-                      "preparedFinalReview": review_binding, "currentApplicationBrowser": browser_binding},
-        "summary": {"environmentCount": 6, "capabilityReviewCount": 11, "featureCount": 44,
-                    "productAcceptedCount": 40, "componentReadyCount": 4,
-                    "currentApplicationLaunchCount": 15, "releaseBlockerCount": 2,
-                    "pendingReviewPrerequisiteCount": 2},
-        "validationCommands": rows,
-        "sources": [{"path": path, "sha256": digest((ROOT / path).read_bytes())} for path in SOURCES],
-        "privacy": {"credentialsRetained": False, "cookieValuesRetained": False,
-                    "userContentRetained": False, "commandOutputRetained": False,
-                    "reviewerIdentityRetained": False},
-        "claimBoundary": {"task20_5Satisfied": passed, "task20_1Satisfied": False,
-            "task20_6Satisfied": False, "baseProductCatalogComplete": False,
-            "independentHumanAcceptance": False, "optionalUsbModeInstalled": False,
-            "activeMediaLuksMigrationSelected": False, "releaseCandidatePromoted": False,
-            "drawingCertified": False, "ocrCertified": False},
-        "failure": None if passed else {"failedCommandIndexes": [
-            index for index, row in enumerate(rows) if row["exitCode"] != 0], "outputRetained": False},
-    }
-    report["evidenceDigest"] = canonical_digest(report)
-    output.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n", encoding="utf-8")
-    print(json.dumps({"runId": args.run_id, "status": report["status"],
-        "task20_5Satisfied": passed, "task20_1Satisfied": False,
-        "productAcceptedCount": 40, "componentReadyCount": 4,
-        "evidence": output.relative_to(ROOT).as_posix()}, separators=(",", ":")))
-    return 0 if passed else 1
+    """Reject new execution; historical record readers remain separate."""
+    raise RuntimeError("Retired OpenSpec qualification runner. See docs/project/legacy-validation.md; no checks or reports were run.")
 
 
 if __name__ == "__main__":

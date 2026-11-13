@@ -1,7 +1,5 @@
 # Signed plugin manifest v1
 
-OpenSpec task: `6.1`
-
 ## One contract, two plugin types
 
 Every official or third-party plugin uses

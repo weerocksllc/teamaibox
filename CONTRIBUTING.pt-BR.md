@@ -16,7 +16,7 @@ Obrigado por ajudar a melhorar Team AI Box. Congratulamo-nos com colaboradores i
 4. Faça a menor alteração coerente, atualize a documentação afetada e execute as verificações relevantes. Explique quaisquer verificações dependentes de hardware que você não pôde executar.
 5. Abra uma solicitação pull descrevendo o problema, solução, impacto de compatibilidade e verificações. Inclua capturas de tela limpas para alterações visíveis. Responder ao feedback da revisão; revisão dos mantenedores antes da fusão.
 
-Um espaço de trabalho OpenSpec local é opcional e não é publicado neste repositório. Os contribuidores públicos podem colocar uma proposta e critérios de aceitação diretamente em uma edição ou PR; nenhuma especificação privada faltante é necessária para participar.
+Organize o trabalho em planos Markdown simples, com resultados esperados e critérios de aceitação explícitos. O Codex segue `AGENTS.md`; quem contribui pode usar suas ferramentas preferidas e discutir alterações em issues ou PRs. O OpenSpec não é usado nem exigido.
 
 ## Traduções e capturas de tela
 

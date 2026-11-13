@@ -1,6 +1,6 @@
 # Operational diagnostics, health, and alert boundary
 
-Task 14.4 adds a durable operations plane around the existing local appliance
+Operational diagnostics provide a durable operations plane around the local appliance
 dashboard. It treats telemetry as bounded operational evidence, not as another
 copy of application requests or team data.
 

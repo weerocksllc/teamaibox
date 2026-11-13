@@ -1,7 +1,5 @@
 # Atomic plugin lifecycle
 
-OpenSpec task: `6.3`
-
 ## Blue/green state model
 
 Plugin install and upgrade use `blue`/`green` runtime slots. A verified import

@@ -16,7 +16,7 @@ Vielen Dank für Ihre Hilfe bei der Verbesserung von Team AI Box. Wir freuen uns
 4. Nehmen Sie die kleinste zusammenhängende Änderung vor, aktualisieren Sie die betroffene Dokumentation und führen Sie relevante Prüfungen durch. Erläutern Sie alle hardwareabhängigen Prüfungen, die Sie nicht ausführen konnten.
 5. Öffnen Sie eine Pull-Anfrage, in der das Problem, die Lösung, die Auswirkungen auf die Kompatibilität und die Prüfungen beschrieben werden. Fügen Sie bereinigte Screenshots für sichtbare Änderungen hinzu. Auf Bewertungsfeedback reagieren; Überprüfung durch den Betreuer vor der Zusammenführung.
 
-Ein lokaler OpenSpec-Arbeitsbereich ist optional und wird nicht in diesem Repository veröffentlicht. Öffentliche Mitwirkende können einen Vorschlag und Akzeptanzkriterien direkt in einer Ausgabe oder PR angeben; Für die Teilnahme sind keine fehlenden privaten Angaben erforderlich.
+Halten Sie die Arbeit in einfachen Markdown-Plänen mit klaren Ergebnissen und Abnahmekriterien fest. Codex folgt `AGENTS.md`; Mitwirkende können ihre bevorzugten Werkzeuge verwenden und Änderungen in Issues oder PRs besprechen. OpenSpec wird weder verwendet noch vorausgesetzt.
 
 ## Übersetzungen und Screenshots
 

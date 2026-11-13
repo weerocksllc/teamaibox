@@ -1,7 +1,5 @@
 # Plugin access channels
 
-OpenSpec task: `6.5`
-
 ApplicationPlugin and ComputePlugin access are deliberately different trust
 paths. They share the signed manifest and sandbox lifecycle, but they do not
 share credentials or registry mutation authority.

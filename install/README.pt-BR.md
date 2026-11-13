@@ -67,6 +67,8 @@ Duas funções podem compartilhar um ID de conteúdo de imagem; seu arquivo é e
 
 As saídas são `teamaibox-<releaseId>-linux-arm64.tar`, seu arquivo `.sha256` e o diretório extraído. A cópia, a exportação de imagens, o hash e o arquivamento ocorrem em um diretório temporário antes da publicação da soma de verificação final. As saídas existentes não são substituídas; uma compilação interrompida não deve parecer uma versão completa. Para alterações somente do instalador com identidades de imagem inalteradas, use `--image-cache <previous-extracted-package>`. Todo o pacote antigo é verificado antes que seus arquivos sejam reutilizados pelo ID de imagem real, e o novo pacote é verificado novamente. Nenhum dado é obtido de uma instalação antiga ou de uma camada gravável de contêiner. Isso evita exportar novamente centenas de GB de imagens idênticas.
 
+Ao transferir diretamente todo o diretório de instalação, use `--directory-only` para dispensar a cópia tar adicional. O diretório ainda inclui todos os arquivos e somas de verificação necessários. Copie o diretório inteiro e execute nele `bash ./install.sh --verify-package` antes de instalar. A opção não altera a saída tar padrão nem os requisitos de hardware.
+
 Uma versão normal exige que seus arquivos de origem incluídos no pacote pertençam ao commit declarado do Git. Um `--allow-working-tree` explícito cria um candidato de desenvolvimento; seu manifesto registra `candidate: true` e arquivos alterados. Passar pela aceitação focada não transforma uma fonte não comprometida em um lançamento publicado.
 
 Layout do pacote:

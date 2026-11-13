@@ -1,5 +1,11 @@
 # Release candidate gate
 
+> Historical reference — this OpenSpec-dependent qualification mechanism is
+> retired. Its CLI refuses new evaluations. It is not a current release command
+> or a dependency of source installation. Use the [project handbook](../project/README.md)
+> and [retired validation note](../project/legacy-validation.md) for current practice.
+> The text below describes old evidence semantics, not instructions to rerun them.
+
 ## Applicability to the current handover
 
 This document describes the separate machine-evaluated release-candidate

@@ -1,7 +1,5 @@
 # Plugin sandbox and isolation
 
-OpenSpec task: `6.4`
-
 ## Trust boundary
 
 Application and compute plugins never receive the Docker socket and cannot

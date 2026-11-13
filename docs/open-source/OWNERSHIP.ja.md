@@ -10,6 +10,8 @@ MIT は、Weerocks LLC に帰属する元の Team AI Box の貢献に対する�
 
 |素材 |ライセンスの扱い |証拠と限界 |
 | --- | --- | --- |
+| Penpot の対象ソースと統合パッチ | MPL-2.0 | `deploy/penpot-source.lock.json` · `install/penpot-patches/`; 上流の通知を保持し、変更した対象ソースを提供する。包括的な MIT 許諾ではない |
+| OpenCode のネイティブ Penpot 通信の変更 | MIT | `deploy/opencode-penpot-transport.lock.json`; 変更したネイティブランタイムを個別に明示。Solid Web GUI は含まない |
 |オリジナルのアプリケーション/サービス/パッケージおよびインストーラー コード | MIT |プロジェクトオーナーの指示。ルートライセンスとパッケージメタデータ。既存のサードパーティのヘッダーはこのデフォルトをオーバーライドします。 |
 | UxPlay の変更とそれに伴うビルドマテリアル | GPL-3.0-only |既存のアップストリーム ライセンス、固定されたコミット、および対応するソースの通知が `deploy/legal/` にあります。 MIT として再ライセンスされていません |
 | GStreamer WebRTC の変更 | MPL-2.0 |ファイルレベルのアップストリームライセンスと固定パッチ/ビルドレコード |

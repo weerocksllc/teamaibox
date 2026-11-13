@@ -27,9 +27,9 @@ or components that can be checked independently.
    and checks. Include sanitized screenshots for visible changes. Respond to
    review feedback; maintainers review before merging.
 
-A local OpenSpec workspace is optional and is not published in this repository.
-Public contributors can put a proposal and acceptance criteria directly in an
-issue or PR; no missing private specification is required to participate.
+Maintain work as plain Markdown plans with explicit outcomes and acceptance
+criteria. Codex follows `AGENTS.md`; contributors can use their preferred tools
+and discuss changes in issues or PRs. OpenSpec is not used or required.
 
 ## Translations and screenshots
 

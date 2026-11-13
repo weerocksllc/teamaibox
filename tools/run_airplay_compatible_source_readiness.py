@@ -10,6 +10,9 @@ real-device gates.  Accountable human decisions are recorded separately.
 
 from __future__ import annotations
 
+if __name__ == "__main__":
+    raise SystemExit("Retired OpenSpec qualification runner. See docs/project/legacy-validation.md; no checks or reports were run.")
+
 import argparse
 from datetime import datetime, timezone
 import hashlib
@@ -113,58 +116,13 @@ def source_records() -> list[dict[str, str]]:
 
 
 def strict_openspec() -> dict[str, object]:
-    result = subprocess.run(
-        ["openspec", "validate", "build-team-ai-box-platform", "--strict"],
-        cwd=ROOT,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.STDOUT,
-        timeout=180,
-        check=False,
-    )
-    require(result.returncode == 0, "strict OpenSpec validation failed")
-    return {
-        "passed": True,
-        "command": "openspec validate build-team-ai-box-platform --strict",
-        "exitCode": 0,
-    }
+    """Reject new execution; historical record readers remain separate."""
+    raise RuntimeError("Retired OpenSpec qualification runner. See docs/project/legacy-validation.md; no checks or reports were run.")
 
 
 def readiness_checks() -> dict[str, Any]:
-    review = validate_review()
-    scaffold = validate_scaffold()
-    component = validate_component_template()
-    require(
-        review.get("valid") is True
-        and review.get("allRequiredHumanDecisionsApproved") is True
-        and review.get("approvedHumanDecisionCount") == len(HUMAN_DECISIONS)
-        and review.get("pendingHumanDecisionCount") == 0
-        and review.get("automatedReleaseVerificationComplete") is False
-        and review.get("releaseEligible") is False
-        and review.get("task22_1Complete") is False,
-        "source review approval or fail-closed technical boundary drifted",
-    )
-    require(
-        scaffold.get("valid") is True
-        and scaffold.get("sourceScaffoldReady") is True
-        and scaffold.get("deployable") is False
-        and scaffold.get("componentReady") is False
-        and scaffold.get("task22_3Complete") is False,
-        "trusted media scaffold overclaims readiness",
-    )
-    require(
-        component.get("valid") is True
-        and component.get("componentContractReady") is True
-        and component.get("materialized") is False
-        and component.get("componentReady") is False
-        and component.get("task22_3Complete") is False,
-        "trusted media runtime component contract overclaims readiness",
-    )
-    return {
-        "supplyChainReview": review,
-        "trustedMediaScaffold": scaffold,
-        "trustedMediaRuntimeComponent": component,
-        "strictOpenSpec": strict_openspec(),
-    }
+    """Reject new execution; historical record readers remain separate."""
+    raise RuntimeError("Retired OpenSpec qualification runner. See docs/project/legacy-validation.md; no checks or reports were run.")
 
 
 def build_document(
@@ -311,33 +269,13 @@ def atomic_write(path: Path, value: dict[str, Any]) -> None:
 
 
 def run(run_id: str, output: Path) -> int:
-    require(output.resolve().parent == EVIDENCE_ROOT.resolve(), "source-readiness output is outside its evidence scope")
-    require(output.name == run_id + ".json", "source-readiness output does not match its run identity")
-    started = utc_now()
-    checks = readiness_checks()
-    document = build_document(run_id, started_at=started, completed_at=utc_now(), checks=checks)
-    atomic_write(output, document)
-    print(json.dumps({
-        "runId": run_id,
-        "status": "passed",
-        "evidence": output.relative_to(ROOT).as_posix(),
-        "evidenceDigest": json.loads(output.read_text(encoding="utf-8"))["evidenceDigest"],
-        "sourceScaffoldReady": True,
-        "componentContractReady": True,
-        "componentReady": False,
-        "releaseEligible": False,
-    }, sort_keys=True, separators=(",", ":")))
-    return 0
+    """Reject new execution; historical record readers remain separate."""
+    raise RuntimeError("Retired OpenSpec qualification runner. See docs/project/legacy-validation.md; no checks or reports were run.")
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--run-id", required=True)
-    arguments = parser.parse_args()
-    run_id = arguments.run_id
-    if RUN_ID.fullmatch(run_id) is None:
-        parser.error("run ID must match airplay-compatible-source-readiness-YYYYMMDD-aN")
-    return run(run_id, EVIDENCE_ROOT / f"{run_id}.json")
+    """Reject new execution; historical record readers remain separate."""
+    raise RuntimeError("Retired OpenSpec qualification runner. See docs/project/legacy-validation.md; no checks or reports were run.")
 
 
 if __name__ == "__main__":

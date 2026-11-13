@@ -16,7 +16,7 @@ Terima kasih telah membantu meningkatkan Team AI Box. Kami menyambut kontributor
 4. Buat perubahan terkecil yang koheren, perbarui dokumentasi yang terpengaruh, dan jalankan pemeriksaan yang relevan. Jelaskan pemeriksaan apa pun yang bergantung pada perangkat keras yang tidak dapat Anda jalankan.
 5. Buka permintaan tarik yang menjelaskan masalah, solusi, dampak kompatibilitas, dan pemeriksaan. Sertakan tangkapan layar yang sudah dibersihkan untuk perubahan yang terlihat. Menanggapi umpan balik ulasan; tinjauan pengelola sebelum penggabungan.
 
-Ruang kerja OpenSpec lokal bersifat opsional dan tidak dipublikasikan dalam repositori ini. Kontributor publik dapat mencantumkan proposal dan kriteria penerimaan secara langsung dalam suatu terbitan atau PR; tidak diperlukan spesifikasi pribadi yang hilang untuk berpartisipasi.
+Kelola pekerjaan dalam rencana Markdown sederhana dengan hasil yang diharapkan dan kriteria penerimaan yang jelas. Codex mengikuti `AGENTS.md`; kontributor dapat menggunakan alat pilihan mereka dan membahas perubahan melalui issue atau PR. OpenSpec tidak digunakan maupun diwajibkan.
 
 ## Terjemahan dan tangkapan layar
 

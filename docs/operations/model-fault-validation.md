@@ -1,7 +1,5 @@
 # Release-candidate model fault validation
 
-OpenSpec task: `7.12`
-
 The fault stage is fail-closed and runs against every profile listed by
 `models/model-fault-suite.v1.json`. The suite is bound to the canonical digest
 of `deploy/compute/model-baseline-deployments.v1.json`; adding, removing, or
